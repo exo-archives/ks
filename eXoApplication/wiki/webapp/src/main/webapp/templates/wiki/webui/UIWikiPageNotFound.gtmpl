@@ -25,7 +25,7 @@ import org.exoplatform.wiki.commons.DateTimeFomatter;
 		%>
 			<h2>Page Not Found</h2>
 			<p>The page you were trying to reach could not be found: it may have been renamed or moved to another space, or the name you requested may be incomplete.</p>
-			<div class="ResultInfo"><b>Note :</b> The page you were looking for may have been renamed or moved to the following location</div>			
+			<div class="ResultInfo"><strong>Note :</strong> The page you were looking for may have been renamed or moved to the following location</div>			
 			<div class="BlockResultFeed">
 			  <a href="$url" class="Page TxtTitFeed"><%=relatedPage.getTitle()%></a>
 				<div class="TxtDetail"><%=summaryContent%></div>
@@ -60,7 +60,7 @@ import org.exoplatform.wiki.commons.DateTimeFomatter;
 <!-- scene 2 
 	<h2>Page Not Found</h2>
 	<p>The page you were trying to reach could not be found: it may have been renamed or moved to another space, or the name you requested may be incomplete.</p>
-	<div class="ResultInfo"><b>In this space :</b> The page you were looking for may have been renamed to the following:</div>
+	<div class="ResultInfo"><strong>In this space :</strong> The page you were looking for may have been renamed to the following:</div>
 	<div class="BlockResultFeed">
 		<a href="" class="Page TxtTitFeed">Lorem ipsum dolor sit amet, consectetur adipiscing elit</a>
 		<div class="TxtDetail">Lorem ipsum dolor sit amet, consectetur adipiscing evlit. Pellentesque blandit libero non diam tempus eu molestie sem pretium. Nulla tristique arcu at urna iaculis non interdum neque vulputate. Vestibulum tempus sapien sapien, et elementum velit. Donec at purus neque. Integer tempus dignissim dui vitae aliquam. Ut id massa velit.</div>

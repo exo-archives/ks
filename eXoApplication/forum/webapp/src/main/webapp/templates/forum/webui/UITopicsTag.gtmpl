@@ -279,7 +279,7 @@
                   <% } else { %>
                     <td colspan="8" align="center">
                   <% } %>
-                      <strong style="display: block;" style="margin:15px 0px 20px 0px"><%=_ctx.appRes("UICategory.label.availableTheard");%></strong>
+                      <strong style="display: block; margin:15px 0px 20px 0px"><%=_ctx.appRes("UICategory.label.availableTheard");%></strong>
                     </td>
                   </tr>
                <%} 
@@ -291,7 +291,7 @@
                   <% } else { %>
                     <td colspan="8" align="center">
                   <% } %>
-                      <strong style="display: block;" style="margin:15px 0px 20px 0px"><%=_ctx.appRes("UITopicContainer.label.Forumempty");%></strong>
+                      <strong style="display: block; margin:15px 0px 20px 0px"><%=_ctx.appRes("UITopicContainer.label.Forumempty");%></strong>
                     </td>
                   </tr>
             <%}%>

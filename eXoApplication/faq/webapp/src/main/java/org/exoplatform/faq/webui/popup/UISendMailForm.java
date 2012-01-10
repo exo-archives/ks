@@ -214,13 +214,13 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
       if (questionLangua.getLanguage().equals(language)) {
         contenQuestion = questionLangua.getQuestion();
         Answer[] answers = questionLangua.getAnswers();
-        stringBuffer.append(getLabel("change-content")).append(":<p><b>").append(getLabel("Question")).append("</b> ").append(contenQuestion).append("</p>");
+        stringBuffer.append(getLabel("change-content")).append(":<p><strong>").append(getLabel("Question")).append("</strong> ").append(contenQuestion).append("</p>");
         if (questionLangua.getDetail() != null && questionLangua.getDetail().trim().length() > 0)
-          stringBuffer.append("<p><b>").append(this.getLabel("Detail")).append("</b> ").append(questionLangua.getDetail()).append("</p>");
+          stringBuffer.append("<p><strong>").append(this.getLabel("Detail")).append("</strong> ").append(questionLangua.getDetail()).append("</p>");
         if (answers != null && answers.length > 0) {
           stringBuffer.append("<p>");
           for (Answer answer : answers) {
-            stringBuffer.append("<br/><b>").append(getLabel("Response")).append("</b>").append("<br/>").append(answer.getResponses());
+            stringBuffer.append("<br/><strong>").append(getLabel("Response")).append("</strong>").append("<br/>").append(answer.getResponses());
           }
           stringBuffer.append("</p>");
         }
@@ -466,8 +466,8 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
         if (questionLanguage.getLanguage().equals(language)) {
           contenQuestion = questionLanguage.getQuestion();
           Answer[] answers = questionLanguage.getAnswers();
-          strBuilder.append(sendMailForm.getLabel("change-content")).append(":<p><b>").append(sendMailForm.getLabel("Question")).append("</b> ")
-                    .append(contenQuestion).append("</p>").append("<p><b>").append(sendMailForm.getLabel("Detail")).append("</b> ")
+          strBuilder.append(sendMailForm.getLabel("change-content")).append(":<p><strong>").append(sendMailForm.getLabel("Question")).append("</strong> ")
+                    .append(contenQuestion).append("</p>").append("<p><strong>").append(sendMailForm.getLabel("Detail")).append("</strong> ")
                     .append(questionLanguage.getDetail()).append("</p>");
           if (answers != null && answers.length > 0) {
             strBuilder.append(sendMailForm.getLabel("Response")).append("</b> ").append(answers[sendMailForm.posOfResponse].getResponses()).append("</p>");

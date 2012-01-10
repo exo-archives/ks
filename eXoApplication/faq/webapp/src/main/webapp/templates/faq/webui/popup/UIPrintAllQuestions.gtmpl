@@ -97,11 +97,11 @@
 																				String markView = question.getMarkVote() + "";
 																				if(markView.length() <= 4){
 																				%>
-																					<div style="line-height:22px;"><b>$markView</b></div>
+																					<div style="line-height:22px;"><strong>$markView</strong></div>
 																				<%
 																				} else {
 																				%>
-																					<div style="line-height:22px;"><b><%=markView.substring(0, 4)%></b></div>
+																					<div style="line-height:22px;"><strong><%=markView.substring(0, 4)%></strong></div>
 																				<%}%>
 																			</td>
 																		</tr>

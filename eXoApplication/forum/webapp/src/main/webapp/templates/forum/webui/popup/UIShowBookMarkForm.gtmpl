@@ -55,7 +55,7 @@
 					   } else {%>
 					<tr>
 						<td colspan="3" align="center">
-							<div><b><%=_ctx.appRes("UIShowBookMarkForm.label.NoLinks");%></b></div>
+							<div><strong><%=_ctx.appRes("UIShowBookMarkForm.label.NoLinks");%></strong></div>
 						</td>
 					</tr>
 					<% } %>

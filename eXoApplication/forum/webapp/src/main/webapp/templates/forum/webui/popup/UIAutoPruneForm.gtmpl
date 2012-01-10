@@ -58,7 +58,7 @@
 					</tr>
 						<% } else { %>
 					<tr class="$classCssInbox">
-						<td style="width:120px; text-align:center"><b>$categoryName</b></td>
+						<td style="width:120px; text-align:center"><strong>$categoryName</strong></td>
 						<td style="width:120px; text-align:center"> </td>
 						<td width="40px"> </td>
 						<td>&nbsp;</td>

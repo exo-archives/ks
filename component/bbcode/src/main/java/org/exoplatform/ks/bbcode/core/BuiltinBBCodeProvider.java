@@ -37,7 +37,7 @@ public class BuiltinBBCodeProvider extends HashMap<String, BBCode> implements BB
 
   public BuiltinBBCodeProvider() {
     addBBCode("I", "<i>{param}</i>", false);
-    addBBCode("B", "<b>{param}</b>", false);
+    addBBCode("B", "<strong>{param}</strong>", false);
     addBBCode("U", "<u>{param}</u>", false);
     addBBCode("COLOR", "<font color='{option}'>{param}</font>", true);
     addBBCode("SIZE", "<font size='{option}'>{param}</font>", true);

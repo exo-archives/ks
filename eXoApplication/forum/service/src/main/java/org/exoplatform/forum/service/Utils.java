@@ -119,8 +119,8 @@ public class Utils implements ForumNodeTypes {
 
   public static final String ADMIN_ROLE            = "ADMIN".intern();
 
-  public static final String DEFAULT_EMAIL_CONTENT = "Hi,</br> You receive this email because you registered for eXo Forum and Topic Watching notification." + "<br/>We would like to inform you that there is a new $ADD_TYPE in the $OBJECT_WATCH_TYPE <b>$OBJECT_NAME</b> with the following content: "
-                                                       + "<div>_______________<br/>$POST_CONTENT<br/>_______________</div><div>At $TIME on $DATE, posted by <b>$POSTER</b> .</div><div>Go directly to the post: " + "<a target=\"_blank\" href=\"$VIEWPOST_LINK\">Click here.</a> <br/>Or go to reply to the post: <a target=\"_blank\" href=\"$REPLYPOST_LINK\">Click here." + "</a></div>".intern();
+  public static final String DEFAULT_EMAIL_CONTENT = "Hi,</br> You receive this email because you registered for eXo Forum and Topic Watching notification." + "<br/>We would like to inform you that there is a new $ADD_TYPE in the $OBJECT_WATCH_TYPE <strong>$OBJECT_NAME</strong> with the following content: "
+                                                       + "<div>_______________<br/>$POST_CONTENT<br/>_______________</div><div>At $TIME on $DATE, posted by <strong>$POSTER</strong> .</div><div>Go directly to the post: " + "<a target=\"_blank\" href=\"$VIEWPOST_LINK\">Click here.</a> <br/>Or go to reply to the post: <a target=\"_blank\" href=\"$REPLYPOST_LINK\">Click here." + "</a></div>".intern();
 
   /**
    * Clear characters that have a codepoint < 31 (non printable) from a string

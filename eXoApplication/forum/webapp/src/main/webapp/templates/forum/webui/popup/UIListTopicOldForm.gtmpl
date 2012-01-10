@@ -79,7 +79,7 @@
 						 		%>
 						 		<tr>
 					 				<td colspan="5" align="center">
-					 					<div style="margin:5px 0px 10px 0px"><b><%=_ctx.appRes("UIForumPortlet.label.NoThread");%></b></div>
+					 					<div style="margin:5px 0px 10px 0px"><strong><%=_ctx.appRes("UIForumPortlet.label.NoThread");%></strong></div>
 					 				</td>
 						 		</tr>
 					 		<%

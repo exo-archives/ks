@@ -3608,7 +3608,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       while (nodeIterator.hasNext()) {
         answerNode = nodeIterator.nextNode();
         if (answerNode.hasProperty(EXO_RESPONSES))
-          listAnswers.add("<b><u>Answer:</u></b> " + (answerNode.getProperty(EXO_RESPONSES).getString()) + "<br/>");
+          listAnswers.add("<strong><u>Answer:</u></strong> " + (answerNode.getProperty(EXO_RESPONSES).getString()) + "<br/>");
       }
     } catch (Exception e) {
       log.error("Failed to get answers for " + questionNode.getName());
@@ -3635,7 +3635,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       while (nodeIterator.hasNext()) {
         commentNode = nodeIterator.nextNode();
         if (commentNode.hasProperty(EXO_COMMENTS))
-          listComment.add("<b><u>Comment:</u></b>" + (commentNode.getProperty(EXO_COMMENTS).getString()) + "<br/>");
+          listComment.add("<strong><u>Comment:</u></strong>" + (commentNode.getProperty(EXO_COMMENTS).getString()) + "<br/>");
       }
     } catch (Exception e) {
       log.error("Failed to get comments for " + questionNode.getName());

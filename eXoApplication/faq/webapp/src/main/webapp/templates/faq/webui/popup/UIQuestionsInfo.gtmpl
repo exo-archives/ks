@@ -85,11 +85,11 @@
 													<div class="UIFormInput">
 														<table class="UIGrid">
 															<tr>
-																<th><b><%=_ctx.appRes("UIQuestionsInfo.label.Question")%></b></th>
-																<th><b><%=_ctx.appRes("UIUserWatchManager.label.pathCategory");%></b></th>
-																<th style="width:100px"><b><%=_ctx.appRes("UIQuestionsInfo.label.QuestionIsApproved")%></b></th>
-																<th style="width:100px"><b><%=_ctx.appRes("UIQuestionsInfo.label.QuestionIsActivated")%></b></th>
-																<th style="width:60px"><b><%=_ctx.appRes("UIQuestionsInfo.label.Action")%></b></th>
+																<th><strong><%=_ctx.appRes("UIQuestionsInfo.label.Question")%></strong></th>
+																<th><strong><%=_ctx.appRes("UIUserWatchManager.label.pathCategory");%></strong></th>
+																<th style="width:100px"><strong><%=_ctx.appRes("UIQuestionsInfo.label.QuestionIsApproved")%></strong></th>
+																<th style="width:100px"><strong><%=_ctx.appRes("UIQuestionsInfo.label.QuestionIsActivated")%></strong></th>
+																<th style="width:60px"><strong><%=_ctx.appRes("UIQuestionsInfo.label.Action")%></strong></th>
 															</tr>
 															<%
 															List questionList = uicomponent.getListQuestion() ;
@@ -157,7 +157,7 @@
 															} else {%>
 																<tr>
 																	<td colspan="4" style="text-align:center;">
-																		<b><%=_ctx.appRes("UIQuestionsInfo.label.ListQuestionIsEmpty")%></b>
+																		<strong><%=_ctx.appRes("UIQuestionsInfo.label.ListQuestionIsEmpty")%></strong>
 																	</td>
 																</tr>
 														<%}%>
@@ -184,14 +184,14 @@
 													<div class="UIFormInput">
 														<table class="UIGrid">
 															<tr>
-																<th><b><%=_ctx.appRes("UIQuestionsInfo.label.Question")%></b></th>
-																<th><b>Category</b></th>
+																<th><strong><%=_ctx.appRes("UIQuestionsInfo.label.Question")%></strong></th>
+																<th><strong>Category</strong></th>
 																<th>
 																	<div style="padding-right:4px;">
-																		<b><%=_ctx.appRes("UIQuestionsInfo.label.Languages")%></b>
+																		<strong><%=_ctx.appRes("UIQuestionsInfo.label.Languages")%></strong>
 																	</div>
 																</th>
-																<th style="width:60px"><b><%=_ctx.appRes("UIQuestionsInfo.label.Action")%></b></th>
+																<th style="width:60px"><strong><%=_ctx.appRes("UIQuestionsInfo.label.Action")%></strong></th>
 															</tr>
 															<%
 															List questionNotAnswered = uicomponent.getListQuestionNotAnswered() ;
@@ -238,7 +238,7 @@
 															} else {%>
 																<tr>
 																	<td colspan="2" align="center">
-																		<b><%=_ctx.appRes("UIQuestionsInfo.label.ListQuestionIsEmpty")%></b>
+																		<strong><%=_ctx.appRes("UIQuestionsInfo.label.ListQuestionIsEmpty")%></strong>
 																	</td>
 																</tr>
 														<%}%>

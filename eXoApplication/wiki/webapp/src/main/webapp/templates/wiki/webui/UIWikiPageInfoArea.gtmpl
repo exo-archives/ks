@@ -25,7 +25,7 @@
   
   String addedByLabel = _ctx.appRes("UIWikiPageInfoArea.label.AddedBy").replace("{0}", "<a class=\"Link\" href=\"\">" + creator + "</a>").replace("{1}", createdDate);
   String lastModifiedByLabel = _ctx.appRes("UIWikiPageInfoArea.label.LastModifiedBy").replace("{0}", "<a class=\"Link\" href=\"\">" + author + "</a>").replace("{1}", updatedDate);
-  String totalAttachmentsLabel = _ctx.appRes("UIWikiPageInfoArea.label.TotalAttachments").replace("{0}", "<div class=\"TxtFeed\"><b>" + attachmentsTotal + "</b><a class=\"Link\" href=\"" + togglelink + "\">");
+  String totalAttachmentsLabel = _ctx.appRes("UIWikiPageInfoArea.label.TotalAttachments").replace("{0}", "<div class=\"TxtFeed\"><strong>" + attachmentsTotal + "</strong><a class=\"Link\" href=\"" + togglelink + "\">");
   %>
 <div class="UIWikiPageInfoArea">
 	<div class="TxtFeed">
@@ -35,5 +35,5 @@
 	  <a onclick="<%=uicomponent.event(uicomponent.COMPARE_REVISION);%>" id="$viewChangeActionId" style="display:none;">&nbsp;</a>
 	  <% }%>
 	</div>
-	<%= totalAttachmentsLabel %></a>&nbsp;-&nbsp;<b>$versionsTotal</b><a class="Link" href="<%=uicomponent.event(uicomponent.SHOW_REVISION);%>">&nbsp;<%=_ctx.appRes("UIWikiPageInfoArea.label.TotalRevisions")%></a></div>
+	<%= totalAttachmentsLabel %></a>&nbsp;-&nbsp;<strong>$versionsTotal</strong><a class="Link" href="<%=uicomponent.event(uicomponent.SHOW_REVISION);%>">&nbsp;<%=_ctx.appRes("UIWikiPageInfoArea.label.TotalRevisions")%></a></div>
 </div>

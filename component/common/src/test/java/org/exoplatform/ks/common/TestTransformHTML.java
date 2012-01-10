@@ -45,7 +45,7 @@ public class TestTransformHTML extends TestCase{
                   TransformHTML.cleanHtmlCode(str, bbcs));
     
     // for text contain bbcode and tag html   
-    str += " defaul data <a href='http://exoplatform.com'>link</a>. new <b>data</b>" +
+    str += " defaul data <a href='http://exoplatform.com'>link</a>. new <strong>data</strong>" +
                        " test<style>.css{color:blue;}</style>, <script> function a {alert('abc');}</script>tested.";
     assertEquals("text content has bbcode, link and img: http://host.com/abc.jpg defaul data link. new data test, tested.",
                     TransformHTML.cleanHtmlCode(str, bbcs));
@@ -55,7 +55,7 @@ public class TestTransformHTML extends TestCase{
     assertEquals(TransformHTML.EMPTY_STR, TransformHTML.getTitleInHTMLCode(TransformHTML.EMPTY_STR, bbcs));
     assertEquals("1 3", TransformHTML.getTitleInHTMLCode("1  3", bbcs));
 
-    String title = " title [b]title[/b] <b>title</b>&nbsp;&nbsp; title<br/>title      title    title " + new String(Character.toChars(20)) + "title\t\ntitle";
+    String title = " title [b]title[/b] <strong>title</strong>&nbsp;&nbsp; title<br/>title      title    title " + new String(Character.toChars(20)) + "title\t\ntitle";
     assertEquals("title title title title title title title title title", TransformHTML.getTitleInHTMLCode(title, bbcs));
   }
   

@@ -41,7 +41,7 @@
 						 		} else { %>
 						 	<tr>
 								<td colspan="2" align="center">
-									<b><%=_ctx.appRes("UIWatchToolsForm.label.NoEmails");%></b>
+									<strong><%=_ctx.appRes("UIWatchToolsForm.label.NoEmails");%></strong>
 								</td>
 							</tr>
 						 <% } %>

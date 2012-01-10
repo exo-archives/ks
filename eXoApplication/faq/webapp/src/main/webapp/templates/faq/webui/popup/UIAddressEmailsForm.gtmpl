@@ -18,7 +18,7 @@ import org.exoplatform.services.organization.User;
 		</div>
 		
 		<div style="float:left; margin:5px 5px 5px 5px;">
-		  <div class="AddressLabel" style="float:left; padding-left:10px;"><b><%=_ctx.appRes("UIAddressEmailsForm.label.addresses-from-group") %> :</b></div>
+		  <div class="AddressLabel" style="float:left; padding-left:10px;"><strong><%=_ctx.appRes("UIAddressEmailsForm.label.addresses-from-group") %> :</strong></div>
 		  <div style="float:left; margin-left:10px;"><% uiform.renderField(uiform.USER_GROUP) %></div>
 		  <div style="clear:left"><span></span></div>
 		</div>

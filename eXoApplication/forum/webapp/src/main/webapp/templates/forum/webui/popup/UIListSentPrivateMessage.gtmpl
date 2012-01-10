@@ -39,7 +39,7 @@
 					++i;
 					String mailId = mail.getId();
 					String nameMail = mail.getName() ;
-					if(mail.getIsUnread())nameMail = "<b>" + nameMail + "</b>";
+					if(mail.getIsUnread())nameMail = "<strong>" + nameMail + "</strong>";
 					String fromUser = mail.getSendTo();
 					fromUser = ForumUtils.getCalculateListEmail(fromUser);
 					String strFromDate = TimeConvertUtils.convertXTimeAgo(mail.getReceivedDate(), formatDate, setTime);
@@ -65,7 +65,7 @@
 		   } else {%>
 		  <tr>
 				<td colspan="4">
-					<div style="text-align:center"><b><%=_ctx.appRes("UIPrivateMessageForm.label.NoMessages");%></b></div>
+					<div style="text-align:center"><strong><%=_ctx.appRes("UIPrivateMessageForm.label.NoMessages");%></strong></div>
 				</td>
 			</tr>
 		 <% } %>

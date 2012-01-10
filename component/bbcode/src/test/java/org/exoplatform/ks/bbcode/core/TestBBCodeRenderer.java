@@ -127,7 +127,7 @@ public class TestBBCodeRenderer extends TestCase {
   public void testBuiltinBBCodes() {
     BBCodeRenderer renderer = new BBCodeRenderer();
     renderer.setBbCodeProvider(new BuiltinBBCodeProvider());
-    assertEquals("<b>param</b>", renderer.render("[B]param[/B]"));
+    assertEquals("<strong>param</strong>", renderer.render("[B]param[/B]"));
     assertEquals("<i>param</i>", renderer.render("[I]param[/I]"));
     assertEquals("<u>param</u>", renderer.render("[U]param[/U]"));
     assertEquals("<font color=\"blue\">param</font>", renderer.render("[COLOR=blue]param[/COLOR]"));
