@@ -42,9 +42,9 @@
   	Không có bài mới nào.
   </msg>	
 	<msg name="urlEmpty">
-  	Bạn phải nhập <b>Subscription URL</b> trong thiết lập Gadget.<br/> Theo định dạng là: <i>"/{container_name}/{rest_name}/ks/forum/getmessage".</i>
+  	Bạn phải nhập <strong>Subscription URL</strong> trong thiết lập Gadget.<br/> Theo định dạng là: <i>"/{container_name}/{rest_name}/ks/forum/getmessage".</i>
   </msg>	<msg name="urlError">
-  	Đường dẫn <b>Subscription URL</b> bạn nhập không đúng. Nó có định dạng là:<br/> <i>"/{container_name}/{rest_name}/ks/forum/getmessage".</i>
+  	Đường dẫn <strong>Subscription URL</strong> bạn nhập không đúng. Nó có định dạng là:<br/> <i>"/{container_name}/{rest_name}/ks/forum/getmessage".</i>
   </msg>
 	<msg name="setting">
   	Thiết lập

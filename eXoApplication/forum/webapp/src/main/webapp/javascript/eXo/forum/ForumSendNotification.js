@@ -103,9 +103,9 @@ ForumSendNotification.prototype.getContentHTML = function(message){
 	}
 	var content = 
 		'<div style="padding:7px 0px 7px 5px">'+
-		'<b>'+String(this.titeName).replace('TYPE',type)+':</b> <br/>'+message.name+'<br/>'+
-		'<b>'+this.from+':</b> ' + message.from + '<br/>' +
-		'<b>'+this.briefContent+':</b><br/>'+ msg + '<br/>' + link +
+		'<strong>'+String(this.titeName).replace('TYPE',type)+':</strong> <br/>'+message.name+'<br/>'+
+		'<strong>'+this.from+':</strong> ' + message.from + '<br/>' +
+		'<strong>'+this.briefContent+':</strong><br/>'+ msg + '<br/>' + link +
 		'</div>';
 	return content;
 };

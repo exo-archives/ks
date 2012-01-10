@@ -42,9 +42,9 @@
   	No new post
   </msg>	
 	<msg name="urlEmpty">
-  	It is required to enter <b>Subscription URL</b> in the Gadget Settings.<br/> Its format must be: <i>"/{container_name}/{rest_name}/ks/forum/getmessage".</i>
+  	It is required to enter <strong>Subscription URL</strong> in the Gadget Settings.<br/> Its format must be: <i>"/{container_name}/{rest_name}/ks/forum/getmessage".</i>
   </msg>	<msg name="urlError">
-  	Your entered <b>Subscription URL</b> is not correct. Its format must be:<br/> <i>"/{container_name}/{rest_name}/ks/forum/getmessage".</i>
+  	Your entered <strong>Subscription URL</strong> is not correct. Its format must be:<br/> <i>"/{container_name}/{rest_name}/ks/forum/getmessage".</i>
   </msg>
 	<msg name="setting">
   	Setting

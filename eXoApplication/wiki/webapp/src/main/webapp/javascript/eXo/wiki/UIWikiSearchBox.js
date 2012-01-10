@@ -297,7 +297,7 @@ UIWikiSearchBox.prototype.hideMenu = function() {
 
 UIWikiSearchBox.prototype.doHighLight = function(text, keyword) {
   var hiRE = new RegExp("(" + keyword + ")", "gi");
-  text = text.replace(hiRE, "<b>$1</b>");  
+  text = text.replace(hiRE, "<strong>$1</strong>");  
   return text;
 }
 

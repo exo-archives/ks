@@ -52,7 +52,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
           <string>B</string>
         </field>
         <field name="replacement">
-          <string><![CDATA[<b>{param}</b>]]></string>
+          <string><![CDATA[<strong>{param}</strong>]]></string>
         </field>
         <field name="description">
           <string>Set text in bold</string>
@@ -611,7 +611,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
             <embed src="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc={option}&rel=0" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="355">
             </embed>
           </object>
-          <b>{param}</b></div>]]>
+          <strong>{param}</strong></div>]]>
           </string>
         </field>
         <field name="description">

@@ -86,7 +86,7 @@
               <string>B</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<b>{param}</b>]]></string>
+              <string><![CDATA[<strong>{param}</strong>]]></string>
             </field>
             <field name="description">
               <string>Set text in bold</string>
@@ -736,7 +736,7 @@ public class MainTest {
                        width="425" height="355">
                 </embed>
               </object>
-              <b>{param}</b></div>]]>
+              <strong>{param}</strong></div>]]>
               </string>
             </field>
             <field name="description">
