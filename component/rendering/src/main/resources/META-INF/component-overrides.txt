@@ -1,1 +1,2 @@
 org.exoplatform.wiki.rendering.macro.code.CodeMacro
+org.exoplatform.wiki.rendering.transformation.icon.DefaultIconTransformation
