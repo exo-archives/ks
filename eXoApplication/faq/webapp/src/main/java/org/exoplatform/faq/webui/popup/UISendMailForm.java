@@ -204,6 +204,7 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
     questionLanguages.setSelectedValues(new String[] { language });
     questionLanguages.setOptions(listLanguageToReponse);
     questionLanguages.setOnChange("ChangeLanguage");
+    questionLanguages.setHTMLAttribute("id", FILED_QUESTION_LANGUAGE);
     addChild(questionLanguages);
     // question
 
@@ -470,7 +471,7 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
                     .append(contenQuestion).append("</p>").append("<p><strong>").append(sendMailForm.getLabel("Detail")).append("</strong> ")
                     .append(questionLanguage.getDetail()).append("</p>");
           if (answers != null && answers.length > 0) {
-            strBuilder.append(sendMailForm.getLabel("Response")).append("</b> ").append(answers[sendMailForm.posOfResponse].getResponses()).append("</p>");
+            strBuilder.append(sendMailForm.getLabel("Response")).append("<p> ").append(answers[sendMailForm.posOfResponse].getResponses()).append("</p>");
           }
           if(!language.equals(sendMailForm.languageIsResponsed)){
             qsId = qsId.concat(UIQuestions.OBJECT_LANGUAGE).concat(language);
