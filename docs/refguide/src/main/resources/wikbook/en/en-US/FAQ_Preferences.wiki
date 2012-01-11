@@ -12,7 +12,7 @@ The FAQ portlet includes some portlet preferences that you can configure to alte
 
 At runtime, you can use the EDIT mode portlet to set the preferences: 
 
-!images/EditModePreference.png!
+!images/EditModePreference.png|align="center" width="120mm" fo:scalefit="1" html:scalefit="0"!
 
 Alternatively, you can configure the portlet in the _portet-preferences.xml_ file.
 

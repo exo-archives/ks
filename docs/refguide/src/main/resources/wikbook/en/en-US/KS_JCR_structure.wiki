@@ -5,7 +5,7 @@ The root node of eXo Knowledge is exo:application which includes these child nod
 h1. Forum JCR structure {anchor:id=KSref.JCRStructure.ForumJCRStructure}
 Forum is a JCR-based application. The Forum data are saved in eXo-JCR under the Forum Service data directory. The whole JCR structure of Forum can be visualized in the diagram below:
 
-!images/Forum_JCR_Structure.png!
+!images/Forum_JCR_Structure.png|align="center" width="150mm" fo:scalefit="1" html:scalefit="0"!
 
 h2. Forum System {anchor:id=KSref.JCRStructure.ForumJCRStructure.ForumSystem}
 The Forum System node is created from the node type exo:forumSystem. That is defined as a child node of Forum Service and can store nodes with these following node types: exo:banIP, exo:forumUserProfile, exo:statistic, exo:administration under the Forum System.
@@ -305,7 +305,7 @@ h1. FAQ JCR structure {anchor:id=KSref.JCRStructure.FAQJCRStructure}
 FAQ is a JCR-based application. The FAQ data are stored in the eXo-JCR under the faqApp data directory. 
 The whole FAQ JCR structure can be visualized in the following diagram:
 
-!images/FAQ_JCR_Structure.png!
+!images/FAQ_JCR_Structure.png|align="center" width="150mm" fo:scalefit="1" html:scalefit="0"!
 
 h2. Category {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category}
 The Category node is created from the exo:faqCategory node type and defined to add data inside as:
@@ -450,7 +450,7 @@ h1. Poll JCR structure {anchor:id=KSref.JCRStructure.PollJCRStructure}
 
 The Poll data are saved in eXo-JCR under the eXoPolls data directory. The whole JCR structure of Poll can be visualized in the diagram below:
 
-!images/Polls_JCR_Structure.png!
+!images/Polls_JCR_Structure.png|align="center" width="70mm" fo:scalefit="1" html:scalefit="0"!
 
 The Poll node is used to store the default data in a poll. The node type of the Poll node is exo:poll.
 The Poll node is stored under eXoPolls node {{/exo:applications/eXoPolls/%PortalName%/Polls/Poll-id%}} and its node type (exo:polls) has the following properties:
@@ -485,7 +485,7 @@ Other Wiki metadata are organized below _{noformat}/exo:applications/eXoWiki/wik
 
 The whole Wiki JCR structure can be visualized in the following diagram:
 
-!images/wiki-jcr.png!
+!images/wiki-jcr.png|align="center" width="150mm" fo:scalefit="1" html:scalefit="0"!
 
 
 h2. Wiki data
