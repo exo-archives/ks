@@ -18,17 +18,43 @@
  */
 
 function UIWikiSavePage() {
+  this.disableClass = ["SavePage", "MinorEdit", "SaveTemplate"];
+  this.actionToSynchronizeSave = ["SavePage", "MinorEdit", "SaveTemplate"];
 };
 
 UIWikiSavePage.prototype.confirm = function(uicomponentId, isNewMode, pageTitleInputId, untitled,
     titleMessage, addMessage, submitClass, submitLabel,cancelLabel) {
-  var pageTitleInput = document.getElementById(pageTitleInputId); 
-    if (isNewMode ==true && (pageTitleInput.value == untitled)) {
-      eXo.wiki.UIConfirmBox.render(uicomponentId, titleMessage, addMessage,
-          submitClass, submitLabel, cancelLabel);
-      return false;
-    } 
+  
+  var pageTitleInput = document.getElementById(pageTitleInputId);
+  if (isNewMode == true && (pageTitleInput.value == untitled)) {
+    eXo.wiki.UIConfirmBox.render(uicomponentId, titleMessage, addMessage, submitClass, submitLabel, cancelLabel);
+    return false;
+  }
   return true;
 };
+
+UIWikiSavePage.prototype.disableButton = function(parent, action) {
+  var isNeedToSynchronize = false;
+  for (i = 0; i < this.actionToSynchronizeSave.length; i++) {
+    if (action == this.actionToSynchronizeSave[i]) {
+      isNeedToSynchronize = true;
+      break;
+    }
+  }
+  
+  if (isNeedToSynchronize == false) {
+    return;
+  }
+  
+  var DOMUtil = eXo.core.DOMUtil;
+  for (i = 0; i < this.disableClass.length; i++) {
+    var buttons = DOMUtil.findDescendantsByClass(parent, "a", this.disableClass[i]);
+    for (k = 0; k < buttons.length; k++) {
+      DOMUtil.addClass(buttons[k], "DisableButton");
+      buttons[k].href = "javascript:void(0);";
+      buttons[k].onclick = "return false;";
+    }
+  }
+}
 
 eXo.wiki.UIWikiSavePage = new UIWikiSavePage();

@@ -22,3 +22,12 @@
 .UIWikiPageEditForm .UISubmitToolBar .SavePage {
 	margin-right: 10px;
 }
+
+.UIWikiPageEditForm .UISubmitToolBar .DisableButton {
+    opacity: 0.40;
+}
+
+.UIWikiPageEditForm .UISubmitToolBar .DisableButton:HOVER {
+    cursor: wait;
+    color: black;
+}

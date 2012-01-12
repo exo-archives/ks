@@ -42,6 +42,7 @@ UIForm.prototype.submitPageEvent = function(formId, action, params) {
   if(!form.originalAction) form.originalAction = form.action ; 
   form.action =  form.originalAction +  encodeURI(params) ;
   form.submit();
+  eXo.wiki.UIWikiSavePage.disableButton(form, action);
 } ;
 
 eXo.wiki.UIForm = new UIForm();
