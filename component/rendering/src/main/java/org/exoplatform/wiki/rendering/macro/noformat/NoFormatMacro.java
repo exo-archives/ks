@@ -66,7 +66,7 @@ public class NoFormatMacro extends AbstractMacro<Object> {
 
   @Override
   public boolean supportsInlineMode() {
-    return true;
+    return false;
   }
 
 }
