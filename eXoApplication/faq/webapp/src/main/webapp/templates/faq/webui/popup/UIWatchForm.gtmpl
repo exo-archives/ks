@@ -13,7 +13,7 @@
 												<%fieldName = uicomponent.getLabel(field.getName());%>										
 													<td class="FieldLabel">
 														<%if(fieldName != null && fieldName.length() > 0) {%> 
-															<%=uicomponent.getLabel(field.getName()) %>
+															<label for="<%=field.getId()%>"><%=uicomponent.getLabel(field.getName()) %></label>
 														<%}%>
 													</td>
 													<td class="FieldComponent">

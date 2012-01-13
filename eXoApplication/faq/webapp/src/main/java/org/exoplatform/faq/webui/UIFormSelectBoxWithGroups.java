@@ -233,9 +233,12 @@ public class UIFormSelectBoxWithGroups extends UIFormStringInput {
       formId = uiForm.getId();
 
     Writer w = context.getWriter();
-    w.write("<select class=\"selectbox\" name=\"");
+    w.write("<select class=\"selectbox\" id=\"");
+    w.write(getId());
+    w.write("\" name=\"");
     w.write(name);
     w.write("\"");
+    renderHTMLAttributes(w);
     if (onchange_ != null) {
       w.append(" onchange=\"").append(renderOnChangeEvent(uiForm)).append("\"");
     }

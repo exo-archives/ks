@@ -13,26 +13,26 @@ if(!uicomponent.isEditPortlet_){
 									<%
 									if(uicomponent.isEditPortlet_){%>
 										<tr>
-											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.display-mode"); %></td>
+											<td class="FieldLabel"><label for="<%=uicomponent.DISPLAY_MODE%>"><%= _ctx.appRes("UISettingForm.label.display-mode"); %></label></td>
 											<td class="FieldComponent">
 												<%uicomponent.renderField(uicomponent.DISPLAY_MODE)%>
 											</td>
 										</tr>
 								<%}%>
 										<tr>
-											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.order-by"); %></td>
+											<td class="FieldLabel"><label for="<%=uicomponent.ORDER_BY%>"><%= _ctx.appRes("UISettingForm.label.order-by"); %></label></td>
 											<td class="FieldComponent">
 												<%uicomponent.renderField(uicomponent.ORDER_BY)%>
 											</td>
 										</tr>
 										<tr>
-											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.order-type"); %></td>
+											<td class="FieldLabel"><label for="<%=uicomponent.ORDER_TYPE%>"><%= _ctx.appRes("UISettingForm.label.order-type"); %></label></td>
 											<td class="FieldComponent">
 												<%uicomponent.renderField(uicomponent.ORDER_TYPE)%>
 											</td>
 										</tr>
 										<tr>
-											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.option.vote"); %></td>
+											<td class="FieldLabel"><label for="<%=uicomponent.ITEM_VOTE%>"><%= _ctx.appRes("UISettingForm.label.option.vote"); %></label></td>
 											<td class="FieldComponent">
 												<%uicomponent.renderField(uicomponent.ITEM_VOTE)%>
 											</td>
@@ -195,7 +195,7 @@ if(!uicomponent.isEditPortlet_){
 																			%>
 																				<tr>
 																					<td class="FieldLabel" style="white-space:nowrap; width:120px;">
-																						<%=_ctx.appRes("FAQPortletSetting.label." + childForm.getName())%>
+																						<label for="<%=childForm.getId();%>"><%=_ctx.appRes("FAQPortletSetting.label." + childForm.getName())%></label>
 																					</td>
 																					<td class="FieldComponent">
 																						<div style="float:left; width:90%;">
@@ -253,10 +253,10 @@ if(!uicomponent.isEditPortlet_){
 										        	<div class="FAQCategoryTreeView">
 										        			<div style="float:left" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this)">
 															 	 		<%formInput.renderChild(cate.getCategory().getId());%>
-															 	 </div>
-																	<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')">
-																		<%= cate.getCategory().getName();%>
-																	</a>
+															 		</div>
+															 		<label for="<%=cate.getCategory().getId()%>">
+																		<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
+																	</label>
 															</div>
 															<div class="FAQChildNodeContainer" id="FAQViewChild$i">
 															
@@ -268,33 +268,33 @@ if(!uicomponent.isEditPortlet_){
 														    		<div style="float:left" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this)">
 																 	 		<%formInput.renderChild(cate.getCategory().getId());%>
 																 	 </div>
-														    		<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')">
-														    			<%= cate.getCategory().getName();%>
-														    		</a>
+																 		<label for="<%=cate.getCategory().getId()%>">
+																			<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
+																		</label>
 														    	</div>
-														    </div>
-															  <div class="FAQChildNodeContainer" id="FAQViewChild$i">
+														   	</div>
+																<div class="FAQChildNodeContainer" id="FAQViewChild$i">
 										    <%
 										        } else {%>
 										     		<%for(int j = 0 ; j < (-1*sub) + 1; j ++) {%>
 											    				</div>
 											    			</div>
 										     		<%}%>
-											      <div class="FAQDomNode">
-														 <div class="Icon FAQCategoryTreeView">
-														 	 <div style="float:left" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this)">
-														 	 		<%formInput.renderChild(cate.getCategory().getId());%>
-														 	 </div>
-															 <a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')">
-															 	<%= cate.getCategory().getName();%>
-															 </a>
-														 </div>
-														 <div class="FAQChildNodeContainer" id="FAQViewChild$i">
+											    	<div class="FAQDomNode">
+															<div class="Icon FAQCategoryTreeView">
+																<div style="float:left" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this)">
+															 	 		<%formInput.renderChild(cate.getCategory().getId());%>
+															 	</div>
+																<label for="<%=cate.getCategory().getId()%>">
+																	<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
+																</label>
+															</div>
+															<div class="FAQChildNodeContainer" id="FAQViewChild$i">
 										     <%
 										        }
 										      }
 										    }%>
-										    	</div>
+													</div>
 										    </div>
 										    <%
 										    for(i = 1 ; i < listCate.get(n - 1).getDeft() ; i ++) {%>

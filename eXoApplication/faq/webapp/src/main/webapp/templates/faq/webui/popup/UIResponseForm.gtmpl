@@ -32,7 +32,7 @@
 							<%fieldName = uicomponent.getLabel(field.getName());
 								if(!fieldName.equals(uicomponent.getId())) { %>												
 								<td class="FieldLabel" style="white-space:nowrap; width:15%">
-									<%=uicomponent.getLabel(field.getName()) %> :
+									<label for="<%=field.getId()%>"><%=uicomponent.getLabel(field.getName()) %> :</label>
 								</td>
 								<td class="FieldComponent" style="width:85%">
 									<%if(field.getName().equals("QuestionRelation")){ 

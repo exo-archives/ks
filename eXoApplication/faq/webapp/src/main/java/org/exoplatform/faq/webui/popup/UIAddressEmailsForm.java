@@ -164,15 +164,18 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
   @SuppressWarnings("unchecked")
   public List<User> getUsers() throws Exception {
     List<User> users = new ArrayList<User>(uiPageList_.getCurrentPageData());
+    String userName;
     for (User c : users) {
-      UICheckBoxInput uiInput = getUICheckBoxInput(c.getUserName());
-      if (uiInput == null)
-        addUIFormInput(new UICheckBoxInput(c.getUserName(), c.getUserName(), null));
-    }
-    for (User c : checkedList_.values()) {
-      UICheckBoxInput uiInput = getUICheckBoxInput(c.getUserName());
-      if (uiInput != null)
+      userName = c.getUserName();
+      UICheckBoxInput uiInput = getUICheckBoxInput(userName);
+      if (uiInput == null){
+        uiInput = new UICheckBoxInput(userName, userName, null);
+        addUIFormInput(uiInput);
+      }
+      if(checkedList_.containsKey(userName)) {
         uiInput.setChecked(true);
+      }
+      uiInput.setHTMLAttribute("title", c.getFullName());
     }
     return users;
   }

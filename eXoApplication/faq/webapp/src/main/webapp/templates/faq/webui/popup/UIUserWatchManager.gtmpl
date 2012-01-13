@@ -42,7 +42,7 @@
 		      </div>
 		      <% END RECOMMENT TAB FOR WATCH QUESTION */%>
 		      <% uiform.begin() %>
-	        <input type="hidden" id="<%=uicomponent.RENDER_TAB%>" name="<%=uicomponent.RENDER_TAB%>" value="$uicomponent.selectedTabId">
+	        <input type="hidden" id="<%=uicomponent.RENDER_TAB%>" title="<%=uicomponent.RENDER_TAB%>" name="<%=uicomponent.RENDER_TAB%>" value="$uicomponent.selectedTabId">
 					<div style="background-color:#F3F3F3;">
 	        	<!-- div class="UITabContentContainer" -->
 	        	<div class="UITabContentContainer" style="border: 1px solid #C7C7C7;">

@@ -19,7 +19,7 @@
 					%>
 							  <tr>
 							    <td class="FieldLabel" style="width:100px; text-align:right">
-							      <%=uicomponent.getLabel(field.getName()) %> :
+							      <label for="<%=field.getId()%>"><%=uicomponent.getLabel(field.getName()) %> :</label>
 							    </td>
 							    <td class="FieldComponent" style="padding-left:4px; white-space:nowrap;">
 										<% uiform.renderField(field) %>
@@ -31,15 +31,16 @@
 								String link = uiform.event(uicomponent.DELETE_LANGUAGE_ACTION, uicomponent.id,"delete question");
 						%>
 								<tr>
-									<td class="FieldLabel" style="width:100px; text-align:right"><%=uicomponent.getLabel(field.getName()) %> :</td>
+									<td class="FieldLabel" style="width:100px; text-align:right">
+										<label for="<%=field.getId()%>"><%=uicomponent.getLabel(field.getName()) %> :</label>
+									</td>
 									<td class="FieldComponent" style="padding-left:4px; white-space:nowrap;">
-										<div style="float:left;">
+										<div class="ClearFix">
 											<div style="float:left;"><% uiform.renderField(field) %></div>
 											<div onclick="$link" style="float:left; width:24px;">
 												<div class="DustBinIcon"><span></span></div>
 											</div>
 										</div>
-										<div style="clear:left;"><span></span></div>
 									</td>
 								</tr>
 						<%} else {%>
@@ -47,7 +48,7 @@
 									<%fieldName = uicomponent.getLabel(field.getName());
 										if(!fieldName.equals(uicomponent.getId())) {%>												
 											<td class="FieldLabel" style="width:100px">
-												<%=uicomponent.getLabel(field.getName()) %> :
+												<label for="<%=field.getId()%>"><%=uicomponent.getLabel(field.getName()) %> :</label>
 											</td>
 											<td class="FieldComponent" style="white-space:normal;">
 													<% uiform.renderField(field) %>
@@ -71,11 +72,11 @@
 								<div style="float:left;">
 									<div style="float:left; padding:0px 4px 0px 4px;">
 										<%uiform.renderChild(uicomponent.IS_APPROVED);%>
-										<%=_ctx.appRes("UIQuestionForm.label.IsApproved")%>
+										<label for="<%=uicomponent.IS_APPROVED%>"><%=_ctx.appRes("UIQuestionForm.label.IsApproved")%></label>
 									</div>
 									<div style="float:left; padding:0px 4px 0px 4px;">
 										<%uiform.renderChild(uicomponent.IS_ACTIVATED);%>
-										<%=_ctx.appRes("UIQuestionForm.label.IsActivated")%>
+										<label for="<%=uicomponent.IS_ACTIVATED%>"><%=_ctx.appRes("UIQuestionForm.label.IsActivated")%></label>
 									</div>
 								</div>
 							</td>

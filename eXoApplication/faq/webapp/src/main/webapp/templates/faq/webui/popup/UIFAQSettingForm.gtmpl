@@ -88,11 +88,9 @@
 												      <div class="FAQDomNode" style="padding-left:30px">
 																<div style="margin:6px 0px;line-height:22px;" id="FAQCate$i">
 																	<div class="Icon CategoryIcon" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this);">
-																		<input type="checkbox" class="checkbox" value="false" name="$cateId" $checked/>
+																		<input title="<%= cate.getCategory().getName();%>" type="checkbox" class="checkbox" value="false" name="$cateId" $checked/>
 																 	</div>
-																	<div class="LabelNameCategory">
-																		<%= cate.getCategory().getName();%>
-																	</div>
+																	<div class="LabelNameCategory"><%= cate.getCategory().getName();%></div>
 																	<div style="clear:left;"><span></span></div>
 																</div>
 																<div class="FAQChildNodeContainer" id="FAQViewChild$i">
@@ -105,7 +103,7 @@
 												      <div class="FAQDomNode" style="padding-left:30px">
 											        	<div style="margin:6px 0px;line-height:22px;">
 											        			<div class="Icon CategoryIcon" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this);">
-																			<input type="checkbox" class="checkbox" value="false" name="$cateId" $checked/>
+																			<input title="<%= cate.getCategory().getName();%>"type="checkbox" class="checkbox" value="false" name="$cateId" $checked/>
 																		</div>
 																		<div class="LabelNameCategory">
 																			<%= cate.getCategory().getName();%>
@@ -120,7 +118,7 @@
 																	<div style="margin:6px 0px;line-height:22px;">
 															    	<div id="FAQCate$i">
 															    		<div class="Icon CategoryIcon" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this);">
-																				<input type="checkbox" class="checkbox" value="false" name="$cateId" $checked/>
+																				<input title="<%= cate.getCategory().getName();%>" type="checkbox" class="checkbox" value="false" name="$cateId" $checked/>
 																			</div>
 															    		<div class="LabelNameCategory">
 															    			<%= cate.getCategory().getName();%>s
@@ -138,7 +136,7 @@
 												      <div class="FAQDomNode" style="padding-left:30px">
 															 <div style="margin:6px 0px;line-height:22px;">
 															 	 <div class="Icon CategoryIcon" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this);">
-																		<input type="checkbox" class="checkbox" value="false" name="$cateId" $checked/>
+																		<input title="<%= cate.getCategory().getName();%>" type="checkbox" class="checkbox" value="false" name="$cateId" $checked/>
 																 </div>
 																 <div class="LabelNameCategory">
 																 	<%= cate.getCategory().getName();%>
@@ -164,7 +162,7 @@
 
 									<% } else if(tabconten.id.equals(uiform.EDIT_TEMPLATE_TAB)) {%>
 											<div class="EditTempLateContent">
-												<div class="LabelContent"><%=uiform.getLabel(uiform.FIELD_TEMPLATE_TEXTARE);%>:</div>
+												<div class="LabelContent"><label for="<%=uiform.FIELD_TEMPLATE_TEXTARE%>"><%=uiform.getLabel(uiform.FIELD_TEMPLATE_TEXTARE);%>:</label></div>
 												<div class="TextAreContent">
 													<%uiform.renderField(tabconten.getChildById(uiform.FIELD_TEMPLATE_TEXTARE)) ;%>
 												</div>
@@ -176,9 +174,9 @@
 										%>
 											<div class="EditTempLateContent">
 												<div style="width:200px; margin:30px auto;line-height:20px;">
-													<div class="FloatLeft"><%=uiform.getLabel(uiform.FIELD_USEAJAX_CHECKBOX);%>:&nbsp; &nbsp;</div>
+													<div class="FloatLeft"><label for="<%=uiform.FIELD_USEAJAX_CHECKBOX;%>"><%=uiform.getLabel(uiform.FIELD_USEAJAX_CHECKBOX);%>:&nbsp; &nbsp;</label></div>
 													<div class="FloatLeft" style="padding-top:3px">
-														<input type="checkbox" class="checkbox" value="false" $checkedBox name="<%=uiform.FIELD_USEAJAX_CHECKBOX;%>"/>
+														<input type="checkbox" class="checkbox" value="false" $checkedBox name="<%=uiform.FIELD_USEAJAX_CHECKBOX;%>" id="<%=uiform.FIELD_USEAJAX_CHECKBOX;%>"/>
 													</div>
 													<div style="clear:left;"><span></span></div>
 												</div>

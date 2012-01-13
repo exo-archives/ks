@@ -1,5 +1,32 @@
 @import url('UIMoveCategoryForm/Stylesheet.css') ;
 
+.FL {
+	float: left;
+}
+
+.FR {
+	float: right;
+}
+
+h1 {font-size: 22px;}
+
+h2 {font-size: 18px;}
+
+h3 {font-size: 16px;}
+
+h4 {font-size: 14px;}
+
+h5 {font-size: 12px;}
+
+h6 {font-size: 11px;}
+
+
+ul,li{
+	margin: 0px;
+	padding: 0px;
+	list-style-type: none;
+}
+
 .UIWindow .UIAnswersPortlet {
 	min-width: 900px;
 	border: none;
@@ -179,8 +206,7 @@
 }
 
 .UIAnswersPortlet .UISearchForm input {
-	float:right;
-	margin:4px 5px 0px 5px;
+	margin: 2px;
 	width:150px;
 	height: 13px;
 }
@@ -2135,23 +2161,45 @@
 
 /*******************************************UI Page Interrator***************************/
 
+.UIAnswersPortlet .UIInsertAddress .SearchContent {
+  border:1px solid #b7b7b7;
+  padding:10px;
+  margin:10px 0px;
+}
+
+.UIAnswersPortlet .UIInsertAddress .AddressLabel {
+  float: left;
+  font-weight: bold;
+  line-height: 24px;
+  padding-left: 10px;
+  text-align: right;
+  width: 20%;
+}
+
+.UIAnswersPortlet .UIInsertAddress .SearchIcon {
+  float: left;
+  padding: 3px;
+	cursor: pointer;
+  background-position: center;
+}
+
 .UIAnswersPortlet .UIInsertAddress .UIPageIterator {		
 	margin: 0px ;
 	padding: 3px 0px 0px 0px ;
 }
 
-.UIAnswersPortlet .UIInsertAddress .UIPageIterator .PageIteratorContainer {		
+.UIAnswersPortlet .UIInsertAddress .PageIteratorContainer {		
 	float: right ;
 	overflow: hidden; 
 }
 
-.UIAnswersPortlet .UIInsertAddress .UIPageIterator .PageIteratorContainer .LeftPageIteratorBlock{		
+.UIAnswersPortlet .UIInsertAddress .PageIteratorContainer .LeftPageIteratorBlock{		
 	line-height: 18px ; 
 	float: right ;
 	margin-right: 15px;
 }
 
-.UIAnswersPortlet .UIInsertAddress .UIPageIterator .PageIteratorContainer .RightPageIteratorBlock{		
+.UIAnswersPortlet .UIInsertAddress .PageIteratorContainer .RightPageIteratorBlock{		
 	float: right ;
 }
 

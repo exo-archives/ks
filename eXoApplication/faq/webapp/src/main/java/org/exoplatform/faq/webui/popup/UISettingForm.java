@@ -217,7 +217,6 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
 
       DisplayTab.addUIFormInput((new UIFormSelectBox(DISPLAY_MODE, DISPLAY_MODE, displayMode)).setValue(faqSetting_.getDisplayMode()));
       DisplayTab.addUIFormInput((new UIFormSelectBox(ORDER_BY, ORDER_BY, orderBy)).setValue(String.valueOf(faqSetting_.getOrderBy())));
-      ;
       DisplayTab.addUIFormInput((new UIFormSelectBox(ORDER_TYPE, ORDER_TYPE, orderType)).setValue(String.valueOf(faqSetting_.getOrderType())));
       DisplayTab.addUIFormInput((new UICheckBoxInput(ENABLE_VOTE_COMMNET, ENABLE_VOTE_COMMNET, false)).setChecked(faqSetting_.isEnanbleVotesAndComments()));
       DisplayTab.addUIFormInput((new UICheckBoxInput(ENABLE_ANONYMOUS_SUBMIT_QUESTION, ENABLE_ANONYMOUS_SUBMIT_QUESTION, false)).setChecked(faqSetting_.isEnableAnonymousSubmitQuestion()));

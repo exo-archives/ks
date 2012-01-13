@@ -6,7 +6,7 @@
 					<tbody>
 						<tr>
 							<td style="white-space:nowrap;" align="right">
-							<div style="padding-right:10px;line-height:24px;*line-height:20px"><%=_ctx.appRes("UICommentForm.title.Author")%>: </div>
+							<div style="padding-right:10px;line-height:24px;*line-height:20px"><label for="<%=uicomponent.TITLE_USERNAME%>"><%=_ctx.appRes("UICommentForm.title.Author")%>:</label></div>
 							</td>
 							<td>
 								<div style="padding-right:10px;line-height:24px"><% uiform.renderChild(uicomponent.TITLE_USERNAME) %></div>

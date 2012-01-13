@@ -270,8 +270,8 @@
     
     <!-- View list categories -->
     <div style="overflow:auto;float:right;padding-right:10px;">
-    	<%=_ctx.appRes("UIQuestionsInfo.label.SelectCategory")%>&nbsp;:&nbsp;
-			<% uicomponent.renderChild("ListCategories") ; %>
+    	<label for="<%=uicomponent.LIST_CATEGORIES%>"><%=_ctx.appRes("UIQuestionsInfo.label.SelectCategory")%>&nbsp;:&nbsp;</label>
+			<% uicomponent.renderChild(uicomponent.LIST_CATEGORIES) ; %>
 		</div>
     
     </div>  

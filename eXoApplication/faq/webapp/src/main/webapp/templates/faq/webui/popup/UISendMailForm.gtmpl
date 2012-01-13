@@ -30,26 +30,26 @@
 													String linkActionTo = uicomponent.event("To") ;
 												%>
 												<div style="float:right; margin-right:5px;">
-													<a href="$linkActionTo" style="text-decoration:underline;">$fieldName</a>:
+													<label for="<%=name%>"><a href="$linkActionTo" style="text-decoration:underline;">$fieldName</a>:</label>
 												</div>
 											<%
 											} else if(name.equals("AddCc")){
 													String linkActionCc = uicomponent.event("Cc") ;
 												%>
 												<div style="float:right; margin-right:5px;">
-													<a href="$linkActionCc" style="text-decoration:underline;">$fieldName</a>:
+													<label for="<%=name%>"><a href="$linkActionCc" style="text-decoration:underline;">$fieldName</a>:</label>
 												</div>
 											<%
 											} else if(name.equals("AddBcc")){
 													String linkActionBcc= uicomponent.event("Bcc") ;
 												%>
 												<div style="float:right; margin-right:5px;">
-													<a href="$linkActionBcc" style="text-decoration:underline;">$fieldName</a>:
+													<label for="<%=name%>"><a href="$linkActionBcc" style="text-decoration:underline;">$fieldName</a>:</label>
 												</div>
 											<%
 											} else {
 											%>
-											<div style="float:right; margin-right:5px;">$fieldName: </div>
+											<div style="float:right; margin-right:5px;"><label for="<%=name%>">$fieldName:</label></div>
 											<%
 											} 
 										}
