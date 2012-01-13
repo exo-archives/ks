@@ -188,9 +188,11 @@ Besides the _MoreExtensionContainer_ type, action extension may be one of these 
 h3. Deploy new action extension      {anchor:id=KSref.Extend_actions_over_a_wiki_page_from_external_jars.Deploy_new_action_extension}
 Follow these steps to deploy your new action extension:
 
-*1*. Build the project by using the *mvn clean install* command.
-*2*. Copy the _target/example-1.0-SNAPSHOT.jar_ file into the _TOMCAT_HOME/webapps/wiki.war/WEB-INF/lib/_ directory.
-*3*. Run the tomcat and go to Wiki application, you should see the result as below:
+*1.* Build the project by using the *mvn clean install* command.
+
+*2.* Copy the _target/example-1.0-SNAPSHOT.jar_ file into the _TOMCAT_HOME/webapps/wiki.war/WEB-INF/lib/_ directory.
+
+*3.* Run the tomcat and go to Wiki application, you should see the result as below:
 
 !images/New_action.png|align="center" width="150mm" fo:scalefit="1" html:scalefit="0"!
 
