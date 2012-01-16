@@ -137,8 +137,6 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
       printBeginParameters(parameters, true);
     }
 
-    print("{group}");
-
     // Create a new listener stack in order to preserve current states, to
     // handle the group.
     getListenerChain().pushAllStackableListeners();
@@ -162,7 +160,6 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
    */
   @Override
   public void endGroup(Map<String, String> parameters) {
-    print("{group}");
 
     // Restore previous listeners that were stacked
     getListenerChain().popAllStackableListeners();
@@ -487,7 +484,10 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
   @Override
   public void beginList(ListType listType, Map<String, String> parameters) {
     if (getBlockState().getListDepth() == 1) {
-      printEmptyLine();
+      if (!getBlockState().isInLine()) {
+        print("\n");
+      } else
+        printEmptyLine();
     } else {
       getPrinter().print("\n");
     }
