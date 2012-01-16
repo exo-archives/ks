@@ -44,7 +44,7 @@
 					<tr>
 						<td class="UserContainer">
 							<div class="UserContent">
-								<img src="<%=uiform.getAvatarUrl(userName);%>" class="ImgAvatarBorder" width="120px" height="120px" alt=""/>
+								<img src="<%=uiform.getAvatarUrl(userName);%>" class="ImgAvatarBorder" width="120px" height="120px" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
 								<div class="Rank">$fullName</div>
 								<div class="InfoUser">
 									<div><%=_ctx.appRes("UIViewUserProfile.label.JoinDate");%>: $createdDate</div>

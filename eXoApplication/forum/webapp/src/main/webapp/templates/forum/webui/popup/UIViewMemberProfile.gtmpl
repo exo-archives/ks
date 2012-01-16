@@ -62,7 +62,7 @@
 								String userTitle = userProfileViewer.getUserTitle();
 								if(userProfileViewer.getIsDisplayAvatar()) {
 								%>
-								<img src="<%=uiform.getAvatarUrl()%>" class="ImgAvatar ImgAvatarBorder" alt=""/>
+								<img src="<%=uiform.getAvatarUrl()%>" class="ImgAvatar ImgAvatarBorder" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
 								<% } %>
 								<div class="Rank">$userTitle</div>
 								<div class="InfoMember">

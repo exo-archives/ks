@@ -20,7 +20,7 @@
 		    %>
 		    <div id="FAQCateRoot" style="padding-left:20px;">
 					<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQRootChildren')" ondblclick="$link">
-						<img src="/faq/skin/DefaultSkin/webui/background/HomeIcon.gif" alt="<%=uicomponent.homeCategoryName%>"/>
+						<img alt="<%= _ctx.appRes("UICategoryForm.label.category-home"); %>" src="/faq/skin/DefaultSkin/webui/background/HomeIcon.gif" alt="<%=uicomponent.homeCategoryName%>"/>
 					</a>
 				</div>
     		<div style="display:none; padding-left:30px; margin-top:10px;" id="FAQRootChildren">

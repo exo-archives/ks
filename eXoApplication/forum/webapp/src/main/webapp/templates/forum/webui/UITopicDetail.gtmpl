@@ -488,7 +488,7 @@
                 %>
                 <div class="ContentAction ClearFix" onclick="eXo.ks.KSUtils.showUserMenu(this, event)">
                   <div class="ImgAvatarBorder FL">
-                    <img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt=""/>
+                    <img src="<%=uiform.getAvatarUrl(post.getOwner());%>" class="ImgAvatar" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
                   </div>
                   <div class="UIPopupInfoMenu">
                     <div class="UIPopupInfoContent">
@@ -630,7 +630,7 @@
                     <% if(typeFile.indexOf("image") >= 0) {
                        String attLink = uicomponent.getImageUrl(attachment.getPath());
                     %>
-                      <a class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;" alt=""/></a> 
+                      <a class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;" alt="$titleFile"/></a> 
                       <div class="LabelBox">
                         <a class="AttachmentIcon JPGIcon" onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript:void(0)" class="AttachmentLabel" title="$titleFile">$fileName</a>
                         <div class="Size"><%=_ctx.appRes(uiformId + ".label.Size");%>: ${size}</div>

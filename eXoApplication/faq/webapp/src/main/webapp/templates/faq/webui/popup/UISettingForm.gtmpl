@@ -50,7 +50,7 @@ if(!uicomponent.isEditPortlet_){
 											<td class="FieldLabel"><%=_ctx.appRes("UISettingForm.label.Avatar")%>:</td>
 											<td>
 													<div style="float:left; color:blue; white-space:nowrap; padding:2px 5px; text-align:center;">
-														<img src="${uicomponent.getAvatarUrl()}" class="SmallImgAvatar ImgAvatarBorder" alt=""/>
+														<img src="${uicomponent.getAvatarUrl()}" class="SmallImgAvatar ImgAvatarBorder" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
 														<br/>
 														<a href="javaScript:void(0);" onclick="<%=uicomponent.event("ChangeAvatar")%>" style="color:blue; cursor:pointer;">
 															<%=_ctx.appRes("UISettingForm.action.ChangeAvatar")%>

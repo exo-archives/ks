@@ -40,7 +40,7 @@
 													if(uicomponent.faqSetting_.isEnableViewAvatar()) {
 												%>				
 													<div class="AvatarContainer">
-														<img class="FAQAvatar ImgAvatarBorder" src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="Avatar"/>
+														<img class="FAQAvatar ImgAvatarBorder" src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
 													</div>
 												<%}%>
 												<!-- ========================================= view author's infor ================================ -->
@@ -178,7 +178,7 @@
 														%>
 																<div style="float:left; margin:10px 5px 0px 12px;" id="divId${fileName}">
 																	<div class="Image">
-																		<img style="cursor:pointer;" id="imgView${fileName}" src="$attLink" width="100px" height="100px" alt="" class="AttachmentFile"/>
+																		<img style="cursor:pointer;" id="imgView${fileName}" src="$attLink" width="100px" height="100px" alt="$fileName" class="AttachmentFile"/>
 																	</div>
 																	<div style="clear:left;"><span></span></div>
 											 						<div class="LabelBox">
@@ -303,7 +303,7 @@
 																				if(uicomponent.faqSetting_.isEnableViewAvatar()) {
 																				%>				
 																				<div class="AvatarContainer" style="margin-top:0px;">
-																					<img class="FAQAvatar ImgAvatarBorder" src="<%=uicomponent.getAvatarUrl(answer.getResponseBy())%>" alt="Avatar"/>
+																					<img class="FAQAvatar ImgAvatarBorder" src="<%=uicomponent.getAvatarUrl(answer.getResponseBy())%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
 																				</div>
 																				<%}%>
 																				<div class="AuthorInfor" style="text-align:center">
@@ -386,7 +386,7 @@
 																					if(uicomponent.faqSetting_.isEnableViewAvatar()) {
 																					%>				
 																					<div class="AvatarContainer" style="margin-top:0px;">
-																						<img class="FAQAvatar ImgAvatarBorder" src="<%=uicomponent.getAvatarUrl(comment.getCommentBy())%>" alt="Avatar"/>
+																						<img class="FAQAvatar ImgAvatarBorder" src="<%=uicomponent.getAvatarUrl(comment.getCommentBy())%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
 																					</div>
 																					<%}%>
 																					<div class="AuthorInfor" style="text-align:center">

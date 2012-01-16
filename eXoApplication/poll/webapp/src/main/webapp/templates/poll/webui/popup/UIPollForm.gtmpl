@@ -55,7 +55,7 @@
 							</td>
 							<td class="Label">
 								<div class="Display" style="display:block;">
-									<img src="/eXoResources/skin/sharedImages/Blank.gif" class="MultiFieldAction AddNewNodeIcon" alt="Add" title="<%=_ctx.appRes("UIPollForm.label.AddGroup"); %>" onclick="<%=uicomponent.event("AddGroup")%>">
+									<img src="/eXoResources/skin/sharedImages/Blank.gif" class="MultiFieldAction AddNewNodeIcon" alt="<%=_ctx.appRes("UIPollForm.label.AddGroup"); %>" title="<%=_ctx.appRes("UIPollForm.label.AddGroup"); %>" onclick="<%=uicomponent.event("AddGroup")%>">
 								</div>
 							</td>
 							

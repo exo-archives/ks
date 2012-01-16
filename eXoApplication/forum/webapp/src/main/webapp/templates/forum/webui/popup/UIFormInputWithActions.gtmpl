@@ -49,7 +49,7 @@
 												    </td>
 												    <td class="FieldComponent" style="padding:2px 0px 3px 0px;">
 												    	<div>
-																<img src="<%=uicomponent.getAvatarUrl()%>" width="70px" style="margin:5px;" alt=""/>
+																<img src="<%=uicomponent.getAvatarUrl()%>" width="70px" style="margin:5px;" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar")%>"/>
 															</div>
 															<div style="text-align:left">
 																<a href="<%=uiform.event("Attachment")%>" style="color:blue;">

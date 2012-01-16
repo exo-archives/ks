@@ -512,7 +512,7 @@
               <string>IMG</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<img border="0" alt="" src="{param}" class="inlineimg"/>]]></string>
+              <string><![CDATA[<img border="0" alt="image" src="{param}" class="inlineimg"/>]]></string>
             </field>
             <field name="description">
               <string>The [img] tag allows you to shows the image indicated by {url}</string>

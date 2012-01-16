@@ -397,7 +397,7 @@
                               if(uicomponent.faqSetting_.isEnableViewAvatar()) {
                             %>        
                               <div class="AvatarContainer">
-                                <img class="FAQAvatar ImgAvatarBorder" src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="Avatar"/>
+                                <img class="FAQAvatar ImgAvatarBorder" src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
                               </div>
                             <%}%>
                             <!-- ========================================= view author's infor ================================ -->
@@ -789,7 +789,7 @@
                                   <div style="float:left; margin:10px 5px 0px 12px;" id="divId${fileName}">
                                     <div class="Image">
                                       <div onclick="eXo.faq.UIAnswersPortlet.showPicture('$attLink');">
-                                        <img style="cursor:pointer;" id="imgView${fileName}" src="$attLink" width="100px" height="100px" alt="" class="AttachmentFile"/>
+                                        <img style="cursor:pointer;" id="imgView${fileName}" src="$attLink" width="100px" height="100px" alt="$fileName" class="AttachmentFile"/>
                                       </div>
                                     </div>
                                     <div style="clear:left;"><span></span></div>
@@ -923,7 +923,7 @@
                                             if(uicomponent.faqSetting_.isEnableViewAvatar()) {
                                             %>        
                                             <div class="AvatarContainer" style="margin-top:0px;">
-                                              <img class="FAQAvatar ImgAvatarBorder" src="<%=uicomponent.getAvatarUrl(owner);%>" alt="Avatar"/>
+                                              <img class="FAQAvatar ImgAvatarBorder" src="<%=uicomponent.getAvatarUrl(owner);%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
                                             </div>
                                             <%}%>
                                             <div class="AuthorInfor" style="text-align:center">
@@ -1097,7 +1097,7 @@
                                               if(uicomponent.faqSetting_.isEnableViewAvatar()) {
                                               %>        
                                               <div class="AvatarContainer" style="margin-top:0px;">
-                                                <img class="FAQAvatar ImgAvatarBorder" src="<%=uicomponent.getAvatarUrl(owner);%>" alt="Avatar"/>
+                                                <img class="FAQAvatar ImgAvatarBorder" src="<%=uicomponent.getAvatarUrl(owner);%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
                                               </div>
                                               <%}%>
                                               <div class="AuthorInfor" style="text-align:center">

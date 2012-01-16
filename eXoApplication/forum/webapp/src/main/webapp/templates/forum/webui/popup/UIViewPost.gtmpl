@@ -62,7 +62,7 @@
 								<% if(typeFile.indexOf("image") >= 0) {
 									String attLink = uicomponent.getImageUrl(attachment.getPath());
 								%>
-									<a class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" src="$attLink" height="100px;" alt=""/></a>
+									<a class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" src="$attLink" height="100px;" alt="$titleFile"/></a>
 									<div class="LabelBox">
 										<a class="AttachmentIcon JPGIcon" onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)" class="AttachmentLabel" title="$titleFile">$fileName</a>
 										<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>

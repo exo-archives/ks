@@ -111,7 +111,7 @@
 								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();	
 									if(isDisplayAvatar) {
 								%>
-								<img src="<%=uiform.getAvatarUrl(owner);%>" class="ImgAvatar ImgAvatarBorder" alt=""/>
+								<img src="<%=uiform.getAvatarUrl(owner);%>" class="ImgAvatar ImgAvatarBorder" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar");%>"/>
 								<% } %>
 								<div class="InfoMember">
 									<span><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>: $joinDate</span>
@@ -172,7 +172,7 @@
 										<% if(typeFile.indexOf("image") >= 0) {
 										   String attLink = uicomponent.getImageUrl(attachment.getPath());
 										%>
-											<a href="#" class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;" alt=""/></a> 
+											<a href="#" class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;" alt="$titleFile"/></a> 
 						 					<div class="LabelBox">
 						 						<a class="AttachmentIcon JPGIcon" onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)" title="$titleFile">$fileName</a>
 						 						<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
