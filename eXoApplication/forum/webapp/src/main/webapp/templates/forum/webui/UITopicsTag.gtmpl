@@ -266,7 +266,7 @@
                 checked = "checked=\"checked\"";
                 }
               %>
-              <td class="Tdbox"><input type="checkbox" class="checkbox" value="false" name="$topicId" $checked/></td>
+              <td class="Tdbox"><input type="checkbox" class="checkbox" value="false" title="$titlePost" name="$topicId" $checked/></td>
               <% } %>
             </tr>
         <% 

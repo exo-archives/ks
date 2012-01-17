@@ -80,7 +80,7 @@
         <div class="UIRightClickPopupMenu ClearFix" style="display: block;">
 
             <% uicomponent.renderChild(ForumUtils.GOPAGE_ID_T) ; %>
-            <a class="NormalButtomBT UIActionForum FL" href="<%=uicomponent.event("GoNumberPage","1")%>" ><%=_ctx.appRes("UIForumPortlet.label.GoPage");%></a>
+            <label for="<%=ForumUtils.GOPAGE_ID_T%>"><a class="NormalButtomBT UIActionForum FL" href="<%=uicomponent.event("GoNumberPage","1")%>" ><%=_ctx.appRes("UIForumPortlet.label.GoPage");%></a></label>
 
         </div>
       </div>
@@ -160,7 +160,7 @@
                     
                       <li class="BorderSearch ClearFix">
                         <% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
-                          <a class="NormalButtomBT SearchLink UIActionForum" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
+                          <label for="<%=ForumUtils.SEARCHFORM_ID%>"><a class="NormalButtomBT SearchLink UIActionForum" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a></label>
                       </li>
                       <li class="MenuItem">
                         <a class="ItemIcon AdvancedSearchIcon" href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
@@ -296,7 +296,7 @@
                   </div>
                 </th>
                 <% if(canEdit) { %>
-                <th style="width:30px;"><input id="UIForumCheckAll" type="checkbox" class="checkbox" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>" value="4"/></th>
+                <th style="width:30px;"><input type="checkbox" class="checkbox" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>" value="4"/></th>
                 <% } %>
               </tr>
             </thead>
@@ -543,7 +543,7 @@
                       checked = "checked=\"checked\"";
                     }
                   %>
-                  <td class="Tdbox"><input type="checkbox" class="checkbox" value="false" name="$topicId" $checked/></td>
+                  <td class="Tdbox"><input type="checkbox" class="checkbox" value="false" title="$titlePost" name="$topicId" $checked/></td>
                   <% } %>
                 </tr>
             <% 
@@ -602,7 +602,7 @@
           <div class="UIRightClickPopupMenu" style="display:block; left:-37px;">
             
               <% uicomponent.renderChild(ForumUtils.GOPAGE_ID_B) ; %>
-              <a class="NormalButtomBT UIActionForum FL" href="<%=uicomponent.event("GoNumberPage","2")%>"><%=_ctx.appRes("UIForumPortlet.label.GoPage");%></a>
+              <label for="<%=ForumUtils.GOPAGE_ID_B%>"><a class="NormalButtomBT UIActionForum FL" href="<%=uicomponent.event("GoNumberPage","2")%>"><%=_ctx.appRes("UIForumPortlet.label.GoPage");%></a></label>
                   
           </div>
         </div>

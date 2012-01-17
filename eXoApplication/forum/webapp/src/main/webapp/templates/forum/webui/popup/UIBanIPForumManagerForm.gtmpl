@@ -15,7 +15,7 @@
 		<div style="width:400px; margin:auto;">
 			<div class="UIQuickSearchForm" style="padding:10px 0px;">
 				<div style="float:left;">
-					<%=_ctx.appRes("UIBanIPForumManagerForm.label.Filter")%>:&nbsp;
+					<label for="<%=uicomponent.SEARCH_IP_BAN%>"><%=_ctx.appRes("UIBanIPForumManagerForm.label.Filter")%>:&nbsp;</label>
 					<% uiform.renderField(uicomponent.SEARCH_IP_BAN) ;%>
 				</div>
 				<div style="clear:left;"><span></span></div>

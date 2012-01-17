@@ -48,9 +48,7 @@
 								<tr class="$classRow">
 									<td class="Tdbox"><div class="ThreadStatusIcon $iconPost"><span></span></div></td>
 									<td >
-										<div >
-											<a href="<%=uicomponent.event("OpenPostLink", post.getId());%>" title="$message" class="title">$postTitle</a>
-										</div>
+										<label for="$topicId"><a href="<%=uicomponent.event("OpenPostLink", post.getId());%>" title="$message" class="title">$postTitle</a></label>
 									</td>
 									<td class="Tdbox">
 										<div class="RatingInfoContainer">$createdDate</div>
@@ -61,7 +59,7 @@
 									    checked = "checked=\"checked\"";
 									  }
 									%>
-									<td class="Tdbox" align="center"><input type="checkbox" class="checkbox" value="false" name="$postId" $checked/></td>
+									<td class="Tdbox" align="center"><input type="checkbox" class="checkbox" value="false" id="$postId" name="$postId" $checked/></td>
 					 			</tr>
 						 	<% i = i + 1;
 						 		}

@@ -5,7 +5,7 @@
 				<table class="UIFormGrid">
 					<tbody>
 						<tr>
-							<td class="FieldLabel"><%=uicomponent.getLabel(uicomponent.FIELD_QUESTION_INPUT)%>:</td>
+							<td class="FieldLabel"><label for="<%=uicomponent.FIELD_QUESTION_INPUT%>"><%=uicomponent.getLabel(uicomponent.FIELD_QUESTION_INPUT)%>:</label></td>
 							<td class="FieldComponent" style="width:400px;">
 								<div class="QuestionInput">
 								<% uiform.renderChild(uicomponent.FIELD_QUESTION_INPUT) %>
@@ -32,7 +32,9 @@
 				<table class="UIFormGrid">
 					<tbody>
 						<tr>
-							<td class="FieldLabel" style="width:auto;"><%=uicomponent.getLabel(uicomponent.FIELD_TIMEOUT_INPUT)%>:</td>
+							<td class="FieldLabel" style="width:auto;">
+								<label for="<%=uicomponent.FIELD_QUESTION_INPUT%>"><%=uicomponent.getLabel(uicomponent.FIELD_TIMEOUT_INPUT)%>:</label>
+							</td>
 							<td class="FieldComponent" style="width:60px;">
 								<div class="TimeOutInput">
 									<% uiform.renderChild(uicomponent.FIELD_TIMEOUT_INPUT) %>
@@ -41,13 +43,17 @@
 							<td class="Label"><%=_ctx.appRes("UIPollForm.label.DayAfter") + " " + uicomponent.getDateAfter();%></td>
 						</tr>
 						<tr>
-							<td class="FieldLabel" style="width:auto;"><%=uicomponent.getLabel(uicomponent.FIELD_AGAINVOTE_CHECKBOX)%>:</td>
+							<td class="FieldLabel" style="width:auto;">
+								<label for="<%=uicomponent.FIELD_AGAINVOTE_CHECKBOX%>"><%=uicomponent.getLabel(uicomponent.FIELD_AGAINVOTE_CHECKBOX)%>:</label>
+							</td>
 							<td class="FieldComponent">
 								<% uiform.renderChild(uicomponent.FIELD_AGAINVOTE_CHECKBOX) %>
 							</td>
 						</tr>
 						<tr>
-							<td class="FieldLabel" style="width:auto;"><%=uicomponent.getLabel(uicomponent.FIELD_MULTIVOTE_CHECKBOX)%>:</td>
+							<td class="FieldLabel" style="width:auto;">
+								<label for="<%=uicomponent.FIELD_MULTIVOTE_CHECKBOX%>"><%=uicomponent.getLabel(uicomponent.FIELD_MULTIVOTE_CHECKBOX)%>:</label>
+							</td>
 							<td class="FieldComponent">
 								<% uiform.renderChild(uicomponent.FIELD_MULTIVOTE_CHECKBOX) %>
 							</td>

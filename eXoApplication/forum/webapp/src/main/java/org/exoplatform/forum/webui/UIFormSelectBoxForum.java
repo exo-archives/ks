@@ -169,7 +169,9 @@ public class UIFormSelectBoxForum extends UIFormStringInput {
       formId = uiForm.getId();
 
     Writer w = context.getWriter();
-    w.write("<select class=\"selectbox\" name=\"");
+    w.write("<select class=\"selectbox\" id=\"");
+    w.write(name);
+    w.write("\" name=\"");
     w.write(name);
     w.write("\"");
     if (onchange_ != null) {
@@ -183,6 +185,8 @@ public class UIFormSelectBoxForum extends UIFormStringInput {
 
     if (isDisabled())
       w.write(" disabled ");
+    
+    renderHTMLAttributes(w);
 
     w.write(">\n");
 

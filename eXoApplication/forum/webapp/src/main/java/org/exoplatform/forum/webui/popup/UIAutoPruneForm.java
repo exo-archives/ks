@@ -65,15 +65,17 @@ public class UIAutoPruneForm extends BaseForumForm implements UIPopupComponent {
   protected List<PruneSetting> getPruneSettings() throws Exception {
     listPruneSetting = new ArrayList<PruneSetting>();
     try {
-      UICheckBoxInput isActiveBBcode;
+      UICheckBoxInput autoPruneCheckBox;
       for (PruneSetting pruneSetting : getForumService().getAllPruneSetting()) {
         listPruneSetting.add(pruneSetting);
-        isActiveBBcode = getUICheckBoxInput(getForumIdOfPrune(pruneSetting));
-        if (isActiveBBcode == null) {
-          isActiveBBcode = new UICheckBoxInput(getForumIdOfPrune(pruneSetting), getForumIdOfPrune(pruneSetting), false);
-          addUIFormInput(isActiveBBcode);
+        autoPruneCheckBox = getUICheckBoxInput(getForumIdOfPrune(pruneSetting));
+        if (autoPruneCheckBox == null) {
+          autoPruneCheckBox = new UICheckBoxInput(getForumIdOfPrune(pruneSetting), getForumIdOfPrune(pruneSetting), false);
+          addUIFormInput(autoPruneCheckBox);
         }
-        isActiveBBcode.setChecked(pruneSetting.isActive());
+        String title = (pruneSetting.isActive()) ? getLabel("InActive") : getLabel("Active");
+        autoPruneCheckBox.setHTMLAttribute("title", title);
+        autoPruneCheckBox.setChecked(pruneSetting.isActive());
       }
     } catch (Exception e) {
       log.error("failed to get prune settings", e);

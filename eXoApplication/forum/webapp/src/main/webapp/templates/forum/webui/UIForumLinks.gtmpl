@@ -6,7 +6,7 @@
 	 <% uiform.begin(); 
 	 	 uiform.setUpdateForumLinks() ;
 	 %>
-		<%=uicomponent.getLabel(uiform.FIELD_FORUMLINK_SELECTBOX)%>:
+		<label for="<%=uiform.FIELD_FORUMLINK_SELECTBOX%>"><%=uicomponent.getLabel(uiform.FIELD_FORUMLINK_SELECTBOX)%>:</label>
 		<% uicomponent.renderChild(uiform.FIELD_FORUMLINK_SELECTBOX); %>
 		<a onclick="<%=uicomponent.event("Select")%>;script:scroll(0,0);" class="NormalButtomBT" href="javascript:void(0);"><%=_ctx.appRes("UIForumPortlet.label.Go");%></a>
 	<%uiform.end()%>

@@ -194,15 +194,17 @@ public class UIFormDateTimePicker extends UIFormInputBase<String> {
   public void processRender(WebuiRequestContext context) throws Exception {
     context.getJavascriptManager().importJavascript("eXo.ks.UIDateTimePicker", "/ksResources/javascript/");
     Writer w = context.getWriter();
-    w.write("<input type='text' class='DateTimeInput'");
-    w.write("name='");
+    w.write("<input type=\"text\" class=\"DateTimeInput\" name=\"");
     w.write(getName());
-    w.write('\'');
+    w.write("\" id=\"");
+    w.write(getId());
+    w.write("\"");
     if (value_ != null && value_.length() > 0) {
       w.write(" value='");
       w.write(value_.toString());
       w.write('\'');
     }
+    renderHTMLAttributes(w);
     w.write("/>");
     w.write("<div class='CalendarIcons' lang='" + getLang() + "' fistweekday='" + getFirstDayOfWeek() + "' format='" + getFormatStyle() + "' onclick='eXo.ks.UIDateTimePicker.init(this,");
     w.write(String.valueOf(isDisplayTime_) + ");' title='" + titleShowCalendar + "'><span></span></div>");

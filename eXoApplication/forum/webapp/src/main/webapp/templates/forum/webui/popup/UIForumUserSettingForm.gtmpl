@@ -83,7 +83,7 @@
 														}%>
 														<tr>
 															<td class="FieldLabel" align="right" style="padding:2px 0px 3px 4px;">
-													      <%=uicomponent.getLabel(tabChildConten.getName()) %> :
+													      <label for="<%=tabChildConten.getId()%>"><%=uicomponent.getLabel(tabChildConten.getId()) %> :</label>
 													    </td>
 													    <td class="FieldComponent" style="padding:2px 0px 3px 4px;">
 																<% uiform.renderField(tabChildConten) %>
@@ -127,16 +127,18 @@
 																	}%>
 																</td>
 																<td class="text" style="text-align:left">
-																	<a href="javaScript:void(0);" onclick="<%=uiform.event("OpentContent",watch.getNodePath())%>" title="<%=watch.getPath()%>">
-																		<%=watch.getPath().substring(watch.getPath().lastIndexOf(">") + 1)%>
-																	</a>
+																	<label for="<%=(uicomponent.RSS + watch.getId())%>">
+																		<a href="javaScript:void(0);" onclick="<%=uiform.event("OpentContent",watch.getNodePath())%>" title="<%=watch.getPath()%>">
+																			<%=watch.getPath().substring(watch.getPath().lastIndexOf(">") + 1)%>
+																		</a>
+																	</label>
 																</td>
 																<td  class="text" style="text-align:left" width="32px">
 																	<div style="width:17px; margin:auto;"><%uicomponent.renderUIComponent(tabconten.getChildById(uicomponent.RSS + watch.getId()))%></div>
 																</td>
 																<td width="32" class="text" style="text-align:left">
 																	<%uicomponent.renderUIComponent(tabconten.getChildById(uicomponent.EMAIL + watch.getId()))%>
-																	<%=watch.getEmail()%>
+																	<label for="<%=(uicomponent.EMAIL + watch.getId())%>"><%=watch.getEmail()%></label>
 																</td>
 																<td class="text" style="text-align:left">
 																	<div class="DeleteIcon" style="cursor:pointer;" onclick="javaScript:if(confirm('<%=_ctx.appRes("UIForumUserSettingForm.msg.confirm-delete-emailwatch")%>')){<%=uiform.event("DeleteEmailWatch", watch.getUserId() + "/" + watch.getNodePath() + "/" + watch.getEmail())%>}">
@@ -155,7 +157,7 @@
 													<tr>
 														<td align="left" style="padding-top:8px;">
 															<div class="Icon ForumRSS" style="height:24px; line-height:16px; text-algin:left;padding-left:32px;">
-																<span><%=_ctx.appRes("UIForumUserSettingForm.title.RSSURL")%> :</span>
+																<label for="<%=uicomponent.RSS_LINK%>"><%=_ctx.appRes("UIForumUserSettingForm.title.RSSURL")%> :</label>
 															</div>
 														</td>
 														<td align="left" style="padding-top:8px;">
@@ -166,7 +168,7 @@
 													<tr>
 														<td align="left" style="padding-top:6px;">
 															<div class="Icon HotThreadNoNewPost" style="height:24px; line-height:22px; text-algin:left;padding-left:32px;">
-																<span><%=_ctx.appRes("UIForumUserSettingForm.title.EmailAddress")%> :</span>
+																<label for="<%=uicomponent.EMAIL_ADD%>"><%=_ctx.appRes("UIForumUserSettingForm.title.EmailAddress")%> :</label>
 															</div>
 														</td>
 														<td align="left" style="padding-top:8px;">
@@ -174,14 +176,14 @@
 														</td>
 														<td>
 															<div class="UIAction">
-								                                <a href="<%=uiform.event("UpdateEmail")%>" onclick="javaScript:void(0);" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIForumUserSettingForm.action.Update")%></a>
-								                              </div>
+                                <a href="<%=uiform.event("UpdateEmail")%>" onclick="javaScript:void(0);" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIForumUserSettingForm.action.Update")%></a>
+                              </div>
 														</td>
 													</tr>
 												</table>
 											<%
 											} else if(!tabconten.id.equals("WatchChesPageIterator")){%>
-												<% uiform.renderChild(tabconten.id) ; %>
+												<% uiform.renderChild(tabconten) ; %>
 											<%
 											}
 											%>

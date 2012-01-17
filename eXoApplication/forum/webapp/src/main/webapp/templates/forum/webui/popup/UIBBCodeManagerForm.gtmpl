@@ -30,10 +30,12 @@
 			%>				
 				<tr class="$classCssInbox">
 					<td style="width:80px;text-align:center">
-						<span><%=bbcode.getTagName();%></span>
-						<% if(bbcode.isOption()) {%>
-						<span>(<%=_ctx.appRes("UIBBCodeManagerForm.label.Option");%>)</span>
-						<% } %>
+						<label for="$bbcodeId">
+							<%=bbcode.getTagName();%>
+							<% if(bbcode.isOption()) {%>
+							<span>(<%=_ctx.appRes("UIBBCodeManagerForm.label.Option");%>)</span>
+							<% } %>
+						</label>
 					</td>
 					<td style="text-align:left"><%=bbcode.getDescription();%></td>
 					<td style="width:40px;text-align:center"><% uiform.renderField(uiform.getIdCheckBox(bbcodeId)); %></td>

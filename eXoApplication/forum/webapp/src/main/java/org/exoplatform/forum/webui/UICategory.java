@@ -206,13 +206,16 @@ public class UICategory extends BaseForumForm {
       this.getAncestorOfType(UICategoryContainer.class).getChild(UICategories.class).setIsgetForumList(true);
     }
     List<Forum> listForum = new ArrayList<Forum>();
+    UICheckBoxInput checkBoxInput;
     for (Forum forum : this.forums) {
       String forumId = forum.getId();
       if (getUICheckBoxInput(forumId) != null) {
-        getUICheckBoxInput(forumId).setChecked(false);
+        checkBoxInput = getUICheckBoxInput(forumId).setChecked(false);
       } else {
-        addUIFormInput(new UICheckBoxInput(forumId, forumId, false));
+        checkBoxInput = new UICheckBoxInput(forumId, forumId, false);
       }
+      checkBoxInput.setHTMLAttribute("title", forum.getForumName());
+      addUIFormInput(checkBoxInput);
       if (isShowForum(forumId))
         listForum.add(forum);
     }

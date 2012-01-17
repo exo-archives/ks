@@ -9,7 +9,7 @@
 					<tbody>						
 							<tr>
 									<td class="FieldLabel">
-											<%=uicomponent.getLabel(uiform.FIELD_SEARCHVALUE_INPUT); %>
+											<label for="<%=uicomponent.FIELD_SEARCHVALUE_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_SEARCHVALUE_INPUT); %></label>
 									</td>
 									<td class="FieldComponent" colspan="2">
 											<%uiform.renderField(uiform.FIELD_SEARCHVALUE_INPUT); %>
@@ -17,7 +17,7 @@
 							</tr>
 							<tr>
 									<td class="FieldLabel">
-											<%=uicomponent.getLabel(uiform.FIELD_SEARCHTYPE_SELECTBOX); %>
+											<label for="<%=uicomponent.FIELD_SEARCHTYPE_SELECTBOX%>"><%=uicomponent.getLabel(uiform.FIELD_SEARCHTYPE_SELECTBOX); %></label>
 									</td>
 									<td class="FieldComponent" colspan="2">
 											<%uiform.renderField(uiform.FIELD_SEARCHTYPE_SELECTBOX); %>
@@ -26,7 +26,7 @@
 						<% if(uiform.getIsSearchTopic()){ %>	
 							<tr>
 									<td class="FieldLabel">
-											<%=uicomponent.getLabel(uiform.FIELD_TOPICTYPE_SELECTBOX); %>
+											<label for="<%=uicomponent.FIELD_TOPICTYPE_SELECTBOX%>"><%=uicomponent.getLabel(uiform.FIELD_TOPICTYPE_SELECTBOX); %></label>
 									</td>
 									<td class="FieldComponent" colspan="2">
 											<%uiform.renderField(uiform.FIELD_TOPICTYPE_SELECTBOX); %>
@@ -43,7 +43,7 @@
 							</tr>
 							<tr>
 									<td class="FieldLabel">
-											<%=uicomponent.getLabel(uiform.FIELD_SEARCHUSER_INPUT); %>
+											<label for="<%=uicomponent.FIELD_SEARCHUSER_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_SEARCHUSER_INPUT); %></label>
 									</td>
 									<td class="FieldComponent FieldUserName" colspan="2">
 										<div style="float:left">
@@ -64,9 +64,9 @@
 									</td>
 									<td class="FieldComponent" colspan="2">
 									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISLOCK_CHECKBOX);%></div>
-									  <div style="float:left; padding-left:5px; width:65px;"><%=uicomponent.getLabel(uiform.FIELD_ISLOCK_CHECKBOX); %></div>
+									  <div style="float:left; padding-left:5px; width:65px;"><label for="<%=uicomponent.FIELD_ISLOCK_CHECKBOX%>"><%=uicomponent.getLabel(uiform.FIELD_ISLOCK_CHECKBOX); %></label></div>
 									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISUNLOCK_CHECKBOX);%></div>
-									  <div style="float:left; padding-left:5px;"><%=uicomponent.getLabel(uiform.FIELD_ISUNLOCK_CHECKBOX); %></div>
+									  <div style="float:left; padding-left:5px;"><label for="<%=uicomponent.FIELD_ISUNLOCK_CHECKBOX%>"><%=uicomponent.getLabel(uiform.FIELD_ISUNLOCK_CHECKBOX); %></label></div>
 									  <div style="clear:left;"><span></span></div>
 									</td>
 							</tr>
@@ -78,8 +78,8 @@
 											<%=_ctx.appRes("UISearchForm.label.State");%>
 									</td>
 									<td class="FieldComponent" colspan="2">
-									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISOPEN_CHECKBOX);%></div><div style="float:left; padding-left:5px; width:65px;"><%=uicomponent.getLabel(uiform.FIELD_ISOPEN_CHECKBOX); %></div>
-									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISCLOSED_CHECKBOX);%></div><div style="float:left; padding-left:5px;"><%=uicomponent.getLabel(uiform.FIELD_ISCLOSED_CHECKBOX); %></div>
+									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISOPEN_CHECKBOX);%></div><div style="float:left; padding-left:5px; width:65px;"><label for="<%=uicomponent.FIELD_ISOPEN_CHECKBOX%>"><%=uicomponent.getLabel(uiform.FIELD_ISOPEN_CHECKBOX); %></label></div>
+									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISCLOSED_CHECKBOX);%></div><div style="float:left; padding-left:5px;"><label for="<%=uicomponent.FIELD_ISCLOSED_CHECKBOX%>"><%=uicomponent.getLabel(uiform.FIELD_ISCLOSED_CHECKBOX); %></label></div>
 									  <div style="clear:left;"><span></span></div>
 									</td>
 							</tr>
@@ -88,11 +88,11 @@
 							%>
 							<tr>
 									<td class="FieldLabel">
-											<%=_ctx.appRes("UISearchForm.label.FromDateCreated");%>
+											<label for="<%=uicomponent.FROMDATECREATED%>"><%=_ctx.appRes("UISearchForm.label.FromDateCreated");%></label>
 									</td>
 									<td class="FieldComponent FieldCalendar">
 										<div style="float:left;"><%uiform.renderField(uiform.FROMDATECREATED); %></div>
-										<div style="float:left; padding-left:5px;"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></div>
+										<div style="float:left; padding-left:5px;"><label for="<%=uicomponent.TODATECREATED%>"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></label></div>
 										<div style="clear:left;"><span></span></div>
 									</td>
 									<td class="FieldComponent FieldCalendar"><%uiform.renderField(uiform.TODATECREATED); %></td>
@@ -100,11 +100,11 @@
 							<% if(uiform.getIsSearchTopic()){ %>
 							<tr>
 									<td class="FieldLabel">
-										<%=_ctx.appRes("UISearchForm.label.FromDateCreatedLastPost");%>
+										<label for="<%=uicomponent.FROMDATECREATEDLASTPOST%>"><%=_ctx.appRes("UISearchForm.label.FromDateCreatedLastPost");%></label>
 									</td>
 									<td class="FieldComponent FieldCalendar">
 										<div style="float:left;"><%uiform.renderField(uiform.FROMDATECREATEDLASTPOST); %></div>
-										<div style="float:left; padding-left:5px;"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></div>
+										<div style="float:left; padding-left:5px;"><label for="<%=uicomponent.TODATECREATEDLASTPOST%>"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></label></div>
 										<div style="clear:left;"><span></span></div>
 									</td>
 									<td class="FieldComponent FieldCalendar"><%uiform.renderField(uiform.TODATECREATEDLASTPOST); %></td>
@@ -146,7 +146,7 @@
 							%>
 							<tr>
 									<td class="FieldLabel">
-											<%=uicomponent.getLabel(uiform.FIELD_MODERATOR_INPUT); %>
+											<label for="<%=uicomponent.FIELD_MODERATOR_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_MODERATOR_INPUT); %></label>
 									</td>
 									<td class="FieldComponent" colspan="2">
 										<div style="float:left">

@@ -76,16 +76,22 @@ public class UIBanIPForumManagerForm extends BaseForumForm implements UIPopupCom
   private UIForumPageIterator pageIterator;
 
   public UIBanIPForumManagerForm() throws Exception {
+    addUIFormInput(new UIFormStringInput(SEARCH_IP_BAN, SEARCH_IP_BAN, ""));
+    addUIFormStringInput(NEW_IP_BAN_INPUT1);
+    addUIFormStringInput(NEW_IP_BAN_INPUT2);
+    addUIFormStringInput(NEW_IP_BAN_INPUT3);
+    addUIFormStringInput(NEW_IP_BAN_INPUT4);
 
-    addUIFormInput(new UIFormStringInput(SEARCH_IP_BAN, null));
-    addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT1, null)).setMaxLength(3));
-    addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT2, null)).setMaxLength(3));
-    addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT3, null)).setMaxLength(3));
-    addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT4, null)).setMaxLength(3));
     setActions(new String[] { "Cancel" });
     pageIterator = addChild(UIForumPageIterator.class, null, BAN_IP_PAGE_ITERATOR);
   }
 
+  private void addUIFormStringInput(String id) {
+    UIFormStringInput stringInput = new UIFormStringInput(id, id, "").setMaxLength(3);
+    stringInput.setHTMLAttribute("title", getLabel("IPNumber"));
+    addUIFormInput(stringInput);
+  }
+  
   public void activate() throws Exception {
   }
 

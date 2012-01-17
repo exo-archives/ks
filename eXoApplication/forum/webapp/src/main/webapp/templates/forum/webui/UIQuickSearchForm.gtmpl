@@ -6,7 +6,7 @@
 %>
 <div class="UIQuickSearchForm">
   <% uiform.begin() %>  
-	<div class="SearchForm">
+	<div class="SearchForm ClearFix">
 		<a class="AdvancedSearch" title="<%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%>" href="<%=uicomponent.event("AdvancedSearch");%>"></a>
 		<a class="SearchLink SearchForumIcon" title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>" href="<%=uicomponent.event("Search");%>"></a>
 		<div class="Input">
@@ -14,8 +14,7 @@
 			uiform.renderChildren() ;
 		%>
 		</div>
-		<div class="Label"><%=_ctx.appRes("UIQuickSearchForm.label.Search")%>:</div>
-		<div style="clear:right"><span></span></div>
+		<div class="Label"><label for="<%=uiform.FIELD_SEARCHVALUE%>"><%=_ctx.appRes("UIQuickSearchForm.label.Search")%>:</label></div>
 	</div>
   <%uiform.end()%>
 </div>

@@ -41,7 +41,7 @@ import org.exoplatform.web.application.JavascriptManager;
 													<% child.renderChild(id) %>
 												</td>
 												<td style="padding-left:10px; width:100%">
-													<%=uiform.mapObject.get(id);%>
+													<label for="$id"><%=uiform.mapObject.get(id);%></label>
 												</td>
 											</tr>
 									 <%
@@ -62,7 +62,7 @@ import org.exoplatform.web.application.JavascriptManager;
 					%>
 							<tr>
 								<td class="FieldLabel" style="white-space:nowrap;">
-									$fieldName
+									<label for="<%=field.getId()%>">$fieldName</label>
 								</td>
 								<td class="FieldComponent">
 									<% uiform.renderField(field) %>

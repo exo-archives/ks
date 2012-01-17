@@ -136,7 +136,7 @@
           <ul class="UIRightClickPopupMenu" style="display:block;">
             <li>
               <% uicomponent.renderChild(ForumUtils.GOPAGE_ID_T) ; %>
-              <a class="NormalButtomBT UIActionForum FL" href="<%=uicomponent.event("GoNumberPage","1")%>"><%=_ctx.appRes("UIForumPortlet.label.GoPage");%></a>
+              <label for="<%=ForumUtils.GOPAGE_ID_T%>"><a class="NormalButtomBT UIActionForum FL" href="<%=uicomponent.event("GoNumberPage","1")%>"><%=_ctx.appRes("UIForumPortlet.label.GoPage");%></a></label>
             </li>
           </ul>
         </div>
@@ -210,7 +210,7 @@
                   <ul id="SearchInTopic" class="SearchPopup UIRightClickPopupMenu"  style="display:block;">
                     <li class="ClearFix SearchTopic BorderSearch">
                         <% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
-                       <a class="SearchLink NormalButtomBT UIActionForum" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
+                       <label for="<%=ForumUtils.SEARCHFORM_ID%>"><a class="SearchLink NormalButtomBT UIActionForum" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a></label>
                     </li>
                     <li class="MenuItem" onclick="<%=uicomponent.event("AdvancedSearch")%>">
                       <a class="ItemIcon AdvancedSearchIcon" href="javaScript:void(0)"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
@@ -340,7 +340,7 @@
                             </div>
                             <div class="UIActionForum FL">
                               <div class="NormalButtomBT">
-                                 <div onclick="<%=uicomponent.event("AddTagTopic")%>"><%=_ctx.appRes("UITopicDetail.label.AddTag");%></div>
+                                 <div onclick="<%=uicomponent.event("AddTagTopic")%>"><label for="<%=uicomponent.FIELD_ADD_TAG%>"><%=_ctx.appRes("UITopicDetail.label.AddTag");%></label></div>
                               </div>
                             </div>
                           </li>
@@ -558,7 +558,7 @@
                        isChecked = "checked=\"checked\"";
                      } 
                   %>
-                    <input onclick="eXo.forum.UIForumPortlet.checkedPost(this);" type="checkbox" class="checkbox FR" value="false" name="$postId" $isChecked/>
+                    <input onclick="eXo.forum.UIForumPortlet.checkedPost(this);" title="$namePost" type="checkbox" class="checkbox FR" value="false" name="$postId" $isChecked/>
                   <%} %>
                 <%
                    if(isShowIP) {
@@ -754,7 +754,7 @@
           <ul class="UIRightClickPopupMenu" style="display:block;">
             <li>
               <% uicomponent.renderChild(ForumUtils.GOPAGE_ID_B) ; %>
-              <a class="NormalButtomBT UIActionForum FL" href="<%=uicomponent.event("GoNumberPage","2")%>"><%=_ctx.appRes("UIForumPortlet.label.GoPage");%></a>
+              <label for="<%=ForumUtils.GOPAGE_ID_B%>"><a class="NormalButtomBT UIActionForum FL" href="<%=uicomponent.event("GoNumberPage","2")%>"><%=_ctx.appRes("UIForumPortlet.label.GoPage");%></a></label>
             </li>
           </ul>
         </div>
@@ -772,7 +772,7 @@
     </div>
     <div class="ContentContainer">
       <div class="ForumList" id="QuickReply">
-        <%=_ctx.appRes("UITopicDetail.label.Message");%>:
+        <label for="<%=uicomponent.FIELD_MESSAGE_TEXTAREA%>"><%=_ctx.appRes("UITopicDetail.label.Message");%>:</label>
         <%uicomponent.renderChild(uicomponent.FIELD_MESSAGE_TEXTAREA);%>
       </div>
       <div class="UIAction">

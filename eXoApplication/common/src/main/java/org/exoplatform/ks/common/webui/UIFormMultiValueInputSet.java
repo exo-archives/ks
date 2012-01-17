@@ -182,7 +182,8 @@ public class UIFormMultiValueInputSet extends UIFormInputContainer<List> {
     int size = getChildren().size();
     String rmItem = getResourceBundle(context, ".label.RemoveItem", "Remove Item") ;
     String addItem =  getResourceBundle(context, ".label.AddItem", "Add Item") ;
-
+    String lbItem = getLabel();
+    writer.append("<div class=\"UIFormMultiValueInputSet\" id=\"").append(getId()).append("\">");
     for (int i = 0; i < size; i++) {
       UIFormInputBase uiInput = getChild(i);
       writer.append("<div class=\"MultiValueContainer\">");
@@ -191,6 +192,7 @@ public class UIFormMultiValueInputSet extends UIFormInputContainer<List> {
       uiInput.setDisabled(!enable_);
 
       uiInput.processRender(context);
+      uiInput.setHTMLAttribute("title", lbItem + " " + (i+1));
 
       if ((size >= 2) || ((size == 1) && (uiInput.getValue() != null))) {
         writer.append("<img onclick=\"");
@@ -205,6 +207,7 @@ public class UIFormMultiValueInputSet extends UIFormInputContainer<List> {
       }
       writer.append("</div>");
     }
+    writer.append("</div>");
   }
 
   public UIFormInputBase createUIFormInput(int idx) throws Exception {

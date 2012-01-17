@@ -38,17 +38,22 @@ public class UISliderControl extends UIFormInputBase<String> {
   public void processRender(WebuiRequestContext context) throws Exception {
     context.getJavascriptManager().importJavascript("eXo.ks.UISliderControl", "/ksResources/javascript/");
     Writer w = context.getWriter();
-    w.write("<div class='UISliderControl'>");
-    w.write("<div class='SliderContainer' onmousedown='eXo.webui.UISliderControl.start(this,event);' unselectable='on'>");
-    w.write("    <div class='LeftSide'>");
-    w.write("          <div class='RightSide'>");
-    w.write("              <div class='CenterSide'>");
-    w.write("                <div class='SliderPointer' unselectable='on'><span></span></div>");
+    w.write("<div class=\"UISliderControl\">");
+    w.write("<div class=\"SliderContainer\" onmousedown=\"eXo.webui.UISliderControl.start(this,event);\" onkeydown=\"eXo.webui.UISliderControl.start(this,event);\" unselectable=\"on\">");
+    w.write("    <div class=\"LeftSide\">");
+    w.write("          <div class=\"RightSide\">");
+    w.write("              <div class=\"CenterSide\">");
+    w.write("                <div class=\"SliderPointer\" unselectable=\"on\"><span></span></div>");
     w.write("              </div>");
     w.write("          </div>");
     w.write("      </div>");
     w.write("  </div>");
-    w.write("<div class='BoxNumber'><div class='BoxNumberInput'>" + value_ + "</div><input class='UISliderInput' type='hidden' name='" + getName() + "' id='" + getId() + "' value='" + value_ + "'/></div>");
+    w.write("  <div class=\"BoxNumber\">");
+    w.write("    <div class=\"BoxNumberInput\">");
+    w.write(new StringBuilder("      <label for=\"").append(getId()).append("\">").append(value_).append("</label>").toString());
+    w.write("    </div>");
+    w.write(new StringBuilder("    <input class=\"UISliderInput\" type=\"hidden\" name=\"").append(getName()).append("\" id=\"").append(getId()).append("\" value=\"").append(value_).append("\"/>").toString());
+    w.write("  </div>");
     w.write("</div>");
   }
 

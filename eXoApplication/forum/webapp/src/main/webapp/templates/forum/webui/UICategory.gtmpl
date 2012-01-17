@@ -100,7 +100,7 @@
 									
 									<li class="BorderSearch ClearFix">
 										<% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
-										<a class="NormalButtomBT SearchLink" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
+										<label for="<%=ForumUtils.SEARCHFORM_ID%>"><a class="NormalButtomBT SearchLink" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a></label>
 									</li>
 									<li class="MenuItem">
 										<a class="ItemIcon AdvancedSearchIcon" href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
@@ -144,7 +144,7 @@
 						<th style="width:75px;"><%=_ctx.appRes("UICategory.label.thread");%></th>
 						<th style="width:65px;"><%=_ctx.appRes("UICategory.label.post");%></th>
 						<% if(isShowMenu){ %>
-						<th style="width:30px;"><input id="UIFORUMCheckAllForum" type="checkbox" class="checkbox" title="Check all" value="4" onClick="eXo.forum.UIForumPortlet.checkAll(this);"/></th>
+						<th style="width:30px;"><input type="checkbox" class="checkbox" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>" value="4" onclick="eXo.forum.UIForumPortlet.checkAll(this);"/></th>
 						<% } %>
 					</tr>
 				</thead>

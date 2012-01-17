@@ -46,7 +46,7 @@
 						<div style="float:left"><%uicomponent.renderChild(forum.getPath())%></div>
 						<div class="Icon $classForumIcon"><span></span></div>
 						<div class="NodeLabel"> 
-							<div>$forumName</div>
+							<label for="<%=forum.getPath()%>">$forumName</label></div>
 						</div>
 						<div style="clear:left;"><span></span></div>
 					</div>

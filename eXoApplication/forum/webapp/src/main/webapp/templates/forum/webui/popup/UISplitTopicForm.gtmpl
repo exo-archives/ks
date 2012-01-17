@@ -60,7 +60,7 @@
 	 			 	<td class="text">
 	 			 		<div class="Icon24x24 $classIconPost"><span></span></div>
  			 		</td>
-	 			 	<td class="text"><%=post.getName();%></td>
+	 			 	<td class="text"><label for="$postId"><%=post.getName();%></label></td>
 	 			 	<td class="text">$createdDate</td>
 	 			 	<td class="text"><%=post.getOwner();%></td>
 	 			 	<td class="text">
@@ -70,7 +70,7 @@
 						    checked = "checked=\"checked\"";
 						  }
 					 %>
-					 <div><input type="checkbox" class="checkbox" value="false" name="$postId" $checked/></div>
+					 <div><input type="checkbox" class="checkbox" value="false" id="$postId" name="$postId" $checked/></div>
 		 			 </td>
 				</tr>
 			<%} %>

@@ -6,7 +6,7 @@
 			<table class="UIFormGrid">
 				<tbody>
 					<tr>
-						<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_CATEGORY_SELECTBOX)%>:</td>
+						<td class="FieldLabel"><label for="<%=uiform.FIELD_CATEGORY_SELECTBOX%>"><%=uicomponent.getLabel(uiform.FIELD_CATEGORY_SELECTBOX)%>:</label></td>
 						<td class="FieldComponent">
 							<% uiform.renderChild(uiform.FIELD_CATEGORY_SELECTBOX) %>
 						</td>

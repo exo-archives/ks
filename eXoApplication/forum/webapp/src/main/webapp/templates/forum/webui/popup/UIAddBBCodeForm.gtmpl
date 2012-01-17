@@ -9,7 +9,7 @@
 						String id = "";
 					%>
 						<tr>
-							<td class="FieldLabel"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_TAGNAME_INPUT);%></td>
+							<td class="FieldLabel"><label for="<%=uiform.FIELD_TAGNAME_INPUT%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_TAGNAME_INPUT);%></label></td>
 							<td class="FieldComponent" colspan="2">
 								<%uiform.renderField(uiform.FIELD_TAGNAME_INPUT);%>
 								<% id = uiform.FIELD_TAGNAME_INPUT + "Help"; %>
@@ -25,7 +25,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="FieldLabel"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_REPLACEMENT_TEXTARE);%></td>
+							<td class="FieldLabel"><label for="<%=uiform.FIELD_REPLACEMENT_TEXTARE%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_REPLACEMENT_TEXTARE);%></label></td>
 							<td class="FieldComponent" colspan="2">
 								<%uiform.renderField(uiform.FIELD_REPLACEMENT_TEXTARE);%>
 								<% id = uiform.FIELD_REPLACEMENT_TEXTARE + "Help"; %>
@@ -41,7 +41,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="FieldLabel"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_DESCRIPTION_TEXTARE);%></td>
+							<td class="FieldLabel"><label for="<%=uiform.FIELD_DESCRIPTION_TEXTARE%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_DESCRIPTION_TEXTARE);%></label></td>
 							<td class="FieldComponent" colspan="2">
 								<%uiform.renderField(uiform.FIELD_DESCRIPTION_TEXTARE);%>
 								<% id = uiform.FIELD_DESCRIPTION_TEXTARE + "Help"; %>
@@ -56,7 +56,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="FieldLabel"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_EXAMPLE_TEXTARE);%></td>
+							<td class="FieldLabel"><label for="<%=uiform.FIELD_EXAMPLE_TEXTARE%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_EXAMPLE_TEXTARE);%></label></td>
 							<td class="FieldComponent" style="width:360px;">
 								<%uiform.renderField(uiform.FIELD_EXAMPLE_TEXTARE);%>
 								<% id = uiform.FIELD_EXAMPLE_TEXTARE + "Help"; %>
@@ -72,14 +72,14 @@
 							</td>
 							<td class="FieldComponent">
 								<div class="UIAction">
-				                  <a href="$actionPriview" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIAddBBCodeForm.action.Preview");%></a>
-				                </div>
+                  <a href="$actionPriview" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIAddBBCodeForm.action.Preview");%></a>
+                </div>
 							</td>
 						</tr>
 						<tr>
-							<td class="FieldLabel"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_USEOPTION_CHECKBOX);%></td>
+							<td class="FieldLabel"><label for="<%=uiform.FIELD_USEOPTION_CHECKBOX%>"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_USEOPTION_CHECKBOX);%></label></td>
 							<td class="FieldComponent" colspan="2">
-								<div class="FloatLeft" id="<%=uiform.FIELD_USEOPTION_CHECKBOX%>"><%uiform.renderField(uiform.FIELD_USEOPTION_CHECKBOX);%></div>
+								<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_USEOPTION_CHECKBOX);%></div>
 								<% id = uiform.FIELD_USEOPTION_CHECKBOX + "Help"; %>
 								<div class="IconBBCodeHelp ShowHelpIcon" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')" onfocus="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')" onblur="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
                   <span>&nbsp;&nbsp;</span>
@@ -104,8 +104,8 @@
 						<tr>
 							<td>
 								<div class="UIAction">
-				                  <a href="<%=uicomponent.event("Apply");%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIAddBBCodeForm.action.Apply");%></a>
-				                </div>
+				          <a href="<%=uicomponent.event("Apply");%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIAddBBCodeForm.action.Apply");%></a>
+				        </div>
 							</td>
 						</tr>
 						<tr>
@@ -128,8 +128,11 @@
 					 if(uiform.getPriview()) {
 				%>
 					<div style="display:none;">
+					<label for="<%=uiform.FIELD_TAGNAME_INPUT%>">&nbsp;</label>
 					<%uiform.renderField(uiform.FIELD_TAGNAME_INPUT);%>
+					<label for="<%=uiform.FIELD_REPLACEMENT_TEXTARE%>">&nbsp;</label>
 					<%uiform.renderField(uiform.FIELD_REPLACEMENT_TEXTARE);%>
+					<label for="<%=uiform.FIELD_DESCRIPTION_TEXTARE%>">&nbsp;</label>
 					<%uiform.renderField(uiform.FIELD_DESCRIPTION_TEXTARE);%>
 					</div>
 				<% } %>

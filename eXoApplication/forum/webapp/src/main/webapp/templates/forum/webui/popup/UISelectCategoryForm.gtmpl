@@ -18,7 +18,7 @@
 			<div class="Node">
 			 	<div class="Icon CategoryNormalIcon" style="background-position:20px 50%; width:40px;padding-top:2px;"><%uicomponent.renderChild(categoryId)%></div>	
 			 	<div class="NodeLabel">
-			 		<div class="NodeSelected" style="line-height:22px;">$categoryName</div> 
+			 		<div class="NodeSelected" style="line-height:22px;"><label for="$categoryId">$categoryName</label></div> 
 				</div> 			
 				<div style="clear:left;"><span></span></div>
 			</div>

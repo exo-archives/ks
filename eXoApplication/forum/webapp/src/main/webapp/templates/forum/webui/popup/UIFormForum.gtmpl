@@ -12,7 +12,11 @@
 								<%fieldName = uicomponent.getLabel(field.getName());%>
 								<%if(!fieldName.equals(uicomponent.getId()) && fieldName != null && fieldName.length() > 0) { %>												
 									<td class="FieldLabel">
-											<%=fieldName%>
+										<%if(field instanceof org.exoplatform.webui.form.UIFormInputIconSelector) { %>
+											<label><%=fieldName%></label>
+										<%} else {%>
+										  <label for="<%=field.getId()%>"><%=fieldName%></label>
+										<%} %>
 									</td>
 									<td class="FieldComponent">
 											<% uiform.renderField(field) %>

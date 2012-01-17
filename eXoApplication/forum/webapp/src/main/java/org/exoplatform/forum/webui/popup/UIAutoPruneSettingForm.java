@@ -119,6 +119,7 @@ public class UIAutoPruneSettingForm extends BaseForumForm implements UIPopupComp
     } else {
       selectBox.setOptions(list);
     }
+    selectBox.setHTMLAttribute("title", getLabel("SelectDateTime"));
     return selectBox;
   }
 

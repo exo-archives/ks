@@ -9,22 +9,22 @@
 				<table class="UIFormGrid">
 					<tbody>						
 						<tr>
-							<td><span class="Label"><%=uicomponent.getLabel(uiform.FIELD_INACTIVEDAY_INPUT); %></span></td>
+							<td><label class="Label" for="<%=uiform.FIELD_INACTIVEDAY_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_INACTIVEDAY_INPUT); %></label></td>
 							<td style="width:50px;"><%uiform.renderField(uiform.FIELD_INACTIVEDAY_INPUT); %></td>
 							<td style="width:100px;"><%uiform.renderField(uiform.FIELD_INACTIVEDAY_SELECTBOX); %></td>
 						</tr>
 						<tr>
-							<td><span class="Label"><%=uicomponent.getLabel(uiform.FIELD_JOBDAY_INPUT); %></span></td>
+							<td><label class="Label" for="<%=uiform.FIELD_JOBDAY_INPUT%>"><%=uicomponent.getLabel(uiform.FIELD_JOBDAY_INPUT); %></label></td>
 							<td style="width:50px;"><%uiform.renderField(uiform.FIELD_JOBDAY_INPUT); %></td>
 							<td style="width:100px;"><%uiform.renderField(uiform.FIELD_JOBDAY_SELECTBOX); %></td>
 						</tr>
 						<tr>
 							<td colspan="3">
 								<div class="UIAction TextAlignLeft">
-				                  <span class="ActionButton LightBlueStyle">
-				                    <a href="javascript:void(0);" onclick="<%=uiform.event("Run")%>" class="ArrowLeftIcon" style="padding-left:24px;"><%=_ctx.appRes("UIAutoPruneSettingForm.label.Test");%></a>
-				                  </span>
-				                </div>
+                  <span class="ActionButton LightBlueStyle">
+                    <a href="javascript:void(0);" onclick="<%=uiform.event("Run")%>" class="ArrowLeftIcon" style="padding-left:24px;"><%=_ctx.appRes("UIAutoPruneSettingForm.label.Test");%></a>
+                  </span>
+                </div>
 								<div class="Lightheight">$topicsPruned <%=_ctx.appRes("UIAutoPruneSettingForm.label.topicPrun");%></div>
 							</td>
 						</tr>
