@@ -29,7 +29,7 @@ import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.ext.UIExtensionManager;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.webui.control.action.RestoreRevisionActionComponent;
@@ -72,7 +72,7 @@ public class UIWikiPageVersionsList extends UIWikiForm {
     this.versionsList = Utils.getCurrentPageRevisions();
     getChildren().clear();
     for (NTVersion version : this.versionsList) {
-      addUIFormInput(new UIFormCheckBoxInput<Boolean>(version.getName(), "", false));
+      addUIFormInput(new UICheckBoxInput(version.getName(), "", false));
     }
     addChild(RestoreRevisionActionComponent.class, null, null);
     super.processRender(context);
@@ -108,10 +108,9 @@ public class UIWikiPageVersionsList extends UIWikiForm {
     public void execute(Event<UIComponent> event) throws Exception {
       UIWikiPageVersionsList uiForm = (UIWikiPageVersionsList) event.getSource();
       List<NTVersion> checkedVersions = new ArrayList<NTVersion>();
-      UIWikiPortlet wikiPortlet = uiForm.getAncestorOfType(UIWikiPortlet.class);
       List<NTVersion> versions = uiForm.versionsList;
       for (NTVersion version : versions) {
-        UIFormCheckBoxInput<Boolean> uiCheckBox = uiForm.getChildById(version.getName());
+        UICheckBoxInput uiCheckBox = uiForm.getUICheckBoxInput(version.getName());
         if (uiCheckBox.isChecked()) {
           checkedVersions.add(version);
         }

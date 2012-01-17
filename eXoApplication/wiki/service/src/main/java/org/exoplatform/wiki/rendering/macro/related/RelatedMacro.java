@@ -73,7 +73,7 @@ public class RelatedMacro extends AbstractMacro<RelatedPagesMacroParameters>{
     
     String treeID = "RelatedPages"+ IdGenerator.generate();
     treeBuilder.append("<div class=\"UITreeExplorer\" id =\"").append(treeID).append("\">")
-      .append("   <input class='info' type='hidden' restUrl='").append(restUri.toString()).append("' redirectUrl='").append(redirectURI).append("' />")   
+      .append("   <input class='info' title=\"hidden\" type='hidden' restUrl='").append(restUri.toString()).append("' redirectUrl='").append(redirectURI).append("' />")   
       .append("   <script> eXo.wiki.UIRelated.init(\"" + treeID  +"\"); </script>")
       .append("</div>");
     

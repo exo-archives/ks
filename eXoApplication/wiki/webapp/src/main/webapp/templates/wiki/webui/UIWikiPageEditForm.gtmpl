@@ -42,12 +42,12 @@
   <%} %>
   <% uiform.renderChild(uiform.RICHTEXT_AREA);%>
     <div class="SyntaxType">
-      <span class="SyntaxTypeTitle"><%= _ctx.appRes("UIWikiPageEditForm.label.SyntaxTypeTitle"); %></span>
+      <label class="SyntaxTypeTitle" for="<%=uiform.FIELD_SYNTAX%>"><%= _ctx.appRes("UIWikiPageEditForm.label.SyntaxTypeTitle"); %></label>
       <% uiform.renderField(uiform.FIELD_SYNTAX); %>
     </div>
     <div class="CommentInput">
   <% if(uiform.getChildById(uiform.FIELD_COMMENT).isRendered()) { %>
-      <span class="CommentTitle"><%= _ctx.appRes("UIWikiPageEditForm.label.CommentTitle"); %></span>
+      <label class="CommentTitle" for="<%=uiform.FIELD_COMMENT%>"><%= _ctx.appRes("UIWikiPageEditForm.label.CommentTitle"); %></label>
   <%
       uiform.renderField(uiform.FIELD_COMMENT);      
   %>

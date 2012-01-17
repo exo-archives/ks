@@ -118,7 +118,7 @@ UIUpload.prototype.getUploadContent = function(uploadId, uploadAction, isAutoUpl
   uploadHTML += "  <form id='"+uploadId+"' class='UIUploadForm' style='margin: 0px; padding: 0px' action='"+uploadAction+"' enctype='multipart/form-data' method='post'>";
   uploadHTML += "    <div class='BrowseDiv'>";
   uploadHTML += "      <a class='BrowseLink'>";
-  uploadHTML += "        <input type='file' name='file' size='1' id='file' class='FileHidden' value='' onchange='eXo.wiki.UIUpload.upload(this, " + uploadId + ")'/>";
+  uploadHTML += "        <input type='file' name='file' size='1' id='file' class='FileHidden' value='' title='" + uploadText + "' onchange='eXo.wiki.UIUpload.upload(this, " + uploadId + ")'/>";
   uploadHTML += "      " + uploadText + "</a>";
   uploadHTML += "    </div>";
   uploadHTML += "  </form>";

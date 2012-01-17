@@ -11,15 +11,15 @@
         if(Scope.WIKI.equals(uiParent.getScope())){
       %>
         <th><%=_ctx.appRes("UIPermissionGrid.label.Owner")%></th>
-        <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.ViewPages")%></th>
-        <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.EditPages")%></th>
-        <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.AdminPages")%></th>
-        <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.AdminSpace")%></th>
+        <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.VIEWPAGE")%></th>
+        <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.EDITPAGE")%></th>
+        <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.ADMINPAGE")%></th>
+        <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.ADMINSPACE")%></th>
         <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.Action")%></th>
       <% } else { %>
         <th><%=_ctx.appRes("UIPermissionGrid.label.Owner")%></th>
-        <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.ViewPages")%></th>
-        <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.EditPages")%></th>
+        <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.VIEWPAGE")%></th>
+        <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.EDITPAGE")%></th>
         <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.Action")%></th>
       <%}%>
       </tr>

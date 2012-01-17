@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.ks.common.webui.WebUIUtils;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
@@ -61,6 +62,7 @@ public class UIWikiPageTitleControlArea extends UIWikiExtensionContainer {
     titleInfo.setRendered(true);
     addChild(titleInfo);
     UIFormStringInput titleInput = new UIFormStringInput(FIELD_TITLEINPUT, FIELD_TITLEINPUT, FIELD_TITLEINPUT);
+    titleInput.setHTMLAttribute("title", WebUIUtils.getLabel(getId(), "title"));
     titleInput.setRendered(false);
     addChild(titleInput);
   }

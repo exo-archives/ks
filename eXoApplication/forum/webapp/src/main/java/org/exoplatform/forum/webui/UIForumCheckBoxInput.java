@@ -34,22 +34,24 @@ public class UIForumCheckBoxInput extends UICheckBoxInput {
   }
 
   public void processRender(WebuiRequestContext context) throws Exception {
+    String id = getId().replaceAll("\\s*", "_");
     Writer w = context.getWriter();
-    w.write("<input type='checkbox' name='");
+    w.write("<input type=\"checkbox\" class=\"checkbox\" name=\"");
     w.write(name);
-    w.write("'");
-    w.write(" value='");
-    if (value_ != null)
-      w.write(String.valueOf(value_));
-    w.write("' ");
-    if (isChecked())
-      w.write(" checked ");
-    if (isDisabled())
-      w.write(" disabled ");
+    w.write("\" id=\"");
+    w.write(id);
+    w.write("\"");
+    if (isChecked()) {
+      w.write(" checked");
+    }
+    if (isDisabled()) {
+      w.write(" disabled");
+    }
     renderHTMLAttributes(w);
-    w.write(" class='checkbox'/>");
-    w.write("<span> " + name + "</span><br/>");
-    if (this.isMandatory())
+    w.write("/>");
+    w.write("<label for=\"" + id + "\"> " + name + "</label><br/>");
+    if (this.isMandatory()){
       w.write(" *");
+    }
   }
 }

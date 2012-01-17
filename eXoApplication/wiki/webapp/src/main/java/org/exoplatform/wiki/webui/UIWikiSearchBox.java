@@ -53,8 +53,11 @@ public class UIWikiSearchBox extends UIForm {
 
   protected String              wikiType;
   
-  public UIWikiSearchBox() {
-    addChild(new UIFormStringInput(FIELD_SEARCHVALUE, FIELD_SEARCHVALUE, null)) ;
+  public UIWikiSearchBox() throws Exception {
+    if(getId() == null) setId("UIWikiSearchBox");
+    UIFormStringInput stringInput = new UIFormStringInput(FIELD_SEARCHVALUE, FIELD_SEARCHVALUE, null);
+    stringInput.setHTMLAttribute("title", getLabel("Search"));
+    addUIFormInput(stringInput) ;
   }
   
   protected String getContextSearchURL() throws Exception {

@@ -98,12 +98,13 @@ public class UIWikiPageEditForm extends UIWikiForm {
     addChild(UIWikiSidePanelArea.class, null, HELP_PANEL);
     addChild(UIWikiRichTextArea.class, null, RICHTEXT_AREA).setRendered(false);
     UIFormTextAreaInput markupInput = new UIFormTextAreaInput(FIELD_CONTENT, FIELD_CONTENT, "");
-    addUIFormInput(markupInput).setRendered(true);
+    markupInput.setHTMLAttribute("title", getLabel(FIELD_CONTENT));
+    addUIFormInput(markupInput);
     UIFormStringInput commentInput = new UIFormStringInput(FIELD_COMMENT, FIELD_COMMENT, "");
     addUIFormInput(commentInput);
     UIFormSelectBox selectSyntax = UISyntaxSelectBoxFactory.newInstance(FIELD_SYNTAX, FIELD_SYNTAX);
     selectSyntax.setOnChange("SelectSyntax");
-    this.addChild(selectSyntax);   
+    this.addChild(selectSyntax);
   }
   
   public void setTitle(String title){ this.title = title ;}

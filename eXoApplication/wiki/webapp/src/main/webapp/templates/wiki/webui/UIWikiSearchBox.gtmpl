@@ -1,8 +1,6 @@
 <%
-import org.exoplatform.wiki.commons.Utils;
-  %>
+	import org.exoplatform.wiki.commons.Utils;
 
-<%
   def rcontext = _ctx.getRequestContext() ;
   String searchLabel=_ctx.appRes("UIWikiSearchBox.label.Search");
   String wikiNodeURI = Utils.getCurrentWikiNodeUri();
@@ -14,11 +12,11 @@ import org.exoplatform.wiki.commons.Utils;
   <% uiform.begin() %>
     <div class="SearchForm">
       <a class="AdvancedSearch" title="<%=_ctx.appRes("UIWikiPortlet.label.Advanced-Search")%>" onclick="<%=uicomponent.event("AdvancedSearch");%>"></a>
-      <input name="restURL" type="hidden" value="$restUrl" />
+      <input name="restURL" type="hidden" title="hidden" value="$restUrl" />
       <div class="Input">
 		<div class="SearchIcon">
         <%
-          uiform.renderChildren() ;
+          uiform.renderChild(uiform.FIELD_SEARCHVALUE) ;
         %>
 		</div>	
       </div>
@@ -33,32 +31,15 @@ import org.exoplatform.wiki.commons.Utils;
 		<div class="SearchPopupML">
 			<div class="SearchPopupMR">
 				<div class="SearchPopupMC">
-					<div class="SubBlock">
-
-						<!--	<div class="MenuItem">	
-								<a class="ItemIcon MenuIcon" title="" href="#">Forum</a>
-							</div>
-
-							<div class="MenuItem">
-								<a class="ItemIcon MenuIcon" title="" href="#">Thread</a>
-							</div>
-
-							<div class="MenuItem">	
-								<a class="ItemIcon MenuIcon" title="" href="#">Topic</a>
-							</div>-->
-						
-					</div>
-					<!--<div class="MenuResult">	
-							Resul for "e"
-						</div>-->
+					<div class="SubBlock"><span></span></div>
 				</div>
 			</div>
 		</div>	
 		<div class="SearchPopupBL">
 			<div class="SearchPopupBR">
 				<div class="SearchPopupBC"><span></span></div>
-		  	</div>
-	</div>
+		  </div>
+		</div>
 	</div>
  
 </div>

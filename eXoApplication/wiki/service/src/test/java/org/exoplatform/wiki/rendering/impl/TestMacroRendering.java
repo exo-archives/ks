@@ -170,7 +170,7 @@ public class TestMacroRendering extends AbstractRenderingTestCase {
     StringBuilder xwikiExpectedHtml = new StringBuilder();
     xwikiExpectedHtml.append("<div class=\"UITreeExplorer\" id =\"PageTree123\">")
                      .append("  <div>")
-                     .append("    <input class=\"ChildrenURL\" type=\"hidden\" value=\"/wiki/tree/children/\" />")
+                     .append("    <input class=\"ChildrenURL\" title=\"hidden\" type=\"hidden\" value=\"/wiki/tree/children/\" />")
                      .append("    <a class=\"SelectNode\" style=\"display:none\" href=\"http://localhost:8080/portal/classic/\" ></a>")
                      .append("    <div class=\"NodeGroup\">")
                      .append("      <script type=\"text/javascript\">")

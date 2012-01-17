@@ -16,6 +16,10 @@
  */
 package org.exoplatform.wiki.webui;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.exoplatform.ks.common.webui.WebUIUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.GroupHandler;
@@ -29,6 +33,7 @@ import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
 import org.exoplatform.wiki.service.Permission;
 import org.exoplatform.wiki.service.PermissionEntry;
+import org.exoplatform.wiki.service.PermissionType;
 
 /**
  * Created by The eXo Platform SAS
@@ -46,12 +51,25 @@ public class UIWikiPermissionEntry extends UIContainer {
   private static final Log log = ExoLogger.getLogger(UIWikiPermissionEntry.class);
 
   private PermissionEntry permissionEntry;
+  
+  private static Map<String, String>permissionLabels = new HashMap<String, String>();
 
   public PermissionEntry getPermissionEntry() {
     return permissionEntry;
   }
+  
+  public static Map<String, String> getPermissionLabels() throws Exception {
+    if(permissionLabels.isEmpty()) {
+      PermissionType[] all = PermissionType.values();
+      for (int i = 0; i < all.length; i++) {
+        permissionLabels.put(all[i].name(), WebUIUtils.getLabel("UIPermissionGrid", all[i].name()));
+      }
+    }
+    return permissionLabels;
+  }
+  
 
-  public void setPermissionEntry(PermissionEntry permissionEntry) {
+  public void setPermissionEntry(PermissionEntry permissionEntry) throws Exception {
     this.permissionEntry = permissionEntry;
     
     getChildren().clear();
@@ -59,12 +77,12 @@ public class UIWikiPermissionEntry extends UIContainer {
       return;
     }
     Permission[] permissions = this.permissionEntry.getPermissions();
+    UICheckBoxInput checkBoxInput;
     for (int i = 0; i < permissions.length; i++) {
-      
-      
-      addChild((UIComponent) new UICheckBoxInput(permissions[i].getPermissionType()
-                                                                            .toString()
-          + this.permissionEntry.getId(), "", permissions[i].isAllowed()).setValue(permissions[i].isAllowed()));
+      checkBoxInput = new UICheckBoxInput(permissions[i].getPermissionType().name() + this.permissionEntry.getId(),
+                                          "", permissions[i].isAllowed());
+      checkBoxInput.setHTMLAttribute("title", getPermissionLabels().get(permissions[i].getPermissionType().name()));
+      addChild((UIComponent) checkBoxInput);
     }
   }
   

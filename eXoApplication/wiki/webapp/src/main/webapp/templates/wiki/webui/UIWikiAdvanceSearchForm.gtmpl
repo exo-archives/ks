@@ -1,16 +1,3 @@
-<!-- <div class="UIWikiAdvanceSearchForm">
-	<form class="ClearFix" method="" action="">
-		<div class="SearchInfo">
-			<input type="text" value="Car" name=""/>
-			<label>Space</label>
-			<select name="" class="SelectBox">
-				<option value="">Industrial Trends</option>
-				<option value="">Industrial Trends</option>
-				<option value="">Industrial Trends</option>
-			</select>
-		</div>
-		<div class="SearchBtn"><a href="">Search</a></div>
-	</form> -->
 <%
   def rcontext = _ctx.getRequestContext() ;
   String inputId = uicomponent.TEXT;

@@ -152,7 +152,7 @@ public class PageTreeMacro extends AbstractMacro<PageTreeMacroParameters> {
           .append(startDepth);
     treeSb.append("<div class=\"UITreeExplorer\" id =\"").append(treeID).append("\">")
           .append("  <div>")
-          .append("    <input class=\"ChildrenURL\" type=\"hidden\" value=\"").append(treeRestURI).append("\" />")
+          .append("    <input class=\"ChildrenURL\" title=\"hidden\" type=\"hidden\" value=\"").append(treeRestURI).append("\" />")
           .append("    <a class=\"SelectNode\" style=\"display:none\" href=\"").append(redirectURI).append("\" ></a>")
           .append(buildHierachyNode(treeID, initSb.toString()))                
           .append("  </div>")
