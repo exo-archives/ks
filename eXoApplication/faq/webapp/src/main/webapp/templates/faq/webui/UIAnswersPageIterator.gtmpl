@@ -10,8 +10,8 @@
 			String selected = "" + pageSelected ;
 	%>
 			<div class="UIAnswersPageIterator" id="$uicomponent.id">
-				<div class="PageIteratorContainer">
-				  <div class="RightPageIteratorBlock">
+				<div class="PageIteratorContainer ClearFix">
+				  <div class="RightPageIteratorBlock ClearFix">
 				  <% if(pageSelected == 1) {%>
 				    <div class="Icon DisableLastTopPageIcon"></div>        
 				    <div class="Icon DisableLastPageIcon"><span></span></div>
@@ -45,15 +45,12 @@
 				    <div class="Icon DisableNextPageIcon"><span></span></div>
 				    <div class="Icon DisableNextTopPageIcon"><span></span></div>
 				  <% } %>
-				    <div style="clear:left;"><span></span></div>
 				  </div>
-				  <div class="LeftPageIteratorBlock">
+				  <div class="LeftPageIteratorBlock ClearFix">
 				  	<div class="TotalPages"><%=_ctx.appRes("UIAnswersPageIterator.label.TotalPages")%>:</div>
 				  	<div class="PagesTotalNumber"><%=max_page%></div>
-				  	<div style="clear:left;"><span></span></div>
 				  </div>
 			  </div>
-			  <div style="clear:right;"><span></span></div>
 			</div>
 	<%
 		}

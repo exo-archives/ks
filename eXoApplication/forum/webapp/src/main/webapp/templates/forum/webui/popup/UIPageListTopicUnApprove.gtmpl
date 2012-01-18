@@ -13,9 +13,8 @@
 	 	<div class="UIForumContainer">
 			<div class="ContentContainer">
 				<div class="UITopicList">
-					<div style="overflow:auto; margin:2px 0px;">
+					<div style="overflow:auto; margin:2px 0px;" class="ClearFix">
 						<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
-						<div style="clear:right; height:0px;"><span></span></div>
 					</div>
 					<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 						<thead>
@@ -90,9 +89,8 @@
 					 		<%}%>
 						</tbody>
 					</table>
-					<div style="overflow:auto;">
+					<div style="overflow:auto;" class="ClearFix">
 						<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
-						<div style="clear:right; height:0px;"><span></span></div>
 					</div>						
 				</div>
 			</div>

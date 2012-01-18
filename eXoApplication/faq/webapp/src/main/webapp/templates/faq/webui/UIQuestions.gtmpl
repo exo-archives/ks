@@ -19,7 +19,7 @@
   boolean isViewRootCate = uicomponent.isViewRootCate;
 %>
 <div class="UIQuestions" id="$uicomponent.id" oncontextmenu="return false">
-  <div class="AnswerToolbar" style="float:left; width:100%;">
+  <div class="AnswerToolbar">
     <div class="LeftBar">
       <div class="RightBar">
         <div class="CenterBar">
@@ -181,7 +181,7 @@
                     <div title="Next"><span></span></div>
                   </div>
                 </div>
-                <div style="clear:both;"><span></span></div>
+                
                 </td>
               </tr>
             </tbody>
@@ -218,7 +218,7 @@
           if(!uicomponent.getQuestionView().equals(qId)){
             questionContent = question.getQuestion();
       %>
-            <div class="QuestionContainer" id="$qId" ctxMenuId="UIPopupQuestion$questionIndex" oncontextmenu="return false;">
+            <div class="QuestionContainer ClearFix" id="$qId" ctxMenuId="UIPopupQuestion$questionIndex" oncontextmenu="return false;">
       
 <!---- style for Questions ----->
               <div class="NormalQuest ClearFix">
@@ -361,7 +361,7 @@
                   <!-- finish action of this question -->
                   
                 </div>
-              <div style="clear:left;"><span></span></div>
+              
     
             
             </div>
@@ -636,7 +636,7 @@
                                           </td>
                                         </tr>
                                       </table>
-                                      <div style="clear:right;"><span></span></div>
+                                      
                                     <%
                                     }
                                     %>
@@ -772,7 +772,7 @@
                     
                       <!-- ============================== View attachment files ============================================== -->
                       <%if(!question.getAttachMent().isEmpty()) {%>
-                          <div class="AttachmentContent" style="background:white;">
+                          <div class="AttachmentContent ClearFix" style="background:white;">
                             <%
                               for(FileAttachment fileAttachment :question.getAttachMent()){
                                 String fileName = fileAttachment.getName();
@@ -787,13 +787,13 @@
                                   String attLink = uicomponent.getImageUrl(fileAttachment.getPath());
                               %>
                                   <div style="float:left; margin:10px 5px 0px 12px;" id="divId${fileName}">
-                                    <div class="Image">
+                                    <div class="Image ClearFix">
                                       <div onclick="eXo.faq.UIAnswersPortlet.showPicture('$attLink');">
                                         <img style="cursor:pointer;" id="imgView${fileName}" src="$attLink" width="100px" height="100px" alt="$fileName" class="AttachmentFile"/>
                                       </div>
                                     </div>
-                                    <div style="clear:left;"><span></span></div>
-                                    <div class="LabelBox">
+                                    
+                                    <div class="LabelBox ClearFix">
                                       <div style="line-height:20px; white-space:nowrap;">
                                         <div class="Size AttachmentLabel">
                                           <%
@@ -813,11 +813,11 @@
                                           <span>&nbsp;- </span><span style="color:gray;font-size:11px;">$size</span>
                                         </div>
                                       </div>
-                                      <div style="clear:left;"><span></span></div>
+                                      
                                     </div>
                                   </div>
                               <%} else { %>
-                                  <div class="LabelBox" style="margin:10px 5px 0px 12px; line-height:20px; float:left;">
+                                  <div class="LabelBox ClearFix" style="margin:10px 5px 0px 12px; line-height:20px; float:left;">
                                     <div class="AttachmentIcon FileAttachmentIcon" style="width:auto; height:auto;float:left;">
                                     <%
                                     if(fileName.length() > 60){
@@ -832,11 +832,11 @@
                                     <%}%>
                                     </div>
                                     <div style=" float:left;">&nbsp;-&nbsp;<span style="color:gray;">$size</span></div>
-                                    <div style="clear:left;"><span></span></div>
+                                    
                                   </div>
                               <%}
                               }%>
-                            <div style="clear:left;"><span></span></div>
+                            
                           </div>
                       <%}%>
                       
@@ -950,7 +950,7 @@
                                         </div>
                                         
                                         <!-- ============================= View mark vote answer ======================================== -->
-                                        <div class="DisablePrint" style="overflow:auto; margin-top:5px;">
+                                        <div class="DisablePrint ClearFix" style="overflow:auto; margin-top:5px;">
                                           <%
                                           if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
                                               String userVoteUpAnswer = "javaScript:alert('" + _ctx.appRes("UIQuestions.alert.LoginBeforVote") + "')";
@@ -961,7 +961,7 @@
                                               }
                                               String idVote = "FAQVoteAnswerUp" + i;
                                             %>
-                                              <div style="float:left;">
+                                              <div style="float:left;" class="ClearFix">
                                                 <div style="float:left;" title="+1">
                                                   <div class="VoteAnswerUp" id="$idVote" onmouseover="eXo.faq.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onfocus="eXo.faq.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onmouseout="eXo.faq.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)" onblur="eXo.faq.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)">
                                                     <a href="$userVoteUpAnswer" style="width:16px; height:16px; display:block"></a>
@@ -979,15 +979,15 @@
                                                 <div style="float:left; line-height:18px; margin-left:4px;">
                                                   <%=answer.getMarkVotes()%>
                                                 </div>
-                                                <div style="clear:left;"><span></span></div>
+                                                
                                               </div>
                                             <%
                                             }%>
-                                            <div style="clear:left;"><span></span></div>
+                                            
                                         </div>
                                         
                                       </div>
-                                      <div style="clear:left;"><span></span></div>
+                                      
                                 
                                     </td>
                                   
@@ -1115,7 +1115,7 @@
                                           <span>$commentDetail</span>
                                           <div style="color:#721d95"><%=FAQUtils.getLongDateFormat(comment.getDateComment());%></div>
                                         </div>
-                                        <div style="clear:left;"><span></span></div>
+                                        
       
                                     </td>
                                     <%
@@ -1166,9 +1166,9 @@
                           <%}
                             if(uicomponent.getChildById(uicomponent.COMMENT_ITER + question.getId())!= null){
                           %>
-                            <div>
+                            <div class="ClearFix">
                               <% uicomponent.renderChild(uicomponent.COMMENT_ITER + question.getId()) %>
-                              <div style="clear:right;"><span></span></div>
+                              
                             </div>                            
                             <%}%> 
                           </div>

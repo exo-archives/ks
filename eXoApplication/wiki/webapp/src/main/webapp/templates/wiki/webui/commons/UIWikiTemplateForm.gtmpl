@@ -9,13 +9,12 @@
 	<%uiform.begin();%>
 	<div class="TemplateControl">
 	    <div class="TemplateSearchBox" >	
-			<% uiform.renderChild(uiform.TEMPLATE_SEARCHBOX);	%>
-      <label for="<%=uiform.TEMPLATE_SEARCHBOX%>"><a class="SearchButton" onclick="<%=uiform.event(uiform.ACTION_SEARCH);%>"><%=_ctx.appRes("UITemplateSettingForm.label.Search")%></a></label>			
+				<% uiform.renderChild(uiform.TEMPLATE_SEARCHBOX);	%>
+				<label for="<%=uiform.TEMPLATE_SEARCHBOX%>"><a class="SearchButton" onclick="<%=uiform.event(uiform.ACTION_SEARCH);%>"><%=_ctx.appRes("UITemplateSettingForm.label.Search")%></a></label>			
   		</div>
-  	</div>
-  	<div class="ClearBoth"></div>
-  	<div class="TemplateGrid">
-  	  <% uiform.renderChild(uiform.TEMPLATE_GRID);	%>
-  	</div>				
+	</div>
+	<div class="TemplateGrid">
+		<% uiform.renderChild(uiform.TEMPLATE_GRID);	%>
+	</div>				
   <%uiform.end();%>
 </div>

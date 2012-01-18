@@ -1,4 +1,4 @@
-<div class="UIWikiApplicationControlArea Border">
+<div class="UIWikiApplicationControlArea Border ClearFix">
 <%
   List children = uicomponent.getChildren() ;
   for(component in children) {
@@ -7,7 +7,5 @@
     }
   }
 %>
-  <div class="ClearBoth">
-    <span></span>
-  </div>
+
 </div>

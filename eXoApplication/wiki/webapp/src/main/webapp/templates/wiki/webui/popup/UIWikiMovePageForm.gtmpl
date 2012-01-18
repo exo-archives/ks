@@ -6,7 +6,7 @@
  <%
  	  uiform.renderChild(uiform.PAGENAME_INFO);
  %>
-<div class="ClearBoth"></div>
+
 <div class="SideBarContent">
  	<div class="BarContent">
  		<%=_ctx.appRes("UITreeExplorer.label.Destination")%>
@@ -17,11 +17,11 @@
  		%> 		
   </div>
 </div>
-<div class="ClearBoth"></div>
+
   <%
  	  uiform.renderChild(uiform.LOCATION_CONTAINER);
  %> 
-  <div class="ClearBoth"></div>
+
  <div class="UIAction">
   <% 			
  				String closeLink=  uiform.event("Close");

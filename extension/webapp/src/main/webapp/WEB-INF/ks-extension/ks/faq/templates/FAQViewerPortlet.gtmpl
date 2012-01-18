@@ -146,9 +146,8 @@
       <%} %>
       </ul>
     </div>
-    <div style="height:18px;">
+    <div style="height:18px;" class="ClearFix">
       <a class="BackTopIcon" href="#name${id_}"> </a>
-      <div style="clear:right;"><span></span></div>
     </div>
   <% } %>
   </div>
@@ -186,9 +185,8 @@
       </div>
     </div>
     <%} %>
-    <div style="height:18px;">
+    <div style="height:18px;" class="ClearFix">
       <a class="BackTopIcon" href="#${id}"> </a>
-      <div style="clear:right;"><span></span></div>
     </div>
   </div>
   <% } %>

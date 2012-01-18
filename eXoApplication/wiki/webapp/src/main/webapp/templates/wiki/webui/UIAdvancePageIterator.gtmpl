@@ -3,92 +3,89 @@
     int maxPage = uicomponent.pageList.getAvailablePage() ;
     String selected = String.valueOf(pageSelected) ;
 %>
-<div class="UIAdvancePageIterator">
+<div class="UIAdvancePageIterator ClearFix">
 <% uiform.begin() %>
 <% if(maxPage > 1) {%>
-    <div class="PageIteratorContainer" align="center">
-		<div class="LeftPageIteratorBlock">
-            <div class="TotalPages"><%=_ctx.appRes("UIAdvancePageIterator.label.Totalpages");%>:</div>
-            <div class="PagesTotalNumber"><%=maxPage%></div>
-            <div style="clear:left;"><span></span></div>
-        </div>
-        <div class="RightPageIteratorBlock">
-        <% if(pageSelected == 1) {%>
-            <div class="Number DisableLastTopPage Disable"><< <%=_ctx.appRes("UIAdvancePageIterator.label.BackFirstPage");%></div>             
-            <div class="Number DisableLastPage Disable">< <%=_ctx.appRes("UIAdvancePageIterator.label.PreviousPage");%></div>
-        <% } else { %>
-            <a title="<%=_ctx.appRes("UIAdvancePageIterator.label.BackFirstPage");%>" class="LastTopPage PageNormal Number" href="<%=uicomponent.event(uicomponent.GOPAGE, uicomponent.FIRST)%>"><< <%=_ctx.appRes("UIAdvancePageIterator.label.BackFirstPage");%></a>               
-            <a title="<%=_ctx.appRes("UIAdvancePageIterator.label.PreviousPage");%>" class="LastPage PageNormal Number" href="<%=uicomponent.event(uicomponent.GOPAGE,uicomponent.PREVIOUS)%>">< <%=_ctx.appRes("UIAdvancePageIterator.label.PreviousPage");%></a>
-        <% } %>
-        <% 
-            for(number in uicomponent.getDisplayedRange()) {
-                if(number.equals(selected)) {
-        %>
-                <div class="Number">
-                    <a class="PageSelected">$number</a>
-                </div>
-            <%} else {%>
-                <div class="Number">
-                    <a class="PageNormal" href="<%=uicomponent.event(uicomponent.GOPAGE, number)%>">$number</a>
-                </div>
-            <% } %>
-        <%} %>
-        <% if(pageSelected != maxPage) {%> 
-            <a title="<%=_ctx.appRes("UIAdvancePageIterator.label.NextPage");%>" class="NextPage PageNormal Number" href="<%=uicomponent.event(uicomponent.GOPAGE, uicomponent.NEXT)%>"><%=_ctx.appRes("UIAdvancePageIterator.label.NextPage");%> ></a>
-            <a title="<%=_ctx.appRes("UIAdvancePageIterator.label.ReturnLastPage");%>" class="NextTopPage PageNormal Number" href="<%=uicomponent.event(uicomponent.GOPAGE, uicomponent.LAST)%>"><%=_ctx.appRes("UIAdvancePageIterator.label.ReturnLastPage");%> >></a>
-        <% } else { %>  
-            <div class="Number DisableNextPage Disable"><%=_ctx.appRes("UIAdvancePageIterator.label.NextPage");%> ></div>
-            <div class="Number DisableNextTopPage Disable"><%=_ctx.appRes("UIAdvancePageIterator.label.ReturnLastPage");%> >></div>
-        <% } %>
-        <div title="<%=_ctx.appRes("UIAdvancePageIterator.label.GoPageNumber");%>" class="GotoPageIcon">
-            <div onclick="eXo.wiki.UIWikiPortlet.showPopup(this, event);" style="width:20px; height:16px;"><span></span></div>
-            <% /*Begin Popup Menu*/ %>
-            <div style="position:relative;">
-                <div class="UIPopupCategory" style="display:none; ">
-                    <div class="UIRightClickPopupMenu" style="display:block; left:-75px;">
-                        <div class="UIContextMenuContainer">
-                            <div class="TopLeftRightClickPopupMenu">
-                                <div class="TopRightRightClickPopupMenu">
-                                    <div class="TopCenterRightClickPopupMenu"><span></span></div>
-                                </div>
-                            </div>
-                            <div class="MiddleLeftRightClickPopupMenu" >
-                                <div class="MiddleRightRightClickPopupMenu">
-                                    <div class="UIRightPopupMenuContainer" style="padding:0px 5px;">
-                                        <div class="InputPage" style="float:left;">
-                                            <% uicomponent.renderChild(uicomponent.GOTOPPAGE) ; %>
-                                        </div>
-                                        <div class="UIActionForum" style="float:left;">
-                                            <div class="NormalButtom">
-                                                <div class="ButtonLeft">
-                                                    <div class="ButtonRight">
-                                                        <div class="ButtonMiddle">
-                                                         <a href="<%=uicomponent.event("GoNumberPage","1")%>" ><%=_ctx.appRes("UIAdvancePageIterator.label.GoPage");%></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div style="clear:left;"><span></span></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="BottomLeftRightClickPopupMenu">
-                                <div class="BottomRightRightClickPopupMenu">
-                                    <div class="BottomCenterRightClickPopupMenu"><span></span></div>
-                                </div>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <% /*End Popup Menu*/ %>
-        </div>
-            <div style="clear:left;"><span></span></div>
-        </div>
+	<div class="PageIteratorContainer ClearFix" align="center">
+		<div class="LeftPageIteratorBlock ClearFix">
+				<div class="TotalPages"><%=_ctx.appRes("UIAdvancePageIterator.label.Totalpages");%>:</div>
+				<div class="PagesTotalNumber"><%=maxPage%></div>
+		</div>
+		<div class="RightPageIteratorBlock ClearFix">
+			<% if(pageSelected == 1) {%>
+					<div class="Number DisableLastTopPage Disable"><< <%=_ctx.appRes("UIAdvancePageIterator.label.BackFirstPage");%></div>             
+					<div class="Number DisableLastPage Disable">< <%=_ctx.appRes("UIAdvancePageIterator.label.PreviousPage");%></div>
+			<% } else { %>
+					<a title="<%=_ctx.appRes("UIAdvancePageIterator.label.BackFirstPage");%>" class="LastTopPage PageNormal Number" href="<%=uicomponent.event(uicomponent.GOPAGE, uicomponent.FIRST)%>"><< <%=_ctx.appRes("UIAdvancePageIterator.label.BackFirstPage");%></a>               
+					<a title="<%=_ctx.appRes("UIAdvancePageIterator.label.PreviousPage");%>" class="LastPage PageNormal Number" href="<%=uicomponent.event(uicomponent.GOPAGE,uicomponent.PREVIOUS)%>">< <%=_ctx.appRes("UIAdvancePageIterator.label.PreviousPage");%></a>
+			<% } %>
+			<% 
+					for(number in uicomponent.getDisplayedRange()) {
+							if(number.equals(selected)) {
+			%>
+							<div class="Number">
+									<a class="PageSelected">$number</a>
+							</div>
+					<%} else {%>
+							<div class="Number">
+									<a class="PageNormal" href="<%=uicomponent.event(uicomponent.GOPAGE, number)%>">$number</a>
+							</div>
+					<% } %>
+			<%} %>
+			<% if(pageSelected != maxPage) {%> 
+					<a title="<%=_ctx.appRes("UIAdvancePageIterator.label.NextPage");%>" class="NextPage PageNormal Number" href="<%=uicomponent.event(uicomponent.GOPAGE, uicomponent.NEXT)%>"><%=_ctx.appRes("UIAdvancePageIterator.label.NextPage");%> ></a>
+					<a title="<%=_ctx.appRes("UIAdvancePageIterator.label.ReturnLastPage");%>" class="NextTopPage PageNormal Number" href="<%=uicomponent.event(uicomponent.GOPAGE, uicomponent.LAST)%>"><%=_ctx.appRes("UIAdvancePageIterator.label.ReturnLastPage");%> >></a>
+			<% } else { %>  
+					<div class="Number DisableNextPage Disable"><%=_ctx.appRes("UIAdvancePageIterator.label.NextPage");%> ></div>
+					<div class="Number DisableNextTopPage Disable"><%=_ctx.appRes("UIAdvancePageIterator.label.ReturnLastPage");%> >></div>
+			<% } %>
+			<div title="<%=_ctx.appRes("UIAdvancePageIterator.label.GoPageNumber");%>" class="GotoPageIcon">
+				<div onclick="eXo.wiki.UIWikiPortlet.showPopup(this, event);" style="width:20px; height:16px;"><span></span></div>
+				<% /*Begin Popup Menu*/ %>
+				<div style="position:relative;">
+						<div class="UIPopupCategory" style="display:none; ">
+								<div class="UIRightClickPopupMenu" style="display:block; left:-75px;">
+										<div class="UIContextMenuContainer">
+												<div class="TopLeftRightClickPopupMenu">
+														<div class="TopRightRightClickPopupMenu">
+																<div class="TopCenterRightClickPopupMenu"><span></span></div>
+														</div>
+												</div>
+												<div class="MiddleLeftRightClickPopupMenu" >
+														<div class="MiddleRightRightClickPopupMenu">
+																<div class="UIRightPopupMenuContainer ClearFix" style="padding:0px 5px;">
+																		<div class="InputPage" style="float:left;">
+																				<% uicomponent.renderChild(uicomponent.GOTOPPAGE) ; %>
+																		</div>
+																		<div class="UIActionForum" style="float:left;">
+																				<div class="NormalButtom">
+																						<div class="ButtonLeft">
+																								<div class="ButtonRight">
+																										<div class="ButtonMiddle">
+																										 <a href="<%=uicomponent.event("GoNumberPage","1")%>" ><%=_ctx.appRes("UIAdvancePageIterator.label.GoPage");%></a>
+																										</div>
+																								</div>
+																						</div>
+																				</div>
+																		</div>
+																</div>
+														</div>
+												</div>
+												<div class="BottomLeftRightClickPopupMenu">
+														<div class="BottomRightRightClickPopupMenu">
+																<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+														</div>
+											</div>
+										</div>
+								</div>
+						</div>
+				</div>
+				<% /*End Popup Menu*/ %>
+				</div>
+				
+		</div>
         
     </div>
-    <div style="clear:right;"><span></span></div>
 <% } %>
 <% uiform.end() %>
 </div>
