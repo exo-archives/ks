@@ -18,9 +18,7 @@ package org.exoplatform.poll.webui;
 
 import java.io.Writer;
 
-import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.webui.application.WebuiRequestContext;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
 
 /**
@@ -31,17 +29,19 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
  */
 public class UIForumCheckBoxInput extends UICheckBoxInput {
 
-  public UIForumCheckBoxInput(String name, String bindingExpression, Boolean value) {
+  private String label; 
+  
+  public UIForumCheckBoxInput(String name, String bindingExpression, String label, Boolean value) {
     super(name, bindingExpression, value);
+    this.label = label;
   }
 
   public void processRender(WebuiRequestContext context) throws Exception {
-    String id = getId().replaceAll("\\s*", "_");
     Writer w = context.getWriter();
     w.write("<input type=\"checkbox\" class=\"checkbox\" name=\"");
     w.write(name);
     w.write("\" id=\"");
-    w.write(id);
+    w.write(name);
     w.write("\"");
     if (isChecked()) {
       w.write(" checked");
@@ -51,7 +51,7 @@ public class UIForumCheckBoxInput extends UICheckBoxInput {
     }
     renderHTMLAttributes(w);
     w.write("/>");
-    w.write("<label for=\"" + id + "\"> " + name + "</label><br/>");
+    w.write("<label for=\"" + name + "\"> " + label + "</label><br/>");
     if (this.isMandatory()) {
       w.write(" *");
     }

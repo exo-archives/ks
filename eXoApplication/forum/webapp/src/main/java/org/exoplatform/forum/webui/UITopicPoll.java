@@ -65,6 +65,8 @@ import org.exoplatform.webui.form.UIFormRadioBoxInput;
     }
 )
 public class UITopicPoll extends BaseForumForm {
+  private final String POLL_OPTION_ID  = "option";
+
   private Poll        poll_;
 
   private String      categoryId, forumId, topicId;
@@ -132,12 +134,14 @@ public class UITopicPoll extends BaseForumForm {
         for (String s : poll_.getOption()) {
           options.add(new SelectItemOption<String>(s, s));
         }
-        UIFormRadioBoxInput input = new UIFormRadioBoxInput("vote", "vote", options);
+        UIFormRadioBoxInput input = new UIFormRadioBoxInput(POLL_OPTION_ID, POLL_OPTION_ID, options);
         input.setAlign(1);
         addUIFormInput(input);
       } else {
-        for (String s : poll_.getOption()) {
-          addUIFormInput(new UIForumCheckBoxInput(s, s, false));
+        String[] options = poll_.getOption();
+        for (int i = 0; i < options.length; i++) {
+          addUIFormInput(new UIForumCheckBoxInput(POLL_OPTION_ID.concat(String.valueOf(i)), 
+                                                  POLL_OPTION_ID.concat(String.valueOf(i)), options[i], false));
         }
       }
     }

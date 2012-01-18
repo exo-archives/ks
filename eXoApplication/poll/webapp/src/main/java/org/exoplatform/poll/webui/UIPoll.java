@@ -62,17 +62,19 @@ import org.exoplatform.webui.form.UIFormRadioBoxInput;
     }
 )
 public class UIPoll extends BasePollForm {
-  private Poll     poll_;
+  private final String POLL_OPTION_ID  = "option";
+  
+  private Poll         poll_;
 
-  private String   pollId, userId;
+  private String       pollId, userId;
 
-  private boolean  isAgainVote   = false;
+  private boolean      isAgainVote    = false;
 
-  private boolean  isEditPoll    = false;
+  private boolean      isEditPoll     = false;
 
-  private boolean  hasPermission = true;
+  private boolean      hasPermission  = true;
 
-  private boolean  isAdmin       = false;
+  private boolean      isAdmin        = false;
 
   private String[] dateUnit      = new String[] { "Never", "Closed", "day(s)", "hour(s)", "minutes" };
 
@@ -156,12 +158,14 @@ public class UIPoll extends BasePollForm {
         for (String s : poll_.getOption()) {
           options.add(new SelectItemOption<String>(s, s));
         }
-        UIFormRadioBoxInput input = new UIFormRadioBoxInput("vote", "vote", options);
+        UIFormRadioBoxInput input = new UIFormRadioBoxInput(POLL_OPTION_ID, POLL_OPTION_ID, options);
         input.setAlign(1);
         addUIFormInput(input);
       } else {
-        for (String s : poll_.getOption()) {
-          addUIFormInput(new UIForumCheckBoxInput(s, s, false));
+        String[] options = poll_.getOption();
+        for (int i = 0; i < options.length; i++) {
+          addUIFormInput(new UIForumCheckBoxInput(POLL_OPTION_ID.concat(String.valueOf(i)), 
+                                                  POLL_OPTION_ID.concat(String.valueOf(i)), options[i], false));
         }
       }
     }
