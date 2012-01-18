@@ -24,13 +24,17 @@
             <%
             String categoryName = uicomponent.getCurrentName();
             if(categoryName.length() <=20 || categoryName.indexOf("<img") >= 0){%>
-              <span class="TextTitle"><%=categoryName%></span>
+            	<% if(categoryName.indexOf("<img") >= 0) { %>
+            		<%=categoryName%>
+            	<% } else { %>
+              	<div class="TextTitle"><%=categoryName%></div>
+              <% } %>
             <%
             } else {%>
               <div class="TextTitle" title="<%=uicomponent.getCurrentName()%>">
-                <span><%=FAQUtils.getSubString(categoryName, 20)%></span>
+                <%=FAQUtils.getSubString(categoryName, 20)%>
               </div>
-            <%}%>
+          <%}%>
           </div>
         </div>
       </div>
@@ -45,7 +49,6 @@
         long questionNotAnswer = cateInfo[2] ;
         long questionNotApproved = cateInfo[3] ;
       %>
-      <!-- <div style="margin-top:2px;">$numberOfSubCate <%= _ctx.appRes("UICategories.label.SubCategories"); %></div> -->
       <a id="uicategoriesCateInfors0" style="margin-top:4px;cursor:pointer;font-weight:<%=uicomponent.font_weight[0]%>;" onclick="javaScript:eXo.faq.UIAnswersPortlet.selectCateInfor(0);<%=uicomponent.event("FilterQuestions", "allQuestions")%>">$numberOfQuestion <%= _ctx.appRes("UICategories.title.Questions"); %></a><br/>
       <a id="uicategoriesCateInfors1" style="margin-top:4px;cursor:pointer;font-weight:<%=uicomponent.font_weight[1]%>;" onclick="javaScript:eXo.faq.UIAnswersPortlet.selectCateInfor(1);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_OPEN_QUESTIONS)%>">$questionNotAnswer <%= _ctx.appRes("UICategories.label.QuestionsNotAnswer"); %></a><br/>
       <%
@@ -63,7 +66,7 @@
         <div class="RightBar">
           <div class="CenterBar" style="padding-left:10px; font-size:12px; text-align:center;">
               <span class="TextTitle"><%= _ctx.appRes("UICategories.title.Categories"); %></span>
-            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -71,13 +74,11 @@
       <div class="UICategories">
         <%
          if(!uicomponent.parentCateID_.equals(Utils.CATEGORY_HOME) || !uicomponent.parentCateID_.equals(uicomponent.categoryId_)){%>
-           <div>
-             <div class="FAQBack" onclick="<%=uicomponent.event("OpenCategory", uicomponent.parentCateID_)%>">
-              <a href="<%=uicomponent.event("OpenCategory", uicomponent.parentCateID_)%>"></a>
-             </div>
-           </div>
+	      	<div class="FAQBack" onclick="<%=uicomponent.event("OpenCategory", uicomponent.parentCateID_)%>">
+	       		<a href="<%=uicomponent.event("OpenCategory", uicomponent.parentCateID_)%>"></a>
+	      	</div>
         <%}%>
-        <div style="padding:4px 0px 0px 0px;">
+        	<div style="padding:4px 0px 0px 0px;">
         <%
           String classCss = "";
           int i = 0;
@@ -87,12 +88,12 @@
             else classCss = "FAQCategoryRight";
             canEdit = uicomponent.isCategoryModerator(category.getPath()) ; 
         %>
-            <div class="FAQTmpCategory"><span></span></div>
-            <div id="<%=category.getPath()%>" class="$classCss FAQCategory" unselectable="on" ctxMenuId="UIFAQPopupCategories$i" actionLink="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>">
-              <div unselectable="on">
-                <a title="<%=category.getName()%>" oncontextmenu="return false;" unselectable="on" onclick="<%=uicomponent.event("OpenCategory", category.getPath())%>">
-                  <span><%=FAQUtils.getSubString(category.getName(), 20);%></span>
-                </a>
+          <div class="FAQTmpCategory"><span></span></div>
+          <div id="<%=category.getPath()%>" class="$classCss FAQCategory" unselectable="on" ctxMenuId="UIFAQPopupCategories$i" actionLink="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>">
+            <div unselectable="on">
+	            <a title="<%=category.getName()%>" oncontextmenu="return false;" unselectable="on" onclick="<%=uicomponent.event("OpenCategory", category.getPath())%>">
+	              <span><%=FAQUtils.getSubString(category.getName(), 20);%></span>
+	            </a>
                 <%
                 String linkWacth = uicomponent.event("WatchManager", category.getPath());
                 if(canEdit && uicomponent.hasWatch(category.getPath())) {%>

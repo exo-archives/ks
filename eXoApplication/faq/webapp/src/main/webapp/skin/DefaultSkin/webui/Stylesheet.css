@@ -1,31 +1,4 @@
-@import url('UIMoveCategoryForm/Stylesheet.css') ;
-
-.FL {
-	float: left;
-}
-
-.FR {
-	float: right;
-}
-
-h1 {font-size: 22px;}
-
-h2 {font-size: 18px;}
-
-h3 {font-size: 16px;}
-
-h4 {font-size: 14px;}
-
-h5 {font-size: 12px;}
-
-h6 {font-size: 11px;}
-
-
-ul,li{
-	margin: 0px;
-	padding: 0px;
-	list-style-type: none;
-}
+@import url('UIMoveCategoryForm/Stylesheet.css');
 
 .UIWindow .UIAnswersPortlet {
 	min-width: 900px;
@@ -37,6 +10,44 @@ ul,li{
 	padding: 5px;
 	min-width: 600px;
 	border: none;
+}
+
+.UIAnswersPortlet h1 {
+	font-size: 22px;
+}
+
+.UIAnswersPortlet h2 {
+	font-size: 18px;
+}
+
+.UIAnswersPortlet h3 {
+	font-size: 16px;
+}
+
+.UIAnswersPortlet h4 {
+	font-size: 14px;
+}
+
+.UIAnswersPortlet h5 {
+	font-size: 12px;
+}
+
+.UIAnswersPortlet h6 {
+	font-size: 11px;
+}
+
+.UIAnswersPortlet ul,li {
+	margin: 0px;
+	padding: 0px;
+	list-style-type: none;
+}
+
+.UIAnswersPortlet .FL {
+	float: left;
+}
+
+.UIAnswersPortlet .FR {
+	float: right;
 }
 
 /******************************************** UIRightClickPopupMenu ****************************************/

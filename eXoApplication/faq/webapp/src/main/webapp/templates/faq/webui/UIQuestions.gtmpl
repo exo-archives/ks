@@ -1154,6 +1154,7 @@
                                       <td style="width:20px" class="DisablePrint">
                                         <a title="<%=_ctx.appRes("UIQuestions.action.DeleteComment")%>" style="cursor:pointer;" href="<%=uicomponent.event("DeleteComment", comment.getId())%>">
                                           <div class="ItemIcon Delete" style="height:24px;width:16px;">
+
                                               <span></span>
                                           </div>
                                         </a>
@@ -1191,9 +1192,9 @@
         }
     %>
     
-      <!-- -------------------------------------- Print function ------------------------------- -->
+      <!---------------------------------------- Print function --------------------------------->
       
-          <div id="PrintAction" print="<%=_ctx.appRes("UIQuestions.action.Print")%>" cancel="<%=_ctx.appRes("UIQuestions.action.ClosePrintQuestion")%>"></div>
+          <div id="PrintAction" print="<%=_ctx.appRes("UIQuestions.action.Print")%>" cancel="<%=_ctx.appRes("UIQuestions.action.ClosePrintQuestion")%>"><span></span></div>
       
     </div>
     <%
