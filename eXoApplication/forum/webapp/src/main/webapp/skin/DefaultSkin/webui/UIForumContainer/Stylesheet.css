@@ -7,9 +7,9 @@
 }
 
 .UIForumContainer .LockActionForum {
-	filter:alpha(opacity=50);
-	-moz-opacity:.50;
-	opacity:.50;
+	filter: alpha(opacity =     50);
+	-moz-opacity: .50;
+	opacity: .50;
 }
 
 .UIForumContainer .ButtomAndPageListContainer .UIPageIterator {
@@ -22,7 +22,8 @@
 	background-position: left center;
 	padding-left: 22px;
 	margin: 0px;
-	width: auto; height: auto;
+	width: auto;
+	height: auto;
 	display: block;
 }
 
@@ -37,7 +38,8 @@
 
 .UIForumContainer .ContentContainer .UITopicList .TitleBold {
 	color: #204aa0;
-	font-size: 12px; font-weight: bold;
+	font-size: 12px;
+	font-weight: bold;
 }
 
 .UIForumContainer .ContentContainer .UITopicList .TitleNorman {
@@ -67,8 +69,10 @@
 }
 
 .UIForumContainer .ContentContainer .StatusIcon {
-	margin: auto; cursor: pointer;
-	width: 16px; height: 16px;
+	margin: auto;
+	cursor: pointer;
+	width: 16px;
+	height: 16px;
 }
 
 .UIForumContainer .ContentContainer .AvgRatingImages {
@@ -77,37 +81,39 @@
 }
 
 .UIForumContainer .ContentContainer .VoteIcon {
-	width: 16px; 
+	width: 16px;
 	height: 16px;
 	float: left;
 }
 
 .UIForumContainer .ContentContainer .ThreadStatusIcon {
 	margin: auto;
-	width: 24px; 
+	width: 24px;
 	height: 24px;
 }
 
-.UIForumContainer .ContentContainer span{
+.UIForumContainer .ContentContainer span {
 	display: inline-block;
 }
 
 .UIForumContainer .ContentContainer .AttachmentIcon {
 	margin: 2px 0px 0px 12px;
-	width: 16px; height: 16px;
+	width: 16px;
+	height: 16px;
 	display: block;
 }
 
 .UIForumContainer .ContentContainer .LeftArrowIcon {
 	margin: 0px 2px 0px 0px;
-	width: 16px; height: 16px;
+	width: 16px;
+	height: 16px;
 	float: left;
 	cursor: pointer;
 }
 
 .UIForumContainer .ContentContainer .RightArrowIcon {
 	margin: 0px 2px;
-	width: 16px; 
+	width: 16px;
 	height: 16px;
 	float: right;
 	cursor: pointer;
@@ -118,7 +124,6 @@
 	cursor: pointer;
 	display: block;
 }
-
 
 .UIForumContainer .ContentContainer .NonArrow1Icon {
 	padding-right: 16px;
@@ -136,7 +141,7 @@
 
 .UIForumContainer .LeftStartsList {
 	margin: 0px 310px 0px 0px;
-} 
+}
 
 .UIForumContainer .RightStartsList {
 	float: right;
@@ -170,11 +175,11 @@
 }
 
 .UIForumContainer .UITopicContainer .TopicDeleted {
-	border: 1px outset ;
+	border: 1px outset;
 	color: black;
 	padding: 10px;
 }
 
-.UIForumPortlet .UIPostRules .TxtRules{
+.UIForumPortlet .UIPostRules .TxtRules {
 	padding: 5px;
 }

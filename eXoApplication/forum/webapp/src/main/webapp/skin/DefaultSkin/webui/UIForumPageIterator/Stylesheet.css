@@ -1,117 +1,116 @@
-.UIForumPageIterator {    
-	float:right;
-	margin: 0px ;
-	padding: 3px 0px 3px 5px ;
-	overflow: hidden; 
+.UIForumPageIterator {
+	float: right;
+	margin: 0px;
+	padding: 3px 0px 3px 5px;
+	overflow: hidden;
 }
 
-.UIForumPageIterator span{    
+.UIForumPageIterator span {
 	display: block;
 	float: left;
 }
 
 .UIForumPageIterator .Icon {
-  float: left ;
-  margin: 0px 2px 0px 0px ;
-  width: 18px ; 
-  height: 17px ;
+	float: left;
+	margin: 0px 2px 0px 0px;
+	width: 18px;
+	height: 17px;
 }
 
-
 .UIForumPageIterator .PagesTotalNumber {
-  line-height: 17px ; 
-  color: #0183f1;
-  margin: 0px 5px;
-  float: left;
+	line-height: 17px;
+	color: #0183f1;
+	margin: 0px 5px;
+	float: left;
 }
 
 .UIForumPageIterator .LastTopPageIcon {
-  vertical-align: middle ;
-  background: url('background/ScrollDoubleBackArrows.gif') no-repeat ;
-  cursor: pointer ;
+	vertical-align: middle;
+	background: url('background/ScrollDoubleBackArrows.gif') no-repeat;
+	cursor: pointer;
 }
 
 .UIForumPageIterator .NextTopPageIcon {
-  background: url('background/ScrollDoubleNextArrows.gif') no-repeat ;
-  cursor: pointer ;
+	background: url('background/ScrollDoubleNextArrows.gif') no-repeat;
+	cursor: pointer;
 }
 
 .UIForumPageIterator .LastPageIcon {
-  background: url('background/ScrollSingleBackArrow.gif') no-repeat ;
-  cursor: pointer ; 
+	background: url('background/ScrollSingleBackArrow.gif') no-repeat;
+	cursor: pointer;
 }
 
 .UIForumPageIterator .NextPageIcon {
-  background: url('background/ScrollSingleNextArrow.gif') no-repeat ;
-  cursor: pointer ;
+	background: url('background/ScrollSingleNextArrow.gif') no-repeat;
+	cursor: pointer;
 }
 
 .UIForumPageIterator .DisableLastTopPageIcon {
-  vertical-align: middle ;
-  background: url('background/DoubleBackArrows.gif') no-repeat ;
+	vertical-align: middle;
+	background: url('background/DoubleBackArrows.gif') no-repeat;
 }
 
 .UIForumPageIterator .DisableNextTopPageIcon {
-  background: url('background/DoubleNextArrows.gif') no-repeat ;
+	background: url('background/DoubleNextArrows.gif') no-repeat;
 }
 
 .UIForumPageIterator .DisableLastPageIcon {
-  background: url('background/SingleBackArrow.gif') no-repeat ;
+	background: url('background/SingleBackArrow.gif') no-repeat;
 }
 
 .UIForumPageIterator .DisableNextPageIcon {
-  background: url('background/SingleNextArrow.gif') no-repeat ;
+	background: url('background/SingleNextArrow.gif') no-repeat;
 }
 /* End */
-
 .UIForumPageIterator .Number {
-  float: left ;
-  text-align: center;
-  margin: 0px 2px 0px 0px;
-  line-height: 15px;
-  display: block;
-  padding: 0px 6px
+	float: left;
+	text-align: center;
+	margin: 0px 2px 0px 0px;
+	line-height: 15px;
+	display: block;
+	padding: 0px 6px
 }
 
 .UIForumPageIterator .PageSelected {
-  border: 1px solid #dfdfdf;
-  color: #f16701;
-  font-weight: bold;
-  cursor: default;
+	border: 1px solid #dfdfdf;
+	color: #f16701;
+	font-weight: bold;
+	cursor: default;
 }
 
 .UIForumPageIterator .PageNormal {
 	border: 1px solid #dfdfdf;
-	color: #333333 ;
+	color: #333333;
 	background: white;
 }
 
 .UIForumPageIterator .Number a {
-  padding: 1px 6px 1px 7px;
+	padding: 1px 6px 1px 7px;
 }
 
 .UIForumPageIterator .Number a:hover {
-  padding: 1px 6px 1px 7px;
-  color: #058ee6 ;
-  border: 1px solid #777777;
+	padding: 1px 6px 1px 7px;
+	color: #058ee6;
+	border: 1px solid #777777;
 }
 
 .UIForumPortlet .GotoPageIcon {
-	background: url('background/OpenPopup17x21.gif') no-repeat ;
+	background: url('background/OpenPopup17x21.gif') no-repeat;
 	margin-top: 3px;
-	float: right; 
-	width: 21px; height: 17px;
+	float: right;
+	width: 21px;
+	height: 17px;
 	display: block;
 }
 
 .UIForumPortlet .GotoPageIcon .UIPopupCategory {
-	left:-90px;
+	left: -90px;
 	position: relative;
 	top: 2px;
 	z-index: 1010;
 }
 
-.UIForumPortlet .SearchForm .UIPopupCategory input{
+.UIForumPortlet .SearchForm .UIPopupCategory input {
 	width: 70px;
 	height: 20px;
 	line-height: 20px;
@@ -120,30 +119,29 @@
 	padding: 0 5px;
 }
 
-.UIForumPortlet .SearchForm .UIPopupCategory .BorderSearch{
+.UIForumPortlet .SearchForm .UIPopupCategory .BorderSearch {
 	padding: 10px;
 }
 
 .UIForumPortlet .GotoPageIcon .UIPopupCategory .InputPage {
-	padding:2px 6px 0px 0px;
+	padding: 2px 6px 0px 0px;
 }
 
-.UIForumPortlet .GotoPageIcon .UIPopupCategory .InputPage input{
-	width:30px;
+.UIForumPortlet .GotoPageIcon .UIPopupCategory .InputPage input {
+	width: 30px;
 	height: 12px;
 	font-size: 12px;
 }
 
 /*=========================== Add ==========================*/
-
-.UIForumPortlet .GotoPageIcon .UIRightClickPopupMenu{
+.UIForumPortlet .GotoPageIcon .UIRightClickPopupMenu {
 	width: 122px;
 	right: 0px;
 	top: 15px;
 	padding: 10px 12px;
 }
 
-.UIForumPortlet .GotoPageIcon .UIRightClickPopupMenu input{
+.UIForumPortlet .GotoPageIcon .UIRightClickPopupMenu input {
 	width: 50px;
 	height: 13px;
 	float: left;

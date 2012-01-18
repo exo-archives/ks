@@ -10,13 +10,14 @@
 }
 
 .UIForumPortlet .UIViewMemberProfile .ViewContainer {
-  min-height: 270px;
-}
-*html .UIForumPortlet .UIViewMemberProfile .ViewContainer {
-  height: 270px;
+	min-height: 270px;
 }
 
-.UIForumPortlet .UIViewMemberProfile .ViewMemberProfileContainer .UserLabel{
+* html .UIForumPortlet .UIViewMemberProfile .ViewContainer {
+	height: 270px;
+}
+
+.UIForumPortlet .UIViewMemberProfile .ViewMemberProfileContainer .UserLabel {
 	background-position: right;
 	padding: 1px 18px 2px 0px;
 	color: #135bbe;
@@ -41,7 +42,7 @@
 
 .UIForumPortlet .UIViewMemberProfile .MemberContent {
 	padding: 10px 0px 0px 15px;
-}	
+}
 
 .UIForumPortlet UIViewMemberProfile .MemberContent .Rank {
 	color: #2c2c2c;
@@ -58,7 +59,7 @@
 	line-height: 20px;
 	text-align: right;
 	padding-right: 6px;
-	width: 111px ;
+	width: 111px;
 }
 
 .UIForumPortlet .UIViewMemberProfile .ProfileContainer .LabelProfile {
@@ -80,6 +81,6 @@
 	margin: auto;
 }
 
-*html .UIForumPortlet .UIViewPrivateMessageForm {
+* html .UIForumPortlet .UIViewPrivateMessageForm {
 	width: 94%;
 }

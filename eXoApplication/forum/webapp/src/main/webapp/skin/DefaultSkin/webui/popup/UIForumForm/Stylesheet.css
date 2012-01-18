@@ -14,7 +14,7 @@
 	height: 46px;
 }
 
-.UIForumForm .HorizontalLayout .moderationOptions  {
+.UIForumForm .HorizontalLayout .moderationOptions {
 	width: 510px;
 	padding: 20px 0px 60px 0px;
 }
@@ -22,7 +22,6 @@
 .UIForumForm .HorizontalLayout .moderationOptions  .UIFormGrid td.FieldLabel {
 	padding: 4px 0px;
 }
-
 
 .UIForumForm .HorizontalLayout .moderationOptions textarea {
 	width: 260px;
@@ -39,7 +38,7 @@
 }
 
 .UIForumForm .ForumPermission input {
-	float: left ;
+	float: left;
 }
 
 .UIForumForm .ForumPermission .SelectUserIcon {
@@ -59,7 +58,6 @@
 }
 
 /********KS-2315*********/
-
-.UIFormForum  .UIFormInput .UIFormUploadInput .UploadIframe iframe{
+.UIFormForum  .UIFormInput .UIFormUploadInput .UploadIframe iframe {
 	width: 360px;
 }

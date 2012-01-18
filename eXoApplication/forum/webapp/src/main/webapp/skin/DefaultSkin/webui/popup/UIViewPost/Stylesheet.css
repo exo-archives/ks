@@ -3,7 +3,7 @@
 	width: 96%;
 }
 
-*html .UIForumPortlet .UIViewPost {
+* html .UIForumPortlet .UIViewPost {
 	margin: 10px auto;
 	width: 94%;
 }
@@ -68,7 +68,7 @@
 }
 
 .UIViewPost .AttachmentIcon {
-	height: 20px; 
+	height: 20px;
 	width: auto;
 	display: block;
 	padding-left: 20px;

@@ -4,7 +4,7 @@
 }
 
 .UITopicForm .UIFormInputSet .UIFormGrid td.FieldLabel {
-	text-align: left ;
+	text-align: left;
 	white-space: nowrap;
 }
 
@@ -20,8 +20,9 @@
 	padding-left: 5px;
 }
 
-.UITopicForm .UIForm .HorizontalLayout .ThreadContent textarea { 
-	width: 430px; height: 205px;
+.UITopicForm .UIForm .HorizontalLayout .ThreadContent textarea {
+	width: 430px;
+	height: 205px;
 }
 
 .UITopicForm .UIForm .HorizontalLayout .ThreadOptions checkbox {
@@ -41,8 +42,8 @@
 }
 
 .UITopicForm .HorizontalLayout .ThreadPermission .FormContainer {
-	border: none;	
-	padding:0px 15px;
+	border: none;
+	padding: 0px 15px;
 }
 
 .UITopicForm .UITabContent {
@@ -59,7 +60,7 @@
 }
 
 .UITopicForm .UIFormTabPane .ThreadPermission .HorizontalLayout {
-	border:1px solid #B7B7B7;
+	border: 1px solid #B7B7B7;
 	padding-top: 8px;
 }
 
@@ -85,14 +86,14 @@
 }
 
 .UITopicForm .ThreadPermission input {
-	float: left ;
+	float: left;
 }
 
 .UITopicForm .UIForm .UIFormGrid td.FieldComponent {
 	width: 700px;
 }
 
-.UITopicForm .UIFormTabPane .UITabContent .FieldComponent div{
+.UITopicForm .UIFormTabPane .UITabContent .FieldComponent div {
 	width: 98%;
-	float:left;
+	float: left;
 }

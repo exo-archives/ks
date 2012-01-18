@@ -1,4 +1,5 @@
 .UIForumPortlet .UICategoryForm {
+	
 }
 
 .UIForumPortlet .UICategoryForm .HorizontalLayout {
@@ -11,15 +12,15 @@
 }
 
 .UIForumPortlet .UICategoryForm .HorizontalLayout textarea {
-	height:54px;
-	width:235px;
+	height: 54px;
+	width: 235px;
 }
 
 .UIForumPortlet .UICategoryForm #PermissionTab textarea {
-	height:50px;
-	width:235px;
+	height: 50px;
+	width: 235px;
 }
 
 .UIForumPortlet .UICategoryForm .HorizontalLayout input {
-	width:232px;
+	width: 232px;
 }

@@ -1,6 +1,6 @@
 .UIModeratorManagementForm {
 	padding: 10px;
-	background:#ffffff;
+	background: #ffffff;
 }
 
 .UIModeratorManagementForm .UIForumPageIterator {
@@ -8,17 +8,17 @@
 }
 
 .UIModeratorManagementForm .UIComponentModerator {
-  margin: auto;
-  width: 99%;
-  *width: 95%;
+	margin: auto;
+	width: 99%;
+	*width: 95%;
 }
 
 .UIModeratorManagementForm .UITabPane .UITabContentContainer .UITabContent {
-	border-bottom: none ;
+	border-bottom: none;
 }
 
 .UIModeratorManagementForm .UITabPane .UIAction {
-	border-bottom: white ;
+	border-bottom: white;
 }
 
 .UIModeratorManagementForm .ModeratorsManagementContainer {
@@ -40,7 +40,7 @@
 }
 
 .UIModeratorManagementForm .UITabPane .TabPaneContent {
-  padding: 0px;
+	padding: 0px;
 }
 
 .UIModeratorManagementForm .ModeratorsGroup .UIFormWithTitle {
@@ -67,11 +67,12 @@
 }
 
 .UIModeratorManagementForm .ModeratorsGroup .UIFormGrid input.radio {
-	margin: 0px;	
+	margin: 0px;
 }
 
 .UIModeratorManagementForm .ModeratorsGroup .AddIcon16x16 {
-	width: 16px;	height: 16px;
+	width: 16px;
+	height: 16px;
 	margin: 0px 2px;
 }
 
@@ -102,16 +103,3 @@
 .UIModeratorManagementForm .ForumUserProfile .textarea {
 	height: 50px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

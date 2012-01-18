@@ -1,20 +1,22 @@
 .UIForumPortlet .Icon16x16 {
-	width: 16px; height: 16px;
+	width: 16px;
+	height: 16px;
 }
+
 .UIForumPortlet .BusyIcon {
-	background: url('icons/BusyIcon.gif') no-repeat ;
+	background: url('icons/BusyIcon.gif') no-repeat;
 }
 
 .UIForumPortlet .BigGrinIcon {
-	background: url('icons/BigGrinIcon.gif') no-repeat ;
+	background: url('icons/BigGrinIcon.gif') no-repeat;
 }
 
 .UIForumPortlet .OfflineIcon {
-	background: url('icons/OffLineIcon.gif') no-repeat ;
+	background: url('icons/OffLineIcon.gif') no-repeat;
 }
 
 .UIForumPortlet .OnlineIcon {
-	background: url('icons/OnlineIcon.gif') no-repeat ;
+	background: url('icons/OnlineIcon.gif') no-repeat;
 }
 
 .UIForumPortlet .ManageCategoryButton {
@@ -22,27 +24,27 @@
 }
 
 .UIForumPortlet .ToolIcon {
-	background: url('icons/ToolIcon.gif') no-repeat ;
+	background: url('icons/ToolIcon.gif') no-repeat;
 }
 
 .UIForumPortlet .ModeratedIcon {
-	background: url('icons/ModeratedIcon.gif') no-repeat ;
+	background: url('icons/ModeratedIcon.gif') no-repeat;
 }
 
 .UIForumPortlet .ModerationIcon {
-	background: url('icons/ModerationIcon.gif') no-repeat ;
+	background: url('icons/ModerationIcon.gif') no-repeat;
 }
 
 .UIForumPortlet .ViewPublicUserInfo {
-	background: url('icons/ViewProfileIcon.gif') no-repeat left center ;
+	background: url('icons/ViewProfileIcon.gif') no-repeat left center;
 }
 
 .UIForumPortlet .ClosePostsIcon {
-	background: url('icons/ClosePostsIcon.gif') no-repeat left center ;
+	background: url('icons/ClosePostsIcon.gif') no-repeat left center;
 }
 
 .UIForumPortlet .LockPostsIcon {
-	background: url('icons/LockPostsIcon.gif') no-repeat left center ;
+	background: url('icons/LockPostsIcon.gif') no-repeat left center;
 }
 
 .UIForumPortlet .SmallGrayPlus {
@@ -54,19 +56,19 @@
 }
 
 .UIForumPortlet .SearchIcon {
-	background: url('icons/SearchIcon.gif') no-repeat ;
+	background: url('icons/SearchIcon.gif') no-repeat;
 }
 
 .UIForumPortlet .StickyIcon {
-	background: url('icons/StickyIcon.gif') no-repeat ;
+	background: url('icons/StickyIcon.gif') no-repeat;
 }
 
 .UIForumPortlet .LeftArrowIcon {
-	background: url('icons/LeftArrowIcon.gif') no-repeat ;
+	background: url('icons/LeftArrowIcon.gif') no-repeat;
 }
 
 .UIForumPortlet .RightArrowIcon {
-	background: url('icons/LeftArrowIcon.gif') no-repeat ;
+	background: url('icons/LeftArrowIcon.gif') no-repeat;
 }
 
 .UIForumPortlet .FieldComponent .AttachmentIcon {
@@ -121,7 +123,7 @@
 }
 
 .UIForumPortlet .EditPollIcon {
-	background: url('icons/EditPollIcon.gif')  no-repeat left center;
+	background: url('icons/EditPollIcon.gif') no-repeat left center;
 }
 
 .UIForumPortlet .CategoryNormalIcon {
@@ -223,6 +225,7 @@
 .UIForumPortlet .DisplayOptionsIcon {
 	background: url('icons/DisplayOptionsIcon.gif') no-repeat left center;
 }
+
 .UIForumPortlet .EditCategoryIcon {
 	background: url('icons/EditCategory.gif') no-repeat left center;
 }
@@ -370,8 +373,9 @@
 }
 
 .UIForumPortlet .AddIcon16x16 {
-	float: left ;
-	width: 16px;	height: 16px;
+	float: left;
+	width: 16px;
+	height: 16px;
 	margin: 0px 0px 0px 6px;
 	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/BlueCirclePlus.gif') no-repeat center;
 	cursor: pointer;
@@ -402,7 +406,8 @@
 }
 
 .UIForumPortlet .DustBin {
-	width:24px; height:24px;
+	width: 24px;
+	height: 24px;
 	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/DustBin.gif') no-repeat left center;
 }
 
@@ -429,78 +434,86 @@
 .UIForumPortlet .TagManager {
 	background: url('icons/TagManager.gif') no-repeat left center;
 }
+
 .UIForumPortlet .View {
 	background: url('icons/ViewIcon.gif') no-repeat left center;
 }
 
 .UIForumPortlet .CalendarIcons {
-  background: url('icons/CalendarIcons.gif') no-repeat left center;
-  width:16px;
-  height:16px;
-  float:left;
-  margin-left:5px; 
+	background: url('icons/CalendarIcons.gif') no-repeat left center;
+	width: 16px;
+	height: 16px;
+	float: left;
+	margin-left: 5px;
 }
+
 .UIForumPortlet .DateTimeInput {
-  width:100px;
-  float:left;
+	width: 100px;
+	float: left;
 }
 
 .UIForumPortlet .TopicUnApprovedIcon {
-  background: url('icons/ApproveTopicsIcon.gif') no-repeat left center;
+	background: url('icons/ApproveTopicsIcon.gif') no-repeat left center;
 }
 
 .UIForumPortlet .TopicWaitingIcon {
-  background: url('icons/SetUnWaiting.gif') no-repeat left center;
+	background: url('icons/SetUnWaiting.gif') no-repeat left center;
 }
 
 .UIForumPortlet .PostUnApprovedIcon {
-  background: url('icons/ApprovePostsIcon.gif') no-repeat left center;
+	background: url('icons/ApprovePostsIcon.gif') no-repeat left center;
 }
 
 .UIForumPortlet .PostsHiddenIcon {
-  background: url('icons/HiddenPostIcon.gif') no-repeat left center;
+	background: url('icons/HiddenPostIcon.gif') no-repeat left center;
 }
 
 .UIForumPortlet .BanIpToolsIcon {
-  background: url('icons/OpenIPBanIcon.png') no-repeat left center;
+	background: url('icons/OpenIPBanIcon.png') no-repeat left center;
 }
 
 .UIForumPortlet .ExportForumIcon {
-  background:url('icons/Export.gif') no-repeat left center;
+	background: url('icons/Export.gif') no-repeat left center;
 }
 
 .UIForumPortlet .ExportCategoryIcon {
-  background:url('icons/Export.gif') no-repeat left center;
+	background: url('icons/Export.gif') no-repeat left center;
 }
 
 .UIForumPortlet .ImportForumIcon {
-  background:url('icons/Import.gif') no-repeat left;
+	background: url('icons/Import.gif') no-repeat left;
 }
 
 .UIForumPortlet .ImportCategoryIcon {
-  background:url('icons/Import.gif') no-repeat left;
+	background: url('icons/Import.gif') no-repeat left;
 }
 
 .UIForumPortlet .OpenIPBanIcon {
-  background: url('icons/OpenIPBanIcon.png') no-repeat left center;
+	background: url('icons/OpenIPBanIcon.png') no-repeat left center;
 }
+
 .UIForumPortlet .SortSettingIcon {
-  background: url('icons/SortSettingIcon.png') no-repeat left center;
+	background: url('icons/SortSettingIcon.png') no-repeat left center;
 }
+
 .UIForumPortlet .CensorKeywordIcon {
-  background: url('icons/CensorKeywordIcon.png') no-repeat left center;
+	background: url('icons/CensorKeywordIcon.png') no-repeat left center;
 }
+
 .UIForumPortlet .NotificationIcon {
-  background: url('icons/NotificationIcon.png') no-repeat left center;
+	background: url('icons/NotificationIcon.png') no-repeat left center;
 }
+
 .UIForumPortlet .BBCodeManagerIcon {
-  background: url('icons/BBCodeManagerIcon.png') no-repeat left center;
+	background: url('icons/BBCodeManagerIcon.png') no-repeat left center;
 }
+
 .UIForumPortlet .AutoPruneIcon {
-  background: url('icons/AutoPruneIcon.png') no-repeat left center;
+	background: url('icons/AutoPruneIcon.png') no-repeat left center;
 }
+
 .UIForumPortlet .TopicTypeManagerIcon {
-  background: url('icons/TopicTypeManagerIcon.png') no-repeat left center;
+	background: url('icons/TopicTypeManagerIcon.png') no-repeat left center;
 }
 
 .UIForumPortlet .PrivateMessage {
@@ -513,12 +526,14 @@
 
 .UIForumPortlet .PruneSettingIcon {
 	background: url('icons/PruneSettingIcon.gif') no-repeat left center;
-	width: 20px; height: 20px;
+	width: 20px;
+	height: 20px;
 }
 
 .UIForumPortlet .RunIcon {
 	background: url('icons/RunIcon.gif') no-repeat left center;
-	width: 20px; height: 20px;
+	width: 20px;
+	height: 20px;
 }
 
 .UIForumPortlet .ArrowLeftIcon {
@@ -531,21 +546,28 @@
 
 .UIForumPortlet .UntagIcon {
 	background: url('icons/UntagIcon.gif') no-repeat left center;
-	width: 12px; height: 24px;
-	cursor:pointer;
+	width: 12px;
+	height: 24px;
+	cursor: pointer;
 }
 
 .UIForumPortlet #PendingJob {
-	line-height:24px; white-space:nowrap;
-	height:24px; cursor:pointer;
-	padding-left: 18px; display: block;
+	line-height: 24px;
+	white-space: nowrap;
+	height: 24px;
+	cursor: pointer;
+	padding-left: 18px;
+	display: block;
 	background: url('icons/PendingJob.gif') no-repeat left center;
 }
 
 .UIForumPortlet .PermLink {
-	line-height:24px; white-space:nowrap;
-	height:24px; cursor:pointer;
-	padding-left: 20px; display: block;
+	line-height: 24px;
+	white-space: nowrap;
+	height: 24px;
+	cursor: pointer;
+	padding-left: 20px;
+	display: block;
 	background: url('icons/PermLink.gif') no-repeat left center;
 }
 
@@ -573,6 +595,8 @@
 
 .UIForumPortlet .InfoMessageIcon {
 	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/Info.gif') no-repeat left center;
-	padding-left: 20px;	margin-left: 20px;
-	line-height: 18px;	height: 18px;
+	padding-left: 20px;
+	margin-left: 20px;
+	line-height: 18px;
+	height: 18px;
 }

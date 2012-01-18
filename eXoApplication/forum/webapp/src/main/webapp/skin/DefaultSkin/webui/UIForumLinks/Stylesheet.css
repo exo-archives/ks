@@ -14,7 +14,7 @@
 
 .UIForumLinks .HorizontalLayout .UIFormGrid td.FieldLabel {
 	line-height: 20px;
-	white-space:nowrap;
+	white-space: nowrap;
 	padding: 0px 4px;
 	width: 100%;
 	width: expression("auto");
@@ -22,7 +22,7 @@
 
 .UIForumLinks .UIFormGrid td.FieldLabel {
 	line-height: 20px;
-	white-space:nowrap;
+	white-space: nowrap;
 	padding: 0px 4px;
 	width: 100%;
 	width: expression("auto");
@@ -33,19 +33,19 @@
 }
 
 .UIForumLinks .UIForm .HorizontalLayout select {
-	float:left;
-	text-align:left;
-	white-space:nowrap;
+	float: left;
+	text-align: left;
+	white-space: nowrap;
 }
 
 .UIForumLinks .categoryLink {
 	line-height: 16px;
-	background: #eaf2fb ;
+	background: #eaf2fb;
 }
 
 .UIForumLinks .forumLink {
 	line-height: 16px;
-	white-space:nowrap;
+	white-space: nowrap;
 }
 
 .UIForumLinks .forumHomePage {
@@ -54,17 +54,17 @@
 }
 
 .UIForumPortlet .optionSelected {
-	background-color: #8eb3da ;
+	background-color: #8eb3da;
 }
 
 .UIForumPortlet .timeZone {
 	line-height: 16px;
 }
 
-.UIForumLinks .UIForm  .UIFormGrid td.FieldLabel{
+.UIForumLinks .UIForm  .UIFormGrid td.FieldLabel {
 	padding: 0px;
 }
 
-.UIForumPortlet .UIForm select{
+.UIForumPortlet .UIForm select {
 	*height: 19px;
 }

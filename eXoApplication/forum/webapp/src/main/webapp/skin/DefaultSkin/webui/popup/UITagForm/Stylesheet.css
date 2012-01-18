@@ -1,6 +1,6 @@
 .UIForumPortlet .UITagForm {
 	padding: 10px;
-	background:#ffffff;
+	background: #ffffff;
 }
 
 .UIForumPortlet .UITagForm .TagContent {
@@ -64,94 +64,93 @@
 }
 
 .UIForumPortlet .DarkGoldenRod {
-	background-position: left -24px;	
+	background-position: left -24px;
 }
 
 .UIForumPortlet .Green {
-	background-position: left -48px;	
+	background-position: left -48px;
 }
 
 .UIForumPortlet .Yellow {
-	background-position: left -72px;	
+	background-position: left -72px;
 }
 
 .UIForumPortlet .BlueViolet {
-	background-position: left -96px;	
+	background-position: left -96px;
 }
 
 .UIForumPortlet .Orange {
-	background-position: left -120px;	
+	background-position: left -120px;
 }
 
 .UIForumPortlet .DarkBlue {
-	background-position: left -144px;	
+	background-position: left -144px;
 }
 
 .UIForumPortlet .IndianRed {
-	background-position: left -168px;	
+	background-position: left -168px;
 }
 
 .UIForumPortlet .DarkCyan {
-	background-position: left -192px;	
+	background-position: left -192px;
 }
 
 .UIForumPortlet .LawnGreen {
-	background-position: left -216px;	
+	background-position: left -216px;
 }
 
 .UIForumPortlet .Violet {
-	background-position: left -240px;	
+	background-position: left -240px;
 }
 
 .UIForumPortlet .Red {
-	background-position: left bottom;	
+	background-position: left bottom;
 }
 
 .BlueTagIcon {
-	background: url('icons/BlueTagIcon.gif') no-repeat ;
+	background: url('icons/BlueTagIcon.gif') no-repeat;
 }
 
 .DarkGoldenRodTagIcon {
-	background: url('icons/DarkGoldenRodTagIcon.gif') no-repeat ;
+	background: url('icons/DarkGoldenRodTagIcon.gif') no-repeat;
 }
 
 .GreenTagIcon {
-	background: url('icons/GreenTagIcon.gif') no-repeat ;
+	background: url('icons/GreenTagIcon.gif') no-repeat;
 }
 
 .YellowTagIcon {
-	background: url('icons/YellowTagIcon.gif') no-repeat ;
+	background: url('icons/YellowTagIcon.gif') no-repeat;
 }
 
 .BlueVioletTagIcon {
-	background: url('icons/BlueVioletTagIcon.gif') no-repeat ;
+	background: url('icons/BlueVioletTagIcon.gif') no-repeat;
 }
 
 .OrangeTagIcon {
-	background: url('icons/OrangeTagIcon.gif') no-repeat ;
+	background: url('icons/OrangeTagIcon.gif') no-repeat;
 }
 
 .DarkBlueTagIcon {
-	background: url('icons/DarkBlueTagIcon.gif') no-repeat ;
+	background: url('icons/DarkBlueTagIcon.gif') no-repeat;
 }
 
 .IndianRedTagIcon {
-	background: url('icons/IndianRedTagIcon.gif') no-repeat ;
+	background: url('icons/IndianRedTagIcon.gif') no-repeat;
 }
 
 .DarkCyanTagIcon {
-	background: url('icons/DarkCyanTagIcon.gif') no-repeat ;
+	background: url('icons/DarkCyanTagIcon.gif') no-repeat;
 }
 
 .LawnGreenTagIcon {
-	background: url('icons/LawnGreenTagIcon.gif') no-repeat ;
+	background: url('icons/LawnGreenTagIcon.gif') no-repeat;
 }
 
 .VioletTagIcon {
-	background: url('icons/VioletTagIcon.gif') no-repeat ;
+	background: url('icons/VioletTagIcon.gif') no-repeat;
 }
 
 .RedTagIcon {
-	background: url('icons/RedTagIcon.gif') no-repeat ;
+	background: url('icons/RedTagIcon.gif') no-repeat;
 }
-

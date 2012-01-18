@@ -1,6 +1,3 @@
-.UIForumPortlet .UICategories {
-}
-
 .UICategories .UIForumWorkingWorkspace {
 	width: auto;
 	padding: 0px 10px;
@@ -11,7 +8,6 @@
 }
 
 /**************************** UICategories ForumToolBar *********************************/
-
 .UIForumCategory .ForumToolbar .ToolbarActionsContainer {
 	float: right;
 	min-width: 137px;
@@ -28,9 +24,9 @@
 	padding-left: 22px;
 	width: auto;
 	height: auto;
-} 
+}
 
 .UIForumCategory .ForumToolbar .DownArrow1Icon {
-	background-position:right center;
-	padding-right:16px;
+	background-position: right center;
+	padding-right: 16px;
 }

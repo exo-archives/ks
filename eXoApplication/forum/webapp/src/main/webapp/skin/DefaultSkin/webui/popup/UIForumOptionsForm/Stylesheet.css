@@ -4,7 +4,7 @@
 }
 
 .UIForumPortlet .UIForumOptionForm .HorizontalLayout {
-	border:1px solid #AEAEAE;
+	border: 1px solid #AEAEAE;
 	background-color: #f7f7f7;
 }
 
@@ -14,7 +14,7 @@
 
 .UIForumPortlet .UIForumOptionForm .UIFormInput {
 	border: solid 1px #ffffff;
-} 
+}
 
 .UIForumPortlet .UIForumOptionForm .UIFormInput {
 	padding: 8px 10px 8px 0px;

@@ -4,14 +4,14 @@
 }
 
 .UIForumPortlet .UIAddPollForm .HorizontalLayout {
-	background-color: #f7f7f7 ;
+	background-color: #f7f7f7;
 	padding: 20px 20px 15px;
 }
 
 .UIForumPortlet .UIAddPollForm .Line {
-	background: url('background/Line1x2.gif') repeat-x ;
-	height: 2px ;
-	margin: 4px auto 10px auto ;
+	background: url('background/Line1x2.gif') repeat-x;
+	height: 2px;
+	margin: 4px auto 10px auto;
 }
 
 .UIForumPortlet .UIAddPollForm .PollOptionConntent {
@@ -46,7 +46,8 @@
 }
 
 .UIForumPortlet .UIAddPollForm .Icon {
-	width: 16px; height: 16px;
+	width: 16px;
+	height: 16px;
 	float: left;
 	margin: 0px 2px;
 }

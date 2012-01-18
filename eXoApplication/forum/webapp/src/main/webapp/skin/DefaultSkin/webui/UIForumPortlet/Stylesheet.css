@@ -3,7 +3,7 @@
 	background: #ffffff;
 }
 
-*html .UIForumPortlet {
+* html .UIForumPortlet {
 	height: 470px;
 }
 
@@ -34,29 +34,34 @@
 	float: right;
 	line-height: 20px;
 	margin: 2px 0px;
-	color: #595b6a; 
+	color: #595b6a;
 }
 
 .UIForumPortlet .UIQuickSearchForm .Input {
 	margin: 0px 8px 0px 10px;
-	float: right ;
+	float: right;
 }
 
 .UIForumPortlet .UIQuickSearchForm .Input input {
-	width: 130px;	height: 15px;
+	width: 130px;
+	height: 15px;
 }
 
 .UIForumPortlet .UIQuickSearchForm .Search {
-	background: url('icons/16x16/SearchIcon.gif') no-repeat ;	
-	height: 16px;	width: 16px;
-	float: right;	cursor: pointer;
+	background: url('icons/16x16/SearchIcon.gif') no-repeat;
+	height: 16px;
+	width: 16px;
+	float: right;
+	cursor: pointer;
 	margin: 3px 5px 0px 0px;
 }
 
 .UIForumPortlet .UIQuickSearchForm .AdvancedSearch {
-	background: url('icons/16x16/FindIcon.gif') no-repeat ;	
-	height: 16px; width: 16px;
-	float: right; cursor: pointer;
+	background: url('icons/16x16/FindIcon.gif') no-repeat;
+	height: 16px;
+	width: 16px;
+	float: right;
+	cursor: pointer;
 	margin: 3px 0px 0px 2px;
 }
 
@@ -66,11 +71,10 @@
 }
 
 .UIForumPortlet .AdvancedSearchIcon {
-	background: url('icons/16x16/FindIcon.gif') no-repeat left center;	
+	background: url('icons/16x16/FindIcon.gif') no-repeat left center;
 	cursor: pointer;
 }
 /******************************************** UIBreadcumbs ****************************************/
-
 .UIForumPortlet .UIBreadcumbs {
 	background: #f6f6f6;
 	border: 1px solid #e2e2e2;
@@ -79,10 +83,9 @@
 	height: 28px;
 }
 
-.UIForumPortlet .UIBreadcumbs .CenterBreadcumbs{
+.UIForumPortlet .UIBreadcumbs .CenterBreadcumbs {
 	height: 28px;
 }
-
 
 .UIForumPortlet .UIBreadcumbs .BreadcumbsInfoBar {
 	float: left;
@@ -90,29 +93,32 @@
 }
 
 .UIForumPortlet .UIBreadcumbs .BreadcumbsInfoBar .OpenIcon {
-	float:left;
-	background: url('icons/24x24/OpenFolder.gif') no-repeat ;
-	width: 24px; height: 24px;
+	float: left;
+	background: url('icons/24x24/OpenFolder.gif') no-repeat;
+	width: 24px;
+	height: 24px;
 }
 
 .UIForumPortlet .UIBreadcumbs .BreadcumbsInfoBar a.Selected {
 	float: left;
-	color: #1e1f21;	font-weight: bold;
+	color: #1e1f21;
+	font-weight: bold;
 	padding: 0px 5px;
 	line-height: 25px;
 }
 
 .UIForumPortlet .UIBreadcumbs .BreadcumbsInfoBar .Selected {
 	float: left;
-	color: #1e1f21;	
+	color: #1e1f21;
 	padding: 0px 5px;
 	line-height: 25px;
 }
 
 .UIForumPortlet .UIBreadcumbs .BreadcumbsInfoBar .RightArrowIcon {
 	float: left;
-	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/BlueNextArrow.gif') no-repeat ;
-	width: 16px; height: 16px;	
+	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/BlueNextArrow.gif') no-repeat;
+	width: 16px;
+	height: 16px;
 	margin: 6px 0px 0px 0px;
 }
 
@@ -132,15 +138,15 @@
 	background: url('icons/16x16/RSSIcon.gif') no-repeat left;
 }
 
-.UIForumPortlet .UIBreadcumbs .ShareLink a:hover{
-  text-decoration: underline;
-  color: #058EE6;
+.UIForumPortlet .UIBreadcumbs .ShareLink a:hover {
+	text-decoration: underline;
+	color: #058EE6;
 }
 
 .UIForumPortlet .UIBreadcumbs .ShareLink a {
-  line-height: 24px; 
-  cursor: pointer;
-  color: #000000;
+	line-height: 24px;
+	cursor: pointer;
+	color: #000000;
 }
 /******************************************** UIForumActionBar ****************************************/
 .UIForumPortlet .UIForumActionBar {
@@ -157,7 +163,7 @@
 
 .UIForumPortlet .UIForumActionBar .Icon {
 	padding: 0px 2px 0px 26px;
-	background-position: left center ;
+	background-position: left center;
 	white-space: nowrap;
 }
 
@@ -169,11 +175,11 @@
 }
 
 .UIForumPortlet .UIForumActionBar #OpenBookMark.SeparatorLineForum {
-  background: none;
+	background: none;
 }
 
-.UIForumPortlet .UIForumActionBar .RightLine{
-	float:right;
+.UIForumPortlet .UIForumActionBar .RightLine {
+	float: right;
 }
 
 .UIForumPortlet .UIForumActionBar .AddCategory {
@@ -181,20 +187,21 @@
 }
 
 .UIForumPortlet .UIForumActionBar .DefaultStyle .DisableAction {
-	opacity:0.5;filter:alpha(opacity=50);
+	opacity: 0.5;
+	filter: alpha(opacity =     50);
 }
 
 .UIForumPortlet .ToolbarActionsTag {
-	float:right;
+	float: right;
 	margin: 2px 6px 0px 0px;
-	cursor: pointer ;
+	cursor: pointer;
 }
 
 /******************************************** UIForumDescription ****************************************/
 .UIForumPortlet .UIForumDescription {
 	border: 1px solid #cdcdcd;
 	line-height: 16px;
-	padding: 7px 10px; 
+	padding: 7px 10px;
 	margin: 0px 0px 10px 0px;
 	zoom: 1;
 }
@@ -226,7 +233,6 @@
 	margin: 10px 0px;
 }
 
-
 .UIForumPortlet .ForumContains .IconPost {
 	float: left;
 	padding: 0px 31px;
@@ -246,14 +252,16 @@
 }
 
 .UIForumPortlet .ContentContainer .UserIcon {
-	background: url('icons/24x24/UserIcon.gif') no-repeat ;
-	width: 24px; height: 22px;
+	background: url('icons/24x24/UserIcon.gif') no-repeat;
+	width: 24px;
+	height: 22px;
 	margin: 0px 4px;
 }
 
 .UIForumPortlet .ContentContainer .ChartIcon {
-	background: url('icons/24x24/ChartIcon.gif') no-repeat ;
-	width: 24px; height: 22px;
+	background: url('icons/24x24/ChartIcon.gif') no-repeat;
+	width: 24px;
+	height: 22px;
 	margin: 0px 4px;
 }
 
@@ -263,8 +271,8 @@
 }
 
 .UIForumPortlet .UICategoryInfo .ContentContainer {
-	border-top:solid 1px #b7b7b7; 
-	*border-top: none; 
+	border-top: solid 1px #b7b7b7;
+	*border-top: none;
 	padding-top: 1px;
 	*padding-top: 0px;
 }
@@ -274,7 +282,8 @@
 }
 
 .UIForumPortlet .ContentContainer .ForumStatusIcon {
-	width: 24px; height: 24px;
+	width: 24px;
+	height: 24px;
 	margin: auto;
 }
 
@@ -293,7 +302,8 @@
 
 .UIForumPortlet .ContentContainer .LastPostIcon {
 	float: left;
-	width: 18px;	height: 18px;
+	width: 18px;
+	height: 18px;
 }
 
 .UIForumPortlet .ContentContainer .ForumQuantity {
@@ -323,11 +333,11 @@
 	line-height: 16px;
 }
 
-.UIForumPortlet .ContentContainer .LastPostInfos .LastPostCategory{
-	display:none; 
-	left:2px; 
-	top:2px; 
-	width:auto; 
+.UIForumPortlet .ContentContainer .LastPostInfos .LastPostCategory {
+	display: none;
+	left: 2px;
+	top: 2px;
+	width: auto;
 	position: relative;
 }
 
@@ -337,10 +347,9 @@
 
 .UIForumPortlet .ContentContainer .UITopicList .TagIcon {
 	background-position: left center;
-	padding:5px 0 5px 22px;
+	padding: 5px 0 5px 22px;
 	white-space: nowrap;
 }
-
 
 .UIForumPortlet .SelectFileFrame {
 	white-space: normal;
@@ -354,9 +363,9 @@
 }
 
 .UIListTopicOld .UITopicList .IconContent {
-  margin:auto;
-  overflow:auto;
-  width:55px;
+	margin: auto;
+	overflow: auto;
+	width: 55px;
 }
 
 /*============================= BBCode====================*/
@@ -372,17 +381,17 @@
 }
 
 .UIForumPortlet .ClassCode {
-  background: #ededed;
+	background: #ededed;
 	border: 1px inset #7b7b7b;
 	margin: 5px;
 	overflow: auto;
 }
 
 .UIForumPortlet .ClassCode pre {
-  padding: 5px;
+	padding: 5px;
 }
 
-.UIForumPortlet .highlight{
+.UIForumPortlet .highlight {
 	font-weight: bold;
 	color: blue;
 }
@@ -426,7 +435,8 @@
 
 .UIForumPortlet .LeftBBCodeHelp {
 	position: absolute;
-	width: 18px; height: 49px;
+	width: 18px;
+	height: 49px;
 	z-index: 10;
 }
 
@@ -442,54 +452,53 @@
 	-moz-border-radius: 9px 9px 9px 9px;
 	-webkit-border-radius: 9px 9px 9px 9px;
 	border-radius: 9px 9px 9px 9px;
-    -moz-box-shadow: 1px 1px 4px #A7A7A7;
+	-moz-box-shadow: 1px 1px 4px #A7A7A7;
 	-webkit-box-shadow: 1px 1px 4px #A7A7A7;
 	box-shadow: 1px 1px 4px #A7A7A7;
-  background: none repeat scroll 0 0 white;
-  border: 1px solid #717171;
-  padding: 8px;
+	background: none repeat scroll 0 0 white;
+	border: 1px solid #717171;
+	padding: 8px;
 	white-space: normal;
-  cursor: text;
+	cursor: text;
 }
 
 /*============================= UITopicsTag	====================*/
-
-.UITopicsTag .ForumContainer{
+.UITopicsTag .ForumContainer {
 	margin: 2px 0px;
 }
 
-.UIForumContainer .ContentContainer .WidthStatus{
+.UIForumContainer .ContentContainer .WidthStatus {
 	width: 40px;
 }
 
-.UIForumContainer .ContentContainer .WidthRating{
+.UIForumContainer .ContentContainer .WidthRating {
 	width: 96px;
 }
 
-.UIForumContainer .ContentContainer .WidthLastPost{
-	width: 160px;	
+.UIForumContainer .ContentContainer .WidthLastPost {
+	width: 160px;
 }
 
-.UIForumContainer .ContentContainer .WidthReplies{
+.UIForumContainer .ContentContainer .WidthReplies {
 	width: 65px;
 }
 
-.UIForumContainer .ContentContainer .WidthCheck{
+.UIForumContainer .ContentContainer .WidthCheck {
 	width: 30px;
 }
 
-.UIForumContainer .ContentContainer .TxtPopupTag{
-	left:2px; 
-	top:2px; 
-	width:140px
+.UIForumContainer .ContentContainer .TxtPopupTag {
+	left: 2px;
+	top: 2px;
+	width: 140px
 }
 
-.UIForumContainer .ContentContainer .NotAvailableTheard{
-	text-align:center;
+.UIForumContainer .ContentContainer .NotAvailableTheard {
+	text-align: center;
 	padding: 15px 0px;
 	font-weight: bold;
 }
 
-.UIForumPortlet .UITopicsTag .ForumToolbar .Title{
+.UIForumPortlet .UITopicsTag .ForumToolbar .Title {
 	font-weight: normal;
 }

@@ -69,7 +69,7 @@
 }
 
 .UITopicDetail .ViewTopicContainer {
-	padding:10px 8px;
+	padding: 10px 8px;
 }
 
 .UITopicDetail .ViewTopicContainer .ViewTopicPageIterator {
@@ -161,7 +161,7 @@
 .UITopicDetail .PostViewContainer .PostTime {
 	padding: 2px 0px 0px 20px;
 	margin-right: 4px;
-	font-size: 10px; 
+	font-size: 10px;
 	color: gray;
 }
 
@@ -179,7 +179,7 @@
 	border-collapse: separate;
 }
 
-.UITopicDetail .PostViewContainer .AttachmentContainer .AttachmentTitle	{
+.UITopicDetail .PostViewContainer .AttachmentContainer .AttachmentTitle {
 	background: #e7e7e7 url('/forum/skin/DefaultSkin/webui/skinIcons/16x16/icons/AttachmentIcon.gif') no-repeat 3px center;
 	padding-left: 20px;
 	line-height: 25px;
@@ -208,7 +208,7 @@
 	padding-left: 20px;
 }
 
-.UITopicDetail .PostViewContainer .AttachmentContainer .AttachmentLabel{
+.UITopicDetail .PostViewContainer .AttachmentContainer .AttachmentLabel {
 	color: #1555b5;
 	line-height: 20px;
 	font-weight: bold;
@@ -320,23 +320,21 @@
 }
 
 /*----------------------ForumQuickReply-----------------------*/
-
-
 .UITopicDetail .ForumQuickReply {
 	width: 100%;
 }
 
 .UITopicDetail .ForumQuickReply .ForumList {
 	width: 70%;
-    margin: 0 auto;
-    padding: 10px 0 0 0;
+	margin: 0 auto;
+	padding: 10px 0 0 0;
 }
 
 .UITopicDetail .ForumQuickReply .ForumList textarea {
 	width: 100%;
-    height: 115px;
-    display: block;
-    margin: 5px 0 0 0;
+	height: 115px;
+	display: block;
+	margin: 5px 0 0 0;
 }
 
 .UITopicDetail .ForumQuickReply .ActionContent {
@@ -352,8 +350,8 @@
 	border: solid 1px #b7b7b7;
 	background: white;
 	width: 98px;
-	overflow: hidden; 
-	padding : 1px 0px 4px 0px;
+	overflow: hidden;
+	padding: 1px 0px 4px 0px;
 	top: 24px;
 	left: 6px;
 	*top: 28px;
@@ -381,15 +379,15 @@
 	overflow: auto;
 }
 
-.UITopicDetail .MenuTagContainer .TagItem{
+.UITopicDetail .MenuTagContainer .TagItem {
 	float: left;
 }
 
-.UIForumPortlet .UITopicDetail .SearchForm .UIPopupCategory .SearchTopic .InputPage{
+.UIForumPortlet .UITopicDetail .SearchForm .UIPopupCategory .SearchTopic .InputPage {
 	padding: 0px;
 }
 
-.UIForumPortlet .UITopicDetail .ContentAction .UIRightPopupMenuContainer .UIActionForum{
+.UIForumPortlet .UITopicDetail .ContentAction .UIRightPopupMenuContainer .UIActionForum {
 	padding: 0px 0px 0px 1px;
 }
 
@@ -400,74 +398,73 @@
 }
 
 /*---------------------- Optimization CSS UITopicDetail-----------------------*/
-
-.UITopicDetail .ButtomAndPageListContainer .TitleTag{
-	padding-left: 20px; 
+.UITopicDetail .ButtomAndPageListContainer .TitleTag {
+	padding-left: 20px;
 	line-height: 24px;
 }
 
-.UITopicDetail .GotoPageIcon .BntGoPage{
-	width:20px; 
-	height:16px;
+.UITopicDetail .GotoPageIcon .BntGoPage {
+	width: 20px;
+	height: 16px;
 	display: block;
 }
 
 .UITopicDetail .ButtonHeadBar .UIPopupCategory {
-  width: 0.1px;	
+	width: 0.1px;
 }
 
-.UITopicDetail .ButtonHeadBar .UIPopupCategory .BlockAddTag{
-	padding:5px 0px;
-	min-width:155px;
-	display:block; 
-	left:-103px;
+.UITopicDetail .ButtonHeadBar .UIPopupCategory .BlockAddTag {
+	padding: 5px 0px;
+	min-width: 155px;
+	display: block;
+	left: -103px;
 	top: 1px;
 }
 
-.UITopicDetail .ButtonHeadBar .UIPopupCategory .BlockAddTag input{
+.UITopicDetail .ButtonHeadBar .UIPopupCategory .BlockAddTag input {
 	margin-left: 5px;
 }
 
 .UITopicDetail .MemberContent .ImgAvatar {
-	cursor:pointer;
+	cursor: pointer;
 }
 
-.UITopicDetail .PostViewContainer .UIPopupCategory .BloclPopupIP{
-	display:block; 
-	left:-60px;
-	width:165px;
-	min-width:164px;
+.UITopicDetail .PostViewContainer .UIPopupCategory .BloclPopupIP {
+	display: block;
+	left: -60px;
+	width: 165px;
+	min-width: 164px;
 }
 
-.UITopicDetail .PostViewContainer .UIPopupCategory{
+.UITopicDetail .PostViewContainer .UIPopupCategory {
 	position: relative;
 }
 
-.UITopicDetail .ContentContainer .PostViewTitleOtherAcc{
+.UITopicDetail .ContentContainer .PostViewTitleOtherAcc {
 	width: 100%;
 }
 
-.UITopicDetail .ContentContainer .MemberContent .InfoMember span{
+.UITopicDetail .ContentContainer .MemberContent .InfoMember span {
 	display: block;
 }
 
-.UITopicDetail .MemberContent .MemberName .TxtTitleName{
-	cursor:pointer;
+.UITopicDetail .MemberContent .MemberName .TxtTitleName {
+	cursor: pointer;
 }
 
-.UITopicDetail .PostViewContainer .PostViewHeader .CheckPost .checkbox{
+.UITopicDetail .PostViewContainer .PostViewHeader .CheckPost .checkbox {
 	margin: 2px;
 	padding: 0px;
 }
 
-.UITopicDetail .PostsInThreadContainer .FootPost .TxtLastEdit{
+.UITopicDetail .PostsInThreadContainer .FootPost .TxtLastEdit {
 	text-align: right;
 }
 
-.UITopicDetail .PostsInThreadContainer .FootPost .TxtLastEdit .TxtRoot{
-	color:blue;
+.UITopicDetail .PostsInThreadContainer .FootPost .TxtLastEdit .TxtRoot {
+	color: blue;
 }
 
-.UIForumPortlet .UITopicDetail .FootPost .ActionButton{
+.UIForumPortlet .UITopicDetail .FootPost .ActionButton {
 	float: right;
 }
