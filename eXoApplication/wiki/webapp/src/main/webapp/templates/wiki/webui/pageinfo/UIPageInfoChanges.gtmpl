@@ -36,7 +36,7 @@
         } else {
           versionLabel = "v. " + versionLabel;
         }
-        def viewLinkId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + "ViewRevision/"+versionNumber;
+        def viewLinkId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + "ViewRevision_"+versionNumber;
         def viewLink = uicomponent.event("ViewRevision", version.getName());
         def updatedDate = df.format(frozenNode.getUpdatedDate());
         def author = frozenNode.getAuthor();
@@ -50,7 +50,7 @@
         %>
         <tr class="$rowClass">
           <td style="width: 40%">
-            <a href="#ViewRevision/$versionNumber" title="$versionLabel" >$versionLabel</a>
+            <a href="#ViewRevision_<%=versionNumber%>" title="$versionLabel" >$versionLabel</a>
             <a style="display: none;" id="$viewLinkId" onclick="<%=uicomponent.event("ViewRevision", versionNumber)%>">&nbsp;</a>
           </td>
           <td colspan="2" class="Editor">$author</td>

@@ -22,6 +22,6 @@
 %>
 <td>
   <div class="ActionContainer">
-    <img class="DeleteUserIcon" src="/eXoResources/skin/sharedImages/Blank.gif" title="<%= _ctx.appRes("UIPermissionEntry.title.DeletePermission"); %>" alt="<%= _ctx.appRes("UIPermissionEntry.title.DeletePermission"); %>" onclick="$deleteLink">
+    <img class="DeleteUserIcon" src="/eXoResources/skin/sharedImages/Blank.gif" title="<%= _ctx.appRes("UIPermissionEntry.title.DeletePermission"); %>" alt="<%= _ctx.appRes("UIPermissionEntry.title.DeletePermission"); %>" onclick="$deleteLink"/>
   </div>
 </td>

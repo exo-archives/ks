@@ -714,9 +714,6 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
     attachment.getLinks().add(pageLink);
   }
   
-  @GET
-  @Path("/help/{syntaxId}")
-  @Produces(MediaType.TEXT_HTML)
   /**
    * Return the help syntax page.
    * The syntax id have to replaced all special characters: 
@@ -729,6 +726,9 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
    * @param syntaxId The id of syntax to show in help page
    * @return The response that contains help page
    */
+  @GET
+  @Path("/help/{syntaxId}")
+  @Produces(MediaType.TEXT_HTML)
   public Response getHelpSyntaxPage(@PathParam("syntaxId") String syntaxId) {
     CacheControl cacheControl = new CacheControl();
     
@@ -751,7 +751,11 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
       .append("var i = local.indexOf('/', local.indexOf('//') + 2);")
       .append("local = (i <= 0) ? local : local.substring(0, i);")
       .append("local = local + '/wiki/skin/DefaultSkin/webui/Stylesheet.css';")
-      .append("document.write('<link rel=\"stylesheet\" type=\"text/css\" href=\"' + local + '\">');")
+      .append("var link = document.createElement('link');")
+      .append("link.rel = 'stylesheet';")
+      .append("link.type = 'text/css';")
+      .append("link.href = local;")
+      .append("document.head.appendChild(link);")
       .append("</script>");
       
       // Create help html page
@@ -759,6 +763,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
       htmlOutput.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">")
       .append("<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\" dir=\"ltr\">")
       .append("<head id=\"head\">")
+      .append("<title>Wiki help page</title>")
       .append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>")
       .append(script)
       .append("</head>")

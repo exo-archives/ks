@@ -62,6 +62,7 @@
             }
             NTFrozenNode frozenNode = version.getNTFrozenNode();
             String versionNumber = version.getName();
+            String vertionId = uicomponent.VERSION_NAME_PREFIX + "_" + versionNumber;
             String versionLabel = "v. " + versionNumber;
             if(isCurrentVersion){
               versionLabel = _ctx.appRes("UIWikiPageVersionsList.label.Current") + " (v. " + versionNumber + ")";
@@ -69,19 +70,19 @@
             String author = frozenNode.getAuthor();
             String comment = frozenNode.getComment();
             String viewLink = uicomponent.event(uicomponent.VIEW_REVISION, versionNumber);
-            String viewLinkId=  UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + uicomponent.VIEW_REVISION+"/"+versionNumber;
+            String viewLinkId=  UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + uicomponent.VIEW_REVISION + "_" + versionNumber;
         %>
         <tr class="$rowClass">
           <td>
             <%
-              uicomponent.renderField(versionNumber);
+              uicomponent.renderField(vertionId);
             %>
           </td>
           <td class="Tit">
-          	<label for="<%=versionNumber%>">
-	          	<a onclick="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#$uicomponent.VIEW_REVISION/$versionNumber')" title="<%= _ctx.appRes("UIWikiPageVersionsList.label.ViewRevision"); %>" ><%= versionLabel %></a>
+            <label for="<%=versionNumber%>">
+	          	<a onclick="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#<%=uicomponent.VIEW_REVISION%>_<%=versionNumber%>')" title="<%= _ctx.appRes("UIWikiPageVersionsList.label.ViewRevision"); %>" ><%= versionLabel %></a>
 	          	<a id="$viewLinkId" onclick="$viewLink" style="display:none"></a>
-          	</label>                   	
+          	</label>  
           </td>
           <td><%=df.format(frozenNode.getUpdatedDate())%></td>
           <td><%=((author != null) ? author : _ctx.appRes("UIWikiPortlet.label.Anonymous"))%></td>

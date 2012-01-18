@@ -61,6 +61,8 @@ public class UIWikiPageVersionsList extends UIWikiForm {
   public static final String COMPARE_ACTION = "CompareRevision";
   
   public static final String EXTENSION_TYPE = "org.exoplatform.wiki.webui.UIWikiPageVersionsList";
+  
+  public static final String VERSION_NAME_PREFIX = "version";
 
   public UIWikiPageVersionsList() throws Exception {
     super();
@@ -72,7 +74,7 @@ public class UIWikiPageVersionsList extends UIWikiForm {
     this.versionsList = Utils.getCurrentPageRevisions();
     getChildren().clear();
     for (NTVersion version : this.versionsList) {
-      addUIFormInput(new UICheckBoxInput(version.getName(), "", false));
+      addUIFormInput(new UICheckBoxInput(VERSION_NAME_PREFIX + "_" + version.getName(), "", false));
     }
     addChild(RestoreRevisionActionComponent.class, null, null);
     super.processRender(context);
@@ -110,7 +112,7 @@ public class UIWikiPageVersionsList extends UIWikiForm {
       List<NTVersion> checkedVersions = new ArrayList<NTVersion>();
       List<NTVersion> versions = uiForm.versionsList;
       for (NTVersion version : versions) {
-        UICheckBoxInput uiCheckBox = uiForm.getUICheckBoxInput(version.getName());
+        UICheckBoxInput uiCheckBox = uiForm.getUICheckBoxInput(VERSION_NAME_PREFIX + "_" + version.getName());
         if (uiCheckBox.isChecked()) {
           checkedVersions.add(version);
         }

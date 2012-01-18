@@ -58,6 +58,12 @@
             <% }%>
 	        </tr>
 	       <% } %>
+	       
+	       <% if (relatedPages.size() == 0) { %>
+	       	<tr class="OddClass">
+	          <td></td>
+	       	</tr>
+	       <% } %>
 	      </tbody>
 	    </table>
 	    <% if(uicomponent.isHasExtension()) {

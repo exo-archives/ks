@@ -17,7 +17,7 @@
   int attachmentsTotal =  currentWikiPage.getAttachmentsExcludeContent().size();
   int versionsTotal = currentWikiPage.getVersionableMixin().getVersionHistory().getChildren().size() -1 ;
   
-  String viewChangeSufix = "/changes";
+  String viewChangeSufix = "_changes";
   String viewChangeAnchor = "#" + uicomponent.COMPARE_REVISION +viewChangeSufix;
   
   String viewChangeActionId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + uicomponent.COMPARE_REVISION + viewChangeSufix;
