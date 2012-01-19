@@ -26,3 +26,4 @@ org.exoplatform.wiki.rendering.converter.ConfluenceBlockConverter
 org.exoplatform.wiki.rendering.filter.MacroFilter
 org.exoplatform.wiki.rendering.filter.ConfluenceMacroFilter
 org.exoplatform.wiki.rendering.transformation.icon.DefaultIconTransformation
+org.exoplatform.wiki.rendering.internal.parser.confluence.DefaultWikiModelConfluenceParser

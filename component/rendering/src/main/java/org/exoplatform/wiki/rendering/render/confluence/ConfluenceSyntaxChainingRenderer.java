@@ -608,11 +608,8 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
     if (!isInline) {
       printEmptyLine();
     }
-    printBeginParameters(parameters);
-
-    print("{{{");
+    print("\\");
     getConfluencePrinter().printVerbatimContent(protectedString);
-    print("}}}");
   }
 
   /**

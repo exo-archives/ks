@@ -149,5 +149,13 @@ public class TestRenderingService extends AbstractRenderingTestCase {
     content = renderingService.updateContentOfSection(content, Syntax.XWIKI_2_0.toIdString(), "6", "== Section 2.2 updated ==");
     assertEquals("== Section 2.2 updated ==", renderingService.getContentOfSection(content, Syntax.XWIKI_2_0.toIdString(), "6"));
   }
-
+  
+  public void testEscapeString() throws Exception {
+    String expectedHtml = "<p><tt class=\"wikimodel-verbatim\">_</tt>hello</p>";
+    String outputConfluence = renderingService.render("\\_hello",
+                                                      Syntax.CONFLUENCE_1_0.toIdString(),
+                                                      Syntax.XHTML_1_0.toIdString(),
+                                                      false);
+    assertEquals(expectedHtml, outputConfluence);
+  }
 }
