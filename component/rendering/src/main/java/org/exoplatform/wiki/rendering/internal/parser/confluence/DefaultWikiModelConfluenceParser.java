@@ -18,7 +18,7 @@ package org.exoplatform.wiki.rendering.internal.parser.confluence;
 
 import org.exoplatform.wiki.rendering.internal.parser.DefaultXWikiConfluenceGeneratorListener;
 import org.wikimodel.wem.IWikiParser;
-import org.wikimodel.wem.confluence.ConfluenceExtendedWikiParser;
+import org.wikimodel.wem.confluence.ConfluenceWikiParser;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.rendering.internal.parser.WikiModelConfluenceParser;
 import org.xwiki.rendering.internal.parser.wikimodel.XWikiGeneratorListener;
@@ -34,7 +34,7 @@ import org.xwiki.rendering.util.IdGenerator;
 @Component("confluence/1.0")
 public class DefaultWikiModelConfluenceParser extends WikiModelConfluenceParser {
   public IWikiParser createWikiModelParser() {
-    return new ConfluenceExtendedWikiParser();
+    return new ConfluenceWikiParser();
   }
 
   @Override
