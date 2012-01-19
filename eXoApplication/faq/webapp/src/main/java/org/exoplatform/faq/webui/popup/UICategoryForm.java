@@ -46,6 +46,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
+import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 import org.exoplatform.webui.organization.account.UIUserSelector;
 /**
  * Created by The eXo Platform SARL
@@ -105,6 +106,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
     UIFormInputWithActions inputset = new UIFormInputWithActions("UIAddCategoryForm") ;
     inputset.addUIFormInput(new UIFormStringInput(FIELD_NAME_INPUT, FIELD_NAME_INPUT, null).addValidator(MandatoryValidator.class)) ;
     UIFormStringInput index = new UIFormStringInput(FIELD_INDEX_INPUT, FIELD_INDEX_INPUT, null) ;
+    index.addValidator(PositiveNumberFormatValidator.class);
     if(isAddNew){
     	maxIndex = faqService_.getMaxindexCategory(parentId_) + 1;
     	index.setValue(String.valueOf(maxIndex));
@@ -236,7 +238,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       
       name = FAQUtils.convertTextForTitle(name);
       
-      if(uiCategory.isAddNew_) {
+      if(isAddNew_) {
       	if(faqService_.isCategoryExist(name, uiCategory.parentId_)) {
         	uiApp.addMessage(new ApplicationMessage("UICateforyForm.sms.cate-name-exist", null, ApplicationMessage.WARNING)) ;
       		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
@@ -250,21 +252,17 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
         }
       }
       
-      
-      long index = 1;
-      String strIndex = uiCategory.getUIStringInput(FIELD_INDEX_INPUT).getValue() ;
-      if(strIndex != null && strIndex.trim().length() > 0) {
-      	try {
-	        index = Long.parseLong(strIndex);
-        } catch (Exception e){
-        	uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erro-large-number", 
-        			new String[]{uiCategory.getLabel(FIELD_INDEX_INPUT)}, ApplicationMessage.WARNING)) ;
-	        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-	        return ;
+      long index = 0;
+      maxIndex = faqService_.getMaxindexCategory(uiCategory.parentId_) + 1;
+      String strIndex = uiCategory.getUIStringInput(FIELD_INDEX_INPUT).getValue();
+      if (!FAQUtils.isFieldEmpty(strIndex)) {
+        index = Long.parseLong(strIndex);
+        if (index > maxIndex) {
+          index = maxIndex;
         }
+      } else if (isAddNew_) {
+        index = maxIndex;
       }
-			maxIndex = (maxIndex == 1) ? (faqService_.getMaxindexCategory(uiCategory.parentId_) + 1) : maxIndex;
-			index = (index > maxIndex) ? maxIndex : index;
       String description = uiCategory.getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).getValue() ;
      
       String moderator = uiCategory.getUIStringInput(FIELD_MODERATOR_INPUT).getValue() ;
