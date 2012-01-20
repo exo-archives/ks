@@ -89,7 +89,7 @@
             canEdit = uicomponent.isCategoryModerator(category.getPath()) ; 
         %>
           <div class="FAQTmpCategory"><span></span></div>
-          <div id="<%=category.getPath()%>" class="$classCss FAQCategory" unselectable="on" ctxMenuId="UIFAQPopupCategories$i" actionLink="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>">
+          <div id="<%=category.getId()%>" class="$classCss FAQCategory" unselectable="on" ctxMenuId="UIFAQPopupCategories$i" actionLink="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>">
             <div unselectable="on">
 	            <a title="<%=category.getName()%>" oncontextmenu="return false;" unselectable="on" onclick="<%=uicomponent.event("OpenCategory", category.getPath())%>">
 	              <span><%=FAQUtils.getSubString(category.getName(), 20);%></span>

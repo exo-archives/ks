@@ -27,7 +27,7 @@
             <tbody>
               <tr>
                 <td class="ControlButtonContainer">
-                  <!-- ================== CustomView action ====================== -->
+                  <!--  CustomView action  -->
                   <div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onblur="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)" onfocus="eXo.faq.UIAnswersPortlet.OverButton(this)" class="DefaultStyle FAQBar ControlButton">
                     <div style="cursor:pointer" class="SeparatorLine" id="FAQTitlePanels" title="<%=_ctx.appRes("UIQuestions.label.HileLeftPanels")%>" onclick="eXo.faq.UIAnswersPortlet.changeCustomView('true', '<%=_ctx.appRes("UIQuestions.label.HileLeftPanels")%>', '<%=_ctx.appRes("UIQuestions.label.ShowLeftPanels")%>')">
                       <div class="LeftOverButton">
@@ -77,7 +77,7 @@
                         </div>
                       </div>
                       
-                      <!-- ================================================= Begin popup menu ================================ -->
+                      <!--  Begin popup menu  -->
                       <div class="UIFAQPopupCategory" id="FAQCategroManager" style="display:none;" onmouseover="eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager')" onfocus="eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager')" onmouseout="eXo.faq.UIAnswersPortlet.setCheckEvent(true); eXo.faq.UIAnswersPortlet.checkAction();" onblur="eXo.faq.UIAnswersPortlet.setCheckEvent(true); eXo.faq.UIAnswersPortlet.checkAction();">
                       <div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block; width:150px; min-width:150px;">
                       
@@ -102,7 +102,7 @@
                       
                       </div>
                     </div>
-                  <!-- ================================================= End popup menu ================================ -->
+                  <!--  End popup menu  -->
                   </div>
                 </div>
                 <%
@@ -193,7 +193,7 @@
   <div style="clear:left;"><span></span></div>
   <div class="AnswersContainer ViewQuestionContent">
     <div class="FAQContent">
-<!-- ===================================================== View question ====================================================== -->
+<!--  View question  -->
       <%
         String[] questionActions = uicomponent.getActionQuestion();
         
@@ -220,7 +220,7 @@
       %>
             <div class="QuestionContainer ClearFix" id="$qId" ctxMenuId="UIPopupQuestion$questionIndex" oncontextmenu="return false;">
       
-<!---- style for Questions ----->
+<!-- style for Questions -->
               <div class="NormalQuest ClearFix">
                 <div class="LeftCon ClearFix">
                   <a class="BoxNum">
@@ -255,28 +255,9 @@
                   </div>
                 </div>
               </div>
-<!-- 
-              <div class="HighlightQuest ClearFix">
-                <div class="LeftCon ClearFix">
-                  <a class="BoxNum">
-                    <p>2</p>
-                    <h4>score</h4>
-                  </a>
-                  <a class="BoxNum">
-                    <p>3</p>
-                    <h4>answers</h4>
-                  </a>
-                </div>
-                <div class="RightCon">
-                  <p class="Questions">$questionContent</p>
-                  <div class="ClearFix">
-                    <div class="WarningCon"><p class="Warning">this question is pending for approval</p></div>
-                    <p class="Name">By <a>John Smith</a> | 2 minutes ago</p>
-                  </div>
-                </div>
-              </div>
--->
-<!---- End new style for Questions -----> 
+
+					<!-- End new style for Questions -->
+ 
               <div style="width:85%; _width:80%; float:left;">
                   <!-- action of this question -->
                   <div class="UIFAQPopupCategory" id="UIPopupQuestion$questionIndex" style="display:none;">
@@ -358,24 +339,19 @@
                         </div>
                     </div>
                   </div>
+
                   <!-- finish action of this question -->
                   
                 </div>
-              
-    
-            
             </div>
             
-            
-        <!-- ============================================== View Question which is selected ===================================== -->
+        <!--  View Question which is selected  -->
+
         <%} else {
             String[] listQuestLanguage = uicomponent.getQuestionLangauges(question.getPath());
             questionContent = uicomponent.getQuestionContent();
             String responseBy = "..." ;
             String date = "..." ;
-            //if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
-            //  responseBy = question.getResponseBy();
-            //}
           %>          
             <div class="QuestionSelect" style="_width:100%;">
               <div class="DecoratorTL">
@@ -400,7 +376,7 @@
                                 <img class="FAQAvatar ImgAvatarBorder" src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
                               </div>
                             <%}%>
-                            <!-- ========================================= view author's infor ================================ -->
+                            <!--  view author's infor  -->
                             <%
                               if(uicomponent.viewAuthorInfor){
                                 String email = question.getEmail();
@@ -539,7 +515,7 @@
                                     <%
                                     if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
                                     %>
-                                      <!-- =========================== Vote result ========================== -->
+                                      <!--  Vote result  -->
                                       <table  style="width:150px; float:right;">
                                         <tr>
                                           <td>
@@ -725,7 +701,7 @@
                                         </div>
                                         <!-- finish action of this question -->
                                         
-                                          <!-- ===================================== view Detail =============================== -->
+                                          <!--  view Detail  -->
                                         <div class="UIDetailContainer">
                                           <%
                                             String questionDetail = uicomponent.render(uicomponent.getQuestionDetail());
@@ -733,21 +709,21 @@
                                               $questionDetail
                                         </div>
                                         <span class="QuestionDateTime">&nbsp;<%=FAQUtils.getLongDateFormat(question.getCreatedDate())%>&nbsp;</span>
-                                          <!-- ===================================== view bottom =============================== -->
+                                          <!--  view bottom  -->
                                         <%
                                         if(uicomponent.currentUser_ != null){
                                         %>
                                           <div class="UIAction DisablePrint">
-                                                                <%
+                                           <%
                                             if(question.isApproved() || uicomponent.canEditQuestion){
-                                              %>
-                                                                  <a href="<%=uicomponent.event("ResponseQuestion", question.getPath());%>" class="ActionButton LightBlueStyle ResponseQuestion"><%=_ctx.appRes("UIQuestions.action.AddAnswerQuestion");%></a>
-                                                                  <%}
+                                           %>
+	                                          <a href="<%=uicomponent.event("ResponseQuestion", question.getPath());%>" class="ActionButton LightBlueStyle ResponseQuestion"><%=_ctx.appRes("UIQuestions.action.AddAnswerQuestion");%></a>
+	                                          <%}
                                             if((uicomponent.faqSetting_.isEnanbleVotesAndComments() && question.isApproved())){
                                             %>
-                                                                  <a href="<%=uicomponent.event("CommentQuestion", question.getPath() + "/new")%>" class="ActionButton LightBlueStyle Comment"><%=_ctx.appRes("UIQuestions.action.AddCommentQuestion")%></a>
-                                                                  <%}%>
-                                                                </div>
+	                                          <a href="<%=uicomponent.event("CommentQuestion", question.getPath() + "/new")%>" class="ActionButton LightBlueStyle Comment"><%=_ctx.appRes("UIQuestions.action.AddCommentQuestion")%></a>
+	                                          <%}%>
+	                                        </div>
                                           <%}%>
                                       </div>
                                     </div>
@@ -762,7 +738,7 @@
                     </div>
                     <div class="ButtomQuestion"><span></span></div>
                     
-                    <!-- ===================================== View response content ==================================================== -->
+                    <!--  View response content  -->
                     <% 
                     Answer[] answers = uicomponent.getPageListAnswer(question.getPath());
                     String classResponsse = "";
@@ -770,7 +746,7 @@
                     %>
                     <div class="ResponseContent">
                     
-                      <!-- ============================== View attachment files ============================================== -->
+                      <!--  View attachment files  -->
                       <%if(!question.getAttachMent().isEmpty()) {%>
                           <div class="AttachmentContent ClearFix" style="background:white;">
                             <%
@@ -840,7 +816,7 @@
                           </div>
                       <%}%>
                       
-                      <!-- ======================================= view relation question ========================================= -->
+                      <!--  view relation question  -->
                       <%
                         List questionRelation = question.getRelations();
                         if(!questionRelation.isEmpty()){
@@ -870,7 +846,7 @@
                       <%}%>
                     
                       
-                      <!-- ===================================== Question's answers ==================================================== -->
+                      <!--  Question's answers  -->
                       <div class="ResponseContainer">
                         <div class="TitleResponseContent">
                           <div class="IconResponse">
@@ -892,7 +868,7 @@
                           </div>
                         </div>
                         
-                        <!-- -------------------------------------- View all answer for this question ----------------------------------- -->
+                        <!-- View all answer for this question -->
                         <div class="Response $classResponsse" id="SetWidthContent">
                           <div style="padding-left:0px; _width:98%;">
                           <%
@@ -915,7 +891,7 @@
                                 <tbody>
                                   <tr>
                                     <td>
-                                      <!-- ============================= View user who answered quesetion ============================ -->
+                                      <!--  View user who answered quesetion  -->
                                       <div class="ResponseItemContainerLeft">
                                         <div style="padding-bottom:10px">
                                           <div class="ProfileContainer">
@@ -949,7 +925,7 @@
                                           <div style="color:#721d95;">$date</div>
                                         </div>
                                         
-                                        <!-- ============================= View mark vote answer ======================================== -->
+                                        <!--  View mark vote answer  -->
                                         <div class="DisablePrint ClearFix" style="overflow:auto; margin-top:5px;">
                                           <%
                                           if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
@@ -1059,9 +1035,9 @@
                         <%}%>
                           </div>
                         </div>
-                        <!-- -------------------------------------- finish View all answer for this question ----------------------------------- -->
+                        <!-- finish View all answer for this question -->
                         
-                        <!-- ============================== View question's commnets ============================================== -->
+                        <!--  View question's commnets  -->
                         <%
                         if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
                           boolean canEditComment = false;
@@ -1090,7 +1066,7 @@
                                     <td>
                                     
                                         <div class="ResponseItemContainerLeft">
-                                        <!-- ============================= View user who comment for quesetion ============================ -->
+                                        <!--  View user who comment for quesetion  -->
                                           <div style="padding:10px 0px">
                                             <div class="ProfileContainer">
                                               <%
@@ -1192,7 +1168,7 @@
         }
     %>
     
-      <!---------------------------------------- Print function --------------------------------->
+      <!-- Print function -->
       
           <div id="PrintAction" print="<%=_ctx.appRes("UIQuestions.action.Print")%>" cancel="<%=_ctx.appRes("UIQuestions.action.ClosePrintQuestion")%>"><span></span></div>
       
@@ -1208,6 +1184,6 @@
   <div>
     <%uicomponent.renderChild(uicomponent.OBJECT_ITERATOR);%>
   </div>
-  
-<%/* End View category*/ %>
+
+	<!-- End View category -->
 </div>

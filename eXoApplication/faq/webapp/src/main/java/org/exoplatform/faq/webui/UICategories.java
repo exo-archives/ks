@@ -94,7 +94,9 @@ public class UICategories extends BaseUIFAQForm {
 
   private List<Category>   listCate                 = new ArrayList<Category>();
 
-  Map<String, Boolean>     categoryMod              = new HashMap<String, Boolean>();
+  private Map<String, Boolean> categoryMod          = new HashMap<String, Boolean>();
+
+  private Map<String, String>  categoryIds          = new HashMap<String, String>();
 
   private boolean          isModerator              = false;
 
@@ -168,6 +170,7 @@ public class UICategories extends BaseUIFAQForm {
     if (!isModerator) {
       for (Category cat : listCate) {
         categoryMod.put(cat.getId(), getFAQService().isCategoryModerator(cat.getPath(), null));
+        categoryIds.put(cat.getId(), cat.getPath());
       }
     }
   }
@@ -536,8 +539,10 @@ public class UICategories extends BaseUIFAQForm {
     public void execute(Event<UICategories> event) throws Exception {
       UICategories uiCategories = event.getSource();
       String[] objectIds = event.getRequestContext().getRequestParameter(OBJECTID).split(",");
+      String srcCategoryId = uiCategories.categoryIds.get(objectIds[0]);
+      String destCategoryId = uiCategories.categoryIds.get(objectIds[1]);
       try {
-        uiCategories.getFAQService().swapCategories(objectIds[0], objectIds[1] + "," + objectIds[2]);
+        uiCategories.getFAQService().swapCategories(srcCategoryId, destCategoryId + "," + objectIds[2]);
       } catch (RuntimeException e) {
         uiCategories.warning("UIQuestions.msg.can-not-move-category-same-name");
         return;
@@ -615,13 +620,13 @@ public class UICategories extends BaseUIFAQForm {
     public void execute(Event<UICategories> event) throws Exception {
       UICategories uiCategories = event.getSource();
       String[] objectIds = event.getRequestContext().getRequestParameter(OBJECTID).split(CommonUtils.COMMA);
-      String categoryId = objectIds[0];
-      String destCategoryId = objectIds[1];
+      String srcCategoryId = uiCategories.categoryIds.get(objectIds[0]);
+      String destCategoryId = uiCategories.categoryIds.get(objectIds[1]);
       try {
-        if (uiCategories.faqSetting_.isAdmin() || ((uiCategories.getFAQService().isCategoryModerator(categoryId, null) && 
+        if (uiCategories.faqSetting_.isAdmin() || ((uiCategories.getFAQService().isCategoryModerator(srcCategoryId, null) && 
             uiCategories.getFAQService().isCategoryModerator(destCategoryId, null)))) {
-          if (!uiCategories.getFAQService().isCategoryExist(uiCategories.getFAQService().getCategoryNameOf(categoryId), destCategoryId)) {
-            uiCategories.getFAQService().moveCategory(categoryId, destCategoryId);
+          if (!uiCategories.getFAQService().isCategoryExist(uiCategories.getFAQService().getCategoryNameOf(srcCategoryId), destCategoryId)) {
+            uiCategories.getFAQService().moveCategory(srcCategoryId, destCategoryId);
           } else {
             uiCategories.warning("UIQuestions.msg.can-not-move-category-same-name", false);
           }

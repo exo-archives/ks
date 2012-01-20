@@ -1,18 +1,11 @@
-.FL {
-  float: left;
-}
+/**************************** UIPopupInfoMenu *********************************/
 
-.FR {
-  float: right;
-}
-
-ul,li {
+.UIPopupInfoMenu ul,li {
   margin: 0px;
   padding: 0px;
   list-style-type: none;
 }
 
-/**************************** UIPopupInfoMenu *********************************/
 .UIPopupInfoMenu {
   float: none;
   display: inline;
