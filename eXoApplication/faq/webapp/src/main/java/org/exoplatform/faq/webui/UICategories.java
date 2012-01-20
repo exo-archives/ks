@@ -170,7 +170,6 @@ public class UICategories extends BaseUIFAQForm {
     if (!isModerator) {
       for (Category cat : listCate) {
         categoryMod.put(cat.getId(), getFAQService().isCategoryModerator(cat.getPath(), null));
-        categoryIds.put(cat.getId(), cat.getPath());
       }
     }
   }
@@ -211,6 +210,9 @@ public class UICategories extends BaseUIFAQForm {
       listCate.addAll(getFAQService().getSubCategories(categoryId, faqSetting_, true, null));
     } else {
       listCate.addAll(getFAQService().getSubCategories(categoryId, faqSetting_, false, UserHelper.getAllGroupAndMembershipOfUser(null)));
+    }
+    for (Category cat : listCate) {
+      categoryIds.put(cat.getId(), cat.getPath());
     }
   }
 
@@ -286,6 +288,14 @@ public class UICategories extends BaseUIFAQForm {
     UIAnswersPortlet answerPortlet = getAncestorOfType(UIAnswersPortlet.class);
     context.getUIApplication().addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING));    
     context.addUIComponentToUpdateByAjax(answerPortlet);
+  }
+
+  private String getSubPathCategoryById(String categoryId) {
+    String subCateId = categoryIds.get(categoryId);
+    if (FAQUtils.isFieldEmpty(subCateId)) {
+      subCateId = categoryId;
+    }
+    return subCateId;
   }
 
   static public class OpenCategoryActionListener extends EventListener<UICategories> {
@@ -539,8 +549,8 @@ public class UICategories extends BaseUIFAQForm {
     public void execute(Event<UICategories> event) throws Exception {
       UICategories uiCategories = event.getSource();
       String[] objectIds = event.getRequestContext().getRequestParameter(OBJECTID).split(",");
-      String srcCategoryId = uiCategories.categoryIds.get(objectIds[0]);
-      String destCategoryId = uiCategories.categoryIds.get(objectIds[1]);
+      String srcCategoryId = uiCategories.getSubPathCategoryById(objectIds[0]);
+      String destCategoryId = uiCategories.getSubPathCategoryById(objectIds[1]);
       try {
         uiCategories.getFAQService().swapCategories(srcCategoryId, destCategoryId + "," + objectIds[2]);
       } catch (RuntimeException e) {
@@ -620,8 +630,8 @@ public class UICategories extends BaseUIFAQForm {
     public void execute(Event<UICategories> event) throws Exception {
       UICategories uiCategories = event.getSource();
       String[] objectIds = event.getRequestContext().getRequestParameter(OBJECTID).split(CommonUtils.COMMA);
-      String srcCategoryId = uiCategories.categoryIds.get(objectIds[0]);
-      String destCategoryId = uiCategories.categoryIds.get(objectIds[1]);
+      String srcCategoryId = uiCategories.getSubPathCategoryById(objectIds[0]);
+      String destCategoryId = uiCategories.getSubPathCategoryById(objectIds[1]);
       try {
         if (uiCategories.faqSetting_.isAdmin() || ((uiCategories.getFAQService().isCategoryModerator(srcCategoryId, null) && 
             uiCategories.getFAQService().isCategoryModerator(destCategoryId, null)))) {
