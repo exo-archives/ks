@@ -16,8 +16,10 @@
  */
 package org.exoplatform.wiki.rendering.render.confluence;
 
+import org.apache.commons.lang.StringUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.rendering.listener.reference.ResourceReference;
+import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.renderer.reference.ResourceReferenceSerializer;
 
 /**
@@ -28,12 +30,6 @@ import org.xwiki.rendering.renderer.reference.ResourceReferenceSerializer;
  */
 @Component("confluence/1.0/link")
 public class ConfluenceResourceReferenceSerializer implements ResourceReferenceSerializer {
-  
-  /**
-   * Prefix to use for {@link org.xwiki.rendering.renderer.reference.ResourceReferenceTypeSerializer} role hints.
-   */
-  private static final String COMPONENT_PREFIX = "confluence/1.0";
-  
   /**
    * {@inheritDoc}
    *
@@ -41,8 +37,18 @@ public class ConfluenceResourceReferenceSerializer implements ResourceReferenceS
    */
   @Override
   public String serialize(ResourceReference reference) {
+    if (reference == null || StringUtils.isEmpty(reference.getReference()))
+      return StringUtils.EMPTY;
+
     String ref = reference.getReference();
-    return ref != null ? ref.replace("|", "~|") : "";
+    ResourceType type = reference.getType();
+    if (ResourceType.ATTACHMENT.equals(type)) {
+      return new StringBuilder("^").append(ref).toString();
+    } else if (ResourceType.MAILTO.equals(type)) {
+      return new StringBuilder(ResourceType.MAILTO.getScheme()).append(":").append(ref).toString();
+    } else {
+      return ref;
+    }
   }
 
 }

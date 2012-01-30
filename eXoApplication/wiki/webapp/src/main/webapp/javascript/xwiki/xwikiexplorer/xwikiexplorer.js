@@ -526,7 +526,7 @@ isc.XWEWikiDataSource.addProperties({
 
 isc.XWEWikiDataSource.addMethods({
     init : function() {
-        this.dataURL = XWiki.constants.rest.baseRestURI + "wiki/" + eXo.wiki.currentWiki + "/spaces";
+        this.dataURL = XWiki.constants.rest.baseRestURI + "wiki/" + eXo.wiki.UIWikiRichTextArea.wiki + "/spaces";
         this.Super("init", arguments);
     }
 });
@@ -568,13 +568,13 @@ isc.XWESpaceDataSource.addProperties({
 
 isc.XWESpaceDataSource.addMethods({
     init : function() {
-        this.dataURL = XWiki.constants.rest.baseRestURI + "wiki/" + eXo.wiki.currentWiki + "/spaces/"
+        this.dataURL = XWiki.constants.rest.baseRestURI + "wiki/" + eXo.wiki.UIWikiRichTextArea.wiki + "/spaces/"
                 + this.space + "/pages";
         // Override transformRequest method to allow the insertion of a fake initial parent when
         // parent property is null. This fake initial parent is a regex that allow to retrieve only
         // pages without parent or with a parent outside of the current space.
         this.transformRequest = function (dsRequest) {
-            var prefixedSpace = eXo.wiki.currentWiki + XWiki.constants.wikiSpaceSeparator + this.space;
+            var prefixedSpace = eXo.wiki.UIWikiRichTextArea.wiki + XWiki.constants.wikiSpaceSeparator + this.space;
             if (dsRequest.originalData.parentId == prefixedSpace || dsRequest.originalData.parentId == null) {
                 dsRequest.originalData.parentId = "^(?!" + prefixedSpace + "\.).*$";
             }
@@ -619,7 +619,7 @@ isc.XWEPageDataSource.addProperties({
 
 isc.XWEPageDataSource.addMethods({
     init : function() {
-        this.dataURL = XWiki.constants.rest.baseRestURI + "wiki/" + eXo.wiki.currentWiki + "/spaces/" + this.space
+        this.dataURL = XWiki.constants.rest.baseRestURI + "wiki/" + eXo.wiki.UIWikiRichTextArea.wiki + "/spaces/" + this.space
                 + "/pages/" + this.page;
         this.Super("init", arguments);
     }
@@ -657,7 +657,7 @@ isc.XWEAttachmentsDataSource.addProperties({
 
 isc.XWEAttachmentsDataSource.addMethods({
     init : function() {
-        this.dataURL = XWiki.constants.rest.baseRestURI + "wiki/" + eXo.wiki.currentWiki + "/spaces/"
+        this.dataURL = XWiki.constants.rest.baseRestURI + "wiki/" + eXo.wiki.UIWikiRichTextArea.wiki + "/spaces/"
                 + this.space + "/pages/"
                 + this.page + "/attachments";
         this.Super("init", arguments);

@@ -20,9 +20,11 @@ import org.exoplatform.wiki.rendering.internal.parser.DefaultXWikiConfluenceGene
 import org.wikimodel.wem.IWikiParser;
 import org.wikimodel.wem.confluence.ConfluenceWikiParser;
 import org.xwiki.component.annotation.Component;
+import org.xwiki.component.annotation.Requirement;
 import org.xwiki.rendering.internal.parser.WikiModelConfluenceParser;
 import org.xwiki.rendering.internal.parser.wikimodel.XWikiGeneratorListener;
 import org.xwiki.rendering.listener.Listener;
+import org.xwiki.rendering.parser.ResourceReferenceParser;
 import org.xwiki.rendering.util.IdGenerator;
 
 /**
@@ -33,6 +35,29 @@ import org.xwiki.rendering.util.IdGenerator;
  */
 @Component("confluence/1.0")
 public class DefaultWikiModelConfluenceParser extends WikiModelConfluenceParser {
+  
+  /**
+   * @see #getLinkReferenceParser()
+   */
+  @Requirement("confluence/1.0/link")
+  private ResourceReferenceParser referenceParser;
+
+  /**
+   * @see #getImageReferenceParser()
+   */
+  @Requirement("default/image")
+  private ResourceReferenceParser imageReferenceParser;
+
+  @Override
+  public ResourceReferenceParser getLinkReferenceParser() {
+    return this.referenceParser;
+  }
+
+  @Override
+  public ResourceReferenceParser getImageReferenceParser() {
+    return this.imageReferenceParser;
+  }
+  
   public IWikiParser createWikiModelParser() {
     return new ConfluenceWikiParser();
   }
