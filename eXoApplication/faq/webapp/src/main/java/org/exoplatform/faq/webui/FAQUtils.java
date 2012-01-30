@@ -346,7 +346,7 @@ public class FAQUtils {
   public static boolean getUseAjaxFAQPortlet() {
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-    return Boolean.parseBoolean(portletPref.getValue("useAjax", ""));
+    return Boolean.parseBoolean(portletPref.getValue("useAjax", "false"));
   }
 
   public static void saveFAQPortletPreference(List<String> list, boolean useAjax) throws Exception {

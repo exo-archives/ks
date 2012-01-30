@@ -67,7 +67,8 @@ public class UIFAQPortlet extends UIPortletApplication {
     } else if (portletReqContext.getApplicationMode() == PortletMode.EDIT) {
       removeChild(UIViewer.class);
       if (getChild(UIFAQSettingForm.class) == null) {
-        addChild(UIFAQSettingForm.class, null, null);
+        UIFAQSettingForm settingForm = addChild(UIFAQSettingForm.class, null, null);
+        settingForm.defaulValue();
       }
     }
     super.processRender(app, context);

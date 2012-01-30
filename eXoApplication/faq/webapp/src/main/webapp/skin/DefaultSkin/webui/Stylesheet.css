@@ -1019,7 +1019,6 @@
 .UIAnswersPortlet .FAQChildNodeContainer {
 	display:none;
 	padding-left:30px;
-	margin-top:10px;
 }
 
 .UIResultContainer .PopupContent {
@@ -2543,7 +2542,8 @@
 .UIViewerSettingForm .LabelNameCategory {
 	float: left;
 	padding-left: 4px;
-	line-height: 18px;
+	line-height: 22px;
+	cursor: pointer;
 }
 
 .UIViewerSettingForm .TextAreContent {

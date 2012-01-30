@@ -238,9 +238,7 @@ if(!uicomponent.isEditPortlet_){
 																<div style="float:left" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this)">
 															 	 		<%formInput.renderChild(cate.getCategory().getId());%>
 															 	 </div>
-																<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')">
-																	<%= cate.getCategory().getName();%>
-																</a>
+																<label for="<%=cate.getCategory().getId()%>" class="LabelNameCategory" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></label>
 															</div>
 															<div class="FAQChildNodeContainer" id="FAQViewChild$i">
 										  	<%
@@ -254,9 +252,7 @@ if(!uicomponent.isEditPortlet_){
 										        			<div style="float:left" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this)">
 															 	 		<%formInput.renderChild(cate.getCategory().getId());%>
 															 		</div>
-															 		<label for="<%=cate.getCategory().getId()%>">
-																		<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
-																	</label>
+															 		<label for="<%=cate.getCategory().getId()%>" class="LabelNameCategory" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></label>
 															</div>
 															<div class="FAQChildNodeContainer" id="FAQViewChild$i">
 															
@@ -268,9 +264,7 @@ if(!uicomponent.isEditPortlet_){
 														    		<div style="float:left" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this)">
 																 	 		<%formInput.renderChild(cate.getCategory().getId());%>
 																 	 </div>
-																 		<label for="<%=cate.getCategory().getId()%>">
-																			<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
-																		</label>
+																 		<label for="<%=cate.getCategory().getId()%>" class="LabelNameCategory" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></label>
 														    	</div>
 														   	</div>
 																<div class="FAQChildNodeContainer" id="FAQViewChild$i">
@@ -285,9 +279,7 @@ if(!uicomponent.isEditPortlet_){
 																<div style="float:left" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this)">
 															 	 		<%formInput.renderChild(cate.getCategory().getId());%>
 															 	</div>
-																<label for="<%=cate.getCategory().getId()%>">
-																	<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
-																</label>
+																<label for="<%=cate.getCategory().getId()%>" class="LabelNameCategory" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></label>
 															</div>
 															<div class="FAQChildNodeContainer" id="FAQViewChild$i">
 										     <%
