@@ -25,7 +25,7 @@ import org.exoplatform.wiki.commons.Utils;
       }
     }
 	%>
-  <div>
+  <div class="LinkContainer">
     <a onclick="$showInputAction" class="ShowInput" style="display:none;">&nbsp;</a>
     <a onclick="$submitAction" class="SubmitLink" style="display:none;">&nbsp;</a>
     <a onclick="$hideInputAction" class="HideInput" style="display:none;">&nbsp;</a>

@@ -32,9 +32,11 @@ UIFieldEditableForm.prototype.init = function(componentId, parentId, titleId,
   if (titleControl) {
     me.fieldValue = titleControl.firstChild.data;
   }
+  
+  me.divTag = eXo.core.DOMUtil.findFirstChildByClass(me.component, "div", "LinkContainer");
   me.inputControl = eXo.core.DOMUtil.findDescendantById(me.component, inputId);
-  me.showInputLink = eXo.core.DOMUtil.findFirstChildByClass(me.component, "a", "ShowInput");
-  me.submitLink = eXo.core.DOMUtil.findFirstChildByClass(me.component, "a", "SubmitLink");
+  me.showInputLink = eXo.core.DOMUtil.findFirstChildByClass(me.divTag, "a", "ShowInput");
+  me.submitLink = eXo.core.DOMUtil.findFirstChildByClass(me.divTag, "a", "SubmitLink");
   eXo.core.Browser.eventListener(document, 'click', me.onClick);
 
   if (titleControl) {   
@@ -51,7 +53,7 @@ UIFieldEditableForm.prototype.init = function(componentId, parentId, titleId,
 
 UIFieldEditableForm.prototype.onClickToChangeTitle = function(evt) {
   var me = eXo.wiki.UIFieldEditableForm;
-  if (me.showInputLink || me.showInputLink.onclick)
+  if (me.showInputLink && me.showInputLink.onclick)
     me.showInputLink.onclick();
 };
 
@@ -61,7 +63,7 @@ UIFieldEditableForm.prototype.onClick = function(evt) {
   var target = evt.target || evt.srcElement;
   if (me.inputControl && target != me.inputControl && target != me.component) {
     var hideInputLink = eXo.core.DOMUtil.findFirstDescendantByClass(
-        me.component, "a", "HideInput");
+        me.divTag, "a", "HideInput");
     hideInputLink.onclick();
   }
 };
@@ -99,7 +101,7 @@ UIFieldEditableForm.prototype.enterHandler = function(evt) {
       me.submitLink.onclick();
   } else {
     var hideInputLink = eXo.core.DOMUtil.findFirstDescendantByClass(
-        me.component, "a", "HideInput");
+        me.divTag, "a", "HideInput");
     hideInputLink.onclick();
   }
 };
