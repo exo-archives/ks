@@ -16,17 +16,14 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.jcr.ItemExistsException;
 
 import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.service.Category;
-import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.webui.BaseForumForm;
+import org.exoplatform.forum.webui.BaseDataForm;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -40,8 +37,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu
@@ -56,18 +53,12 @@ import org.exoplatform.webui.event.Event.Phase;
       @EventConfig(listeners = UIMoveTopicForm.CancelActionListener.class,phase = Phase.DECODE)
     }
 )
-public class UIMoveTopicForm extends BaseForumForm implements UIPopupComponent {
-  private String         forumId;
+public class UIMoveTopicForm extends BaseDataForm implements UIPopupComponent {
+  private List<Topic> topics;
 
-  private List<Topic>    topics;
+  private boolean     isFormTopic = false;
 
-  private List<Category> categories;
-
-  private boolean        isFormTopic = false;
-
-  private boolean        isAdmin     = false;
-
-  private String         pathTopic   = ForumUtils.EMPTY_STR;
+  private boolean     isAdmin     = false;
 
   public boolean isAdmin() {
     return isAdmin;
@@ -89,32 +80,13 @@ public class UIMoveTopicForm extends BaseForumForm implements UIPopupComponent {
   public void updateTopic(String forumId, List<Topic> topics, boolean isFormTopic) throws Exception {
     this.forumId = forumId;
     this.topics = topics;
+    this.isMoveTopic = true;
     try {
       this.pathTopic = topics.get(0).getPath();
       this.topics.get(0).setEditReason(getUserProfile().getUserId());
     } catch (Exception e) {
     }
     this.isFormTopic = isFormTopic;
-    setCategories();
-  }
-
-  private void setCategories() throws Exception {
-    this.categories = new ArrayList<Category>();
-    for (Category category : getForumService().getCategories()) {
-      if (getUserProfile().getUserRole() == 1) {
-        String[] list = category.getUserPrivate();
-        if (list != null && list.length > 0 && !list[0].equals(" ")) {
-          if (!ForumUtils.isStringInStrings(list, this.userProfile.getUserId())) {
-            continue;
-          }
-        }
-      }
-      categories.add(category);
-    }
-  }
-
-  protected List<Category> getCategories() throws Exception {
-    return this.categories;
   }
 
   protected boolean getSelectCate(String cateId) throws Exception {
@@ -122,30 +94,6 @@ public class UIMoveTopicForm extends BaseForumForm implements UIPopupComponent {
       return true;
     else
       return false;
-  }
-
-  protected List<Forum> getForums(String categoryId) throws Exception {
-    List<Forum> forums = new ArrayList<Forum>();
-    for (Forum forum : this.getForumService().getForumSummaries(categoryId, ForumUtils.EMPTY_STR)) {
-      if (forum.getId().equalsIgnoreCase(this.forumId)) {
-        if (pathTopic.indexOf(categoryId) >= 0)
-          continue;
-      }
-      if (getUserProfile().getUserRole() == 1) {
-        if (forum.getModerators().length > 0 && !ForumUtils.isStringInStrings(forum.getModerators(), this.userProfile.getUserId()) || forum.getModerators().length <= 0) {
-          if (forum.getIsClosed() || forum.getIsLock())
-            continue;
-          if (forum.getCreateTopicRole().length > 0 && !ForumUtils.isStringInStrings(forum.getCreateTopicRole(), this.userProfile.getUserId())) {
-            continue;
-          }
-        }
-      }
-      if (forum.getCreateTopicRole().length > 0 && !ForumUtils.isStringInStrings(forum.getCreateTopicRole(), this.userProfile.getUserId())) {
-        continue;
-      }
-      forums.add(forum);
-    }
-    return forums;
   }
 
   static public class SaveActionListener extends BaseEventListener<UIMoveTopicForm> {

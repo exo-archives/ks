@@ -24,12 +24,8 @@ import java.util.ResourceBundle;
 import javax.jcr.ItemExistsException;
 
 import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.service.Category;
-import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.webui.BaseForumForm;
+import org.exoplatform.forum.webui.BaseDataForm;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -45,8 +41,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu
@@ -61,14 +57,8 @@ import org.exoplatform.webui.event.Event.Phase;
       @EventConfig(listeners = UIMovePostForm.CancelActionListener.class,phase = Phase.DECODE)
     }
 )
-public class UIMovePostForm extends BaseForumForm implements UIPopupComponent {
-  private String         topicId;
-
-  private List<Post>     posts;
-
-  private List<Category> categories;
-
-  private String         pathPost = ForumUtils.EMPTY_STR;
+public class UIMovePostForm extends BaseDataForm implements UIPopupComponent {
+  private List<Post> posts;
 
   public UIMovePostForm() throws Exception {
   }
@@ -86,30 +76,11 @@ public class UIMovePostForm extends BaseForumForm implements UIPopupComponent {
   public void updatePost(String topicId, List<Post> posts) throws Exception {
     this.topicId = topicId;
     this.posts = posts;
+    this.isMovePost = true;
     try {
       this.pathPost = posts.get(0).getPath();
     } catch (Exception e) {
     }
-    setCategories();
-  }
-
-  private void setCategories() throws Exception {
-    this.categories = new ArrayList<Category>();
-    for (Category category : this.getForumService().getCategories()) {
-      if (getUserProfile().getUserRole() == 1) {
-        String[] list = category.getUserPrivate();
-        if (list != null && list.length > 0 && !list[0].equals(" ")) {
-          if (!ForumUtils.isStringInStrings(list, this.userProfile.getUserId())) {
-            continue;
-          }
-        }
-      }
-      categories.add(category);
-    }
-  }
-
-  protected List<Category> getCategories() throws Exception {
-    return this.categories;
   }
 
   protected boolean getSelectForum(String forumId) throws Exception {
@@ -118,42 +89,7 @@ public class UIMovePostForm extends BaseForumForm implements UIPopupComponent {
     else
       return false;
   }
-
-  protected List<Forum> getForums(String categoryId) throws Exception {
-    List<Forum> forums = new ArrayList<Forum>();
-    for (Forum forum : this.getForumService().getForums(categoryId, ForumUtils.EMPTY_STR)) {
-      if (getUserProfile().getUserRole() == 1) {
-        String[] moderators = forum.getModerators();
-        if (!ForumServiceUtils.hasPermission(moderators, this.userProfile.getUserId())) {
-          continue;
-        }
-      }
-      forums.add(forum);
-    }
-    return forums;
-  }
-
-  protected List<Topic> getTopics(String categoryId, String forumId, boolean isMode) throws Exception {
-    List<Topic> topics = new ArrayList<Topic>();
-    List<Topic> topics_ = this.getForumService().getTopics(categoryId, forumId);
-    for (Topic topic : topics_) {
-      if (topic.getId().equalsIgnoreCase(this.topicId)) {
-        if (pathPost.indexOf(categoryId) >= 0 && pathPost.indexOf(forumId) > 0)
-          continue;
-      }
-      if (getUserProfile().getUserRole() == 1) {
-        if (!isMode) {
-          if (!topic.getIsActive() || !topic.getIsActiveByForum() || !topic.getIsApproved() || topic.getIsClosed() || topic.getIsLock() || topic.getIsWaiting())
-            continue;
-          if (topic.getCanPost().length > 0 && !ForumUtils.isStringInStrings(topic.getCanPost(), this.userProfile.getUserId()))
-            continue;
-        }
-      }
-      topics.add(topic);
-    }
-    return topics;
-  }
-
+  
   static public class SaveActionListener extends BaseEventListener<UIMovePostForm> {
     public void onEvent(Event<UIMovePostForm> event, UIMovePostForm uiForm, final String topicPath) throws Exception {
       if (!ForumUtils.isEmpty(topicPath)) {

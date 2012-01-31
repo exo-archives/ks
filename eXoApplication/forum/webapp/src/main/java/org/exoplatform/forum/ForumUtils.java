@@ -409,18 +409,21 @@ public class ForumUtils {
   }
   
   public static boolean isStringInStrings(String[] strings, String string) {
-    string = string.trim();
-    for (String string1 : strings) {
-      string1 = string1.trim();
-      if (string.equals(string1))
-        return true;
+    if (isEmpty(string)) {
+      return false;
     }
-    return false;
+    if (isArrayEmpty(strings)) {
+      return false;
+    }
+    return isStringInList(Arrays.asList(strings), string.trim());
   }
 
   public static boolean isStringInList(List<String> list, String string) {
-    if (list.contains(string))
-      return true;
+    for (String str : list) {
+      if (str.trim().equals(string)) {
+        return true;
+      }
+    }
     return false;
   }
 
