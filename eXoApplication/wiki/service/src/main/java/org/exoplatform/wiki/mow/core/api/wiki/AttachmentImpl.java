@@ -122,7 +122,7 @@ public abstract class AttachmentImpl extends NTFile implements Attachment, Compa
         .append("/")
         .append(this.getName());
     } else {
-      sb.append(Utils.getDefaultRepositoryWebDavUri());
+      sb.append(Utils.getCurrentRepositoryWebDavUri());
       sb.append(getWorkspace());
       String path = getPath();
       try {

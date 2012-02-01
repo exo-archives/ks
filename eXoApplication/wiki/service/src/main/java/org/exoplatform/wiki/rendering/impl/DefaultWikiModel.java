@@ -120,7 +120,7 @@ public class DefaultWikiModel implements WikiModel {
       String portalContainerName = PortalContainer.getCurrentPortalContainerName();
       String portalURL = wikiMarkupContext.getPortalURL();
       String domainURL = portalURL.substring(0, portalURL.indexOf(portalContainerName) - 1);
-      sb.append(domainURL).append(Utils.getDefaultRepositoryWebDavUri());
+      sb.append(domainURL).append(Utils.getCurrentRepositoryWebDavUri());
       PageImpl page = null;
       WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(WikiService.class);
       if (ResourceType.ATTACHMENT.equals(resourceType)) {

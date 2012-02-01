@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Stack;
 
+import javax.jcr.RepositoryException;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
@@ -188,13 +189,17 @@ public class Utils {
     return sb.toString();
   }
 
-  public static String getDefaultRepositoryWebDavUri() {
+  public static String getCurrentRepositoryWebDavUri() {
     StringBuilder sb = new StringBuilder();
     sb.append(getDefaultRestBaseURI());
     sb.append(JCR_WEBDAV_SERVICE_BASE_URI);
     sb.append("/");
     RepositoryService repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
-    sb.append(repositoryService.getConfig().getDefaultRepositoryName());
+    try {
+      sb.append(repositoryService.getCurrentRepository().getConfiguration().getName());
+    } catch (RepositoryException e) {
+      sb.append(repositoryService.getConfig().getDefaultRepositoryName());
+    }
     sb.append("/");
     return sb.toString();
   }

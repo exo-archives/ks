@@ -225,6 +225,6 @@ public class FileAttachment {
    */
   private Session getSesison() throws Exception {
     RepositoryService repoService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
-    return repoService.getDefaultRepository().getSystemSession(getWorkspace());
+    return repoService.getCurrentRepository().getSystemSession(getWorkspace());
   }
 }

@@ -42,7 +42,7 @@ public class UpgradeUtils {
     ConfigurationManager configurationService = (ConfigurationManager) container.getComponentInstanceOfType(ConfigurationManager.class);
     InputStream isXml = configurationService.getInputStream(nodeTypeFilesName);
     KSDataLocation dataLocation = ((KSDataLocation) container.getComponentInstance(KSDataLocation.class));
-    ExtendedNodeTypeManager ntManager = dataLocation.getRepositoryService().getDefaultRepository().getNodeTypeManager();
+    ExtendedNodeTypeManager ntManager = dataLocation.getRepositoryService().getCurrentRepository().getNodeTypeManager();
     log.info("\nTrying register node types from xml-file " + nodeTypeFilesName);
     ntManager.registerNodeTypes(isXml, alreadyExistsBehaviour, NodeTypeDataManager.TEXT_XML);
     log.info("\nNode types were registered from xml-file " + nodeTypeFilesName);
