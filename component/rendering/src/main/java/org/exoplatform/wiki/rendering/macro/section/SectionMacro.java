@@ -23,8 +23,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.annotation.Requirement;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.rendering.block.Block;
@@ -61,7 +62,7 @@ public class SectionMacro extends AbstractMacro<SectionMacroParameters> {
 
   private static final String MACRO_NAME                 = "Section";
 
-  @Requirement
+  @Inject
   private ComponentManager    componentManager;
 
   public SectionMacro() {

@@ -1,4 +1,4 @@
-org.exoplatform.wiki.rendering.impl.DefaultConfigurationSource
+500:org.exoplatform.wiki.rendering.impl.DefaultConfigurationSource
 org.exoplatform.wiki.rendering.render.confluence.ConfluenceResourceReferenceSerializer
 org.exoplatform.wiki.rendering.render.confluence.ConfluenceSyntaxRenderer
 org.exoplatform.wiki.rendering.render.confluence.ConfluenceSyntaxBlockRenderer
@@ -16,7 +16,7 @@ org.exoplatform.wiki.rendering.macro.anchor.AnchorMacro
 org.exoplatform.wiki.rendering.macro.textcolor.ColorMacro
 org.exoplatform.wiki.rendering.macro.floatmacro.FloatMacro
 org.exoplatform.wiki.rendering.macro.excerpt.ExcerptMacro
-org.exoplatform.wiki.rendering.macro.code.CodeMacro
+500:org.exoplatform.wiki.rendering.macro.code.CodeMacro
 org.exoplatform.wiki.rendering.macro.section.column.ColumnMacro
 org.exoplatform.wiki.rendering.macro.section.SectionMacro
 org.exoplatform.wiki.rendering.macro.span.SpanMacro
@@ -25,6 +25,6 @@ org.exoplatform.wiki.rendering.converter.BlockConverter
 org.exoplatform.wiki.rendering.converter.ConfluenceBlockConverter
 org.exoplatform.wiki.rendering.filter.MacroFilter
 org.exoplatform.wiki.rendering.filter.ConfluenceMacroFilter
-org.exoplatform.wiki.rendering.transformation.icon.DefaultIconTransformation
+500:org.exoplatform.wiki.rendering.transformation.icon.DefaultIconTransformation
 org.exoplatform.wiki.rendering.internal.parser.confluence.DefaultWikiModelConfluenceParser
 org.exoplatform.wiki.rendering.internal.parser.confluence.ConfluenceLinkReferenceParser

@@ -4,6 +4,8 @@ import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -11,7 +13,6 @@ import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.related.RelatedUtil;
 import org.exoplatform.wiki.tree.TreeNode;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.annotation.Requirement;
 import org.xwiki.context.Execution;
 import org.xwiki.context.ExecutionContext;
 import org.xwiki.rendering.block.Block;
@@ -34,7 +35,7 @@ public class RelatedMacro extends AbstractMacro<RelatedPagesMacroParameters>{
   
   private static final Syntax XHTML_SYNTAX = new Syntax(SyntaxType.XHTML, "1.0");
   
-  @Requirement
+  @Inject
   private Execution execution;
   
   public RelatedMacro() {

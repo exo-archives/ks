@@ -61,7 +61,8 @@ body.UIWikiPortletWysiwygCss { /*
   span when applying header style to the selection. In order to view headers as in view mode we have to block some of
   the CSS rules applied to the span and add then to the header. 
 */
-.UIWikiPortletWysiwygCss h1 span,.UIWikiPortletWysiwygCss h2 span,.UIWikiPortletWysiwygCss h3 span,.UIWikiPortletWysiwygCss h4 span {
+.UIWikiPortletWysiwygCss h1 span,.UIWikiPortletWysiwygCss h2 span,.UIWikiPortletWysiwygCss h3 span,.UIWikiPortletWysiwygCss h4 span
+  {
   border-bottom: 0 none;
   margin: 0;
   /* IE behaves strangely when the span is displayed as block. */
@@ -73,7 +74,8 @@ body.UIWikiPortletWysiwygCss { /*
   position: static;
 }
 
-.UIWikiPortletWysiwygCss h1,.UIWikiPortletWysiwygCss h2,.UIWikiPortletWysiwygCss h3,.UIWikiPortletWysiwygCss h4 {
+.UIWikiPortletWysiwygCss h1,.UIWikiPortletWysiwygCss h2,.UIWikiPortletWysiwygCss h3,.UIWikiPortletWysiwygCss h4
+  {
   border-bottom: 1px solid #CCCCCC;
   margin: 20px 0;
 }
@@ -98,11 +100,11 @@ body.UIWikiPortletWysiwygCss { /*
   white-space: nowrap;
 }
 
-.UIWikiPortletWysiwygCss .macro-inline {
-  display: inline;
-  margin: 0px;
-  /* Prevent horizontal resizing in IE */
-  width: auto !important;
+.UIWikiPortletWysiwygCss .main .macro .macro-placeholder {
+  color: gray;
+  display: none;
+  font-family: monospace;
+  white-space: nowrap;
 }
 
 .UIWikiPortletWysiwygCss .macro-block {
@@ -114,6 +116,35 @@ body.UIWikiPortletWysiwygCss { /*
     seems to prevent the horizontal scroll bar in IE.
   */
   width: 99% !important;
+}
+
+.UIWikiPortletWysiwygCss .macro-block .macro-collapsed {
+  margin-top: 1px;
+}
+
+.UIWikiPortletWysiwygCss .macro-collapsed .macro-output {
+  display: none !important;
+}
+
+.UIWikiPortletWysiwygCss .macro-collapsed .macro-placeholder {
+  display: inline !important;
+}
+
+.UIWikiPortletWysiwygCss .macro .macro-placeholder .macro-icon {
+  background-image: url(../images/macro.gif);
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 16px;
+  padding-right: 2px;
+  vertical-align: middle;
+  width: 16px;
+}
+
+.UIWikiPortletWysiwygCss .macro-inline {
+  display: inline;
+  margin: 0px;
+  /* Prevent horizontal resizing in IE */
+  width: auto !important;
 }
 
 .UIWikiPortletWysiwygCss .macro-selected {
@@ -156,4 +187,19 @@ body.UIWikiPortletWysiwygCss { /*
   border-right: 1px solid #dddddd;
   border-top: 1px solid #dddddd;
   padding: 5px;
+}
+
+.UIWikiPortletWysiwygCss .readOnly {
+  border: 1px dotted transparent;
+}
+
+.UIWikiPortletWysiwygCss .readOnly:hover {
+  border: 1px dotted #CCC;
+}
+
+.UIWikiPortletWysiwygCss .macro .macro-placeholder {
+  color: gray;
+  display: none;
+  font-family: monospace;
+  white-space: nowrap;
 }

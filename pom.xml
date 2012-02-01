@@ -52,6 +52,7 @@
     <commons-chain.version>1.2</commons-chain.version>
     <commons-logging.version>1.0.4</commons-logging.version>
     <commons-httpclient.version>3.0</commons-httpclient.version>
+    <org.apache.commons.version>3.0.1</org.apache.commons.version>
     <org.apache.httpcomponents.httpclient.version>4.0</org.apache.httpcomponents.httpclient.version>
     <com.google.guava.version>r07</com.google.guava.version>
     <javax.servlet.servlet-api.version>2.5</javax.servlet.servlet-api.version>
@@ -106,11 +107,11 @@
     <nekohtml.version>1.9.14</nekohtml.version>
     <caja.version>r1</caja.version>
     <!-- Begin wiki properties -->
-    <org.xwiki.platform.version>2.7.1</org.xwiki.platform.version>
-    <org.wikimodel.version>2.0.7-20101027</org.wikimodel.version>
-    <gwt.version>2.0.4</gwt.version>
-    <smartgwt.version>2.0</smartgwt.version>
-    <net.sourceforge.htmlcleaner.version>2.1</net.sourceforge.htmlcleaner.version>
+    <org.xwiki.platform.version>3.3</org.xwiki.platform.version>
+    <org.wikimodel.version>2.0.7-20110531</org.wikimodel.version>
+    <gwt.version>2.4.0</gwt.version>
+    <smartgwt.version>2.5</smartgwt.version>
+    <net.sourceforge.htmlcleaner.version>2.2</net.sourceforge.htmlcleaner.version>
     <!--dependencies which Code Macro depends on -->
     <jython-standalone.version>2.5.2b1-xwiki</jython-standalone.version>
     <pygments.version>1.3.1-xwiki</pygments.version>

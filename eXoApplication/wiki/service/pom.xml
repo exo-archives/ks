@@ -117,9 +117,27 @@
       <version>${gwt.version}</version>
       <scope>provided</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.xwiki.commons</groupId>
+      <artifactId>xwiki-commons-legacy-component</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-syntax-xwiki2</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-syntax-xhtml</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-web-gwt-wysiwyg-client</artifactId>
+      <artifactId>xwiki-platform-wysiwyg-client</artifactId>
       <version>${org.xwiki.platform.version}</version>
       <scope>provided</scope>
       <exclusions>

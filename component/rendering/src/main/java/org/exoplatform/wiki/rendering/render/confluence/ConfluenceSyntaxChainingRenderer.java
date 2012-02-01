@@ -25,6 +25,7 @@ import org.apache.commons.lang.StringUtils;
 import org.xwiki.rendering.listener.Format;
 import org.xwiki.rendering.listener.HeaderLevel;
 import org.xwiki.rendering.listener.ListType;
+import org.xwiki.rendering.listener.MetaData;
 import org.xwiki.rendering.listener.chaining.BlockStateChainingListener;
 import org.xwiki.rendering.listener.chaining.ListenerChain;
 import org.xwiki.rendering.listener.chaining.StackableChainingListener;
@@ -148,7 +149,7 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
    * @see org.xwiki.rendering.listener.chaining.AbstractChainingListener#endDocument(java.util.Map)
    */
   @Override
-  public void endDocument(Map<String, String> parameters) {
+  public void endDocument(MetaData metaData) {
     // Ensure that all data in the escape printer have been flushed
     getConfluencePrinter().flush();
   }

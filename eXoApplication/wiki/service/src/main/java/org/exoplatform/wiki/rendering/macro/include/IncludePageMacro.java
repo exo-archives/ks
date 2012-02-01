@@ -19,6 +19,8 @@ package org.exoplatform.wiki.rendering.macro.include;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -29,7 +31,6 @@ import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.annotation.Requirement;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.context.Execution;
@@ -61,16 +62,16 @@ public class IncludePageMacro extends AbstractMacro<IncludePageMacroParameters> 
   /**
    * Used to get the current syntax parser.
    */
-  @Requirement
+  @Inject
   private ComponentManager    componentManager;
 
-  @Requirement
+  @Inject
   private Execution           execution;
   
   /**
    * Used to get the build context for document
    */
-  @Requirement
+  @Inject
   private MarkupContextManager markupContextManager;
 
   private RenderingService    renderingservice;

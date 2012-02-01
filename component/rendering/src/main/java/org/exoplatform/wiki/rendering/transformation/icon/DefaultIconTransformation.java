@@ -22,6 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.Requirement;
 import org.xwiki.component.manager.ComponentLookupException;
@@ -70,6 +73,12 @@ public class DefaultIconTransformation extends AbstractTransformation implements
   private ParserUtils parserUtils = new ParserUtils();  
   
   /**
+   * The logger to log.
+   */
+  @Inject
+  private Logger logger;
+  
+  /**
    * The computed tree used to perform the fast mapping for each syntax
    */
   private Map<String, XDOM>               mappingDOMs = new HashMap<String, XDOM>();
@@ -105,7 +114,9 @@ public class DefaultIconTransformation extends AbstractTransformation implements
             // Put constructed XDOM to map to use later
             this.mappingDOMs.put(context.getSyntax().toIdString(), mappingTree);
           } catch (ParseException e) {
-            getLogger().warn("Failed to parse icon symbols [" + entry.getKey() + "]. Reason = [" + e.getMessage() + "]");
+            if (logger.isDebugEnabled()) {
+              logger.debug("Failed to parse icon symbols [" + entry.getKey() + "]. Reason = [" + e.getMessage() + "]");
+            }
           }
         }
       }
@@ -114,7 +125,7 @@ public class DefaultIconTransformation extends AbstractTransformation implements
         parseTree(mappingTree, filteredBlocks);
       }
     } catch (ComponentLookupException e) {
-      getLogger().error("Failed to transform icon symbols in syntax [" + context.getSyntax().toIdString() + "]. Reason = ["
+      logger.error("Failed to transform icon symbols in syntax [" + context.getSyntax().toIdString() + "]. Reason = ["
           + e.getMessage() + "]");
     }
   }

@@ -21,7 +21,6 @@ import org.xwiki.rendering.listener.chaining.ConsecutiveNewLineStateChainingList
 import org.xwiki.rendering.listener.chaining.GroupStateChainingListener;
 import org.xwiki.rendering.listener.chaining.ListenerChain;
 import org.xwiki.rendering.listener.chaining.LookaheadChainingListener;
-import org.xwiki.rendering.listener.chaining.TextOnNewLineStateChainingListener;
 
 /**
  * Created by The eXo Platform SAS
@@ -57,10 +56,10 @@ public class ConfluenceSyntaxListenerChain extends ListenerChain {
   }
 
   /**
-   * @return the stateful {@link TextOnNewLineStateChainingListener} for this rendering session.
+   * @return the stateful {@link ConsecutiveNewLineStateChainingListener} for this rendering session.
    */
-  public TextOnNewLineStateChainingListener getTextOnNewLineStateChainingListener() {
-    return (TextOnNewLineStateChainingListener) getListener(TextOnNewLineStateChainingListener.class);
+  public ConsecutiveNewLineStateChainingListener getTextOnNewLineStateChainingListener() {
+    return (ConsecutiveNewLineStateChainingListener) getListener(ConsecutiveNewLineStateChainingListener.class);
   }
 
   /**

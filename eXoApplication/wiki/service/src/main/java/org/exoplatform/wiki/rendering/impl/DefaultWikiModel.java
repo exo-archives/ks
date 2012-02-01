@@ -19,6 +19,8 @@ package org.exoplatform.wiki.rendering.impl;
 import java.net.URLEncoder;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.jcr.datamodel.IllegalNameException;
@@ -32,10 +34,9 @@ import org.exoplatform.wiki.rendering.context.MarkupContextManager;
 import org.exoplatform.wiki.service.MetaDataPage;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiService;
-import org.exoplatform.wiki.utils.WikiNameValidator;
 import org.exoplatform.wiki.utils.Utils;
+import org.exoplatform.wiki.utils.WikiNameValidator;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.annotation.Requirement;
 import org.xwiki.context.Execution;
 import org.xwiki.context.ExecutionContext;
 import org.xwiki.rendering.listener.reference.ResourceReference;
@@ -54,13 +55,13 @@ public class DefaultWikiModel implements WikiModel {
   /**
    * Used to get the current context
    */
-  @Requirement
+  @Inject
   private Execution execution;
   
   /**
    * Used to get the build context for document
    */
-  @Requirement
+  @Inject
   private MarkupContextManager markupContextManager;
   
   @Override

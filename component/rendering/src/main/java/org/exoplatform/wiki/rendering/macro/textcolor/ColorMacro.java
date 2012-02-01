@@ -7,8 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.annotation.Requirement;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.rendering.block.Block;
@@ -29,7 +30,7 @@ public class ColorMacro extends AbstractMacro<ColorMacroParameters> {
   /**
    * Used to get the current syntax parser.
    */
-  @Requirement
+  @Inject
   private ComponentManager componentManager;
   
   /**

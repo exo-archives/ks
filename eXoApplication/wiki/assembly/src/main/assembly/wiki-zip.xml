@@ -11,27 +11,32 @@
         <include>org.exoplatform.ks:exo.ks.eXoApplication.wiki.service</include>
         <include>com.google.gwt:gwt-servlet</include>
         <include>com.google.gwt:gwt-user</include>
-        <include>org.xwiki.platform:xwiki-web-gwt-wysiwyg-client</include>
+        <include>org.xwiki.platform:xwiki-platform-wysiwyg-client</include>
         <include>org.apache.pdfbox:fontbox</include>
+        <include>org.apache.commons:commons-lang3</include>
         <include>javax.validation:validation-api</include>      
         <include>org.hibernate:hibernate-validator</include>
         <include>org.python:jython-standalone</include>
         <include>pygments:pygments</include>
         <include>net.sourceforge.htmlcleaner:htmlcleaner</include>
-        <include>org.xwiki.platform:xwiki-core-configuration-api</include>
-        <include>org.xwiki.platform:xwiki-core-model</include>
-        <include>org.xwiki.platform:xwiki-core-context</include>
-        <include>org.xwiki.platform:xwiki-core-component-api</include>
-        <include>org.xwiki.platform:xwiki-core-component-default</include>
-        <include>org.xwiki.platform:xwiki-core-properties</include>
-        <include>org.xwiki.platform:xwiki-core-xml</include>
-        <include>org.xwiki.platform:xwiki-core-script</include>
-        <include>org.xwiki.platform:xwiki-core-rendering-api</include>
-        <include>org.xwiki.platform:xwiki-core-rendering-syntax-wikimodel</include>
-        <include>org.xwiki.platform:xwiki-core-rendering-macro-toc</include>
-        <include>org.xwiki.platform:xwiki-core-rendering-macro-box</include>
-        <include>org.xwiki.platform:xwiki-core-rendering-macro-message</include>
+        <include>org.xwiki.platform:xwiki-platform-model</include>
+        <include>org.xwiki.commons:xwiki-commons-configuration-api</include>
+        <include>org.xwiki.commons:xwiki-commons-context</include>
+        <include>org.xwiki.commons:xwiki-commons-component-api</include>
+        <include>org.xwiki.commons:xwiki-commons-component-default</include>
+        <include>org.xwiki.commons:xwiki-commons-properties</include>
+        <include>org.xwiki.commons:xwiki-commons-xml</include>
+        <include>org.xwiki.commons:xwiki-commons-script</include>
+        <include>org.xwiki.commons:xwiki-commons-legacy-component</include>
         <include>org.xwiki.platform:xwiki-core-rendering-macro-code</include>
+        <include>org.xwiki.rendering:xwiki-rendering-api</include>
+        <include>org.xwiki.rendering:xwiki-rendering-syntax-wikimodel</include>
+        <include>org.xwiki.rendering:xwiki-rendering-macro-toc</include>
+        <include>org.xwiki.rendering:xwiki-rendering-macro-box</include>
+        <include>org.xwiki.rendering:xwiki-rendering-macro-message</include>
+        <include>org.xwiki.rendering:xwiki-rendering-syntax-xwiki2</include>
+        <include>org.xwiki.rendering:xwiki-rendering-syntax-xhtml</include>
+
         <include>org.wikimodel:org.wikimodel.wem</include>
 
         <include>org.suigeneris:jrcs.diff</include>

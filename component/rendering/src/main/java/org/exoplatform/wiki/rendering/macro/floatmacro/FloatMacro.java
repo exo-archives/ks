@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.wiki.rendering.macro.MacroUtils;
 import org.xwiki.component.annotation.Component;
@@ -56,7 +58,7 @@ public class FloatMacro extends AbstractMacro<FloatMacroParameters> {
   /**
    * Used to get the current syntax parser.
    */
-  @Requirement
+  @Inject
   private ComponentManager componentManager;
   
   public FloatMacro() {

@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.log.ExoLogger;
@@ -32,8 +34,8 @@ import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiContext;
-import org.exoplatform.wiki.service.search.WikiSearchData;
 import org.exoplatform.wiki.service.search.SearchResult;
+import org.exoplatform.wiki.service.search.WikiSearchData;
 import org.exoplatform.wiki.utils.Utils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.Requirement;
@@ -62,13 +64,13 @@ public class DefaultWikiService implements WikiService {
   private static Log                     log                      = ExoLogger.getLogger("wiki:GWTWikiService");
 
   /** Execution context handler, needed for accessing the WikiContext. */
-  @Requirement
+  @Inject
   private Execution                      execution;
 
   /**
    * The service used to create links.
    */
-  @Requirement
+  @Inject
   private LinkService                    linkService;
 
   /**
@@ -154,7 +156,7 @@ public class DefaultWikiService implements WikiService {
    * 
    * @see WikiService#getRecentlyModifiedPages(int, int)
    */
-  public List<WikiPage> getRecentlyModifiedPages(int start, int count) {
+  public List<WikiPage> getRecentlyModifiedPages(String wikiName, int start, int count) {
     // TODO: implement wiki search service by author and sort by date to get
     // recently modified pages
     return new ArrayList<WikiPage>();
@@ -165,7 +167,7 @@ public class DefaultWikiService implements WikiService {
    * 
    * @see WikiService#getMatchingPages(String, int, int)
    */
-  public List<WikiPage> getMatchingPages(String keyword, int start, int count) {
+  public List<WikiPage> getMatchingPages(String wikiName, String keyword, int start, int count) {
     String quote = "'";
     String doubleQuote = "''";
     String escapedKeyword = keyword.replaceAll(quote, doubleQuote).toLowerCase();

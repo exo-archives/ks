@@ -93,7 +93,7 @@
     </dependency>
     <dependency>
       <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-web-gwt-wysiwyg-client</artifactId>
+      <artifactId>xwiki-platform-wysiwyg-client</artifactId>
       <version>${org.xwiki.platform.version}</version>
       <exclusions>
         <exclusion>

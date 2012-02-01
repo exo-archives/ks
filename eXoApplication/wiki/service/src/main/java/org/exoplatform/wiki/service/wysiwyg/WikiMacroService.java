@@ -23,10 +23,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.rendering.filter.MacroFilter;
-import org.xwiki.component.annotation.Requirement;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.gwt.wysiwyg.client.plugin.macro.MacroDescriptor;
@@ -54,32 +55,32 @@ public class WikiMacroService implements MacroService {
    * The syntax factory used to create {@link Syntax} instances from string
    * syntax identifiers.
    */
-  @Requirement
+  @Inject
   private SyntaxFactory             syntaxFactory;
 
   /**
    * The macro manager used to retrieve macros.
    */
-  @Requirement
+  @Inject
   private MacroManager              macroManager;
 
   /**
    * The macro category manager used to retrieve macro categories.
    */
-  @Requirement
+  @Inject
   private MacroCategoryManager      categoryManager;
   
   /**
    * The component manager used to macro filter
    */
-  @Requirement
+  @Inject
   private ComponentManager componentManager;
 
   /**
    * The component used to translate macro descriptors into the execution
    * context language.
    */
-  @Requirement
+  @Inject
   private MacroDescriptorTranslator macroDescriptorTranslator;
 
   /**

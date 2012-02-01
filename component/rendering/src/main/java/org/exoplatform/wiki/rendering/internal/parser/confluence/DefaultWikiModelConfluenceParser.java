@@ -16,6 +16,9 @@
  */
 package org.exoplatform.wiki.rendering.internal.parser.confluence;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.exoplatform.wiki.rendering.internal.parser.DefaultXWikiConfluenceGeneratorListener;
 import org.wikimodel.wem.IWikiParser;
 import org.wikimodel.wem.confluence.ConfluenceWikiParser;
@@ -25,6 +28,7 @@ import org.xwiki.rendering.internal.parser.WikiModelConfluenceParser;
 import org.xwiki.rendering.internal.parser.wikimodel.XWikiGeneratorListener;
 import org.xwiki.rendering.listener.Listener;
 import org.xwiki.rendering.parser.ResourceReferenceParser;
+import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.util.IdGenerator;
 
 /**
@@ -38,14 +42,16 @@ public class DefaultWikiModelConfluenceParser extends WikiModelConfluenceParser 
   
   /**
    * @see #getLinkReferenceParser()
-   */
-  @Requirement("confluence/1.0/link")
+   */  
+  @Inject
+  @Named("confluence/1.0/link")
   private ResourceReferenceParser referenceParser;
 
   /**
    * @see #getImageReferenceParser()
    */
-  @Requirement("default/image")
+  @Inject
+  @Named("default/image")
   private ResourceReferenceParser imageReferenceParser;
 
   @Override
@@ -65,11 +71,12 @@ public class DefaultWikiModelConfluenceParser extends WikiModelConfluenceParser 
   @Override
   public XWikiGeneratorListener createXWikiGeneratorListener(Listener listener,
                                                              IdGenerator idGenerator) {
-    return new DefaultXWikiConfluenceGeneratorListener(getLinkLabelParser(),
+    return new DefaultXWikiConfluenceGeneratorListener(this,
                                                        listener,
                                                        getLinkReferenceParser(),
                                                        getImageReferenceParser(),
                                                        this.plainRendererFactory,
-                                                       idGenerator);
+                                                       idGenerator,
+                                                       Syntax.CONFLUENCE_1_0);
   }
 }

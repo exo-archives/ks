@@ -6,59 +6,44 @@
  */
 
 if (typeof XWiki == "undefined") {
-
-    // This is very unlikely not to be the case, since xwiki.js is the first JS file in the stream,
-    // but it might not be the case with custom skins, so let's not take the risk to erase other code.
-    var XWiki = {};
+ 
+   // This is very unlikely not to be the case, since xwiki.js is the first JS file in the stream,
+   // but it might not be the case with custom skins, so let's not take the risk to erase other code.
+   var XWiki = {};
 }
 
 Object.extend(XWiki, {
 
   constants: {
-
-    /**
-     * Character that separates wiki from space in a page fullName (example: xwiki:Main.WebHome).
-     */
+    /** Character that separates wiki from space in a page fullName (example: the colon in xwiki:Main.WebHome). */
     wikiSpaceSeparator: ":",
 
-    /**
-     * Character that separates space from page in a page fullName (example: xwiki:Main.WebHome).
-     */
+    /** Character that separates space from page in a page fullName (example: the dot in xwiki:Main.WebHome). */
     spacePageSeparator: ".",
 
-    /**
-     * Character that separates page from attachment in an attachment fullName (example: xwiki:Main.WebHome@Archive.tgz).
-     */
+    /** Character that separates page from attachment in an attachment fullName (example: the @ in xwiki:Main.WebHome@Archive.tgz). */
     pageAttachmentSeparator: "@",
 
-    /**
-     * URL Anchor separator.
-     */
+    /** URL Anchor separator. */
     anchorSeparator: "#",
 
-    /**
-     * URL Anchor for page comments.
-     */
+    /** URL Anchor for page annotations. */
+    docextraAnnotationsAnchor: "Annotations",
+
+    /** URL Anchor for page comments. */
     docextraCommentsAnchor: "Comments",
 
-    /**
-     * URL Anchor for page comments.
-     */
+    /** URL Anchor for page attachments. */
     docextraAttachmentsAnchor: "Attachments",
 
-    /**
-     * URL Anchor for page comments.
-     */
+    /** URL Anchor for page history. */
     docextraHistoryAnchor: "History",
 
-    /**
-     * URL Anchor for page comments.
-     */
+    /** URL Anchor for page information. */
     docextraInformationAnchor: "Information"
   },
 
   resource: {
-
     /**
      * Extract the name of the wiki from a resource name. Examples: returns "xwiki" with "xwiki:Main.WebHome",
      * returns null with "Main.WebHome".
@@ -374,8 +359,8 @@ Object.extend(XWiki, {
    * Insert a link for editing sections.
    */
   insertSectionEditLinks: function() {
-      // Insert links only in view mode and for xwiki/2.0 documents.
-      if (XWiki.docsyntax == "xwiki/2.0" && XWiki.contextaction == "view" && XWiki.hasEdit) {
+      // Insert links only in view mode and for documents not in xwiki/1.0 syntax
+      if (XWiki.docsyntax != "xwiki/1.0" && XWiki.contextaction == "view" && XWiki.hasEdit) {
 
           // Section count starts at one, not zero.
           var sectioncount = 1;
@@ -411,13 +396,13 @@ Object.extend(XWiki, {
           }
       }
   },
-  
+
   /**
    * Display a modal box allowing to create the new document from a template when clicking on broken links.
    */
   insertCreatePageFromTemplateModalBoxes: function() {
-      // Insert links only in view mode and for xwiki/2.0 documents.
-      if (XWiki.docsyntax == "xwiki/2.0" && XWiki.contextaction == "view" && XWiki.hasEdit) {
+      // Insert links only in view mode and for documents not in xwiki/1.0 syntax
+      if (XWiki.docsyntax != "xwiki/1.0" && XWiki.contextaction == "view" && XWiki.hasEdit) {
           XWiki.widgets.CreatePagePopup = Class.create(XWiki.widgets.ModalPopup, {
               initialize : function($super, interactionParameters) {
                   var content =  new Element('div', {'class': 'modal-popup'});
@@ -439,10 +424,10 @@ Object.extend(XWiki, {
               }
           });
 
-          var spans = document.body.select("span.wikicreatelink"); 
+          var spans = document.body.select("span.wikicreatelink");
           for (var i = 0; i < spans.length; i++) {
-              spans[i].down('a').observe('click', function(event) {               
-                  new Ajax.Request(event.currentTarget.href + '&xpage=createinline&ajax=1', {
+              spans[i].down('a').observe('click', function(event) {
+                  new Ajax.Request(event.findElement('a').href + '&xpage=createinline&ajax=1', {
                       method:'get',
                       onSuccess: function(transport) {
                           var redirect = transport.getHeader('redirect');
@@ -455,42 +440,21 @@ Object.extend(XWiki, {
                       onFailure: function() {
                         new XWiki.widgets.Notification("$msg.get('core.create.ajax.error')", 'error', {inactive: true}).show();
                       }
-                  });                 
+                  });
                   event.stop();
               });
           }
       }
-  },
-  
-  /**
-   * Enable live validation for inputs with classname 'required'.
-   */
-  initRequiredInputsValidation: function(content) {
-    // apply this transformation only in the inline and edit modes
-    if (XWiki.contextaction == "edit" || XWiki.contextaction == "inline") {
-      if (typeof content == "undefined") {
-        content = document.body;
-      }
-      var inputs = content.select("input.required");
-      for (var i = 0; i < inputs.length; i++) {
-        var input = inputs[i];
-        var validator = new LiveValidation(input, { validMessage: "" });
-        validator.add(Validate.Presence, {
-          failureMessage: "$msg.get('core.editors.validation.mandatoryField')"
-        });
-        validator.validate();
-      }
-    }
   },
 
   /**
    * Watchlist methods.
    */
   watchlist : {
- 
+
     /**
      * Mapping between link IDs and associated actions.
-     */    
+     */
     actionsMap : {
         'tmWatchDocument' : 'adddocument',
         'tmUnwatchDocument' : 'removedocument',
@@ -511,24 +475,24 @@ Object.extend(XWiki, {
         'tmWatchWiki' : 'tmUnwatchWiki',
         'tmUnwatchWiki' : 'tmWatchWiki'
     },
-    
+
     /**
      * Execute a watchlist action (add or remove the given document/space/wiki from watchlist).
      *
      * @param element the element that fired the action.
      */
     executeAction : function(element) {
-        var surl = window.docgeturl + "?xpage=watch&do=" + this.actionsMap[element.id];        
+        var surl = window.docgeturl + "?xpage=watch&do=" + this.actionsMap[element.id];
         var myAjax = new Ajax.Request(
           surl,
           {
             method: 'get',
             onComplete: function() {
               if (element.nodeName == 'A') {
-                element.parentNode.toggleClassName('hidden');               
-                $(XWiki.watchlist.flowMap[element.id]).parentNode.toggleClassName('hidden');
+                element.up().toggleClassName('hidden');
+                $(XWiki.watchlist.flowMap[element.id]).up().toggleClassName('hidden');
               } else {
-                element.toggleClassName('hidden');              
+                element.toggleClassName('hidden');
                 $(XWiki.watchlist.flowMap[element.id]).toggleClassName('hidden');
               }
             }
@@ -545,7 +509,7 @@ Object.extend(XWiki, {
             var self = this;
 
             if (element.nodeName != 'A') {
-              element = $(button).firstChild;
+              element = $(button).down('A');
             }
 
             // unregister previously registered handler if any
@@ -554,13 +518,81 @@ Object.extend(XWiki, {
                 Event.stop(event);
                 var element = event.element();
                 while (element.id == '') {
-                    element = element.parentNode;
+                    element = element.up();
                 }
-                XWiki.watchlist.executeAction(element);                 
+                XWiki.watchlist.executeAction(element);
               });
           }
         }
     }
+  },
+
+  cookies: {
+    /**
+     * Create a cookie, with or without expiration date.
+     *
+     * @param name Name of the cookie.
+     * @param value Value of the cookie.
+     * @param days Days to keep the cookie (can be null).
+     * @return
+     */
+    create: function(name,value,days) {
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime()+(days*24*60*60*1000));
+            var expires = "; expires="+date.toGMTString();
+        }
+        else var expires = "";
+        document.cookie = name+"="+value+expires+"; path=/";
+    },
+
+    /**
+     * Read a cookie.
+     *
+     * @param name Name of the cookie.
+     * @return Value for the given cookie.
+     */
+    read:function(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0;i < ca.length;i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') {
+                c = c.substring(1,c.length);
+            }
+            if (c.indexOf(nameEQ) == 0) {
+                return c.substring(nameEQ.length,c.length);
+            }
+        }
+        return null;
+    },
+
+    /**
+     * Erase a cookie.
+     *
+     * @param name Name of the cookie to erase.
+     * @return
+     */
+    erase:function(name) {
+        XWiki.cookies.create(name,"",-1);
+    }
+
+  },
+
+  /**
+   * Expand the given panel if collapsed, collapse if visible.
+   *
+   * @param form  {element} The panel element.
+   */
+  togglePanelVisibility: function(element){
+    element = $(element);
+    element.toggleClassName("collapsed");
+  },
+
+  registerPanelToggle: function() {
+    $$('.panel .xwikipaneltitle').each(function(item) {
+      item.observe('click', this.togglePanelVisibility.bind(this, item.up('.panel')));
+    }.bind(this));
   },
 
   /**
@@ -574,16 +606,15 @@ Object.extend(XWiki, {
     if (typeof this.isInitialized == "undefined" || this.isInitialized == false) {
       this.isInitialized = true;
       document.fire("xwiki:dom:loading");
-      
-      // Replace by UIWikiPortlet@makeRenderingErrorsExpandable for ajax actions
-      //this.makeRenderingErrorsExpandable();
-      
+
+      this.makeRenderingErrorsExpandable();
       this.fixLinksTargetAttribute();
       this.insertSectionEditLinks();
       this.insertCreatePageFromTemplateModalBoxes();
-      this.initRequiredInputsValidation();
       this.watchlist.initialize();
+      this.registerPanelToggle();
 
+      this.domIsLoaded = true;
       document.fire("xwiki:dom:loaded");
     }
   }
@@ -599,50 +630,6 @@ document.observe("dom:loaded", XWiki.initialize.bind(XWiki));
 // Passed this point, the methods are not XWiki-namespaced.
 // They should be progressively cleaned, and we should not add any other of such.
 // See http://jira.xwiki.org/jira/browse/XWIKI-3175
-
-/**
- * Hide the fieldset inside the given form.
- *
- * @param form  {element} The form element.
- * @return
- */
-function hideForm(form){
-    form.getElementsByTagName("fieldset").item(0).className = "collapsed";
-}
-
-/**
- * Hide the fieldset inside the given form if visible, show it if it's not.
- *
- * @param form  {element} The form element.
- * @return
- */
-function toggleForm(form){
-    var fieldset = form.getElementsByTagName("fieldset").item(0);
-    if(fieldset.className == "collapsed"){
-        fieldset.className = "expanded";
-    }
-    else{
-        fieldset.className = "collapsed";
-    }
-}
-
-/**
- * Expand the given panel if collapsed, collapse if visible.
- *
- * @param form  {element} The panel element.
- * @return
- */
-function togglePanelVisibility(element, cookieName){
-  element = $(element);
-  element.toggleClassName("collapsed");
-  if (cookieName) {
-    if (element.hasClassName("collapsed")) {
-      createCookie(cookieName, "collapsed", '');
-    } else {
-      eraseCookie(cookieName);
-    }
-  }
-}
 
 /**
  * Show items under the given entry in the top menu (menuview.vm).
@@ -878,55 +865,6 @@ function prepareName(form) {
 }
 
 /**
- * Create a cookie, with or without expiration date.
- *
- * @param name Name of the cookie.
- * @param value Value of the cookie.
- * @param days Days to keep the cookie (can be null).
- * @return
- */
-function createCookie(name,value,days) {
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime()+(days*24*60*60*1000));
-        var expires = "; expires="+date.toGMTString();
-    }
-    else var expires = "";
-    document.cookie = name+"="+value+expires+"; path=/";
-}
-
-/**
- * Read a cookie.
- *
- * @param name Name of the cookie.
- * @return Value for the given cookie.
- */
-function readCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') {
-            c = c.substring(1,c.length);
-        }
-        if (c.indexOf(nameEQ) == 0) {
-            return c.substring(nameEQ.length,c.length);
-        }
-    }
-    return null;
-}
-
-/**
- * Erase a cookie.
- *
- * @param name Name of the cookie to erase.
- * @return
- */
-function eraseCookie(name) {
-    createCookie(name,"",-1);
-}
-
-/**
  * Method used by editmodes.vm to warn the user if he tries to go to the WYSIWYG editor
  * with HTML in his content.
  *
@@ -993,8 +931,9 @@ shortcut = {
                     if(e.target) element=e.target;
                     else if(e.srcElement) element=e.srcElement;
                     if(element.nodeType==3) element=element.parentNode;
-
-                    if(element.tagName == 'INPUT' || element.tagName == 'TEXTAREA') return;
+                    if(element.tagName == 'INPUT' || element.tagName == 'TEXTAREA' || element.tagName == 'SELECT') {
+                        return;
+                    }
                 }
 
                 //Find Which key is pressed
@@ -1335,7 +1274,7 @@ XWiki.Document = Class.create({
 });
 
 /* Initialize the document URL factory, and create XWiki.currentDocument. */
-document.observe('dom:loaded', function() {
+document.observe('xwiki:dom:loading', function() {
   XWiki.Document.currentWiki = ($$("meta[name=wiki]").length > 0) ? $$("meta[name=wiki]")[0].content : "xwiki";
   XWiki.Document.currentSpace = ($$("meta[name=space]").length > 0) ? $$("meta[name=space]")[0].content : "Main";
   XWiki.Document.currentPage = ($$("meta[name=page]").length > 0) ? $$("meta[name=page]")[0].content : "WebHome";
@@ -1377,7 +1316,7 @@ document.observe('xwiki:dom:loaded', function() {
       this.value=this.defaultValue;
     }
   }
-  $$("input.withTip").each(function(item) {
+  $$("input.withTip", "textarea.withTip").each(function(item) {
     item.observe('focus', onFocus.bindAsEventListener(item));
     item.observe('blur', onBlur.bindAsEventListener(item));
   });
@@ -1386,27 +1325,69 @@ document.observe('xwiki:dom:loaded', function() {
 /**
  * Small JS improvement, which suggests document names (doc.fullName) when typing in an input.
  *
- * To activate this behavior on an input elements, add the "suggestDocuments" classname to it.
+ * To activate this behavior on an input elements, add one of the following classname to it :
+ * <ul>
+ * <li><tt>suggestDocuments</tt> to suggest from any available document</li>
+ * <li><tt>suggestSpaces</tt> to suggest space names</li>
+ * <li><tt>suggestUsers</tt> to suggest from documents that contains user objects</li>
+ * <li><tt>suggestGroups</tt> to suggest from documents that contains group objects</li>
+ * </ul>
  */
 document.observe('xwiki:dom:loaded', function() {
-  if (typeof(XWiki.widgets.Suggest) != "undefined") {
-    $$("input.suggestDocuments").each(function(item) {
-      // Create the Suggest.
-      new XWiki.widgets.Suggest(item, {
-        // This document also provides the suggestions.
-        script: XWiki.Document.getRestSearchURL("scope=name&number=10&media=json&"),
-        varname: "q",
-        noresults: "Document not found",
-        json: true,
-        resultsParameter : "searchResults",
-        resultId : "id",
-        resultValue : "pageFullName",
-        resultInfo : "pageFullName",
-        timeout : 30000,
-        parentContainer : item.up()
-      });
-    });
-  }
+    var suggestionsMapping = {
+        "documents" : {
+            script: XWiki.Document.getRestSearchURL("scope=name&number=10&media=json&"),
+            varname: "q",
+            icon: "$xwiki.getSkinFile('icons/silk/page_white_text.gif')",
+            noresults: "Document not found",
+            json: true,
+            resultsParameter : "searchResults",
+            resultId : "id",
+            resultValue : "pageFullName",
+            resultInfo : "pageFullName"
+        },
+        "spaces" : {
+            script: XWiki.Document.getRestSearchURL("scope=spaces&number=10&media=json&"),
+            varname: "q",
+            icon: "$xwiki.getSkinFile('icons/silk/folder.gif')",
+            noresults: "Space not found",
+            json: true,
+            resultsParameter : "searchResults",
+            resultId : "id",
+            resultValue : "space",
+            resultInfo : "space"
+        },
+        "users" : {
+            script: XWiki.currentDocument.getURL('get', 'xpage=uorgsuggest&classname=XWiki.XWikiUsers&wiki=local&uorg=user&'),
+            varname: "input",
+            icon: "$xwiki.getSkinFile('icons/silk/user.gif')",
+            noresults: "User not found"
+        },
+        "groups" : {
+            script: XWiki.currentDocument.getURL('get', 'xpage=uorgsuggest&classname=XWiki.XWikiGroups&wiki=local&uorg=group&'),
+            varname: "input",
+            icon: "$xwiki.getSkinFile('icons/silk/group.gif')",
+            noresults: "Group not found"
+        }
+    };
+    if (typeof(XWiki.widgets.Suggest) != "undefined") {
+      var keys = Object.keys(suggestionsMapping);
+      for (var i=0;i<keys.length;i++) {
+        var selector = 'input.suggest' + keys[i].capitalize();
+        $$(selector).each(function(item) {
+          if (!item.hasClassName('initialized')) {
+            var options = {
+              timeout : 30000,
+              parentContainer : item.up()
+            };
+            Object.extend(options, suggestionsMapping[keys[i]]);
+            // Create the Suggest.
+            var suggest = new XWiki.widgets.Suggest(item, options);
+            item.addClassName('initialized');
+          }
+        });
+      }
+    }
 });
 
 /**
@@ -1426,6 +1407,206 @@ document.observe('xwiki:dom:loaded', function() {
     });
   }
 });
+
+/*
+ * AJAX improvements for setting the document parent.
+ */
+document.observe('xwiki:dom:loaded', function() {
+  var hierarchyElement   = $('hierarchy');
+  var breadcrumbsElement = $('breadcrumbs');
+  var editParentTrigger  = $('editParentTrigger');
+  var parentInputSection = $('parentinput');
+  var parentInputField   = $('xwikidocparentinput');
+  var titleInputField    = $('xwikidoctitleinput');
+
+  /** Hides the parent input field when focusing out of the parent field. */
+  function hideParentSection(event) {
+    if (event) {
+      event.stop();
+    }
+    parentInputSection.removeClassName('active');
+    editParentTrigger.addClassName('edit-parent');
+    editParentTrigger.removeClassName('hide-edit-parent');
+  }
+  /** Displays the parent input field when clicking on the "Edit parent" button. */
+  function showParentSection(event) {
+    if (event) {
+      event.stop();
+    }
+    parentInputSection.addClassName('active');
+    parentInputField.focus();
+    editParentTrigger.removeClassName('edit-parent');
+    editParentTrigger.addClassName('hide-edit-parent');
+  }
+  /** Toggles the visibility of the parent input field. */
+  function toggleParentSectionVisibility (event) {
+    event.stop();
+    event.element().blur();
+    if (editParentTrigger.hasClassName('edit-parent')) {
+      showParentSection();
+    } else {
+      hideParentSection();
+    }
+  }
+
+  if ($('hideEditParentTrigger')) {
+    $('hideEditParentTrigger').style.display = 'none';
+  }
+  if (editParentTrigger) {
+    editParentTrigger.observe('click', toggleParentSectionVisibility);
+  }
+  if (parentInputField) {
+    if (hierarchyElement || breadcrumbsElement) {
+      ['blur', 'change', 'xwiki:suggest:selected'].each(function(monitoredEvent) {
+        parentInputField.observe(monitoredEvent, function () {
+          var parameters = {
+            xpage: 'xpart',
+            vm: (hierarchyElement ? 'hierarchy.vm' : 'space.vm'),
+            parent : parentInputField.value
+          };
+          if (titleInputField) {
+            parameters.title = titleInputField.value;
+          }
+          new Ajax.Request(XWiki.currentDocument.getURL('edit'), {
+            parameters: parameters,
+            onSuccess : function(response) {
+              if (hierarchyElement) {
+                hierarchyElement.replace(response.responseText);
+                hierarchyElement = $('hierarchy');
+              } else {
+                var tmp = new Element('div');
+                tmp.update(response.responseText);
+                breadcrumbsElement.replace(tmp.down('[id=breadcrumbs]'));
+                breadcrumbsElement = $('breadcrumbs');
+              }
+            }
+          });
+        });
+      });
+    }
+    $('body').observe('click', function (event) {
+      if (!event.element().descendantOf(parentInputSection) && event.element() != parentInputSection && event.element() != editParentTrigger) {
+        hideParentSection();
+      }
+    })
+  }
+});
+
+/*
+ * JS improvement for keeping the content menu visible on the screen when scrolling down.
+ */
+document.observe("xwiki:dom:loaded", function() {
+  var menu = $('contentmenu') || $('editmenu'); // Both for view and edit
+  var content = $('mainContentArea') || $('mainEditArea'); // Both for view and edit
+  if (menu && content) {
+    createGhost(menu);
+    // Resize the fixed menu when the window width changes
+    Event.observe(window, 'resize', function() {
+      if (menu.style.position == 'fixed') {
+        menu.style.width = content.getWidth() + 'px';
+        if (typeof(menu.__fm_extra) != 'undefined') {
+          if (menu.__fm_extra.getStyle('padding-left').replace(/[^a-z]/g, '') == 'px') {
+            var boxExtra = menu.__fm_extra.getStyle('border-left-width').replace(/[^0-9.]/g, '') - 0;
+            boxExtra += menu.__fm_extra.getStyle('padding-left').replace(/[^0-9.]/g, '') - 0;
+            boxExtra += menu.__fm_extra.getStyle('padding-right').replace(/[^0-9.]/g, '') - 0;
+            boxExtra += menu.__fm_extra.getStyle('border-right-width').replace(/[^0-9.]/g, '') - 0;
+          } else {
+            boxExtra = 50; // magic number 50 = standard left+right padding
+          }
+          menu.__fm_extra.style.width = (content.getWidth() - boxExtra) + 'px';
+        }
+      }
+    });
+    if (!browser.isIE6x) { // IE6 is too dumb to be supported
+      Event.observe(window, 'scroll', handleScroll);
+      // Make sure the annotations settings panel shows up in the right place
+      document.observe('xwiki:annotations:settings:loaded', handleScroll);
+    }
+  }
+
+  /**
+   * Ensures that the content menu is always visible when scrolling down.
+   */
+  function handleScroll() {
+    var menuExtras = $$('.annotationsettings');
+    var extraHeight = 0;
+    if (menuExtras && menuExtras.size() > 0) {
+      menu.__fm_extra = menuExtras[0];
+      createGhost(menu.__fm_extra);
+      extraHeight = menu.__fm_extra.getHeight();
+    }
+    var menuHeight = menu.getHeight();
+    var menuMaxTop = content.cumulativeOffset().top + content.getHeight() - menuHeight - extraHeight;
+    var menuMinTop = content.cumulativeOffset().top - menuHeight - extraHeight;
+    if (document.viewport.getScrollOffsets().top >= menuMinTop && document.viewport.getScrollOffsets().top < menuMaxTop) {
+      var menuWidth = content.getWidth();
+      var menuLeft = content.cumulativeOffset().left;
+      makeFixed(menu, 0, menuLeft, menuWidth);
+      makeFixed(menu.__fm_extra, menuHeight, menuLeft, (menuWidth - 50)); // magic number 50 = left+right padding
+    } else if (document.viewport.getScrollOffsets().top >= menuMaxTop) {
+      makeAbsolute(menu, menuMaxTop);
+      makeAbsolute(menu.__fm_extra, menuMaxTop + menuHeight);
+    } else {
+      makeScrollable(menu);
+      makeScrollable(menu.__fm_extra);
+    }
+  }
+
+  /**
+   * Creates a clone of the provided element, which has the same size and position.
+   * This clone prevents layout changes when moving the element outside its parent.
+   * The clone will be stored in the __fm_ghost property of the element and is inserted
+   * after the element in the DOM. The clone is not visible initially.
+   *
+   * @param element the element whose position and dimesions should be cloned
+   */
+  function createGhost(element) {
+    if (typeof(element.__fm_ghost) == 'undefined') {
+      element.__fm_ghost = new Element('div');
+      element.__fm_ghost.hide();
+      element.insert({'after' : element.__fm_ghost});
+    }
+    element.__fm_ghost.clonePosition(element, {setWidth : false});
+  }
+  /**
+   * Pins the provided element at a certain position inside the window. The element's clone is made
+   * visible to prevent layout changes.
+   *
+   * @see #createGhost
+   */
+  function makeFixed(element, top, left, width) {
+    if (element) {
+      element.style.position = 'fixed';
+      element.style.top = top + 'px';
+      element.style.left = left + 'px';
+      element.style.width = width + 'px';
+      element.__fm_ghost.show();
+    }
+  }
+  /**
+   * Keeps the provided element at a certain position inside the document.
+   */
+  function makeAbsolute(element, top) {
+    if (element) {
+      element.style.position = 'absolute';
+      element.style.top = top + 'px';
+      element.__fm_ghost.show();
+    }
+  }
+  /**
+   * Restores the provided element to its original position in the document.
+   */
+  function makeScrollable(element) {
+    if (element) {
+      element.style.position = '';
+      element.style.top = '';
+      element.style.left = '';
+      element.style.width = '';
+      element.__fm_ghost.hide();
+    }
+  }
+});
+
 
 /**
  * Customized CSS for WYSIWYG editor and make some walk around for Chrome and Safari
@@ -1451,15 +1632,5 @@ document.observe('xwiki:wysiwyg:loaded', function() {
     css.setAttribute("href", "/wiki/skin/DefaultSkin/webui/Stylesheet.css");
     doc.getElementsByTagName("head")[0].appendChild(css);
   }
-  if (browser.isAppleWebKit){
-    eXo.wiki.WysiwygEditor.interval = window.setInterval(function(){
-      var iframe = $$('#UIWikiPageEditForm iframe[class=gwt-RichTextArea]')[0];
-      if (!iframe){
-        window.clearInterval(eXo.wiki.WysiwygEditor.interval);
-        return;
-      }
-        eXo.wiki.WysiwygEditor.getCommandManager().execute('submit', 'true');        
-     }, 500);
-   }
 });
 

@@ -20,8 +20,9 @@ import java.io.StringReader;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.annotation.Requirement;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.rendering.block.Block;
@@ -47,7 +48,7 @@ public class TableCellMacro extends AbstractMacro<Object> {
    */
   private static final String DESCRIPTION = "Inserts a table cell.";
 
-  @Requirement
+  @Inject
   private ComponentManager componentManager;
 
   /**

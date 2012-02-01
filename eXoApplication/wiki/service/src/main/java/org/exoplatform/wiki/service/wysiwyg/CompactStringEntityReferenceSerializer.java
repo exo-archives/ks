@@ -16,8 +16,10 @@
  */
 package org.exoplatform.wiki.service.wysiwyg;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.annotation.Requirement;
 import org.xwiki.model.EntityType;
 import org.xwiki.model.internal.reference.DefaultStringEntityReferenceSerializer;
 import org.xwiki.model.reference.EntityReference;
@@ -32,7 +34,8 @@ import org.xwiki.model.reference.EntityReferenceValueProvider;
 @Component("compact")
 public class CompactStringEntityReferenceSerializer extends DefaultStringEntityReferenceSerializer {
 
-  @Requirement("current")
+  @Inject
+  @Named("current")
   private EntityReferenceValueProvider provider;
 
   /**
@@ -52,7 +55,7 @@ public class CompactStringEntityReferenceSerializer extends DefaultStringEntityR
       // In addition an entity reference isn't printed only if all parent references are not printed either,
       // otherwise print it. For example "wiki:page" isn't allowed for a Document Reference.
 
-      if (currentReference.getChild() == null || isLastReference || representation.length() > 0) {
+      if (isLastReference || representation.length() > 0) {
           shouldPrint = true;
       } else {
           String defaultName = resolveDefaultValue(currentReference.getType(), parameters);

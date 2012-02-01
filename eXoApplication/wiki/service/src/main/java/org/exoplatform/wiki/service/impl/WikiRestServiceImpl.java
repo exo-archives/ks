@@ -146,7 +146,8 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
       }
       if (wikiContextKey != null && wikiContextKey.length() > 0) {
         wikiContext = (WikiContext) request.getSession().getAttribute(wikiContextKey);
-        currentSyntax = wikiContext.getSyntax();
+        if (wikiContext != null)
+          currentSyntax = wikiContext.getSyntax();
       }
       Execution ec = ((RenderingServiceImpl) renderingService).getExecution();
       if (ec.getContext() == null) {

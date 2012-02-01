@@ -21,10 +21,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.wiki.rendering.macro.MacroUtils;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.annotation.Requirement;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.ParagraphBlock;
@@ -55,7 +56,7 @@ public class DivMacro extends AbstractMacro<DivParameters> {
   /**
    * Used to get the current syntax parser.
    */
-  @Requirement
+  @Inject
   private ComponentManager componentManager;
 
   public DivMacro() {

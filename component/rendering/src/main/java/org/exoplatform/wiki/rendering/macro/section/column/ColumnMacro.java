@@ -19,8 +19,9 @@ package org.exoplatform.wiki.rendering.macro.section.column;
 import java.io.StringReader;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.annotation.Requirement;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.rendering.block.Block;
@@ -40,7 +41,7 @@ import org.xwiki.rendering.transformation.MacroTransformationContext;
 @Component("column")
 public class ColumnMacro<P extends ColumnMacroParameters> extends AbstractMacro<P> {
 
-  @Requirement
+  @Inject
   private ComponentManager    componentManager;
 
   private static final String MACRO_NAME  = "Column";

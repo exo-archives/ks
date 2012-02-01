@@ -16,6 +16,9 @@
  */
 package org.exoplatform.wiki.service.wysiwyg;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -25,7 +28,6 @@ import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.utils.Utils;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.annotation.Requirement;
 import org.xwiki.context.Execution;
 import org.xwiki.gwt.wysiwyg.client.wiki.EntityConfig;
 import org.xwiki.gwt.wysiwyg.client.wiki.URIReference;
@@ -48,27 +50,30 @@ import org.xwiki.rendering.renderer.reference.ResourceReferenceSerializer;
 public class DefaultLinkService implements LinkService {
   
   /** Execution context handler, needed for accessing the WikiContext. */
-  @Requirement
+  @Inject
   private Execution execution;
   
   /**
    * The component used to serialize XWiki document references.
    */
-  @Requirement("compact")
+  @Inject
+  @Named("compact")
   private EntityReferenceSerializer<String>        entityReferenceSerializer;
 
   /**
    * The component used to resolve an entity reference relative to another
    * entity reference.
    */
-  @Requirement("explicit/reference")
+  @Inject
+  @Named("explicit/reference")
   private EntityReferenceResolver<EntityReference> explicitReferenceEntityReferenceResolver;
 
   /**
    * The component used to resolve a string entity reference relative to another
    * entity reference.
    */
-  @Requirement("explicit")
+  @Inject
+  @Named("explicit")
   private EntityReferenceResolver<String>          explicitStringEntityReferenceResolver;
 
   /**
@@ -78,7 +83,8 @@ public class DefaultLinkService implements LinkService {
    * document. The current hint should be replaced with a generic one to avoid
    * confusion.
    */
-  @Requirement("xhtmlmarker")
+  @Inject
+  @Named("xhtmlmarker")
   private ResourceReferenceSerializer              linkReferenceSerializer;
 
   /**
@@ -88,7 +94,8 @@ public class DefaultLinkService implements LinkService {
    * document. The current hint should be replaced with a generic one to avoid
    * confusion.
    */
-  @Requirement("xhtmlmarker")
+  @Inject
+  @Named("xhtmlmarker")
   private ResourceReferenceParser                  linkReferenceParser;
 
   /**

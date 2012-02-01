@@ -16,6 +16,8 @@
  */
 package org.exoplatform.wiki.rendering.context;
 
+import javax.inject.Inject;
+
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.rendering.reference.ObjectReferenceConverter;
@@ -46,13 +48,13 @@ public class DefaultMarkupContextManager implements MarkupContextManager {
   /**
    * Used to get the current syntax parser.
    */
-  @Requirement
+  @Inject
   private ComponentManager    componentManager;
 
   /**
    * Used to get the current context
    */
-  @Requirement
+  @Inject
   private Execution           execution;
 
   private static final String DEFAULT_WIKI  = "xwiki";

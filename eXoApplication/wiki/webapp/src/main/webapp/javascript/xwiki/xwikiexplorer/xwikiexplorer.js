@@ -308,7 +308,7 @@ isc.XWEResultTree.addMethods({
             space: node.space,
             title: isc.XWEResultTree.constants.addPageTitle,
             parentId: node.id,
-            icon: "/wiki/skin/DefaultSkin/webui/background/bullet_add.gif",
+            icon: "/wiki/skin/DefaultSkin/webui/UIWikiRichTextEditor/images/bullet_add.gif",
             resource: node.resource,
             isNewPage: true,
             isNewAttachment: false,
@@ -339,7 +339,7 @@ isc.XWEResultTree.addMethods({
             space: node.space,
             title: isc.XWEResultTree.constants.addAttachmentTitle,
             parentId: node.id,
-            icon: "/wiki/skin/DefaultSkin/webui/background/bullet_add.gif",
+            icon: "/wiki/skin/DefaultSkin/webui/UIWikiRichTextEditor/images/bullet_add.gif",
             resource: node.resource,
             isNewPage: false,
             isNewAttachment: true,
@@ -405,7 +405,7 @@ isc.XWEResultTree.addMethods({
                 parentId: node.id,
                 xwikiRelativeURL: node.xwikiRelativeURL + XWiki.constants.anchorSeparator +
                                   XWiki.constants.docextraAttachmentsAnchor,
-                icon: "/wiki/skin/DefaultSkin/webui/background/page_white_zip.gif",
+                icon: "/wiki/skin/DefaultSkin/webui/UIWikiRichTextEditor/images/page_white_zip.gif",
                 resource: XWiki.resource.get(node.id + XWiki.constants.anchorSeparator +
                                             XWiki.constants.docextraAttachmentsAnchor),
                 isXWikiAttachment: true,
@@ -466,7 +466,7 @@ isc.XWEDataSource.addProperties({
     /*
      * XWiki Explorer (XWE) per-DataSource type (will be overriden) options.
      */
-    icon : "/wiki/skin/DefaultSkin/webui/background/database.gif",
+    icon : "/wiki/skin/DefaultSkin/webui/UIWikiRichTextEditor/images/database.gif",
 
     /**
      * Properties passed to the RPCManager when request are performed.
@@ -694,7 +694,7 @@ isc.XWETreeGrid.addProperties({
     /*
      * XWiki variables.
      */
-    wiki : XWiki.currentWiki,
+    wiki : eXo.wiki.UIWikiRichTextArea.wiki,
     space : null,
     displaySuggest : true,
     defaultValue : "Main.WebHome",

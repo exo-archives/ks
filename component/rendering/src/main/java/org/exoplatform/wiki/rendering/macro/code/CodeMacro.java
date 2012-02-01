@@ -23,7 +23,10 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.Requirement;
 import org.xwiki.component.manager.ComponentLookupException;
@@ -46,8 +49,14 @@ import org.xwiki.rendering.transformation.MacroTransformationContext;
  */
 @Component("code")
 public class CodeMacro extends AbstractBoxMacro<CodeMacroParameters> {
-  @Requirement
+  @Inject
   private ComponentManager componentManager;
+  
+  /**
+   * The logger to log.
+   */
+  @Inject
+  private Logger logger;
 
   /**
    * @return the component manager.
@@ -105,8 +114,8 @@ public class CodeMacro extends AbstractBoxMacro<CodeMacroParameters> {
         result = highlight(parameters, content);
         return result;
       } catch (Exception e) {
-        if (getLogger().isDebugEnabled()) {
-          getLogger().debug("Can not highlight code", e);
+        if (logger.isDebugEnabled()) {
+          logger.debug("Can not highlight code", e);
         }
       }
     }
@@ -132,16 +141,16 @@ public class CodeMacro extends AbstractBoxMacro<CodeMacroParameters> {
         parser = getComponentManager().lookup(HighlightParser.class, parameters.getLanguage());
         return parser.highlight(parameters.getLanguage(), new StringReader(content));
       } catch (ComponentLookupException e) {
-        if (getLogger().isDebugEnabled()) {
-          getLogger().debug("Can't find specific highlighting parser for language ["
+        if (logger.isDebugEnabled()) {
+          logger.debug("Can't find specific highlighting parser for language ["
                                 + parameters.getLanguage() + "]",
                             e);
         }
       }
     }
 
-    if (getLogger().isDebugEnabled()) {
-      getLogger().debug("Trying the default highlighting parser");
+    if (logger.isDebugEnabled()) {
+      logger.debug("Trying the default highlighting parser");
     }
 
     parser = getComponentManager().lookup(HighlightParser.class, "default");

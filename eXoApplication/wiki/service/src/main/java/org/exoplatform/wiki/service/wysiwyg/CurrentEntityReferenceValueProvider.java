@@ -16,9 +16,10 @@
  */
 package org.exoplatform.wiki.service.wysiwyg;
 
+import javax.inject.Inject;
+
 import org.exoplatform.wiki.service.WikiContext;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.annotation.Requirement;
 import org.xwiki.context.Execution;
 import org.xwiki.model.EntityType;
 import org.xwiki.model.ModelContext;
@@ -34,10 +35,10 @@ import org.xwiki.model.reference.EntityReference;
 @Component("current")
 public class CurrentEntityReferenceValueProvider extends DefaultEntityReferenceValueProvider {
 
-  @Requirement
+  @Inject
   private ModelContext modelContext;
 
-  @Requirement
+  @Inject
   private Execution execution;
 
   @Override

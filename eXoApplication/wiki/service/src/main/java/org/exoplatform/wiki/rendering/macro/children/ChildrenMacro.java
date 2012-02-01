@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.services.log.ExoLogger;
@@ -35,7 +37,6 @@ import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.tree.TreeNode;
 import org.exoplatform.wiki.tree.utils.TreeUtils;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.annotation.Requirement;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.context.Execution;
@@ -73,19 +74,19 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
   /**
    * Used to get the current syntax parser.
    */
-  @Requirement
+  @Inject
   private ComponentManager    componentManager;
   
   /**
    * Used to get the current context
    */
-  @Requirement
+  @Inject
   private Execution           execution;
   
   /**
    * Used to get the build context for document
    */
-  @Requirement
+  @Inject
   private MarkupContextManager markupContextManager;
   
   private boolean excerpt;

@@ -23,6 +23,7 @@ import org.xwiki.rendering.listener.Listener;
 import org.xwiki.rendering.parser.ResourceReferenceParser;
 import org.xwiki.rendering.parser.StreamParser;
 import org.xwiki.rendering.renderer.PrintRendererFactory;
+import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.util.IdGenerator;
 
 /**
@@ -32,19 +33,15 @@ import org.xwiki.rendering.util.IdGenerator;
  * Jan 14, 2012  
  */
 public class DefaultXWikiConfluenceGeneratorListener extends DefaultXWikiGeneratorListener {
-
+  
   public DefaultXWikiConfluenceGeneratorListener(StreamParser parser,
                                                  Listener listener,
                                                  ResourceReferenceParser linkReferenceParser,
                                                  ResourceReferenceParser imageReferenceParser,
                                                  PrintRendererFactory plainRendererFactory,
-                                                 IdGenerator idGenerator) {
-    super(parser,
-          listener,
-          linkReferenceParser,
-          imageReferenceParser,
-          plainRendererFactory,
-          idGenerator);
+                                                 IdGenerator idGenerator,
+                                                 Syntax syntax) {
+    super(parser, listener, linkReferenceParser, imageReferenceParser, plainRendererFactory, idGenerator, syntax);
   }
 
   @Override
