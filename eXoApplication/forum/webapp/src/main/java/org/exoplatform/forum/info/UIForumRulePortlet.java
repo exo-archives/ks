@@ -18,11 +18,15 @@ package org.exoplatform.forum.info;
 
 import java.util.List;
 
+import javax.portlet.PortletSession;
+
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UIPostRules;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletApplication;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPortletApplication;
@@ -50,22 +54,31 @@ public class UIForumRulePortlet extends UIPortletApplication {
   }
 
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
+    if (!ForumUtils.isAjaxRequest()) {
+      PortletSession portletSession = ((PortletRequestContext) context).getRequest().getPortletSession();
+      ForumParameter params = (ForumParameter) portletSession.getAttribute(UIForumPortlet.RULE_EVENT_PARAMS, PortletSession.APPLICATION_SCOPE);
+      this.postRulesInit(params);
+    }
     super.processRender(app, context);
   }
 
+  public void postRulesInit(ForumParameter params) throws Exception {
+    this.isRenderChild = params.isRenderRule();
+    UIPostRules postRules = this.getChild(UIPostRules.class);
+    List<String> infoRules = params.getInfoRules();
+    postRules.setCanCreateNewThread(Boolean.parseBoolean(infoRules.get(1)));
+    postRules.setCanAddPost(Boolean.parseBoolean(infoRules.get(2)));
+    if (!ForumUtils.isEmpty(infoRules.get(0))) {
+      postRules.setLock(Boolean.parseBoolean(infoRules.get(0)));
+    }
+    postRules.setRendered(this.isRenderChild);
+  }
+  
   static public class ForumRuleEventActionListener extends EventListener<UIForumRulePortlet> {
     public void execute(Event<UIForumRulePortlet> event) throws Exception {
       UIForumRulePortlet forumRulePortlet = event.getSource();
       ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
-      forumRulePortlet.isRenderChild = params.isRenderRule();
-      UIPostRules postRules = forumRulePortlet.getChild(UIPostRules.class);
-      List<String> infoRules = params.getInfoRules();
-      postRules.setCanCreateNewThread(Boolean.parseBoolean(infoRules.get(1)));
-      postRules.setCanAddPost(Boolean.parseBoolean(infoRules.get(2)));
-      if (!ForumUtils.isEmpty(infoRules.get(0))) {
-        postRules.setLock(Boolean.parseBoolean(infoRules.get(0)));
-      }
-      postRules.setRendered(forumRulePortlet.isRenderChild);
+      forumRulePortlet.postRulesInit(params);
       event.getRequestContext().addUIComponentToUpdateByAjax(forumRulePortlet);
     }
   }

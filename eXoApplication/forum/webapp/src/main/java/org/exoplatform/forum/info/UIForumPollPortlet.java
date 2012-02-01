@@ -16,12 +16,17 @@
  ***************************************************************************/
 package org.exoplatform.forum.info;
 
+import javax.portlet.PortletSession;
+
+import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicPoll;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletApplication;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPortletApplication;
@@ -51,6 +56,11 @@ public class UIForumPollPortlet extends UIPortletApplication {
   }
 
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
+    if (!ForumUtils.isAjaxRequest()) {
+      PortletSession portletSession = ((PortletRequestContext) context).getRequest().getPortletSession();
+      ForumParameter params = (ForumParameter) portletSession.getAttribute(UIForumPortlet.FORUM_POLL_EVENT_PARAMS, PortletSession.APPLICATION_SCOPE);
+      this.topicPollInit(params);
+    }
     super.processRender(app, context);
   }
 
@@ -61,19 +71,23 @@ public class UIForumPollPortlet extends UIPortletApplication {
     context.addUIComponentToUpdateByAjax(popupAction);
   }
 
+  public void topicPollInit(ForumParameter params) throws Exception {
+    this.isRenderChild = params.isRenderPoll();
+    if (this.isRenderChild && params.getCategoryId() == null)
+      this.isRenderChild = false;
+    UITopicPoll topicPoll = this.getChild(UITopicPoll.class);
+    if (this.isRenderChild) {
+      topicPoll.updateFormPoll(params.getCategoryId(), params.getForumId(), params.getTopicId());
+      topicPoll.setForum(null);
+    }
+    topicPoll.setRendered(this.isRenderChild);
+  }
+  
   static public class ForumPollEventActionListener extends EventListener<UIForumPollPortlet> {
     public void execute(Event<UIForumPollPortlet> event) throws Exception {
       UIForumPollPortlet forumPollPortlet = event.getSource();
       ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
-      forumPollPortlet.isRenderChild = params.isRenderPoll();
-      if (forumPollPortlet.isRenderChild && params.getCategoryId() == null)
-        forumPollPortlet.isRenderChild = false;
-      UITopicPoll topicPoll = forumPollPortlet.getChild(UITopicPoll.class);
-      if (forumPollPortlet.isRenderChild) {
-        topicPoll.updateFormPoll(params.getCategoryId(), params.getForumId(), params.getTopicId());
-        topicPoll.setForum(null);
-      }
-      topicPoll.setRendered(forumPollPortlet.isRenderChild);
+      forumPollPortlet.topicPollInit(params);
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPollPortlet);
     }
   }

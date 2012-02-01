@@ -26,6 +26,7 @@ import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletSession;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.StringUtils;
@@ -340,18 +341,20 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       canCreateTopic = getCanCreateTopic();
       isCanPost = isCanPostReply();
     }
-    try {
-      PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-      ActionResponse actionRes = (ActionResponse) pcontext.getResponse();
-      sendForumPollEvent(actionRes);
-      sendQuickReplyEvent(actionRes);
-      sendRuleEvent(actionRes);
-    } catch (Exception e) {
-      log.error("Can not cast class PortletResponse to ActionResponse");
+
+    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+    PortletSession portletSession = pcontext.getRequest().getPortletSession();
+    ActionResponse actionRes = null;
+    if (pcontext.getResponse() instanceof ActionResponse) {
+      actionRes = (ActionResponse) pcontext.getResponse();
     }
+    sendForumPollEvent(actionRes, portletSession);
+    sendQuickReplyEvent(actionRes, portletSession);
+    sendRuleEvent(actionRes, portletSession);
+    
   }
 
-  private void sendRuleEvent(ActionResponse actionRes) throws Exception {
+  private void sendRuleEvent(ActionResponse actionRes, PortletSession portletSession) throws Exception {
     ForumParameter param = new ForumParameter();
     List<String> list = param.getInfoRules();
     if (forum.getIsClosed() || forum.getIsLock()) {
@@ -363,26 +366,38 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     list.set(2, String.valueOf(isCanPost));
     param.setInfoRules(list);
     param.setRenderRule(true);
-    actionRes.setEvent(new QName("ForumRuleEvent"), param);
+    if (actionRes != null) {
+      actionRes.setEvent(new QName("ForumRuleEvent"), param);
+    } else {
+      portletSession.setAttribute(UIForumPortlet.RULE_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
+    }
   }
 
-  private void sendQuickReplyEvent(ActionResponse actionRes) {
+  private void sendQuickReplyEvent(ActionResponse actionRes, PortletSession portletSession) {
     ForumParameter param = new ForumParameter();
     param.setRenderQuickReply(isCanPost);
     param.setModerator(isMod);
     param.setCategoryId(categoryId);
     param.setForumId(forumId);
     param.setTopicId(topicId);
-    actionRes.setEvent(new QName("QuickReplyEvent"), param);
+    if (actionRes != null) {
+      actionRes.setEvent(new QName("QuickReplyEvent"), param);
+    } else {
+      portletSession.setAttribute(UIForumPortlet.QUICK_REPLY_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
+    }
   }
 
-  private void sendForumPollEvent(ActionResponse actionRes) {
+  private void sendForumPollEvent(ActionResponse actionRes, PortletSession portletSession) {
     ForumParameter param = new ForumParameter();
     param.setCategoryId(categoryId);
     param.setForumId(forumId);
     param.setTopicId(topicId);
     param.setRenderPoll(topic.getIsPoll());
-    actionRes.setEvent(new QName("ForumPollEvent"), param);
+    if (actionRes != null) {
+      actionRes.setEvent(new QName("ForumPollEvent"), param);
+    } else {
+      portletSession.setAttribute(UIForumPortlet.FORUM_POLL_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
+    }
   }
 
   public void setIsGetSv(boolean isGetSv) {

@@ -90,6 +90,13 @@ import org.mortbay.cometd.continuation.EXoContinuationBayeux;
                  }
 )
 public class UIForumPortlet extends UIPortletApplication {
+  
+  public static String QUICK_REPLY_EVENT_PARAMS = "UIForumPortlet.QuickReplyEventParams";
+
+  public static String FORUM_POLL_EVENT_PARAMS  = "UIForumPortlet.ForumPollEventParams";
+
+  public static String RULE_EVENT_PARAMS        = "UIForumPortlet.RuleEventParams";
+  
   private ForumService forumService;
 
   private boolean      isCategoryRendered  = true;

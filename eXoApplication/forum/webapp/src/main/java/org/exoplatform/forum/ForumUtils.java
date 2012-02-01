@@ -547,6 +547,12 @@ public class ForumUtils {
     portletPref.setValue("invisibleForums", listForumId);
     portletPref.store();
   }
+  
+  public static boolean isAjaxRequest() {
+    PortalRequestContext portalContext = Util.getPortalRequestContext();
+    String isAjax = portalContext.getRequestParameter("ajaxRequest");
+    return (isAjax != null && Boolean.parseBoolean(isAjax)) ? true : false;
+  }
 
   public static List<String> getListInValus(String value) throws Exception {
     List<String> list = new ArrayList<String>();
