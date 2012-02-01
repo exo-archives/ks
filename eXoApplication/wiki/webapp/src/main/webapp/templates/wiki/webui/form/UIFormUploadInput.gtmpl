@@ -10,7 +10,7 @@
 	<div class="LimitMessage" style="display: none;"><%= _ctx.appRes("UIFormUploadInput.msg.limit"); %></div>
 	<input type="hidden" id="input$uploadId" title="<%=uicomponent.getName();%>" name="<%=uicomponent.getName();%>" value="false"/>
 	<div id="<%=uploadId;%>UploadIframe" class="UploadIframe" title="<%=_ctx.appRes("UIFormUploadInput.label.UploadLink");%>">
-		<iframe height="38px" width="100%" allowTransparency="true" scrolling="no" frameborder="0" framespacing="0" id="<%=uploadId;%>uploadFrame"></iframe>
+		<iframe height="38px" width="80%" allowTransparency="true" scrolling="no" frameborder="0" framespacing="0" id="<%=uploadId;%>uploadFrame"></iframe>
 	</div>
 	<div id="<%=uploadId;%>ProgressIframe" class="ProgressIframe" style="display: none;"></div>			
 	<div class="ProgressBarFrame" style="display: none;">

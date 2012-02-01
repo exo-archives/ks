@@ -9,7 +9,7 @@
 <div class="UIAttachmentUploadListForm">
   <% uiform.begin(); %>
     <div class="AttachmentTit"><%= _ctx.appRes("UIAttachmentUploadListForm.label.AttachmentTitle"); %></div>
-    <table cellspacing="1" cellpadding="0" border="0" class="UIFormGrid">
+    <table cellspacing="1" cellpadding="0" border="0" class="UIFormGrid" style="*width:98%">
       <thead>
         <tr>
           <th><%= _ctx.appRes("UIAttachmentUploadListForm.label.File"); %></th>
