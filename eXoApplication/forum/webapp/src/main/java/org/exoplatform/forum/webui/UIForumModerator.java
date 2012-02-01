@@ -62,7 +62,7 @@ public class UIForumModerator extends UIContainer {
     return moderators;
   }
 
-  public void setModeratorsForum(List<String> moderators) throws Exception {
+  public void setModeratorsForum(List<String> moderators) {
     this.moderators = moderators;
   }
 

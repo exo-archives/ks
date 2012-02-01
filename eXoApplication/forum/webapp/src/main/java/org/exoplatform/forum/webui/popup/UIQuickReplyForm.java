@@ -81,7 +81,7 @@ public class UIQuickReplyForm extends UIForm {
     addUIFormInput(new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA, null));
   }
 
-  public void setInitForm(String categoryId, String forumId, String topicId, boolean isModerator) throws Exception {
+  public void setInitForm(String categoryId, String forumId, String topicId, boolean isModerator) {
     this.categoryId = categoryId;
     this.forumId = forumId;
     this.topicId = topicId;

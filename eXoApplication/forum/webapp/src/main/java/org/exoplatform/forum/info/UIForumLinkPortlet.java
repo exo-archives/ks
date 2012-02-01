@@ -70,7 +70,7 @@ public class UIForumLinkPortlet extends UIPortletApplication {
     this.isRenderChild = isRenderChild;
   }
 
-  public void initUI(ForumParameter params) throws Exception {
+  public void initUI(ForumParameter params) {
     this.isRenderChild = params.isRenderForumLink();
     UIForumLinks forumLink = this.getChild(UIForumLinks.class);
     forumLink.setValueOption(params.getPath());

@@ -62,7 +62,7 @@ public class UIForumRulePortlet extends UIPortletApplication {
     super.processRender(app, context);
   }
 
-  public void postRulesInit(ForumParameter params) throws Exception {
+  public void postRulesInit(ForumParameter params) {
     this.isRenderChild = params.isRenderRule();
     UIPostRules postRules = this.getChild(UIPostRules.class);
     List<String> infoRules = params.getInfoRules();

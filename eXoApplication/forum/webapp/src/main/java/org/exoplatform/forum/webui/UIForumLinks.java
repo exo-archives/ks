@@ -171,11 +171,11 @@ public class UIForumLinks extends BaseForumForm {
     return findComponentById(name);
   }
 
-  public List<ForumLinkData> getForumLinks() throws Exception {
+  public List<ForumLinkData> getForumLinks() {
     return this.forumLinks;
   }
 
-  public void setValueOption(String path) throws Exception {
+  public void setValueOption(String path) {
     this.path = path;
   }
 

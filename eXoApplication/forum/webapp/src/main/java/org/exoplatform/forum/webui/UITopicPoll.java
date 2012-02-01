@@ -113,7 +113,7 @@ public class UITopicPoll extends BaseForumForm {
     }
   }
 
-  public void updateFormPoll(String categoryId, String forumId, String topicId) throws Exception {
+  public void updateFormPoll(String categoryId, String forumId, String topicId) {
     this.categoryId = categoryId;
     this.forumId = forumId;
     this.topicId = topicId;

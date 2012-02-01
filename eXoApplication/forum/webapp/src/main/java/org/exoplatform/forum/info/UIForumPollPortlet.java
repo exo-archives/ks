@@ -71,7 +71,7 @@ public class UIForumPollPortlet extends UIPortletApplication {
     context.addUIComponentToUpdateByAjax(popupAction);
   }
 
-  public void topicPollInit(ForumParameter params) throws Exception {
+  public void topicPollInit(ForumParameter params) {
     this.isRenderChild = params.isRenderPoll();
     if (this.isRenderChild && params.getCategoryId() == null)
       this.isRenderChild = false;

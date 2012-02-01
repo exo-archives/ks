@@ -71,7 +71,7 @@ public class UIForumQuickReplyPortlet extends UIPortletApplication {
     context.addUIComponentToUpdateByAjax(popupAction);
   }
   
-  public void quickReplyFormInit(ForumParameter params) throws Exception {
+  public void quickReplyFormInit(ForumParameter params) {
     this.isRenderChild = params.isRenderQuickReply();
     if (this.isRenderChild && params.getCategoryId() == null)
       this.isRenderChild = false;

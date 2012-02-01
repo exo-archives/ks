@@ -61,7 +61,7 @@ public class UIForumModeratePortlet extends UIPortletApplication {
     super.processRender(app, context);
   }
 
-  public void quickReplyFormInit(ForumParameter params) throws Exception {
+  public void quickReplyFormInit(ForumParameter params) {
     this.isRenderChild = params.isRenderModerator();
     UIForumModerator quickReplyForm = this.getChild(UIForumModerator.class);
     quickReplyForm.setModeratorsForum(params.getModerators());

@@ -227,7 +227,7 @@ public class UserHelper {
     return email;
   }
 
-  static public String getCurrentUser() throws Exception {
+  static public String getCurrentUser() {
     try {
       return Util.getPortalRequestContext().getRemoteUser();
     } catch (Exception e) {
