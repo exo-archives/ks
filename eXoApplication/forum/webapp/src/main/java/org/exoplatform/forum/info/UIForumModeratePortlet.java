@@ -16,10 +16,15 @@
  ***************************************************************************/
 package org.exoplatform.forum.info;
 
+import javax.portlet.PortletSession;
+
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.webui.UIForumModerator;
+import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletApplication;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPortletApplication;
@@ -48,17 +53,26 @@ public class UIForumModeratePortlet extends UIPortletApplication {
   }
 
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
+    if (!ForumUtils.isAjaxRequest()) {
+      PortletSession portletSession = ((PortletRequestContext) context).getRequest().getPortletSession();
+      ForumParameter params = (ForumParameter) portletSession.getAttribute(UIForumPortlet.FORUM_MODERATE_EVENT_PARAMS, PortletSession.APPLICATION_SCOPE);
+      this.quickReplyFormInit(params);
+    }
     super.processRender(app, context);
   }
 
+  public void quickReplyFormInit(ForumParameter params) throws Exception {
+    this.isRenderChild = params.isRenderModerator();
+    UIForumModerator quickReplyForm = this.getChild(UIForumModerator.class);
+    quickReplyForm.setModeratorsForum(params.getModerators());
+    quickReplyForm.setRendered(this.isRenderChild);
+  }
+  
   static public class ForumModerateEventActionListener extends EventListener<UIForumModeratePortlet> {
     public void execute(Event<UIForumModeratePortlet> event) throws Exception {
       UIForumModeratePortlet forumModeratePortlet = event.getSource();
       ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
-      forumModeratePortlet.isRenderChild = params.isRenderModerator();
-      UIForumModerator quickReplyForm = forumModeratePortlet.getChild(UIForumModerator.class);
-      quickReplyForm.setModeratorsForum(params.getModerators());
-      quickReplyForm.setRendered(forumModeratePortlet.isRenderChild);
+      forumModeratePortlet.quickReplyFormInit(params);
       event.getRequestContext().addUIComponentToUpdateByAjax(forumModeratePortlet);
     }
   }

@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletSession;
 import javax.xml.namespace.QName;
 
 import org.exoplatform.container.PortalContainer;
@@ -282,24 +283,30 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   }
 
   private void setForumModeratorPortlet() throws Exception {
-    try {
-      PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-      ActionResponse actionRes = (ActionResponse) pcontext.getResponse();
-      ForumParameter param = new ForumParameter();
-      param.setRenderModerator(true);
-      param.setModerators(moderators);
-      param.setRenderRule(true);
-      List<String> list = param.getInfoRules();
-      boolean isLock = forum.getIsClosed();
-      if (!isLock)
-        isLock = forum.getIsLock();
-      if (!isLock)
-        isLock = !canAddNewThread;
-      list.set(0, String.valueOf(isLock));
-      param.setInfoRules(list);
+    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+    PortletSession portletSession = pcontext.getRequest().getPortletSession();
+    ActionResponse actionRes = null;
+    if (pcontext.getResponse() instanceof ActionResponse) {
+      actionRes = (ActionResponse) pcontext.getResponse();
+    }
+    ForumParameter param = new ForumParameter();
+    param.setRenderModerator(true);
+    param.setModerators(moderators);
+    param.setRenderRule(true);
+    List<String> list = param.getInfoRules();
+    boolean isLock = forum.getIsClosed();
+    if (!isLock)
+      isLock = forum.getIsLock();
+    if (!isLock)
+      isLock = !canAddNewThread;
+    list.set(0, String.valueOf(isLock));
+    param.setInfoRules(list);
+    if (actionRes != null) {
       actionRes.setEvent(new QName("ForumModerateEvent"), param);
       actionRes.setEvent(new QName("ForumRuleEvent"), param);
-    } catch (Exception e) {
+    } else {
+      portletSession.setAttribute(UIForumPortlet.FORUM_MODERATE_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
+      portletSession.setAttribute(UIForumPortlet.RULE_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
     }
   }
 

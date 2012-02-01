@@ -24,6 +24,7 @@ import java.util.ResourceBundle;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
+import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 
@@ -91,11 +92,15 @@ import org.mortbay.cometd.continuation.EXoContinuationBayeux;
 )
 public class UIForumPortlet extends UIPortletApplication {
   
-  public static String QUICK_REPLY_EVENT_PARAMS = "UIForumPortlet.QuickReplyEventParams";
+  public static String QUICK_REPLY_EVENT_PARAMS    = "UIForumPortlet.QuickReplyEventParams";
 
-  public static String FORUM_POLL_EVENT_PARAMS  = "UIForumPortlet.ForumPollEventParams";
+  public static String FORUM_POLL_EVENT_PARAMS     = "UIForumPortlet.ForumPollEventParams";
 
-  public static String RULE_EVENT_PARAMS        = "UIForumPortlet.RuleEventParams";
+  public static String RULE_EVENT_PARAMS           = "UIForumPortlet.RuleEventParams";
+
+  public static String FORUM_MODERATE_EVENT_PARAMS = "UIForumPortlet.ForumModerateEvent";
+
+  public static String FORUM_LINK_EVENT_PARAMS     = "UIForumPortlet.ForumLinkEvent";
   
   private ForumService forumService;
 
@@ -326,16 +331,27 @@ public class UIForumPortlet extends UIPortletApplication {
 
   public void setRenderQuickReply() {
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-    ActionResponse actionRes = (ActionResponse) pcontext.getResponse();
+    PortletSession portletSession = pcontext.getRequest().getPortletSession();
+    ActionResponse actionRes = null;
+    if (pcontext.getResponse() instanceof ActionResponse) {
+      actionRes = (ActionResponse) pcontext.getResponse();
+    }
     ForumParameter param = new ForumParameter();
     param.setRenderQuickReply(false);
     param.setRenderPoll(false);
     param.setRenderModerator(false);
     param.setRenderRule(false);
-    actionRes.setEvent(new QName("QuickReplyEvent"), param);
-    actionRes.setEvent(new QName("ForumPollEvent"), param);
-    actionRes.setEvent(new QName("ForumModerateEvent"), param);
-    actionRes.setEvent(new QName("ForumRuleEvent"), param);
+    if (actionRes != null) {
+      actionRes.setEvent(new QName("QuickReplyEvent"), param);
+      actionRes.setEvent(new QName("ForumPollEvent"), param);
+      actionRes.setEvent(new QName("ForumModerateEvent"), param);
+      actionRes.setEvent(new QName("ForumRuleEvent"), param);
+    } else {
+      portletSession.setAttribute(UIForumPortlet.QUICK_REPLY_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
+      portletSession.setAttribute(UIForumPortlet.FORUM_POLL_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
+      portletSession.setAttribute(UIForumPortlet.FORUM_MODERATE_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
+      portletSession.setAttribute(UIForumPortlet.RULE_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
+    }
   }
 
   public void loadPreferences() throws Exception {

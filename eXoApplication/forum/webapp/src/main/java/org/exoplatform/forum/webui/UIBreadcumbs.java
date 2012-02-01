@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletSession;
 import javax.xml.namespace.QName;
 
 import org.exoplatform.container.ExoContainerContext;
@@ -184,21 +185,26 @@ public class UIBreadcumbs extends UIContainer {
   }
 
   private void setRenderForumLink(String path) throws Exception {
-    try {
-      PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-      ActionResponse actionRes = (ActionResponse) pcontext.getResponse();
-      ForumParameter param = new ForumParameter();
-      if (userProfile.getIsShowForumJump() && !path.equals(FORUM_SERVICE)) {
-        if (path.indexOf(Utils.TOPIC) > 0) {
-          path = path.substring(0, path.lastIndexOf(ForumUtils.SLASH));
-        }
-        param.setRenderForumLink(true);
-        param.setPath(path);
-      } else {
-        param.setRenderForumLink(false);
+    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+    PortletSession portletSession = pcontext.getRequest().getPortletSession();
+    ActionResponse actionRes = null;
+    if (pcontext.getResponse() instanceof ActionResponse) {
+      actionRes = (ActionResponse) pcontext.getResponse();
+    }
+    ForumParameter param = new ForumParameter();
+    if (userProfile.getIsShowForumJump() && !path.equals(FORUM_SERVICE)) {
+      if (path.indexOf(Utils.TOPIC) > 0) {
+        path = path.substring(0, path.lastIndexOf(ForumUtils.SLASH));
       }
+      param.setRenderForumLink(true);
+      param.setPath(path);
+    } else {
+      param.setRenderForumLink(false);
+    }
+    if (actionRes != null) {
       actionRes.setEvent(new QName("ForumLinkEvent"), param);
-    } catch (Exception e) {
+    } else {
+      portletSession.setAttribute(UIForumPortlet.FORUM_LINK_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
     }
   }
 

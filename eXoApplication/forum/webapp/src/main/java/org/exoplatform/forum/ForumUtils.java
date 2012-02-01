@@ -550,8 +550,7 @@ public class ForumUtils {
   
   public static boolean isAjaxRequest() {
     PortalRequestContext portalContext = Util.getPortalRequestContext();
-    String isAjax = portalContext.getRequestParameter("ajaxRequest");
-    return (isAjax != null && Boolean.parseBoolean(isAjax)) ? true : false;
+    return portalContext.useAjax();
   }
 
   public static List<String> getListInValus(String value) throws Exception {

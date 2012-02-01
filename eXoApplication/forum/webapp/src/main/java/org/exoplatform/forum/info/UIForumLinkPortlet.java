@@ -16,10 +16,15 @@
  ***************************************************************************/
 package org.exoplatform.forum.info;
 
+import javax.portlet.PortletSession;
+
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.webui.UIForumLinks;
+import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletApplication;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPortletApplication;
@@ -49,6 +54,11 @@ public class UIForumLinkPortlet extends UIPortletApplication {
   }
 
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
+    if (!ForumUtils.isAjaxRequest()) {
+      PortletSession portletSession = ((PortletRequestContext) context).getRequest().getPortletSession();
+      ForumParameter params = (ForumParameter) portletSession.getAttribute(UIForumPortlet.FORUM_LINK_EVENT_PARAMS, PortletSession.APPLICATION_SCOPE);
+      this.initUI(params);
+    }
     super.processRender(app, context);
   }
 
@@ -60,14 +70,18 @@ public class UIForumLinkPortlet extends UIPortletApplication {
     this.isRenderChild = isRenderChild;
   }
 
+  public void initUI(ForumParameter params) throws Exception {
+    this.isRenderChild = params.isRenderForumLink();
+    UIForumLinks forumLink = this.getChild(UIForumLinks.class);
+    forumLink.setValueOption(params.getPath());
+    forumLink.setRendered(this.isRenderChild);
+  }
+  
   static public class ForumLinkEventActionListener extends EventListener<UIForumLinkPortlet> {
     public void execute(Event<UIForumLinkPortlet> event) throws Exception {
       UIForumLinkPortlet forumLinkPortlet = event.getSource();
       ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
-      forumLinkPortlet.isRenderChild = params.isRenderForumLink();
-      UIForumLinks forumLink = forumLinkPortlet.getChild(UIForumLinks.class);
-      forumLink.setValueOption(params.getPath());
-      forumLink.setRendered(forumLinkPortlet.isRenderChild);
+      forumLinkPortlet.initUI(params);
       event.getRequestContext().addUIComponentToUpdateByAjax(forumLinkPortlet);
     }
   }
