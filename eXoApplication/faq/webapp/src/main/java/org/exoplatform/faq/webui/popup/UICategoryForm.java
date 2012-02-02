@@ -50,6 +50,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
+import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 import org.exoplatform.webui.organization.account.UIUserSelector;
 
 /**
@@ -97,6 +98,7 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
   final private static String USER_SELECTOR_POPUPWINDOW = "UICategoryUserPopupWindow";
   private boolean isAddNew_ = true ;
   private String oldName_ = "";
+  private long oldIndex_ = 0;
   private Category currentCategory_ ;
   private long maxIndex = 1;
 	public UICategoryForm() throws Exception {
@@ -108,6 +110,7 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
     UIFormInputWithActions inputset = new UIFormInputWithActions(CATEGORY_DETAIL_TAB) ;
     inputset.addUIFormInput(new UIFormStringInput(FIELD_NAME_INPUT, FIELD_NAME_INPUT, null).addValidator(MandatoryValidator.class)) ;
     UIFormStringInput index = new UIFormStringInput(FIELD_INDEX_INPUT, FIELD_INDEX_INPUT, null) ;
+    index.addValidator(PositiveNumberFormatValidator.class);
     maxIndex = getFAQService().getMaxindexCategory(parentId_) + 1;
     if(isAddNew)index.setValue(String.valueOf(maxIndex));
     inputset.addUIFormInput(index) ;
@@ -164,6 +167,7 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
 			categoryId_ = cat.getPath() ; 
 			currentCategory_ = cat ;
 			oldName_ = cat.getName() ;
+			oldIndex_ = cat.getIndex() ;
 			if(oldName_ != null && oldName_.trim().length() > 0) getUIStringInput(FIELD_NAME_INPUT).setValue(oldName_) ;
 			else getUIStringInput(FIELD_NAME_INPUT).setValue("Root") ;
 			String userPrivate = null;
@@ -218,20 +222,19 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
       		return ;
         }
       }
-      
-      long index = 1;
-      String strIndex = uiCategory.getUIStringInput(FIELD_INDEX_INPUT).getValue() ;
-      if(strIndex != null && strIndex.trim().length() > 0) {
-      	try {
-	        index = Long.parseLong(strIndex);
-        } catch (Exception e){
-        	uiCategory.warning("NameValidator.msg.erro-large-number", new String[]{uiCategory.getLabel(FIELD_INDEX_INPUT)}) ;
-	        return ;
+      long index = uiCategory.oldIndex_;
+      uiCategory.maxIndex = uiCategory.getFAQService().getMaxindexCategory(uiCategory.parentId_) + 1;
+      String strIndex = uiCategory.getUIStringInput(FIELD_INDEX_INPUT).getValue();
+      if (!FAQUtils.isFieldEmpty(strIndex)) {
+        index = Long.parseLong(strIndex);
+        if (index > uiCategory.maxIndex) {
+          index = uiCategory.maxIndex;
         }
+      } else if (uiCategory.isAddNew_) {
+        index = uiCategory.maxIndex;
       }
-      if(index > uiCategory.maxIndex) index = uiCategory.maxIndex;
+      
       String description = uiCategory.getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).getValue() ;
-     
       String moderator = uiCategory.getUIFormTextAreaInput(FIELD_MODERATOR_INPUT).getValue() ;
       if (moderator == null || moderator.trim().length() <= 0) {
       	uiCategory.warning("UICategoryForm.msg.moderator-required") ;

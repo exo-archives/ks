@@ -1913,16 +1913,24 @@ public class JCRDataStorage implements DataStorage {
           }
         }
       }
-      parent.getSession().save();
-      iter = getCategoriesIterator(parent);
+      parent.save();
+    } else {
+      goingCategory.setProperty("exo:index", iter.getSize());
+      goingCategory.save();
     }
+    reUpdateIndex(parent);
+  }
+
+  private void reUpdateIndex(Node parentCateNode) throws Exception {
+    NodeIterator iter = getCategoriesIterator(parentCateNode);
     long i = 1;
+    Node node;
     while (iter.hasNext()) {
       node = iter.nextNode();
       node.setProperty("exo:index", i);
       i++;
     }
-    parent.save();
+    parentCateNode.save();
   }
 
   /* (non-Javadoc)
@@ -1943,16 +1951,16 @@ public class JCRDataStorage implements DataStorage {
         newCategory = getFAQServiceHome(sProvider).getNode(cat.getPath()) ;
       }
       long index = cat.getIndex();
-      boolean isResetIndex = (isAddNew || newCategory.getProperty("exo:index").getLong() != index);
-      long size = 0;
+      long oldIndex = new PropertyReader(newCategory).l("exo:index", newCategory.getParent().getNodes().getSize());
+      boolean isResetIndex = (isAddNew || (oldIndex != index));
       if (isResetIndex) {
-        size = newCategory.getParent().getNodes().getSize();
-        cat.setIndex(size);
+        cat.setIndex(oldIndex);
       }
       saveCategory(newCategory, cat, isAddNew, sProvider);
       if (isResetIndex) {
-        resetIndex(newCategory, index, size);
-      }			
+        index = (index < oldIndex) ? index - 1 : index;
+        resetIndex(newCategory, index, oldIndex);
+      }	
     }catch (Exception e) {
       log.error("Failed to save category: ", e);
     }
@@ -2000,8 +2008,12 @@ public class JCRDataStorage implements DataStorage {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node faqHome = getFAQServiceHome(sProvider) ;
-      faqHome.getNode(categoryId).remove() ;
+      Node node = faqHome.getNode(categoryId);
+      Node parent = node.getParent();
+      node.remove() ;
       faqHome.save() ;
+      //update index
+      reUpdateIndex(parent);
     }catch (Exception e) {
       log.error("Can not remove category has id: " + categoryId);
     }	
@@ -2275,17 +2287,18 @@ public class JCRDataStorage implements DataStorage {
   public void moveCategory(String categoryId, String destCategoryId) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
-      Node faqHome = getFAQServiceHome(sProvider) ;
-      Node srcNode = faqHome.getNode(categoryId) ;
-      String srcPath = srcNode.getPath() ;
+      Node faqHome = getFAQServiceHome(sProvider);
+      Node srcNode = faqHome.getNode(categoryId);
+      Node parentNode = srcNode.getParent();
+      String srcPath = srcNode.getPath();
       String destPath = faqHome.getPath() + "/" + destCategoryId + "/" + srcNode.getName();
-      faqHome.getSession().move(srcPath, destPath) ;
-      faqHome.getSession().save() ;
-      Node destNode = faqHome.getNode(destCategoryId + "/" + srcNode.getName()) ;
-      destNode.setProperty("exo:index", destNode.getParent().getNodes().getSize()) ;
-      destNode.save() ;
-      //resetIndex(category, index)
-      // Should be update moderators for moving category
+      faqHome.getSession().move(srcPath, destPath);
+      faqHome.getSession().save();
+      Node destNode = faqHome.getNode(destCategoryId + "/" + srcNode.getName());
+      destNode.setProperty("exo:index", destNode.getParent().getNodes().getSize());
+      destNode.save();
+      // update index for children categories of parent category moved. 
+      reUpdateIndex(parentNode);
     }catch (ItemExistsException e){ 
       throw e ;
     } catch (Exception e) {
@@ -3133,6 +3146,7 @@ public class JCRDataStorage implements DataStorage {
         resetIndex(goingCategory, index, gindex);
       } else {
         String id = goingCategory.getName();
+        Node parentNode = goingCategory.getParent();
         mockCategory.getSession().move(goingCategory.getPath(), mockCategory.getParent().getPath() + "/" + id);
         faqHome.getSession().save();
         Node parent = mockCategory.getParent();
@@ -3144,6 +3158,8 @@ public class JCRDataStorage implements DataStorage {
           parent.save();
         }
         resetIndex(destCat, index, l);
+        // update index for children categories of parent category moved.
+        reUpdateIndex(parentNode);
       }
     } catch (Exception e) {
       log.error("Failed to swap categories", e);
