@@ -53,27 +53,31 @@ public class DefaultContactProvider implements ContactProvider {
    */
   public CommonContact getCommonContact(String userId) {
     CommonContact contact = new CommonContact();
-      try {
-        User user = orgService.getUserHandler().findUserByName(userId);
-        UserProfile profile = orgService.getUserProfileHandler().findUserProfileByName(userId);
-        contact.setEmailAddress(user.getEmail());
-        contact.setFirstName(user.getFirstName());
-        contact.setLastName(user.getLastName());
-        if(profile.getUserInfoMap() != null) {
-          contact.setAvatarUrl(profile.getAttribute("user.other-info.avatar.url"));
-          contact.setBirthday(profile.getAttribute("user.bdate"));
-          contact.setCity(profile.getAttribute("user.home-info.postal.city"));
-          contact.setCountry(profile.getAttribute("user.home-info.postal.country"));
-          contact.setGender(profile.getAttribute("user.gender"));
-          contact.setJob(profile.getAttribute("user.jobtitle"));
-          contact.setHomePhone(profile.getAttribute("user.home-info.telecom.telephone.number"));
-          contact.setWorkPhone(profile.getAttribute("user.business-info.telecom.telephone.number"));
-          contact.setWebSite(profile.getAttribute("user.home-info.online.uri"));
-        }
-      } catch (Exception e) {
-        log.error("Could not retrieve forum user profile for " + userId + ": " ,e);
+    contact.setFullName(userId);
+    try {
+      User user = orgService.getUserHandler().findUserByName(userId);
+      UserProfile profile = orgService.getUserProfileHandler().findUserProfileByName(userId);
+      contact.setEmailAddress(user.getEmail());
+      contact.setFirstName(user.getFirstName());
+      contact.setLastName(user.getLastName());
+      contact.setFullName(user.getFullName());
+      if (profile.getUserInfoMap() != null) {
+        contact.setAvatarUrl(profile.getAttribute("user.other-info.avatar.url"));
+        contact.setBirthday(profile.getAttribute("user.bdate"));
+        contact.setCity(profile.getAttribute("user.home-info.postal.city"));
+        contact.setCountry(profile.getAttribute("user.home-info.postal.country"));
+        contact.setGender(profile.getAttribute("user.gender"));
+        contact.setJob(profile.getAttribute("user.jobtitle"));
+        contact.setHomePhone(profile.getAttribute("user.home-info.telecom.telephone.number"));
+        contact.setWorkPhone(profile.getAttribute("user.business-info.telecom.telephone.number"));
+        contact.setWebSite(profile.getAttribute("user.home-info.online.uri"));
       }
-      return contact;
+    } catch (Exception e) {
+      if (log.isDebugEnabled()) {
+        log.debug("Could not retrieve forum user profile for " + userId + " by DefaultContactProvider.\nCaused by:", e);
+      }
+    }
+    return contact;
   }
 
 }
