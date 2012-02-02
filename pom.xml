@@ -40,6 +40,8 @@
     <!-- eXo extended service -->
     <org.exoplatform.social.version>1.2.8-SNAPSHOT</org.exoplatform.social.version>
     <!-- 3rd parties -->
+    <org.codehaus.swizzle.version>1.6.1</org.codehaus.swizzle.version>
+    <mysql-connector-java.version>5.1.18</mysql-connector-java.version>
     <org.jsecurity.version>0.9.0</org.jsecurity.version>
     <org.aspectj.version>1.6.10</org.aspectj.version>
     <ehcache.version>1.6.0</ehcache.version>
@@ -53,7 +55,7 @@
     <commons-logging.version>1.0.4</commons-logging.version>
     <commons-httpclient.version>3.0</commons-httpclient.version>
     <org.apache.commons.version>3.0.1</org.apache.commons.version>
-    <org.apache.httpcomponents.httpclient.version>4.0</org.apache.httpcomponents.httpclient.version>
+    <org.apache.httpcomponents.version>4.0</org.apache.httpcomponents.version>
     <com.google.guava.version>r07</com.google.guava.version>
     <javax.servlet.servlet-api.version>2.5</javax.servlet.servlet-api.version>
     <javax.portlet.portlet-api.version>2.0</javax.portlet.portlet-api.version>

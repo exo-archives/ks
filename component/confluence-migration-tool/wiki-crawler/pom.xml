@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.exoplatform.ks</groupId>
+    <artifactId>exo.ks.component.confluence-migration-tool</artifactId>
+    <version>2.2.8-SNAPSHOT</version>
+  </parent>
+  <artifactId>exo.ks.component.confluence-migration-tool.crawler</artifactId>
+  <name>Confluence Migration Wiki Crawler</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>${mysql-connector-java.version}</version>
+    </dependency>
+      <!-- CONFLUENCE Libs -->
+    <dependency>
+      <groupId>org.codehaus.swizzle</groupId>
+      <artifactId>swizzle-confluence</artifactId>
+      <version>${org.codehaus.swizzle.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>${org.apache.httpcomponents.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpmime</artifactId>
+      <version>${org.apache.httpcomponents.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>${commons-io.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>jsr311-api</artifactId>
+      <version>${javax.ws.rs.jsr311-api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.commons</artifactId>
+      <version>${org.exoplatform.kernel.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>

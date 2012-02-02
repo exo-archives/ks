@@ -1,0 +1,7 @@
+<atlassian-ide-plugin>
+  <project-configuration>
+    <servers />
+    <fisheye-project-path>trunk/</fisheye-project-path>
+    <default-jira-server>7aca2864-6c44-4a32-b8c2-1b2158527648</default-jira-server>
+  </project-configuration>
+</atlassian-ide-plugin>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.exoplatform.ks</groupId>
+    <artifactId>exo.ks.component.confluence-migration-tool</artifactId>
+    <version>2.2.8-SNAPSHOT</version>
+  </parent>
+  <packaging>pom</packaging>
+  <artifactId>exo.ks.component.confluence-migration-tool.jenkins-runner</artifactId>
+	<name>Confluence Migration Jenkin Runner</name>
+
+  <properties>
+    <wiki.migration.file>migration.properties</wiki.migration.file>
+    <wiki.source.pwd></wiki.source.pwd>
+    <wiki.target.pwd></wiki.target.pwd>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.component.migration.crawler</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>org.exoplatform.wiki.ConfluenceCrawler</mainClass>
+          <systemProperties>
+            <systemProperty>
+              <key>wiki.source.pwd</key>
+              <value>${wiki.source.pwd}</value>
+            </systemProperty>
+            <systemProperty>
+              <key>wiki.target.pwd</key>
+              <value>${wiki.target.pwd}</value>
+            </systemProperty>
+            <systemProperty>
+              <key>wiki.migration.file</key>
+              <value>${wiki.migration.file}</value>
+            </systemProperty>
+          </systemProperties>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
