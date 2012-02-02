@@ -20,7 +20,7 @@
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
-      <artifactId>exo.ks.component.migration.crawler</artifactId>
+      <artifactId>exo.ks.component.confluence-migration-tool.crawler</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
