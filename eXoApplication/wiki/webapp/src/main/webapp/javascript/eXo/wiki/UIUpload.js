@@ -125,10 +125,10 @@ UIUpload.prototype.getUploadContent = function(uploadId, uploadAction, isAutoUpl
   var uploadHTML = "";  
   uploadHTML += "  <form id='"+uploadId+"' class='UIUploadForm' style='margin: 0px; padding: 0px' action='"+uploadAction+"' enctype='multipart/form-data' method='post'>";
   uploadHTML += "    <div class='BrowseDiv'>";
-  uploadHTML += "      <label class='BrowseLink'>";
-  uploadHTML += "        <input type='file' name='file' size='" + size + "' id='file' class='FileHidden' value='' title='" + uploadText + "' onchange='eXo.wiki.UIUpload.upload(this, " + uploadId + ")'/>";
-  uploadHTML += "        <a>" + uploadText + "</a>";
-  uploadHTML += "      </label>";
+  uploadHTML += "      <div class='InputContent'>";
+  uploadHTML += "        <input type='file' name='file' size='" + size + "' id='WikiUploadFile' class='FileHidden' value='' title='" + uploadText + "' onchange='eXo.wiki.UIUpload.upload(this, " + uploadId + ")'/>";
+  uploadHTML += "        <label for='WikiUploadFile' class='BrowseLink'>" + uploadText + "</label>";
+  uploadHTML += "      </div>";
   uploadHTML += "    </div>";
   uploadHTML += "  </form>";
   return uploadHTML;
@@ -139,10 +139,11 @@ UIUpload.prototype.getStyleSheetContent = function(){
   styleText += ".FileHidden { cursor: pointer; overflow: hidden; position: absolute; height: 16px; top: 1px; left: 0px; z-index: 1; width: 100%; *width: auto; *left: -8px;";
   styleText += "  opacity: 0; -moz-opacity:0 ; filter:alpha(opacity: 0);} ";
   styleText += ".BrowseDiv {margin: 10px 0px 10px 0px; height: 20px;} ";
-  styleText += ".BrowseLink { cursor: pointer; position: relative; font-family: Arial, Helvetica, sans-serif; text-align: left; font-size: 12px; color: #165FB3;";
-  styleText += "  text-decoration: none; padding: 0px 0px 0px 20px;";
+  styleText += ".InputContent { cursor: pointer; position: relative; ";
   styleText += "  background: url('/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/AttachFileIcon.gif') no-repeat left top;)}";
-  styleText += ".UIUploadForm a:hover {cursor: pointer; text-decoration: underline;}";
+  styleText += ".BrowseLink { font-family: Arial, Helvetica, sans-serif; text-align: left; font-size: 12px; color: #165FB3;";
+  styleText += "  text-decoration: none; padding: 0px 0px 0px 20px;}";
+  styleText += ".UIUploadForm .BrowseLink:hover {cursor: pointer; text-decoration: underline;}";
   return styleText;
 }
 

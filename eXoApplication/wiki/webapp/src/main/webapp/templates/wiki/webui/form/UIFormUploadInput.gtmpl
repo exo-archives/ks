@@ -13,7 +13,7 @@
 		<iframe height="38px" width="80%" allowTransparency="true" scrolling="no" frameborder="0" framespacing="0" id="<%=uploadId;%>uploadFrame"></iframe>
 	</div>
 	<div id="<%=uploadId;%>ProgressIframe" class="ProgressIframe" style="display: none;"></div>			
-	<div class="ProgressBarFrame" style="display: none;">
+	<div class="ProgressBarFrame" style="display: none; margin-top:10px;">
 		<div class="ProgressBar">
 			<div class="ProgressBarLeft">
 				<div class="ProgressBarMiddle">
