@@ -45,7 +45,7 @@ public class UIBreadcumbs extends UIContainer {
 	public List<String> pathList_ = new ArrayList<String>();
 	private String currentPath_ = Utils.CATEGORY_HOME ;
 	public static final String FIELD_FAQHOME_BREADCUMBS = "faqHome" ;
-	private static final String QUICK_SEARCH = "QuickSearch";
+	private static final String QUICK_SEARCH = "QuickSearchForm";
 	
 	public UIBreadcumbs()throws Exception {
 		addChild(UIQuickSearch.class, null, QUICK_SEARCH) ;
