@@ -16,15 +16,14 @@
  */
 package org.exoplatform.wiki;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 import org.codehaus.swizzle.confluence.Attachment;
 import org.codehaus.swizzle.confluence.Comment;
@@ -81,16 +80,16 @@ public class ConfluenceCrawler {
 
   public static void main(String args[]) {
     ConfluenceCrawler cc = new ConfluenceCrawler();
-    Properties properties = new Properties();
     String propertiesFile = args.length > 0 ? args[0] : "migration.properties";
     String envMigrationFile = System.getProperty("wiki.migration.file");
     if (envMigrationFile != null)
       propertiesFile = envMigrationFile;
 
     log.info("Using input file : " + propertiesFile);
+    ResourceBundle properties = null;
     try {
-      properties.load(new FileReader(propertiesFile));
-    } catch (IOException e) {
+      properties = ResourceBundle.getBundle(propertiesFile);
+    } catch (MissingResourceException e) {
       log.error("Can not load property file", e);
       return;
     }
@@ -102,24 +101,24 @@ public class ConfluenceCrawler {
   public ConfluenceCrawler() {
   }
 
-  public void init(Properties properties) {
-    sourceHost = properties.getProperty("sourceHost");
-    sourceSpace = properties.getProperty("sourceSpace");
-    sourcePage = properties.getProperty("sourcePage");
+  public void init(ResourceBundle properties) {
+    sourceHost = properties.getString("sourceHost");
+    sourceSpace = properties.getString("sourceSpace");
+    sourcePage = properties.getString("sourcePage");
 
-    sourceUser = properties.getProperty("sourceUser");
-    sourcePwd = properties.getProperty("sourcePwd");
+    sourceUser = properties.getString("sourceUser");
+    sourcePwd = properties.getString("sourcePwd");
     String sourcePwdFromEnv = System.getProperty("wiki.source.pwd");
     if (sourcePwdFromEnv != null && !sourcePwdFromEnv.isEmpty()) {
       sourcePwd = sourcePwdFromEnv;
     }
 
-    String targetHost = properties.getProperty("targetHost");
-    targetSpace = properties.getProperty("targetSpace");
-    targetPage = properties.getProperty("targetPage");
+    String targetHost = properties.getString("targetHost");
+    targetSpace = properties.getString("targetSpace");
+    targetPage = properties.getString("targetPage");
 
-    String targetUser = properties.getProperty("targetUser");
-    String targetPwd = properties.getProperty("targetPwd");
+    String targetUser = properties.getString("targetUser");
+    String targetPwd = properties.getString("targetPwd");
     String targetPwdFromEnv = System.getProperty("wiki.target.pwd");
     if (targetPwdFromEnv != null && !targetPwdFromEnv.isEmpty()) {
       targetPwd = targetPwdFromEnv;
@@ -128,13 +127,13 @@ public class ConfluenceCrawler {
     log.info(String.format("%s:%s:%s", sourceHost, sourceUser, sourcePwd));
     log.info(String.format("%s:%s:%s", targetHost, targetUser, targetPwd));
 
-    recurseOnChildren = Boolean.valueOf(properties.getProperty("recurseOnChildren"));
-    stopOnFailure = Boolean.valueOf(properties.getProperty("stopOnFailure"));
-    transferAttachments = Boolean.valueOf(properties.getProperty("transferAttachments"));
-    transferComments = Boolean.valueOf(properties.getProperty("transferComments"));
-    transferLabels = Boolean.valueOf(properties.getProperty("transferLabels"));
+    recurseOnChildren = Boolean.valueOf(properties.getString("recurseOnChildren"));
+    stopOnFailure = Boolean.valueOf(properties.getString("stopOnFailure"));
+    transferAttachments = Boolean.valueOf(properties.getString("transferAttachments"));
+    transferComments = Boolean.valueOf(properties.getString("transferComments"));
+    transferLabels = Boolean.valueOf(properties.getString("transferLabels"));
 
-    crawlerActions = properties.getProperty("migrationActions");
+    crawlerActions = properties.getString("migrationActions");
 
     String[] actions = crawlerActions.split(",");
     Arrays.sort(actions);
@@ -161,7 +160,11 @@ public class ConfluenceCrawler {
     // Init Target Wiki Connector
     log.info(String.format("Login %s  on %s", targetUser, targetHost));
 
-    String targetType = properties.getProperty("targetType", TYPE_EXOWIKI);
+    String targetType = properties.getString("targetType");
+    if (targetType == null) {
+      targetType = TYPE_EXOWIKI;
+    }
+    
     if (TYPE_WIKBOOK.equals(targetType)) {
       log.info("Export to Wikbook format");
       wikiHandler = new WikbookWikiHandler(targetHost, new StringBuilder(targetSpace).append("/").append(targetPage).toString());
