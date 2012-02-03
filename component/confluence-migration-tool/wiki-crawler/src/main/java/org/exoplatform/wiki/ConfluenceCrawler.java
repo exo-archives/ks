@@ -109,7 +109,7 @@ public class ConfluenceCrawler {
     sourceUser = properties.getString("sourceUser");
     sourcePwd = properties.getString("sourcePwd");
     String sourcePwdFromEnv = System.getProperty("wiki.source.pwd");
-    if (sourcePwdFromEnv != null && !sourcePwdFromEnv.isEmpty()) {
+    if (sourcePwdFromEnv != null && !"".equals(sourcePwdFromEnv)) {
       sourcePwd = sourcePwdFromEnv;
     }
 
@@ -120,7 +120,7 @@ public class ConfluenceCrawler {
     String targetUser = properties.getString("targetUser");
     String targetPwd = properties.getString("targetPwd");
     String targetPwdFromEnv = System.getProperty("wiki.target.pwd");
-    if (targetPwdFromEnv != null && !targetPwdFromEnv.isEmpty()) {
+    if (targetPwdFromEnv != null && !"".equals(targetPwdFromEnv)) {
       targetPwd = targetPwdFromEnv;
     }
 
