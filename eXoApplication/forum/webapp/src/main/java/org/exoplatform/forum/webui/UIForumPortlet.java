@@ -301,7 +301,7 @@ public class UIForumPortlet extends UIPortletApplication {
     }
   }
 
-  public void rederForumHome() throws Exception{
+  public void renderForumHome() throws Exception{
     updateIsRendered(ForumUtils.CATEGORIES);
     UICategoryContainer categoryContainer = getChild(UICategoryContainer.class);
     categoryContainer.updateIsRender(true);
@@ -628,7 +628,7 @@ public class UIForumPortlet extends UIPortletApplication {
   public void calculateRenderComponent(String path, WebuiRequestContext context) throws Exception {
     ResourceBundle res = context.getApplicationResourceBundle();
     if (path.equals(Utils.FORUM_SERVICE)) {
-      rederForumHome();
+      renderForumHome();
     } else if (path.indexOf(ForumUtils.FIELD_SEARCHFORUM_LABEL) >= 0) {
       updateIsRendered(ForumUtils.FIELD_SEARCHFORUM_LABEL);
       UISearchForm searchForm = getChild(UISearchForm.class);
@@ -739,13 +739,16 @@ public class UIForumPortlet extends UIPortletApplication {
             }
           } else {
             context.getUIApplication().addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[] { topic.getTopicName(), res.getString("UIForumPortlet.label.topic").toLowerCase() }, ApplicationMessage.WARNING));
-            rederForumHome();
+            renderForumHome();
             path = Utils.FORUM_SERVICE;
           }
         }
       } catch (Exception e) {
+        if (log.isDebugEnabled()){
+          log.debug("Failed to render forum link: [" + path + "]. Forum home will be rendered.\nCaused by:", e);
+        }
         context.getUIApplication().addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING));
-        rederForumHome();
+        renderForumHome();
         path = Utils.FORUM_SERVICE;
       }
     } else if ((path.lastIndexOf(Utils.FORUM) == 0 && path.lastIndexOf(Utils.CATEGORY) < 0) || (path.lastIndexOf(Utils.FORUM) > 0)) {
@@ -790,12 +793,15 @@ public class UIForumPortlet extends UIPortletApplication {
           forumContainer.getChild(UITopicContainer.class).setUpdateForum(cateId, forum, page);
         } else {
           context.getUIApplication().addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[] { forum.getForumName(), res.getString("UIForumPortlet.label.forum").toLowerCase() }, ApplicationMessage.WARNING));
-          rederForumHome();
+          renderForumHome();
           path = Utils.FORUM_SERVICE;
         }
       } catch (Exception e) {
+        if (log.isDebugEnabled()){
+          log.debug("Failed to render forum link: [" + path + "]. Forum home will be rendered.\nCaused by:", e);
+        }
         context.getUIApplication().addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", new String[] { res.getString("UIForumPortlet.label.forum") }, ApplicationMessage.WARNING));
-        rederForumHome();
+        renderForumHome();
         path = Utils.FORUM_SERVICE;
       }
     } else if (path.indexOf(Utils.CATEGORY) >= 0 && path.indexOf(ForumUtils.SLASH) < 0) {
@@ -813,21 +819,27 @@ public class UIForumPortlet extends UIPortletApplication {
                                                                            res.getString("UIForumPortlet.label.category")
                                                                               .toLowerCase() },
                                                                        ApplicationMessage.WARNING));
-          rederForumHome();
+          renderForumHome();
           path = Utils.FORUM_SERVICE;
         }
       } catch (Exception e) {
+        if (log.isDebugEnabled()){
+          log.debug("Failed to render forum link: [" + path + "]. Forum home will be rendered.\nCaused by:", e);
+        }
         context.getUIApplication().addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found",
                                                                      null,
                                                                      ApplicationMessage.WARNING));
-        rederForumHome();
+        renderForumHome();
         path = Utils.FORUM_SERVICE;
       }
     } else {
+      if (log.isDebugEnabled()){
+        log.debug("Failed to render forum link: [" + path + "]. Forum home will be rendered.");
+      }
       context.getUIApplication().addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found",
                                                                    null,
                                                                    ApplicationMessage.WARNING));
-      rederForumHome();
+      renderForumHome();
       path = Utils.FORUM_SERVICE;
     }
     getChild(UIBreadcumbs.class).setUpdataPath(path);

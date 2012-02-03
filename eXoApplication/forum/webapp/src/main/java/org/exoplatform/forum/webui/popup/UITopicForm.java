@@ -643,7 +643,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
                   uiForm.isDetail = false;
                 }
               } catch (PathNotFoundException e) {
-                forumPortlet.rederForumHome();
+                forumPortlet.renderForumHome();
                 forumPortlet.cancelAction();
                 event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
                 uiForm.isDoubleClickSubmit = false;

@@ -321,7 +321,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
         if(cat == null) {
           warning("UIForumPortlet.msg.catagory-deleted", false);
           forumPortlet.cancelAction();
-          forumPortlet.rederForumHome();
+          forumPortlet.renderForumHome();
           event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
           return;
         }
@@ -363,7 +363,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
         forumLinks.setValueOption(cat.getId());
       } catch (Exception e) {
         warning("UIForumPortlet.msg.catagory-deleted", false);
-        forumPortlet.rederForumHome();
+        forumPortlet.renderForumHome();
       }
       forumPortlet.cancelAction();
       uiForm.isDoubleClickSubmit = true;

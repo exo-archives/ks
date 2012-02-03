@@ -280,7 +280,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
         topicsTag.isUpdateTag = true;
         Tag tag = topicsTag.getTagById();
         if (tag == null || tag.getUserTag() == null || tag.getUserTag().length == 0) {
-          forumPortlet.rederForumHome();
+          forumPortlet.renderForumHome();
         }
         topicsTag.isUpdateTag = false;
       }

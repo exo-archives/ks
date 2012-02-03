@@ -615,7 +615,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
               event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer);
             } else if(!uiTopicContainer.isModerator){
               if(uiTopicContainer.forum.getIsClosed()) {
-                forumPortlet.rederForumHome();
+                forumPortlet.renderForumHome();
                 warning("UIForumPortlet.msg.do-not-permission", false);
                 event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
                 return;
@@ -650,7 +650,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
             context.addUIComponentToUpdateByAjax(uiForumContainer);
             context.addUIComponentToUpdateByAjax(forumPortlet.getChild(UIBreadcumbs.class));
           } else {
-            forumPortlet.rederForumHome();
+            forumPortlet.renderForumHome();
             warning("UITopicContainer.msg.forum-deleted", false);
             event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
           }
@@ -787,7 +787,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       if (forum == null) {
         warning("UITopicContainer.msg.forum-deleted", false);
         UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.rederForumHome();
+        forumPortlet.renderForumHome();
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
         return;
       }

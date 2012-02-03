@@ -287,7 +287,7 @@ public class UICategory extends BaseForumForm {
         uiCategory.isEditCategory = true;
       } else {
         UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.rederForumHome();
+        forumPortlet.renderForumHome();
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       }
     }
@@ -297,7 +297,7 @@ public class UICategory extends BaseForumForm {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String objectId) throws Exception {
       uiCategory.getForumService().removeCategory(uiCategory.categoryId);
       UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
-      forumPortlet.rederForumHome();
+      forumPortlet.renderForumHome();
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }
@@ -312,7 +312,7 @@ public class UICategory extends BaseForumForm {
         uiCategory.isEditForum = true;
       } else {
         UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.rederForumHome();
+        forumPortlet.renderForumHome();
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       }
     }
@@ -675,7 +675,7 @@ public class UICategory extends BaseForumForm {
       Category category = uiCategory.getCategory();
       if (category == null) {
         UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.rederForumHome();
+        forumPortlet.renderForumHome();
         warning("UIForumPortlet.msg.catagory-deleted", false);
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
         return;
@@ -695,7 +695,7 @@ public class UICategory extends BaseForumForm {
       Category cate = uiCategory.getCategory();
       if (cate == null) {
         UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.rederForumHome();
+        forumPortlet.renderForumHome();
         warning("UITopicContainer.msg.forum-deleted", false);
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
         return;

@@ -224,7 +224,7 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
               if (exportForm.getForumService().getObjectNameByPath(forum.getCategoryId().concat(ForumUtils.SLASH).concat(forum.getId())) == null) {
                 exportForm.warning("UIExportForm.msg.ForumIsNoLonagerExist", new String[] { forum.getForumName() }, false);
                 portlet.cancelAction();
-                portlet.rederForumHome();
+                portlet.renderForumHome();
                 event.getRequestContext().addUIComponentToUpdateByAjax(portlet);
                 return;
               }

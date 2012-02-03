@@ -85,8 +85,6 @@ public class UIBreadcumbs extends UIContainer {
 
   private String             tooltipLink   = Utils.FORUM_SERVICE;
   
-  private UserProfile        userProfile;
-
   public UIBreadcumbs() throws Exception {
     forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
     breadcumbs_.add(ForumUtils.FIELD_EXOFORUM_LABEL);
@@ -96,8 +94,12 @@ public class UIBreadcumbs extends UIContainer {
 
   protected void setIsUseAjax() throws Exception {
     UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
-    userProfile = forumPortlet.getUserProfile();
     useAjax = forumPortlet.isUseAjax();
+  }
+  
+  protected UserProfile getUserProfile() {
+    UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
+    return forumPortlet.getUserProfile();
   }
 
   public void setUpdataPath(String path) throws Exception {
@@ -193,7 +195,7 @@ public class UIBreadcumbs extends UIContainer {
       actionRes = (ActionResponse) pcontext.getResponse();
     }
     ForumParameter param = new ForumParameter();
-    if (userProfile.getIsShowForumJump() && !path.equals(FORUM_SERVICE)) {
+    if (getUserProfile().getIsShowForumJump() && !FORUM_SERVICE.equals(path)) {
       if (path.indexOf(Utils.TOPIC) > 0) {
         path = path.substring(0, path.lastIndexOf(ForumUtils.SLASH));
       }

@@ -157,7 +157,7 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent {
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
       }
       if (isErr) {
-        forumPortlet.rederForumHome();
+        forumPortlet.renderForumHome();
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       }
     }

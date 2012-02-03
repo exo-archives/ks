@@ -1494,7 +1494,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
       if(topic == null) {
         warning("UIPostForm.msg.isParentDelete", false);
-        forumPortlet.rederForumHome();
+        forumPortlet.renderForumHome();
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
         return;
       }
@@ -1584,7 +1584,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         }
       } catch (Exception e) {
         warning("UIPostForm.msg.isParentDelete", false);
-        forumPortlet.rederForumHome();
+        forumPortlet.renderForumHome();
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       }
     }
