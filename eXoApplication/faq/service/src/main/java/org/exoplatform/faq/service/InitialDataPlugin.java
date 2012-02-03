@@ -162,8 +162,10 @@ public class InitialDataPlugin extends ManagedPlugin {
     if (inputStream != null) {
       try {
         inputStream.close();
-      } catch (Throwable t) {
-        ;// ignore
+      } catch (IOException e) {
+        if (log.isDebugEnabled()) {
+          log.debug("Can not close input stream", e);
+        }
       }
     }
   }

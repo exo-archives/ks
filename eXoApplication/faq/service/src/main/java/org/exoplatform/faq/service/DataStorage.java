@@ -63,9 +63,9 @@ public interface DataStorage {
 
   void saveTemplate(String str) throws Exception;
 
-  Iterator<NotifyInfo> getPendingMessages() throws Exception;
+  Iterator<NotifyInfo> getPendingMessages();
 
-  List<QuestionLanguage> getQuestionLanguages(String questionId) throws Exception;
+  List<QuestionLanguage> getQuestionLanguages(String questionId);
 
   void deleteAnswer(String questionId, String answerId) throws Exception;
 
@@ -117,7 +117,7 @@ public interface DataStorage {
 
   long getMaxindexCategory(String parentId) throws Exception;
 
-  void saveCategory(String parentId, Category cat, boolean isAddNew) throws Exception;
+  void saveCategory(String parentId, Category cat, boolean isAddNew);
 
   List<Cate> listingCategoryTree() throws Exception;
 
@@ -199,7 +199,7 @@ public interface DataStorage {
 
   boolean isModerateQuestion(String id) throws Exception;
 
-  boolean isViewAuthorInfo(String id) throws Exception;
+  boolean isViewAuthorInfo(String id);
 
   /**
    * 

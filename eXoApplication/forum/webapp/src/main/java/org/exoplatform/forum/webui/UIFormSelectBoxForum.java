@@ -196,6 +196,7 @@ public class UIFormSelectBoxForum extends UIFormStringInput {
       try {
         temp[0] = res.getString(formId + ".label.option." + item.getValue());
       } catch (MissingResourceException ex) {
+        temp[0] = formId + ".label.option." + item.getValue();
       }
       String classCss = "optionNormal";
       if (temp.length > 1)

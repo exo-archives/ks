@@ -306,11 +306,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
   }
 
   protected String getCategoryId(String str) {
-    try {
-      str = str.substring((str.lastIndexOf('(') + 1), str.lastIndexOf('/'));
-    } catch (Exception e) {
-    }
-    return str;
+    return str.substring((str.lastIndexOf('(') + 1), str.lastIndexOf('/'));
   }
 
   private List<String> getModerateList(List<String> forumsModerate) {
@@ -918,10 +914,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       if (uiForm.userAvartarUrl.equals(ForumSessionUtils.DEFAULT_AVATAR))
         return;
       String userId = ((UIFormStringInput) uiForm.findComponentById(FIELD_USERID_INPUT)).getValue();
-      try {
-        uiForm.getForumService().setDefaultAvatar(userId);
-      } catch (Exception e) {
-      }
+      uiForm.getForumService().setDefaultAvatar(userId);
       uiForm.userAvartarUrl = ForumSessionUtils.getUserAvatarURL(userId, uiForm.getForumService());
       event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
     }

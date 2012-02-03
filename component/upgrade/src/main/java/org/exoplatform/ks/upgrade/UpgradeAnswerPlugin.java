@@ -125,11 +125,13 @@ public class UpgradeAnswerPlugin extends UpgradeProductPlugin {
     while (iterator.hasNext()) {
       Node cNode = iterator.nextNode();
       try {
-        if(cNode.hasProperty(FAQNodeTypes.EXO_CATEGORY_ID)) {
+        if (cNode.hasProperty(FAQNodeTypes.EXO_CATEGORY_ID)) {
           log.info("\nSet new category id for items children: " + cNode.getName());
           cNode.setProperty(FAQNodeTypes.EXO_CATEGORY_ID, newName);
         }
-      } catch (Exception e) {}
+      } catch (Exception e) {
+        log.warn(String.format("Failed to set new name %s for category", newName), e);
+      }
     }
     cateNode.save();
   }

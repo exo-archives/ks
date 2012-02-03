@@ -81,11 +81,8 @@ public class UIMoveTopicForm extends BaseDataForm implements UIPopupComponent {
     this.forumId = forumId;
     this.topics = topics;
     this.isMoveTopic = true;
-    try {
-      this.pathTopic = topics.get(0).getPath();
-      this.topics.get(0).setEditReason(getUserProfile().getUserId());
-    } catch (Exception e) {
-    }
+    this.pathTopic = topics.get(0).getPath();
+    this.topics.get(0).setEditReason(getUserProfile().getUserId());
     this.isFormTopic = isFormTopic;
   }
 

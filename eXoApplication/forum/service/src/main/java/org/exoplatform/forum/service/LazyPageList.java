@@ -60,13 +60,13 @@ public class LazyPageList<E> extends JCRPageList<E> {
 
   @SuppressWarnings("unchecked")
   @Override
-  protected void populateCurrentPageList(int page, List list) throws Exception {
+  protected void populateCurrentPageList(int page, List list) {
     throw new RuntimeException("Not implemented: populateCurrentPageList(String, List)");
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  protected void populateCurrentPageSearch(int page, List list, boolean isWatch, boolean isSearchUser) throws Exception {
+  protected void populateCurrentPageSearch(int page, List list, boolean isWatch, boolean isSearchUser) {
     throw new RuntimeException("Not implemented: populateCurrentPageSearch(List, boolean, boolean)");
 
   }

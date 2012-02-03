@@ -142,6 +142,9 @@ public class UIMoveCategoryForm extends BaseUIForm implements UIPopupComponent {
             questions.viewingQuestionId_ = "";
             questions.updateCurrentLanguage();
           } catch (Exception e) {
+            if (moveCategory.log.isDebugEnabled()) {
+              moveCategory.log.debug("Failed to update question form", e);
+            }
           }
           UIBreadcumbs breadcumbs = answerPortlet.findFirstComponentOfType(UIBreadcumbs.class);
           breadcumbs.setUpdataPath(tmp);

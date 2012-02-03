@@ -449,6 +449,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
                 } catch (PathNotFoundException e) {
                   isParentDelete = true;
                 } catch (Exception ex) {
+                  uiForm.log.warn(String.format("Failed to save post %s", post.getName()), ex);
                 }
                 topicDetail.setIdPostView("lastpost");
               }
@@ -463,6 +464,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
               uiForm.getForumService().updateTopicAccess(forumPortlet.getUserProfile().getUserId(), uiForm.topicId);
               forumPortlet.getUserProfile().setLastTimeAccessTopic(uiForm.topicId, CommonUtils.getGreenwichMeanTime().getTimeInMillis());
             } catch (Exception e) {
+              uiForm.log.warn("Failed to save topic", e);
             }
             uiForm.isMP = uiForm.isQuote = false;
             if (isParentDelete) {

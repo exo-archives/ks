@@ -226,8 +226,9 @@ public class Utils {
     try {
       ConversationState conversationState = ConversationState.getCurrent();
       return conversationState.getIdentity().getUserId();
-    }catch(Exception e){}
-    return "system" ;
+    }catch(Exception e){
+      return "system" ;
+    }    
   }
   
   public static Collection<Wiki> getWikisByType(WikiType wikiType) {

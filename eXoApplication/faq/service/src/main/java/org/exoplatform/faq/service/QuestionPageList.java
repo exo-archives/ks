@@ -206,9 +206,8 @@ public class QuestionPageList extends JCRPageList {
    * @param faqFormSearchs the faq form searchs
    * @param pageSize the page size
    * 
-   * @throws Exception the exception
    */
-  public QuestionPageList(List<ObjectSearchResult> faqFormSearchs, long pageSize) throws Exception {
+  public QuestionPageList(List<ObjectSearchResult> faqFormSearchs, long pageSize) {
     super(pageSize);
     this.sessionManager = FAQServiceUtils.getSessionManager();
     this.listFAQFormSearchS_ = faqFormSearchs;

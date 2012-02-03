@@ -132,10 +132,7 @@ public class UIModerationForum extends BaseForumForm implements UIPopupComponent
       isShowIter = false;
     int pageSelect = pageIterator.getPageSelected();
     List<ForumSearch> list = new ArrayList<ForumSearch>();
-    try {
-      list.addAll(pageList.getPageSearch(pageSelect, list_));
-    } catch (Exception e) {
-    }
+    list.addAll(pageList.getPageSearch(pageSelect, list_));
     return list;
   }
 

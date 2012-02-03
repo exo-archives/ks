@@ -268,13 +268,11 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
         String userId = topicsTag.getUserProfile().getUserId();
         for (String topicId : (List<String>) topicsTag.getIdSelected()) {
           topicPath = topicsTag.getTopic(topicId).getPath();
-          try {
-            topicsTag.getForumService().unTag(topicsTag.tagId, userId, topicPath);
-          } catch (Exception e) {
-          }
+          topicsTag.getForumService().unTag(topicsTag.tagId, userId, topicPath);
           hasCheck = true;
         }
       } catch (Exception e) {
+        topicsTag.log.warn("Failed to untag topics", e);
       }
       if (!hasCheck) {
         warning("UITopicContainer.sms.notCheckMove", false);

@@ -88,7 +88,9 @@ public class UIFAQPortlet extends UIPortletApplication {
           return pathOfCateSpace;
         }
       }
-    } catch (Exception e) {}
-    return Utils.CATEGORY_HOME;
+      return Utils.CATEGORY_HOME;
+    } catch (Exception e) {
+      return Utils.CATEGORY_HOME;
+    }    
   }
 }

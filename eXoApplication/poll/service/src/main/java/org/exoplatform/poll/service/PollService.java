@@ -57,17 +57,15 @@ public interface PollService {
    * 
    * @param pollId
    * @return the poll
-   * @throws Exception the exception
    */
-  Poll removePoll(String pollId) throws Exception;
+  Poll removePoll(String pollId);
 
   /**
    * Sets the closed poll.
    * 
    * @param poll
-   * @throws Exception the exception
    */
-  void setClosedPoll(Poll poll) throws Exception;
+  void setClosedPoll(Poll poll);
 
   /**
    * Gets list polls.

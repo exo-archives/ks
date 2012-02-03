@@ -100,7 +100,6 @@ public class UIAnswersContainer extends UIContainer {
     if (isAjax != null && Boolean.parseBoolean(isAjax))
       return;
     FAQUtils.getPorletPreference(faqSetting_);
-    try {
       UIQuestions questions = getChild(UIQuestions.class);
       questions.setViewRootCate();
       boolean b = questions.isViewRootCate();
@@ -109,11 +108,9 @@ public class UIAnswersContainer extends UIContainer {
       }
       if (Utils.CATEGORY_HOME.equals(questions.getCategoryId()))
         isRenderChild = hasPermission;
-    } catch (Exception e) {
-    }
   }
 
-  public boolean isRenderCategory(String categoryId) throws Exception {
+  public boolean isRenderCategory(String categoryId) {
     try {
       Category category = faqService_.getCategoryById(categoryId);
       if (currentUser_ != null && currentUser_.trim().length() > 0) {
@@ -130,11 +127,12 @@ public class UIAnswersContainer extends UIContainer {
       if (!faqSetting_.isCanEdit() && category.getUserPrivate() != null && category.getUserPrivate().length > 0 && category.getUserPrivate()[0].trim().length() > 0) {
         if (propetyOfUser.isEmpty())
           propetyOfUser = UserHelper.getAllGroupAndMembershipOfUser(null);
-        return Utils.hasPermission(propetyOfUser, Arrays.asList(category.getUserPrivate()));
+        return Utils.hasPermission(propetyOfUser, Arrays.asList(category.getUserPrivate()));        
       }
+      return true;
     } catch (Exception e) {
+      return true;
     }
-    return true;
   }
 
   public FAQSetting getFAQSetting() {

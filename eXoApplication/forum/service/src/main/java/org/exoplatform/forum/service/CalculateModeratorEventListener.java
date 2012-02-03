@@ -81,7 +81,7 @@ public class CalculateModeratorEventListener implements EventListener {
         }
       }
     } catch (Exception e) {
-
+      log.warn("Failed to calculate moderators");
     }
   }
 }

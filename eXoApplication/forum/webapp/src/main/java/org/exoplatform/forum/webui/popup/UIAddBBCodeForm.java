@@ -154,6 +154,9 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
       try {
         uiForm.listBBCode.addAll(uiForm.bbCodeService.getAll());
       } catch (Exception e) {
+        if (log.isDebugEnabled()){
+          log.debug("Failed to get all BB codes", e);
+        }
       }
       for (BBCode code : uiForm.listBBCode) {
         if (uiForm.bbcode.getTagName().equals(code.getTagName()) && (uiForm.bbcode.isOption() == code.isOption()) && !uiForm.bbcode.getId().equals(code.getId())) {

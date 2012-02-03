@@ -417,6 +417,7 @@ public class UICategories extends BaseUIFAQForm {
             questions.viewingQuestionId_ = "";
             questions.updateCurrentLanguage();
           } catch (Exception e) {
+            log.warn("Failed to update current question list", e);
           }
           UIBreadcumbs breadcumbs = uiPortlet.findFirstComponentOfType(UIBreadcumbs.class);
           breadcumbs.setUpdataPath(tmp);

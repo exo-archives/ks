@@ -263,12 +263,12 @@ public class UISearchForm extends BaseForumForm implements UISelector {
     getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setOptions(optionsType(type));
   }
 
-  private void setTopicType() throws Exception {
+  private void setTopicType() {
     listTT.clear();
     listTT.addAll(getForumService().getTopicTypes());
   }
 
-  public void setUserProfile(UserProfile userProfile) throws Exception {
+  public void setUserProfile(UserProfile userProfile) {
     this.userProfile = (userProfile != null) ? userProfile : this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
   }
 
@@ -280,7 +280,7 @@ public class UISearchForm extends BaseForumForm implements UISelector {
     return false;
   }
 
-  public void setSelectType(String type) throws Exception {
+  public void setSelectType(String type){
     this.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setValue(type);
     if (type.equals(Utils.FORUM)) {
       this.isSearchForum = true;
@@ -306,10 +306,7 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       this.isSearchForum = false;
       this.isSearchTopic = false;
     }
-    try {
-      this.getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class).setValueOption(ForumUtils.EMPTY_STR);
-    } catch (Exception e) {
-    }
+    this.getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class).setValueOption(ForumUtils.EMPTY_STR);
   }
 
   public UIFormRadioBoxInput getUIFormRadioBoxInput(String name) {
@@ -406,16 +403,14 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       Calendar toDateCreated = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(TODATECREATED), TODATECREATED);
       Calendar fromDateCreatedLastPost = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(FROMDATECREATEDLASTPOST), FROMDATECREATEDLASTPOST);
       Calendar toDateCreatedLastPost = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(TODATECREATEDLASTPOST), TODATECREATEDLASTPOST);
-      try {
-        if (fromDateCreated.getTimeInMillis() >= toDateCreated.getTimeInMillis()) {          
-          uiForm.warning("UISearchForm.msg.erro-from-less-then-to");
-          return;
-        }
-        if (type.equals(Utils.TOPIC) && (fromDateCreatedLastPost.getTimeInMillis() > toDateCreatedLastPost.getTimeInMillis())) {    
-          uiForm.warning("UISearchForm.msg.erro-from-less-then-to");
-          return;
-        }
-      } catch (Exception e) {}
+      if (fromDateCreated.getTimeInMillis() >= toDateCreated.getTimeInMillis()) {
+        uiForm.warning("UISearchForm.msg.erro-from-less-then-to");
+        return;
+      }
+      if (type.equals(Utils.TOPIC) && (fromDateCreatedLastPost.getTimeInMillis() > toDateCreatedLastPost.getTimeInMillis())) {
+        uiForm.warning("UISearchForm.msg.erro-from-less-then-to");
+        return;
+      }      
       ForumEventQuery eventQuery = new ForumEventQuery();
       eventQuery.setListOfUser(UserHelper.getAllGroupAndMembershipOfUser(uiForm.userProfile.getUserId()));
       eventQuery.setUserPermission(uiForm.userProfile.getUserRole());

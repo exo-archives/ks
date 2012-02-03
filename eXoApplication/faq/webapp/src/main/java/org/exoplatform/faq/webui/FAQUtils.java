@@ -529,13 +529,10 @@ public class FAQUtils {
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletPreferences portletPref = pcontext.getRequest().getPreferences();
     int limitMB = DEFAULT_VALUE_UPLOAD_PORTAL;
-    try {
-      if (isAvatar) {
-        limitMB = Integer.parseInt(portletPref.getValue(UPLOAD_AVATAR_SIZE, "").trim());
-      } else {
-        limitMB = Integer.parseInt(portletPref.getValue(UPLOAD_FILE_SIZE, "").trim());
-      }
-    } catch (Exception e) {
+    if (isAvatar) {
+      limitMB = Integer.parseInt(portletPref.getValue(UPLOAD_AVATAR_SIZE, "").trim());
+    } else {
+      limitMB = Integer.parseInt(portletPref.getValue(UPLOAD_FILE_SIZE, "").trim());
     }
     return limitMB;
   }

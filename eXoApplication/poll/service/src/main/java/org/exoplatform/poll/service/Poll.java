@@ -242,14 +242,11 @@ public class Poll {
 
   public String getVotes() {
     int size = 0;
-    try {
-      if (!isMultiCheck)
-        size = userVote.length;
-      else
-        for (int i = 0; i < userVote.length; i++)
-          size += userVote[i].split(":").length - 1;
-    } catch (Exception e) {
-    }
+    if (!isMultiCheck)
+      size = userVote.length;
+    else
+      for (int i = 0; i < userVote.length; i++)
+        size += userVote[i].split(":").length - 1;
     votes = String.valueOf(size);
     return votes;
   }

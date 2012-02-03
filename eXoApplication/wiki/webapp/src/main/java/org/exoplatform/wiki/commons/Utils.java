@@ -16,8 +16,6 @@
  */
 package org.exoplatform.wiki.commons;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,8 +33,6 @@ import org.exoplatform.commons.utils.MimeTypeResolver;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
-import org.exoplatform.download.DownloadService;
-import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.portal.config.model.PortalConfig;
@@ -154,34 +150,13 @@ public class Utils {
     return wikiService.getExsitedOrNewDraftPageById(null, null, sessionId);
   }
   
-  public static String getDownloadLink(String path, String filename, DownloadService dservice){
-    if(dservice == null)dservice = (DownloadService)PortalContainer.getComponent(DownloadService.class) ;
-    WikiService wservice = (WikiService)PortalContainer.getComponent(WikiService.class) ;
-    try {
-      InputStream input = wservice.getAttachmentAsStream(path) ;      
-      byte[] attBytes = null;
-      if (input != null) {
-        attBytes = new byte[input.available()];
-        input.read(attBytes);
-        ByteArrayInputStream bytearray = new ByteArrayInputStream(attBytes);
-        MimeTypeResolver mimeTypeResolver = new MimeTypeResolver() ;
-        String mimeType = mimeTypeResolver.getMimeType(filename) ;
-        InputStreamDownloadResource dresource = new InputStreamDownloadResource(bytearray, mimeType);
-        dresource.setDownloadName(filename);
-        return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
-      }
-    } catch (Exception e) {     
-    }
-    return null;
-  }
-  
   public static String getExtension(String filename)throws Exception {
     MimeTypeResolver mimeResolver = new MimeTypeResolver() ;
     try{
       return mimeResolver.getExtension(mimeResolver.getMimeType(filename)) ;
     }catch(Exception e) {
       return mimeResolver.getDefaultMimeType() ;
-    }    
+    }
   }
   
   public static Wiki getCurrentWiki() throws Exception {

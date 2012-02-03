@@ -349,6 +349,8 @@ public class UICategory extends BaseForumForm {
           }
           uiCategory.isEditForum = true;
         } catch (Exception e) {
+          warning("UICategory.msg.fail-lock-forum", false);
+          event.getSource().log.warn("Failed to lock forums", e);
         }
       } else {
         warning("UICategory.msg.notCheck");
@@ -370,6 +372,8 @@ public class UICategory extends BaseForumForm {
           }
           uiCategory.isEditForum = true;
         } catch (Exception e) {
+          warning("UICategory.msg.fail-unlock-forum", false);
+          event.getSource().log.warn("Failed to unlock forums", e);
         }
       } else {
         warning("UICategory.msg.notCheck");
@@ -389,9 +393,10 @@ public class UICategory extends BaseForumForm {
           }
           uiCategory.isEditForum = true;
         } catch (Exception e) {
+          warning("UICategory.msg.fail-open-forum", false);
+          event.getSource().log.warn("Failed to open forums", e);
         }
-      }
-      if (forums.size() == 0) {
+      } else {
         warning("UICategory.msg.notCheck");
       }
     }
@@ -408,9 +413,10 @@ public class UICategory extends BaseForumForm {
           }
           uiCategory.isEditForum = true;
         } catch (Exception e) {
+          warning("UICategory.msg.fail-close-forum", false);
+          event.getSource().log.warn("Failed to close forums", e);
         }
-      }
-      if (forums.size() <= 0) {
+      } else {
         warning("UICategory.msg.notCheck");
       }
     }
@@ -441,6 +447,8 @@ public class UICategory extends BaseForumForm {
           uiCategory.getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class).setUpdateForumLinks();
           uiCategory.isEditForum = true;
         } catch (Exception e) {
+          warning("UICategory.msg.fail-remove-forum", false);
+          event.getSource().log.warn("Failed to remove forums", e);
         }
       } else {
         warning("UICategory.msg.notCheck");

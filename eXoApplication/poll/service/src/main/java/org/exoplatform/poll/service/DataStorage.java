@@ -8,9 +8,9 @@ public interface DataStorage {
 
   void savePoll(Poll poll, boolean isNew, boolean isVote) throws Exception;
 
-  Poll removePoll(String pollId) throws Exception;
+  Poll removePoll(String pollId);
 
-  void setClosedPoll(Poll poll) throws Exception;
+  void setClosedPoll(Poll poll);
 
   List<Poll> getPagePoll() throws Exception;
 

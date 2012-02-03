@@ -113,12 +113,9 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent {
       UIImportForm importForm = event.getSource();
       UIAnswersPortlet portlet = importForm.getAncestorOfType(UIAnswersPortlet.class);
       // remove temp file in upload service and server
-      try {
-        UploadService uploadService = importForm.getApplicationComponent(UploadService.class);
-        UIFormUploadInput uploadInput = (UIFormUploadInput) importForm.getChildById(importForm.FILE_UPLOAD);
-        uploadService.removeUploadResource(uploadInput.getUploadId());
-      } catch (Exception e) {
-      }
+      UploadService uploadService = importForm.getApplicationComponent(UploadService.class);
+      UIFormUploadInput uploadInput = (UIFormUploadInput) importForm.getChildById(importForm.FILE_UPLOAD);
+      uploadService.removeUploadResource(uploadInput.getUploadId());
       portlet.cancelAction();
     }
   }

@@ -48,16 +48,13 @@ public class UIForumContainer extends UIContainer {
     getChild(UITopicDetailContainer.class).setRendered(!isRender);
     getChild(UIForumSummary.class).setRendered(isRender);
     if (isRender) {
-      try {
-        PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-        ActionResponse actionRes = (ActionResponse) pcontext.getResponse();
-        ForumParameter param = new ForumParameter();
-        param.setRenderQuickReply(false);
-        param.setRenderPoll(false);
-        actionRes.setEvent(new QName("QuickReplyEvent"), param);
-        actionRes.setEvent(new QName("ForumPollEvent"), param);
-      } catch (Exception e) {
-      }
+      PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+      ActionResponse actionRes = (ActionResponse) pcontext.getResponse();
+      ForumParameter param = new ForumParameter();
+      param.setRenderQuickReply(false);
+      param.setRenderPoll(false);
+      actionRes.setEvent(new QName("QuickReplyEvent"), param);
+      actionRes.setEvent(new QName("ForumPollEvent"), param);
     }
   }
 }

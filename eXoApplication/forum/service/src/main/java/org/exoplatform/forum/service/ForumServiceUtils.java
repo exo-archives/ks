@@ -120,7 +120,7 @@ public class ForumServiceUtils {
     return ((expr.indexOf(SLASH) >= 0) && (expr.indexOf(COLON) >= 0));
   }
 
-  private static ListAccess<User> getUserByGroup(OrganizationService organizationService, String group) throws Exception {
+  private static ListAccess<User> getUserByGroup(OrganizationService organizationService, String group){
     try {
       return organizationService.getUserHandler().findUsersByGroupId(group);
     } catch (Exception e) {
@@ -246,7 +246,7 @@ public class ForumServiceUtils {
    * @return
    * @throws Exception
    */
-  private static List<String> getFromCache(String[] userGroupMembership) throws Exception {
+  private static List<String> getFromCache(String[] userGroupMembership) {
     ExoCache<Serializable, List<String>> cache = getCache();
     Serializable cacheKey = getCacheKey(userGroupMembership);
     return cache.get(cacheKey);
@@ -260,7 +260,7 @@ public class ForumServiceUtils {
     return sb.toString();
   }
 
-  private static ExoCache<Serializable, List<String>> getCache() throws Exception {
+  private static ExoCache<Serializable, List<String>> getCache(){
     CacheService cacheService = (CacheService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(CacheService.class);
     return cacheService.getCacheInstance("org.exoplatform.forum.ForumPermissionsUsers");
   }

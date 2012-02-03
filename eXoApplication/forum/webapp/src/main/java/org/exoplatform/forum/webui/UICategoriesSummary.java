@@ -35,14 +35,11 @@ public class UICategoriesSummary extends UIContainer {
     addChild(UIForumIconState.class, null, null).updateInfor(true);
   }
 
-  protected void setRenderChild() throws Exception {
-    try {
-      UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
-      UICategoryInfo categoryInfo = getChild(UICategoryInfo.class);
-      if (categoryInfo.isRendered())
-        categoryInfo.setRendered(forumPortlet.isShowStatistics());
-      getChild(UIForumIconState.class).setRendered(forumPortlet.isShowIconsLegend());
-    } catch (Exception e) {
-    }
+  protected void setRenderChild() {
+    UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
+    UICategoryInfo categoryInfo = getChild(UICategoryInfo.class);
+    if (categoryInfo.isRendered())
+      categoryInfo.setRendered(forumPortlet.isShowStatistics());
+    getChild(UIForumIconState.class).setRendered(forumPortlet.isShowIconsLegend());
   }
 }

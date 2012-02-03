@@ -73,32 +73,20 @@ public abstract class AttachmentImpl extends NTFile implements Attachment, Compa
   public abstract String getCreator();
   public abstract void setCreator(String creator);
   
-  public Calendar getCreatedDate(){
-    try {
-      Calendar calendar = GregorianCalendar.getInstance() ;
-      calendar.setTime(getCreated()) ;
-      return calendar ;
-    }catch(Exception e) {      
-    }    
-    return null ;
+  public Calendar getCreatedDate() {
+    Calendar calendar = GregorianCalendar.getInstance();
+    calendar.setTime(getCreated());
+    return calendar;
   }
   
-  public long getWeightInBytes(){
-    try {
-      return getContentResource().getData().length ;
-    }catch(Exception e) {      
-    }
-    return 0 ;
+  public long getWeightInBytes() {
+    return getContentResource().getData().length;
   }
   
-  public Calendar getUpdatedDate(){
-    try {
-      Calendar calendar = GregorianCalendar.getInstance() ;
-      calendar.setTime(getLastModified()) ;
-      return calendar ;
-    }catch(Exception e) {      
-    }    
-    return null ;
+  public Calendar getUpdatedDate() {
+    Calendar calendar = GregorianCalendar.getInstance();
+    calendar.setTime(getLastModified());
+    return calendar;
   }
   
   public String getDownloadURL() {

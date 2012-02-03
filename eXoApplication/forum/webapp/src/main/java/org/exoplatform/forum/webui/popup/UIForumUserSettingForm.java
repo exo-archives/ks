@@ -364,18 +364,15 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
   }
 
   @SuppressWarnings("unchecked")
-  public List<Watch> getListWatch() throws Exception {
+  public List<Watch> getListWatch() {
     int pageSelect = pageIterator.getPageSelected();
     List<Watch> list = new ArrayList<Watch>();
-    try {
-      list.addAll(this.pageList.getPageWatch(pageSelect, this.listWatches));
-      if (list.isEmpty()) {
-        while (list.isEmpty() && pageSelect > 1) {
-          list.addAll(this.pageList.getPageWatch(--pageSelect, this.listWatches));
-          pageIterator.setSelectPage(pageSelect);
-        }
+    list.addAll(this.pageList.getPageWatch(pageSelect, this.listWatches));
+    if (list.isEmpty()) {
+      while (list.isEmpty() && pageSelect > 1) {
+        list.addAll(this.pageList.getPageWatch(--pageSelect, this.listWatches));
+        pageIterator.setSelectPage(pageSelect);
       }
-    } catch (Exception e) {
     }
     return list;
   }
@@ -523,6 +520,8 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
         uiForm.pageList = new ForumPageList(7, uiForm.listWatches.size());
         uiForm.pageIterator.updatePageList(uiForm.pageList);
       } catch (Exception e) {
+        uiForm.log.warn("Failed to delete watch emails",e);
+        uiForm.warning("UIForumUserSettingForm.msg.fail-delete-watch-emails", false);
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
     }

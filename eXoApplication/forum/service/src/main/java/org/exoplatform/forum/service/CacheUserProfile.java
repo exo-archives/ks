@@ -30,7 +30,7 @@ import org.exoplatform.services.cache.ExoCache;
  */
 public class CacheUserProfile {
 
-  private static ExoCache<Serializable, UserProfile> getCache() throws Exception {
+  private static ExoCache<Serializable, UserProfile> getCache() {
     CacheService cacheService = (CacheService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(CacheService.class);
     return cacheService.getCacheInstance("org.exoplatform.forum.UserProfiles");
   }
@@ -39,9 +39,8 @@ public class CacheUserProfile {
    * Store the UserProfile of the user online storage in cache
    * @param userName
    * @param userProfile
-   * @throws Exception
    */
-  public static void storeInCache(String userName, UserProfile userProfile) throws Exception {
+  public static void storeInCache(String userName, UserProfile userProfile) {
     ExoCache<Serializable, UserProfile> cache = getCache();
     Serializable cacheKey = getCacheKey(userName);
     cache.put(cacheKey, userProfile);
@@ -50,9 +49,8 @@ public class CacheUserProfile {
   /**
    * Remove the UserProfile of the user online storage in cache
    * @param userName
-   * @throws Exception
    */
-  public static void removeInCache(String userName) throws Exception {
+  public static void removeInCache(String userName) {
     ExoCache<Serializable, UserProfile> cache = getCache();
     Serializable cacheKey = getCacheKey(userName);
     cache.remove(cacheKey);
@@ -60,9 +58,8 @@ public class CacheUserProfile {
 
   /**
    * Remove all UserProfile storage in cache
-   * @throws Exception
    */
-  public static void clearCache() throws Exception {
+  public static void clearCache(){
     ExoCache<Serializable, UserProfile> cache = getCache();
     cache.clearCache();
   }
@@ -71,9 +68,8 @@ public class CacheUserProfile {
    * Load a UserProfile of the user online from expressions in cache
    * @param userName
    * @return UserProfile
-   * @throws Exception
    */
-  public static UserProfile getFromCache(String userName) throws Exception {
+  public static UserProfile getFromCache(String userName) {
     if (Utils.isEmpty(userName) || UserProfile.USER_GUEST.equals(userName))
       return null;
     ExoCache<Serializable, UserProfile> cache = getCache();

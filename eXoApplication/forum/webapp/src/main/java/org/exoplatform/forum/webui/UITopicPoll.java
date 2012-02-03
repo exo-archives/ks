@@ -89,7 +89,7 @@ public class UITopicPoll extends BaseForumForm {
     pollService = (PollService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class);
   }
 
-  public UserProfile getUserProfile() throws Exception {
+  public UserProfile getUserProfile() {
     userProfile = new UserProfile();
     try {
       userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
@@ -97,6 +97,7 @@ public class UITopicPoll extends BaseForumForm {
       try {
         userProfile = getForumService().getDefaultUserProfile(UserHelper.getCurrentUser(), ForumUtils.EMPTY_STR);
       } catch (Exception ex) {
+        log.warn("Failed to get default user profile", e);
       }
     }
     return userProfile;
@@ -104,10 +105,7 @@ public class UITopicPoll extends BaseForumForm {
 
   public void setForum(Forum forum) {
     if (forum == null) {
-      try {
-        this.forum = getForumService().getForum(categoryId, forumId);
-      } catch (Exception e) {
-      }
+      this.forum = getForumService().getForum(categoryId, forumId);
     } else {
       this.forum = forum;
     }
@@ -157,6 +155,7 @@ public class UITopicPoll extends BaseForumForm {
       try {
         poll_ = pollService.getPoll(pollId);
       } catch (Exception e) {
+        log.warn("Failed to get poll with id " + pollId, e);
       }
       this.init();
       return poll_;
@@ -362,11 +361,8 @@ public class UITopicPoll extends BaseForumForm {
         topicPoll.poll_.setTimeOut(0);
       } else {
         topicPoll.poll_.setIsClosed(!topicPoll.poll_.getIsClosed());
-      }
-      try {
-        topicPoll.pollService.setClosedPoll(topicPoll.poll_);
-      } catch (Exception e) {
-      }
+      }      
+      topicPoll.pollService.setClosedPoll(topicPoll.poll_);
       topicPoll.isAgainVote = false;
       event.getRequestContext().addUIComponentToUpdateByAjax(topicPoll);
     }

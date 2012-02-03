@@ -16,6 +16,7 @@
  */
 package org.exoplatform.wiki.webui;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -62,18 +63,20 @@ public class UIWikiDeletePageConfirm extends UIWikiComponent {
     try{
       WikiPageParams params = Utils.getCurrentWikiPageParams() ;
       return wservice.searchRenamedPage(params.getType(), params.getOwner(), params.getPageId()) ;
-    }catch(Exception e){}
-    return null ;
+    } catch (Exception e) {
+      return new ArrayList<SearchResult>();
+    }
   }
   
   protected PageImpl getCurrentPage() {
-    try{
-      WikiPageParams params = Utils.getCurrentWikiPageParams() ;
-      pageID = params.getPageId() ;
-      owner = params.getOwner() ;
-      return (PageImpl)wservice.getPageById(params.getType(), params.getOwner(), params.getPageId()) ;
-    }catch(Exception e) {}
-    return null ;
+    try {
+      WikiPageParams params = Utils.getCurrentWikiPageParams();
+      pageID = params.getPageId();
+      owner = params.getOwner();
+      return (PageImpl) wservice.getPageById(params.getType(), params.getOwner(), params.getPageId());
+    } catch (Exception e) {
+      return null;
+    }
   }
   
   protected String getCurrentPageId(){ return pageID ;}

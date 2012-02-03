@@ -460,7 +460,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   }
 
   @Override
-  public List<QuestionLanguage> getQuestionLanguages(String questionId) throws Exception {
+  public List<QuestionLanguage> getQuestionLanguages(String questionId){
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>();
     try {
@@ -476,7 +476,8 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         while (nodeIterator.hasNext()) {
           try {
             listQuestionLanguage.add(getQuestionLanguage(nodeIterator.nextNode()));
-          } catch (Exception e) {
+          } catch (RepositoryException e) {
+            log.debug(String.format("Failed to get languages for question %s", questionId), e);
           }
         }
       }
@@ -486,7 +487,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     return listQuestionLanguage;
   }
 
-  private QuestionLanguage getQuestionLanguage(Node questionNode) throws Exception {
+  private QuestionLanguage getQuestionLanguage(Node questionNode) throws RepositoryException{
     QuestionLanguage questionLanguage = new QuestionLanguage();
     questionLanguage.setState(QuestionLanguage.VIEW);
     questionLanguage.setId(questionNode.getName());
@@ -527,7 +528,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     }
   }
 
-  private Answer[] getAnswers(Node questionNode) throws Exception {
+  private Answer[] getAnswers(Node questionNode) {
     try {
       if (!questionNode.hasNode(Utils.ANSWER_HOME))
         return new Answer[] {};
@@ -764,7 +765,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     return null;
   }
 
-  private Comment[] getComment(Node questionNode) throws Exception {
+  private Comment[] getComment(Node questionNode) {
     try {
       if (questionNode == null || !questionNode.hasNode(Utils.COMMENT_HOME))
         return new Comment[] {};
@@ -1407,9 +1408,10 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
           try {
             sendNotifyMoveQuestion(destCateNode, questionNode, catId, questionLink, faqSetting);
           } catch (Exception e) {
+            log.warn("Failed to send notification of moved questions", e);
           }
-
         } catch (ItemNotFoundException ex) {
+          log.warn(String.format("Destination category with %s node is not found", id), ex);
         }
       }
     } catch (Exception e) {
@@ -1624,7 +1626,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   }
 
   @Override
-  public void saveCategory(String parentId, Category cat, boolean isAddNew) throws Exception {
+  public void saveCategory(String parentId, Category cat, boolean isAddNew){
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node newCategory;
@@ -2713,12 +2715,12 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     return names.toString();
   }
 
-  private void sendEmailNotification(List<String> addresses, Message message) throws Exception {
+  private void sendEmailNotification(List<String> addresses, Message message) {
     pendingMessagesQueue.add(new NotifyInfo(addresses, message));
   }
 
   @Override
-  public Iterator<NotifyInfo> getPendingMessages() throws Exception {
+  public Iterator<NotifyInfo> getPendingMessages() {
     Iterator<NotifyInfo> pending = new ArrayList<NotifyInfo>(pendingMessagesQueue).iterator();
     pendingMessagesQueue.clear();
     return pending;
@@ -2887,7 +2889,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     return true;
   }
 
-  private void calculateImportRootCategory(Node categoryRootNode) throws Exception {
+  private void calculateImportRootCategory(Node categoryRootNode) {
     try {
       NodeIterator iterator0 = categoryRootNode.getNodes();
       int i = 0;
@@ -2920,11 +2922,15 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
             }
           }
         } catch (Exception e) {
+          if (log.isDebugEnabled()) {
+            log.debug("Failed to move node " + node.getName(), e);
+          }
         }
       }
       categoryNode.remove();
       session.save();
     } catch (Exception e) {
+        log.warn("Failed to calculate imported root category", e);
     }
   }
 
@@ -2984,7 +2990,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   }
 
   @Override
-  public boolean isViewAuthorInfo(String id) throws Exception {
+  public boolean isViewAuthorInfo(String id) {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node node;
@@ -3055,6 +3061,9 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         reader = new PropertyReader(getQuestionNode(sProvider, path));
         contents.add(reader.string(EXO_TITLE));
       } catch (Exception e) {
+        if (log.isDebugEnabled()) {
+          log.debug("Failed to get question node with path " + path, e);
+        }
       }
     }
     return contents;

@@ -69,18 +69,15 @@ public class ResultQuickSearch extends BaseUIForm implements UIPopupComponent {
     this.setActions(new String[] { "Close" });
   }
 
-  public void setSearchResults(List<ObjectSearchResult> searchResults) throws Exception {
+  public void setSearchResults(List<ObjectSearchResult> searchResults) {
     if (searchResults != null)
       this.searchResults_ = searchResults;
     else
       this.searchResults_ = new ArrayList<ObjectSearchResult>();
-    try {
-      pageList = new QuestionPageList(searchResults_, 10);
-      pageList.setPageSize(10);
-      pageIterator = this.getChildById(LIST_RESULT_SEARCH);
-      pageIterator.updatePageList(pageList);
-    } catch (Exception e) {
-    }
+    pageList = new QuestionPageList(searchResults_, 10);
+    pageList.setPageSize(10);
+    pageIterator = this.getChildById(LIST_RESULT_SEARCH);
+    pageIterator.updatePageList(pageList);
   }
 
   protected long getTotalpages(String pageInteratorId) {
@@ -98,6 +95,9 @@ public class ResultQuickSearch extends BaseUIForm implements UIPopupComponent {
       long pageSelected = pageIterator.getPageSelected();
       searchResults_.addAll(pageList.getPageResultSearch(pageSelected, FAQUtils.getCurrentUser()));
     } catch (Exception e) {
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to get search results", e);
+      }
     }
     return searchResults_;
   }

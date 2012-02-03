@@ -115,32 +115,32 @@ public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
           WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
           ResourceBundle res = context.getApplicationResourceBundle();
           String emailContent = res.getString("UINotificationForm.label.EmailToAuthorMoved");
-          try {
-            for (Topic topic : uiForm.listTopic) {
-              if (topicMergeId.equals(topic.getId())) {
-                continue;
-              }
-              try {
-                // set link
-                String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId", false);
-                forumService.mergeTopic(categoryId + ForumUtils.SLASH + forumId + ForumUtils.SLASH + topic.getId(), destTopicPath, emailContent, link);
-              } catch (Exception e) {
-                isMerge = false;
-                break;
-              }
+          for (Topic topic : uiForm.listTopic) {
+            if (topicMergeId.equals(topic.getId())) {
+              continue;
             }
-            if (isMerge) {
-              topicMerge.setTopicName(topicMergeTitle);
-              try {
-                List<Topic> list = new ArrayList<Topic>();
-                list.add(topicMerge);
-                forumService.modifyTopic(list, Utils.CHANGE_NAME);
-              } catch (Exception e) {
-                uiForm.log.error("Merge topic is fall ", e);
-                isMerge = false;
-              }
+            try {
+              // set link
+              String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId", false);
+              forumService.mergeTopic(categoryId + ForumUtils.SLASH + forumId + ForumUtils.SLASH + topic.getId(),
+                                      destTopicPath,
+                                      emailContent,
+                                      link);
+            } catch (Exception e) {
+              isMerge = false;
+              break;
             }
-          } catch (Exception e) {
+          }
+          if (isMerge) {
+            topicMerge.setTopicName(topicMergeTitle);
+            try {
+              List<Topic> list = new ArrayList<Topic>();
+              list.add(topicMerge);
+              forumService.modifyTopic(list, Utils.CHANGE_NAME);
+            } catch (Exception e) {
+              uiForm.log.error("Merge topic is fall ", e);
+              isMerge = false;
+            }
           }
         } else {
           isMerge = false;

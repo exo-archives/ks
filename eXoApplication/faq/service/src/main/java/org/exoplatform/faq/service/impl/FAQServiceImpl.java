@@ -374,7 +374,7 @@ public class FAQServiceImpl implements FAQService, Startable {
     return getQuestionLanguages(questionId);
   }
 
-  public List<QuestionLanguage> getQuestionLanguages(String questionId) throws Exception {
+  public List<QuestionLanguage> getQuestionLanguages(String questionId) {
     return jcrData_.getQuestionLanguages(questionId);
   }
 
@@ -509,7 +509,7 @@ public class FAQServiceImpl implements FAQService, Startable {
     saveCategory(parentId, cat, isAddNew);
   }
 
-  public void saveCategory(String parentId, Category cat, boolean isAddNew) throws Exception {
+  public void saveCategory(String parentId, Category cat, boolean isAddNew) {
     jcrData_.saveCategory(parentId, cat, isAddNew);
   }
 
@@ -751,10 +751,8 @@ public class FAQServiceImpl implements FAQService, Startable {
   /**
    * This function will send all the pending notification message 
    * 
-   * @param  
-   * @throws Exception the exception
    */
-  public Iterator<NotifyInfo> getPendingMessages() throws Exception {
+  public Iterator<NotifyInfo> getPendingMessages() {
     return jcrData_.getPendingMessages();
   }
 
@@ -1201,7 +1199,7 @@ public class FAQServiceImpl implements FAQService, Startable {
     return jcrData_.getModeratorsOf(path);
   }
 
-  public boolean isViewAuthorInfo(String id) throws Exception {
+  public boolean isViewAuthorInfo(String id) {
     return jcrData_.isViewAuthorInfo(id);
   }
 

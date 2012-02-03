@@ -220,6 +220,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
         try {
           messageForm.getForumService().savePrivateMessage(privateMessage);
         } catch (Exception e) {
+          messageForm.log.warn("Failed to save private message", e);
         }
         areaInput.setValue(ForumUtils.EMPTY_STR);
         stringInput.setValue(ForumUtils.EMPTY_STR);

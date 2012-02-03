@@ -325,7 +325,9 @@ public final class ForumFeedGenerator extends RSSProcess implements FeedContentP
         }
       }
     } catch (PathNotFoundException e) {
+      LOG.warn("Failed to get properties", e);
     } catch (Exception e) {
+      LOG.error("Failed to update topics", e);
     }
   }
   
@@ -341,7 +343,9 @@ public final class ForumFeedGenerator extends RSSProcess implements FeedContentP
           }
         }
       } catch (PathNotFoundException e) {
+        LOG.warn("Failed to get item with path " + path, e);
       } catch (RepositoryException e) {
+        LOG.warn("Failed to get item with path " + path, e);
       }
     }
   

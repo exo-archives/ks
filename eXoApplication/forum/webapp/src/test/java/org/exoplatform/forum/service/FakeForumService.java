@@ -88,7 +88,7 @@ public class FakeForumService implements ForumService {
   public void createUserProfile(User user) throws Exception {
   }
 
-  public void evaluateActiveUsers(String query) throws Exception {
+  public void evaluateActiveUsers(String query) {
   }
 
   public Object exportXML(String categoryId,
@@ -128,9 +128,7 @@ public class FakeForumService implements ForumService {
 
   Map<String,BBCode> bbcodes;
 
-  public List<ForumSearch> getAdvancedSearch(ForumEventQuery eventQuery,
-                                             List<String> listCateIds,
-                                             List<String> listForumIds) throws Exception {
+  public List<ForumSearch> getAdvancedSearch(ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds) {
 
     return null;
   }
@@ -185,7 +183,7 @@ public class FakeForumService implements ForumService {
     return null;
   }
 
-  public List<Category> getCategories() throws Exception {
+  public List<Category> getCategories() {
 
     return null;
   }
@@ -200,7 +198,7 @@ public class FakeForumService implements ForumService {
     return null;
   }
 
-  public Forum getForum(String categoryId, String forumId) throws Exception {
+  public Forum getForum(String categoryId, String forumId) {
 
     return null;
   }
@@ -225,7 +223,7 @@ public class FakeForumService implements ForumService {
     return null;
   }
 
-  public ForumSubscription getForumSubscription(String userId) throws Exception {
+  public ForumSubscription getForumSubscription(String userId) {
 
     return null;
   }
@@ -240,7 +238,7 @@ public class FakeForumService implements ForumService {
     return null;
   }
 
-  public List<ForumSearch> getJobWattingForModerator(String[] paths) throws Exception {
+  public List<ForumSearch> getJobWattingForModerator(String[] paths) {
 
     return null;
   }
@@ -442,7 +440,7 @@ public class FakeForumService implements ForumService {
     return null;
   }
 
-  public List<TopicType> getTopicTypes() throws Exception {
+  public List<TopicType> getTopicTypes() {
 
     return null;
   }
@@ -511,10 +509,10 @@ public class FakeForumService implements ForumService {
   public void modifyForum(Forum forum, int type) throws Exception {
   }
 
-  public void modifyPost(List<Post> posts, int type) throws Exception {
+  public void modifyPost(List<Post> posts, int type) {
   }
 
-  public void modifyTopic(List<Topic> topics, int type) throws Exception {
+  public void modifyTopic(List<Topic> topics, int type) {
   }
 
   public void moveForum(List<Forum> forums, String destCategoryPath) throws Exception {
@@ -555,7 +553,7 @@ public class FakeForumService implements ForumService {
   public void removeMember(User user) throws Exception {
   }
 
-  public Post removePost(String categoryId, String forumId, String topicId, String postId) throws Exception {
+  public Post removePost(String categoryId, String forumId, String topicId, String postId) {
 
     return null;
   }
@@ -563,7 +561,7 @@ public class FakeForumService implements ForumService {
   public void removePrivateMessage(String messageId, String userName, String type) throws Exception {
   }
 
-  public Topic removeTopic(String categoryId, String forumId, String topicId) throws Exception {
+  public Topic removeTopic(String categoryId, String forumId, String topicId) {
 
     return null;
   }
@@ -663,16 +661,16 @@ public class FakeForumService implements ForumService {
     return null;
   }
 
-  public void setDefaultAvatar(String userName) throws Exception {
+  public void setDefaultAvatar(String userName) {
   }
 
-  public void setViewCountTopic(String path, String userRead) throws Exception {
+  public void setViewCountTopic(String path, String userRead) {
   }
 
   public void unRegisterListenerForCategory(String path) throws Exception {
   }
 
-  public void unTag(String tagId, String userName, String topicPath) throws Exception {
+  public void unTag(String tagId, String userName, String topicPath) {
   }
 
   public void updateDataImported() throws Exception {
@@ -684,13 +682,13 @@ public class FakeForumService implements ForumService {
   public void updateForum(String path) throws Exception {
   }
 
-  public void updateForumAccess(String userId, String forumId) throws Exception {
+  public void updateForumAccess(String userId, String forumId) {
   }
 
   public void updateStatisticCounts(long topicCoutn, long postCount) throws Exception {
   }
 
-  public void updateTopicAccess(String userId, String topicId) throws Exception {
+  public void updateTopicAccess(String userId, String topicId) {
   }
 
   public void updateUserProfile(User user) throws Exception {

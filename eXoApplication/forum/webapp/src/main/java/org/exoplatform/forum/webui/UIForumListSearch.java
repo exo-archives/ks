@@ -121,10 +121,7 @@ public class UIForumListSearch extends BaseForumForm {
       isShowIter = false;
     int pageSelect = pageIterator.getPageSelected();
     List<ForumSearch> list = new ArrayList<ForumSearch>();
-    try {
-      list.addAll(pageList.getPageSearch(pageSelect, this.listEvent));
-    } catch (Exception e) {
-    }
+    list.addAll(pageList.getPageSearch(pageSelect, this.listEvent));
     return list;
   }
 

@@ -65,7 +65,7 @@ public class PollServiceImpl implements Startable, PollService {
     return storage_.getPoll(pollId);
   }
 
-  public Poll removePoll(String pollId) throws Exception {
+  public Poll removePoll(String pollId) {
     return storage_.removePoll(pollId);
   }
 
@@ -73,7 +73,7 @@ public class PollServiceImpl implements Startable, PollService {
     storage_.savePoll(poll, isNew, isVote);
   }
 
-  public void setClosedPoll(Poll poll) throws Exception {
+  public void setClosedPoll(Poll poll){
     storage_.setClosedPoll(poll);
   }
 

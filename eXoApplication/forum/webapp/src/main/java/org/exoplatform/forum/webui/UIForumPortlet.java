@@ -164,6 +164,7 @@ public class UIForumPortlet extends UIPortletApplication {
     try {
       loadPreferences();
     } catch (Exception e) {
+      log.warn("Failed to load portlet preferences", e);
     }
   }
 
@@ -241,29 +242,29 @@ public class UIForumPortlet extends UIPortletApplication {
   }
 
   public String getForumIdOfSpace() {
-    try {
-      PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-      PortletPreferences pref = pcontext.getRequest().getPreferences();
-      if (pref.getValue("SPACE_URL", null) != null) {
-        String url = pref.getValue("SPACE_URL", null);
-        SpaceService sService = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class);
-        Space space = sService.getSpaceByUrl(url);
-        String forumId = Utils.FORUM_SPACE_ID_PREFIX + space.getPrettyName();
-        try {
-          OrganizationService service = (OrganizationService) PortalContainer.getInstance().getComponentInstanceOfType(OrganizationService.class);
-          String parentGrId = service.getGroupHandler().findGroupById(space.getGroupId()).getParentId();
-          categorySpId = Utils.CATEGORY + parentGrId.replaceAll(CommonUtils.SLASH, CommonUtils.EMPTY_STR);
-        } catch (Exception e) {
+    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+    PortletPreferences pref = pcontext.getRequest().getPreferences();
+    if (pref.getValue("SPACE_URL", null) != null) {
+      String url = pref.getValue("SPACE_URL", null);
+      SpaceService sService = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class);
+      Space space = sService.getSpaceByUrl(url);
+      String forumId = Utils.FORUM_SPACE_ID_PREFIX + space.getPrettyName();
+      try {
+        OrganizationService service = (OrganizationService) PortalContainer.getInstance()
+                                                                           .getComponentInstanceOfType(OrganizationService.class);
+        String parentGrId = service.getGroupHandler().findGroupById(space.getGroupId()).getParentId();
+        categorySpId = Utils.CATEGORY + parentGrId.replaceAll(CommonUtils.SLASH, CommonUtils.EMPTY_STR);
+      } catch (Exception e) {
+        if (log.isDebugEnabled()){
+          log.debug("Failed to set category id of space " + space.getPrettyName(), e);
         }
-        return forumId;
       }
-      return null;
-    } catch (Exception e) {
-      return null;
+      return forumId;
     }
+    return null;
   }
 
-  public void updateIsRendered(String selected) throws Exception {
+  public void updateIsRendered(String selected){
     if (selected.equals(ForumUtils.CATEGORIES)) {
       isCategoryRendered = true;
       isForumRendered = false;
@@ -296,14 +297,11 @@ public class UIForumPortlet extends UIPortletApplication {
     getChild(UITopicsTag.class).setRendered(isTagRendered);
     getChild(UISearchForm.class).setRendered(isSearchRendered);
     if (!isForumRendered) {
-      try {
-        this.setRenderQuickReply();
-      } catch (Exception e) {
-      }
+      this.setRenderQuickReply();
     }
   }
 
-  public void rederForumHome() throws Exception {
+  public void rederForumHome() throws Exception{
     updateIsRendered(ForumUtils.CATEGORIES);
     UICategoryContainer categoryContainer = getChild(UICategoryContainer.class);
     categoryContainer.updateIsRender(true);
@@ -312,9 +310,9 @@ public class UIForumPortlet extends UIPortletApplication {
     getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
   }
   
-  public void setRenderForumLink() throws Exception {
+  public void setRenderForumLink() {
     if (isShowForumJump) {
-      if(!ForumUtils.isEmpty(getForumIdOfSpace())) {
+      if (!ForumUtils.isEmpty(getForumIdOfSpace())) {
         isJumpRendered = false;
       } else {
         isJumpRendered = getUserProfile().getIsShowForumJump();
@@ -355,30 +353,29 @@ public class UIForumPortlet extends UIPortletApplication {
   }
 
   public void loadPreferences() throws Exception {
-    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-    PortletPreferences portletPref = pcontext.getRequest().getPreferences();
+    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
+    if (context instanceof PortletRequestContext){
+    PortletRequestContext  pContext = (PortletRequestContext) context;
+    PortletPreferences portletPref = pContext.getRequest().getPreferences();
     invisibleCategories.clear();
     invisibleForums.clear();
-    try {
-      prefForumActionBar = Boolean.parseBoolean(portletPref.getValue("showForumActionBar", ForumUtils.EMPTY_STR));
-      dayForumNewPost = Integer.parseInt(portletPref.getValue("forumNewPost", ForumUtils.EMPTY_STR));
-      useAjax = Boolean.parseBoolean(portletPref.getValue("useAjax", ForumUtils.EMPTY_STR));
-      enableIPLogging = Boolean.parseBoolean(portletPref.getValue("enableIPLogging", ForumUtils.EMPTY_STR));
-      enableBanIP = Boolean.parseBoolean(portletPref.getValue("enableIPFiltering", ForumUtils.EMPTY_STR));
-      isShowForumJump = Boolean.parseBoolean(portletPref.getValue("isShowForumJump", ForumUtils.EMPTY_STR));
-      isShowPoll = Boolean.parseBoolean(portletPref.getValue("isShowPoll", ForumUtils.EMPTY_STR));
-      isShowModerators = Boolean.parseBoolean(portletPref.getValue("isShowModerators", ForumUtils.EMPTY_STR));
-      isShowRules = Boolean.parseBoolean(portletPref.getValue("isShowRules", ForumUtils.EMPTY_STR));
-      isShowQuickReply = Boolean.parseBoolean(portletPref.getValue("isShowQuickReply", ForumUtils.EMPTY_STR));
-      isShowStatistics = Boolean.parseBoolean(portletPref.getValue("isShowStatistics", ForumUtils.EMPTY_STR));
-      isShowIconsLegend = Boolean.parseBoolean(portletPref.getValue("isShowIconsLegend", ForumUtils.EMPTY_STR));
-      invisibleCategories.addAll(getListInValus(portletPref.getValue("invisibleCategories", ForumUtils.EMPTY_STR)));
-      invisibleForums.addAll(getListInValus(portletPref.getValue("invisibleForums", ForumUtils.EMPTY_STR)));
-    } catch (Exception e) {
-      log.error("Fail to load preference: " + e.getCause());
-    }
+    prefForumActionBar = Boolean.parseBoolean(portletPref.getValue("showForumActionBar", ForumUtils.EMPTY_STR));
+    dayForumNewPost = Integer.parseInt(portletPref.getValue("forumNewPost", ForumUtils.EMPTY_STR));
+    useAjax = Boolean.parseBoolean(portletPref.getValue("useAjax", ForumUtils.EMPTY_STR));
+    enableIPLogging = Boolean.parseBoolean(portletPref.getValue("enableIPLogging", ForumUtils.EMPTY_STR));
+    enableBanIP = Boolean.parseBoolean(portletPref.getValue("enableIPFiltering", ForumUtils.EMPTY_STR));
+    isShowForumJump = Boolean.parseBoolean(portletPref.getValue("isShowForumJump", ForumUtils.EMPTY_STR));
+    isShowPoll = Boolean.parseBoolean(portletPref.getValue("isShowPoll", ForumUtils.EMPTY_STR));
+    isShowModerators = Boolean.parseBoolean(portletPref.getValue("isShowModerators", ForumUtils.EMPTY_STR));
+    isShowRules = Boolean.parseBoolean(portletPref.getValue("isShowRules", ForumUtils.EMPTY_STR));
+    isShowQuickReply = Boolean.parseBoolean(portletPref.getValue("isShowQuickReply", ForumUtils.EMPTY_STR));
+    isShowStatistics = Boolean.parseBoolean(portletPref.getValue("isShowStatistics", ForumUtils.EMPTY_STR));
+    isShowIconsLegend = Boolean.parseBoolean(portletPref.getValue("isShowIconsLegend", ForumUtils.EMPTY_STR));
+    invisibleCategories.addAll(getListInValus(portletPref.getValue("invisibleCategories", ForumUtils.EMPTY_STR)));
+    invisibleForums.addAll(getListInValus(portletPref.getValue("invisibleForums", ForumUtils.EMPTY_STR)));
     if (invisibleCategories.size() == 1 && invisibleCategories.get(0).equals(" "))
       invisibleCategories.clear();
+    }
   }
 
   private List<String> getListInValus(String value) throws Exception {
@@ -477,7 +474,7 @@ public class UIForumPortlet extends UIPortletApplication {
     }
   }
 
-  public UserProfile getUserProfile() throws Exception {
+  public UserProfile getUserProfile() {
     if (userProfile == null) {
       updateCurrentUserProfile();
     }
@@ -487,10 +484,7 @@ public class UIForumPortlet extends UIPortletApplication {
   public void updateAccessTopic(String topicId) throws Exception {
     String userId = userProfile.getUserId();
     if (userId != null && userId.length() > 0) {
-      try {
-        forumService.updateTopicAccess(userId, topicId);
-      } catch (Exception e) {
-      }
+      forumService.updateTopicAccess(userId, topicId);
     }
     userProfile.setLastTimeAccessTopic(topicId, CommonUtils.getGreenwichMeanTime().getTimeInMillis());
   }
@@ -498,10 +492,7 @@ public class UIForumPortlet extends UIPortletApplication {
   public void updateAccessForum(String forumId) throws Exception {
     String userId = userProfile.getUserId();
     if (userId != null && userId.length() > 0) {
-      try {
-        forumService.updateForumAccess(userId, forumId);
-      } catch (Exception e) {
-      }
+      forumService.updateForumAccess(userId, forumId);
     }
     userProfile.setLastTimeAccessForum(forumId, CommonUtils.getGreenwichMeanTime().getTimeInMillis());
   }
@@ -524,13 +515,9 @@ public class UIForumPortlet extends UIPortletApplication {
   }
 
   protected String getCometdContextName() {
-    String cometdContextName = "cometd";
-    try {
-      EXoContinuationBayeux bayeux = (EXoContinuationBayeux) PortalContainer.getInstance().getComponentInstanceOfType(AbstractBayeux.class);
-      return (bayeux == null ? "cometd" : bayeux.getCometdContextName());
-    } catch (Exception e) {
-    }
-    return cometdContextName;
+    EXoContinuationBayeux bayeux = (EXoContinuationBayeux) PortalContainer.getInstance()
+                                                                          .getComponentInstanceOfType(AbstractBayeux.class);
+    return (bayeux == null ? "cometd" : bayeux.getCometdContextName());
   }
 
   public String getUserToken() throws Exception {
@@ -675,7 +662,10 @@ public class UIForumPortlet extends UIPortletApplication {
       } else if (id.length > 1) {
         try {
           page = Integer.parseInt(id[id.length - 1]);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
+          if (log.isDebugEnabled()){
+            log.debug("Failed to parse number " + id[id.length - 1], e);
+          }
         }
         if (page > 0) {
           path = path.replace(ForumUtils.SLASH + id[id.length - 1], ForumUtils.EMPTY_STR);
@@ -769,6 +759,9 @@ public class UIForumPortlet extends UIPortletApplication {
           try {
             page = Integer.parseInt(arr[arr.length - 1]);
           } catch (Exception e) {
+            if (log.isDebugEnabled()){
+              log.debug("Failed to parse number " + arr[arr.length - 1], e);
+            }
           }
           if (arr[0].indexOf(Utils.CATEGORY) == 0) {
             cateId = arr[0];

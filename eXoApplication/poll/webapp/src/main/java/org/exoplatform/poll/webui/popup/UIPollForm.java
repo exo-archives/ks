@@ -391,6 +391,8 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
             uiForm.getPollService().savePoll(poll, true, false);
           }
         } catch (Exception e) {
+          uiForm.warning("UIPollForm.msg.fail-save");
+          return;
         }
         uiForm.isUpdate = false;
         UIPollPortlet pollPortlet = uiForm.getAncestorOfType(UIPollPortlet.class);

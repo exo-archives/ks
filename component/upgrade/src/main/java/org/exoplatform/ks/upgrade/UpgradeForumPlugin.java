@@ -265,6 +265,7 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
         categoryHome.getSession().save();
       }
     } catch (PathNotFoundException e) {
+      log.warn(String.format("Failed to get category node %s", id), e);
     }
     if (catNode == null) {
       catNode = categoryHome.addNode(id, Utils.EXO_FORUM_CATEGORY);

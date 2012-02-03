@@ -78,11 +78,8 @@ public class UIPoll extends BasePollForm {
 
   private String[] dateUnit      = new String[] { "Never", "Closed", "day(s)", "hour(s)", "minutes" };
 
-  public UIPoll() throws Exception {
-    try {
-      dateUnit = new String[] { getLabel("Never"), getLabel("Closed"), getLabel("day"), getLabel("hour"), getLabel("minutes") };
-    } catch (Exception e) {
-    }
+  public UIPoll() {
+    dateUnit = new String[] { getLabel("Never"), getLabel("Closed"), getLabel("day"), getLabel("hour"), getLabel("minutes") };
   }
 
   public void setPollId() throws Exception {
@@ -359,11 +356,8 @@ public class UIPoll extends BasePollForm {
       } else {
         topicPoll.poll_.setIsClosed(!topicPoll.poll_.getIsClosed());
       }
-      try {
-        topicPoll.getPollService().setClosedPoll(topicPoll.poll_);
-        topicPoll.isEditPoll = true;
-      } catch (Exception e) {
-      }
+      topicPoll.getPollService().setClosedPoll(topicPoll.poll_);
+      topicPoll.isEditPoll = true;
       topicPoll.isAgainVote = false;
       event.getRequestContext().addUIComponentToUpdateByAjax(topicPoll);
     }

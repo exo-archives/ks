@@ -45,7 +45,7 @@ public class UICategoryContainer extends UIContainer {
     this.isRenderJump = isRenderJump;
   }
 
-  public void updateIsRender(boolean isRender) throws Exception {
+  public void updateIsRender(boolean isRender) {
     isRender_ = isRender;
     getChild(UICategories.class).setRendered(isRender);
     getChild(UICategory.class).setRendered(!isRender);

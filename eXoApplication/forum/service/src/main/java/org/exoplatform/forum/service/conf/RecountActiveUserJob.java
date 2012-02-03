@@ -76,10 +76,6 @@ public class RecountActiveUserJob extends MultiTenancyJob {
         }
       } catch (NumberFormatException nfe) {
         log_.debug("Value of days is not Integer number.", nfe);
-      } catch (RepositoryException e) {
-        if (log_.isDebugEnabled()) {
-          log_.debug("\n\n Job run so quick " + e.getMessage());
-        }
       } catch (Exception e) {
         if (log_.isDebugEnabled()) {
           log_.debug("\n\n The have exception " + e.getMessage());

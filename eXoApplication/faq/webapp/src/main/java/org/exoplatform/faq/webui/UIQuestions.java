@@ -219,14 +219,11 @@ public class UIQuestions extends UIContainer {
   }
 
   public void setViewRootCate() {
-    try {
       boolean b = (boolean) ((UIAnswersContainer) getParent()).isRenderCategory(categoryId_);
       if (b != isViewRootCate) {
         isViewRootCate = b;
       }
       setListObject();
-    } catch (Exception e) {
-    }
   }
 
   protected boolean isAddQuestion() {
@@ -263,7 +260,7 @@ public class UIQuestions extends UIContainer {
     return faqSetting_.getIsDiscussForum();
   }
 
-  public void setListObject() throws Exception {
+  public void setListObject() {
     try {
       String objectId = null;
       if (pageList != null)
@@ -458,7 +455,7 @@ public class UIQuestions extends UIContainer {
     return this.categoryId_;
   }
 
-  public void setCategoryId(String categoryId) throws Exception {
+  public void setCategoryId(String categoryId) {
     viewAuthorInfor = faqService_.isViewAuthorInfo(categoryId);
     this.categoryId_ = categoryId;
     setViewRootCate();
@@ -478,11 +475,12 @@ public class UIQuestions extends UIContainer {
   }
 
   // update current language of viewing question
-  public void updateCurrentLanguage() throws Exception {
+  public void updateCurrentLanguage() {
     if (viewingQuestionId_ != null && viewingQuestionId_.length() > 0) {
       try {
         languageMap.put(language_, faqService_.getQuestionLanguageByLanguage(viewingQuestionId_, language_));
       } catch (Exception e) {
+        log.debug("Failed to update current language ", e);
       }
     } else
       languageMap.clear();

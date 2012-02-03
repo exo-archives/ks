@@ -35,9 +35,9 @@ abstract public class JCRPageList<E> extends PageList<E> {
 
   abstract protected void populateCurrentPage(int page) throws Exception;
 
-  abstract protected void populateCurrentPageSearch(int page, List list, boolean isWatch, boolean isSearchUser) throws Exception;
+  abstract protected void populateCurrentPageSearch(int page, List list, boolean isWatch, boolean isSearchUser);
 
-  abstract protected void populateCurrentPageList(int page, List<String> list) throws Exception;
+  abstract protected void populateCurrentPageList(int page, List<String> list);
 
   abstract protected void populateCurrentPage(String valueString) throws Exception;
 
@@ -75,7 +75,7 @@ abstract public class JCRPageList<E> extends PageList<E> {
     return currentListPage_;
   }
 
-  public void checkAndSetPage(int page) throws Exception {
+  public void checkAndSetPage(int page){
     if (page > availablePage_)
       page = availablePage_ - 1;
     if (page < 1)
@@ -88,25 +88,25 @@ abstract public class JCRPageList<E> extends PageList<E> {
     return currentListPage_;
   }
 
-  public List<E> getPageSearch(int page, List<ForumSearch> list) throws Exception {
+  public List<E> getPageSearch(int page, List<ForumSearch> list) {
     checkAndSetPage(page);
     populateCurrentPageSearch(currentPage_, list, false, false);
     return currentListPage_;
   }
 
-  public List<E> getPageWatch(int page, List<Watch> list) throws Exception {
+  public List<E> getPageWatch(int page, List<Watch> list) {
     checkAndSetPage(page);
     populateCurrentPageSearch(currentPage_, list, true, false);
     return currentListPage_;
   }
 
-  public List<E> getPageUser(int page) throws Exception {
+  public List<E> getPageUser(int page) {
     checkAndSetPage(page);
     populateCurrentPageSearch(currentPage_, new CopyOnWriteArrayList<E>(), true, true);
     return currentListPage_;
   }
 
-  public List<E> getPageList(long page, List<String> list) throws Exception {
+  public List<E> getPageList(long page, List<String> list) {
     checkAndSetPage((int) page);
     populateCurrentPageList(currentPage_, list);
     return currentListPage_;

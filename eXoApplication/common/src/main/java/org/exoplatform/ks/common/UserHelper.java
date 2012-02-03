@@ -178,7 +178,7 @@ public class UserHelper {
     return getUserHandler().getUserPageList(10);
   }
 
-  public static boolean isAnonim() throws Exception {
+  public static boolean isAnonim() {
     String userId = UserHelper.getCurrentUser();
     if (userId == null)
       return true;

@@ -99,14 +99,11 @@ public class WikiSearchData extends SearchData {
 
   public String getStatementForRenamedPage() {
     StringBuilder statement = new StringBuilder();
-    try {
-      statement.append("SELECT * ").append("FROM wiki:renamed ").append("WHERE ");
-      statement.append(this.jcrQueryPath);
-      if (getPageId() != null && getPageId().length() > 0) {
-        statement.append(" AND ");
-        statement.append(" oldPageIds = '").append(getPageId()).append("'");
-      }
-    } catch (Exception e) {
+    statement.append("SELECT * ").append("FROM wiki:renamed ").append("WHERE ");
+    statement.append(this.jcrQueryPath);
+    if (getPageId() != null && getPageId().length() > 0) {
+      statement.append(" AND ");
+      statement.append(" oldPageIds = '").append(getPageId()).append("'");
     }
     return statement.toString();
   }

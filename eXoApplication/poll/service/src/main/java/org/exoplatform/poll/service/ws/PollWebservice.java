@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.service.PollNodeTypes;
@@ -188,12 +189,11 @@ public class PollWebservice implements ResourceContainer {
   }
 
   private String getUserId() {
-    String username = "";
     try {
-      username = ConversationState.getCurrent().getIdentity().getUserId();
+      return ConversationState.getCurrent().getIdentity().getUserId();
     } catch (Exception e) {
+      return StringUtils.EMPTY;
     }
-    return username;
   }
 
   private List<String> getAllGroupAndMembershipOfUser() {

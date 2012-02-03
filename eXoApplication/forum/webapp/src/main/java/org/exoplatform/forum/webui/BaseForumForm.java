@@ -86,7 +86,7 @@ public class BaseForumForm extends BaseUIForm {
      return findComponentById(name);
   }
   
-  public UserProfile getUserProfile() throws Exception {
+  public UserProfile getUserProfile() {
     userProfile = getAncestorOfType(UIForumPortlet.class).getUserProfile();
     return userProfile;
   }

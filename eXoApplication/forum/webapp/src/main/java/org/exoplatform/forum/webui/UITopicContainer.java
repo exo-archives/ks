@@ -282,7 +282,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     return this.canAddNewThread;
   }
 
-  private void setForumModeratorPortlet() throws Exception {
+  private void setForumModeratorPortlet(){
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletSession portletSession = pcontext.getRequest().getPortletSession();
     ActionResponse actionRes = null;
@@ -306,7 +306,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       actionRes.setEvent(new QName("ForumRuleEvent"), param);
     } else {
       portletSession.setAttribute(UIForumPortlet.FORUM_MODERATE_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
-      portletSession.setAttribute(UIForumPortlet.RULE_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);
+      portletSession.setAttribute(UIForumPortlet.RULE_EVENT_PARAMS, param, PortletSession.APPLICATION_SCOPE);      
     }
   }
 
@@ -442,7 +442,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   }
 
   @SuppressWarnings("unchecked")
-  public List<Topic> getTopicPageList() throws Exception {
+  public List<Topic> getTopicPageList() throws Exception{
     if (pageList == null)
       return new ArrayList<Topic>();
     maxPage = this.pageList.getAvailablePage();
@@ -454,28 +454,22 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     if (topicList == null)
       topicList = new ArrayList<Topic>();
     isShowActive = false;
-    try {
-      for (Topic topic : topicList) {
-        if (!topic.getIsActive())
-          isShowActive = true;
-        if (getUICheckBoxInput(topic.getId()) != null) {
-          getUICheckBoxInput(topic.getId()).setChecked(false);
-        } else {
-          addChild(new UICheckBoxInput(topic.getId(), topic.getId(), false));
-        }
+    for (Topic topic : topicList) {
+      if (!topic.getIsActive())
+        isShowActive = true;
+      if (getUICheckBoxInput(topic.getId()) != null) {
+        getUICheckBoxInput(topic.getId()).setChecked(false);
+      } else {
+        addChild(new UICheckBoxInput(topic.getId(), topic.getId(), false));
       }
-    } catch (Exception e) {
-    }
+    }    
     return topicList;
   }
 
   private Topic getTopic(String topicId) throws Exception {
-    try {
-      for (Topic topic : topicList) {
-        if (topic.getId().equals(topicId))
-          return topic;
-      }
-    } catch (Exception e) {
+    for (Topic topic : topicList) {
+      if (topic.getId().equals(topicId))
+        return topic;
     }
     return getForumService().getTopic(categoryId, forumId, topicId, userProfile.getUserId());
   }
@@ -697,6 +691,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         uiTopicContainer.isReload = false;
         uiTopicContainer.setForum(true);
       } catch (Exception e) {
+        warning("UITopicContainer.msg.fail-lock-forum", false);
+        event.getSource().log.warn(String.format("Failed to lock forum %s", forum.getForumName()), e);
       }
       UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class);
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
@@ -713,6 +709,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         uiTopicContainer.isReload = false;
         uiTopicContainer.setForum(true);
       } catch (Exception e) {
+        warning("UITopicContainer.msg.fail-unlock-forum", false);
+        event.getSource().log.warn(String.format("Failed to unlock forum %s", forum.getForumName()), e);
       }
       UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class);
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
@@ -729,6 +727,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         uiTopicContainer.isReload = false;
         uiTopicContainer.setForum(true);
       } catch (Exception e) {
+        warning("UITopicContainer.msg.fail-open-forum", false);
+        event.getSource().log.warn(String.format("Failed to open forum %s", forum.getForumName()), e);
       }
       UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class);
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
@@ -745,6 +745,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         uiTopicContainer.isReload = false;
         uiTopicContainer.setForum(true);
       } catch (Exception e) {
+        warning("UITopicContainer.msg.fail-close-forum", false);
+        event.getSource().log.warn(String.format("Failed to close forum %s", forum.getForumName()), e);
       }
       UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class);
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
@@ -912,9 +914,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         try {
           uiTopicContainer.getForumService().modifyTopic(topics, Utils.CLOSE);
         } catch (Exception e) {
+          warning("UITopicContainer.msg.fail-open-topics", false);
+          event.getSource().log.warn("Failed to open topics", e);
         }
-      }
-      if (topics.size() == 0) {
+      } else {
         warning("UITopicContainer.sms.notCheck", new String[] { "Open" }, false);
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
@@ -940,9 +943,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         try {
           uiTopicContainer.getForumService().modifyTopic(topics, Utils.CLOSE);
         } catch (Exception e) {
+          warning("UITopicContainer.msg.fail-close-topics", false);
+          event.getSource().log.warn("Failed to close topics", e);
         }
-      }
-      if (topics.size() == 0) {
+      } else {
         warning("UITopicContainer.sms.notCheck", new String[] { "Close" }, false);
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
@@ -968,9 +972,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         try {
           uiTopicContainer.getForumService().modifyTopic(topics, Utils.LOCK);
         } catch (Exception e) {
+          warning("UITopicContainer.msg.fail-lock-topic", false);
+          event.getSource().log.warn("Failed to lock topics", e);
         }
-      }
-      if (topics.size() == 0) {
+      } else {
         warning("UITopicContainer.sms.notCheck", new String[] { "Locked" }, false);
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
@@ -1007,9 +1012,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         try {
           uiTopicContainer.getForumService().modifyTopic(topics, Utils.LOCK);
         } catch (Exception e) {
+          warning("UITopicContainer.msg.fail-unlock-topic", false);
+          event.getSource().log.warn("Failed to unlock topics", e);
         }
-      }
-      if (topics.size() == 0) {
+      } else {
         warning("UITopicContainer.sms.notCheck", new String[] { "UnLock" }, false);
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
@@ -1035,6 +1041,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         try {
           uiTopicContainer.getForumService().modifyTopic(topics, Utils.STICKY);
         } catch (Exception e) {
+          warning("UITopicContainer.msg.fail-unstick-topic", false);
+          event.getSource().log.warn("Failed to unstick topics", e);
         }
       } else {
         warning("UITopicContainer.sms.notCheck", new String[] { "UnStick" }, false);
@@ -1062,6 +1070,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         try {
           uiTopicContainer.getForumService().modifyTopic(topics, Utils.STICKY);
         } catch (Exception e) {
+          warning("UITopicContainer.msg.fail-stick-topic", false);
+          event.getSource().log.warn("Failed to stick topics", e);
         }
       } else {
         warning("UITopicContainer.sms.notCheck", new String[] { "Stick" }, false);
@@ -1084,8 +1094,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       if (topics.size() > 0) {
         UIMoveTopicForm moveTopicForm = uiTopicContainer.openPopup(UIMoveTopicForm.class, 400, 420);
         moveTopicForm.updateTopic(uiTopicContainer.forumId, topics, false);
-      }
-      if (topics.size() == 0) {
+      } else {
         warning("UITopicContainer.sms.notCheckMove", false);
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer);
@@ -1111,8 +1120,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         mergeTopicForm.updateTopics(topics);
         popupAction.activate(mergeTopicForm, 560, 260);
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-      }
-      if (topics.size() <= 1) {
+      } else {
         warning("UITopicContainer.sms.notCheckThreads", false);
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer);
@@ -1132,15 +1140,12 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       }
       UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class);
       if (topics.size() > 0) {
-        try {
-          for (Topic topic_ : topics) {
-            try {
-              uiTopicContainer.getForumService().removeTopic(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic_.getId());
-            } catch (Exception e) {
-              event.getSource().log.error("Removing " + topic_.getId() + " fail. \nCaused by: " + e.getCause());
-            }
+        for (Topic topic_ : topics) {
+          try {
+            uiTopicContainer.getForumService().removeTopic(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic_.getId());
+          } catch (Exception e) {
+            event.getSource().log.error("Removing " + topic_.getId() + " fail. \nCaused by: " + e.getCause());
           }
-        } catch (Exception e) {
         }
       } else if (topics.size() == 0) {
         warning("UITopicContainer.sms.notCheckMove", false);
@@ -1169,6 +1174,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         try {
           uiTopicContainer.getForumService().modifyTopic(topics, Utils.WAITING);
         } catch (Exception e) {
+          warning("UITopicContainer.msg.fail-set-unwaiting-topic", false);
+          event.getSource().log.warn("Failed to set unwaiting topics", e);
         }
       } else {
         UIPageListTopicUnApprove pageListTopicUnApprove = uiTopicContainer.openPopup(UIPageListTopicUnApprove.class, "PageListTopicWaiting", 500, 365);

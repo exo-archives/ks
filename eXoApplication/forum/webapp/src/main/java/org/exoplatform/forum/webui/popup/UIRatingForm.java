@@ -86,19 +86,9 @@ public class UIRatingForm extends BaseUIForm implements UIPopupComponent {
       topic.setUserVoteRating(temp);
       ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
       UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
-      try {
-        List<Topic> topics = new ArrayList<Topic>();
-        topics.add(topic);
-        forumService.modifyTopic(topics, Utils.VOTE_RATING);
-      } catch (PathNotFoundException e) {
-        warning("UIRatingForm.msg.forum-deleted");
-        UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
-        categoryContainer.updateIsRender(true);
-        forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-        forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
-        forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks();
-        event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
-      }
+      List<Topic> topics = new ArrayList<Topic>();
+      topics.add(topic);
+      forumService.modifyTopic(topics, Utils.VOTE_RATING);
       forumPortlet.cancelAction();
     }
   }

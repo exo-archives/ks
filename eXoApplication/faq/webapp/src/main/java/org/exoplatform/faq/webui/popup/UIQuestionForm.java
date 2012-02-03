@@ -215,25 +215,22 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
     }
   }
 
-  private void setListSystemLanguages() throws Exception {
+  private void setListSystemLanguages() {
     listSystemLanguages.clear();
     List<String> languages = FAQUtils.getAllLanguages(this);
     if (languages.size() <= 1)
       isRenderSelectLang = false;
     else
       isRenderSelectLang = true;
-    try {
-      LocaleConfigService localeConfigService = getApplicationComponent(LocaleConfigService.class);
-      String displyByLocal, lang;
-      for (LocaleConfig localeConfig : localeConfigService.getLocalConfigs()) {
-        lang = localeConfig.getLocale().getDisplayLanguage();
-        displyByLocal = capitalizeFirstLetter(localeConfig.getLocale().getDisplayLanguage(currentLocale));
-        if (lang.equals(defaultLanguage_))
-          listSystemLanguages.add(new SelectItemOption<String>(displyByLocal + " (" + getLabel("default") + ") ", lang));
-        else
-          listSystemLanguages.add(new SelectItemOption<String>(displyByLocal, lang));
-      }
-    } catch (Exception e) {
+    LocaleConfigService localeConfigService = getApplicationComponent(LocaleConfigService.class);
+    String displyByLocal, lang;
+    for (LocaleConfig localeConfig : localeConfigService.getLocalConfigs()) {
+      lang = localeConfig.getLocale().getDisplayLanguage();
+      displyByLocal = capitalizeFirstLetter(localeConfig.getLocale().getDisplayLanguage(currentLocale));
+      if (lang.equals(defaultLanguage_))
+        listSystemLanguages.add(new SelectItemOption<String>(displyByLocal + " (" + getLabel("default") + ") ", lang));
+      else
+        listSystemLanguages.add(new SelectItemOption<String>(displyByLocal, lang));
     }
   }
 

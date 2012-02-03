@@ -52,9 +52,8 @@ public class MultiLanguages implements FAQNodeTypes {
   /**
    * Class constructor, instantiates a new multi languages.
    * 
-   * @throws Exception the exception
    */
-  public MultiLanguages() throws Exception {
+  public MultiLanguages() {
   }
 
   private static Node getLanguageNodeByLanguage(Node questionNode, String language) throws Exception {
@@ -197,6 +196,9 @@ public class MultiLanguages implements FAQNodeTypes {
           ans.setLanguage(language);
           answers.add(ans);
         } catch (Exception e) {
+          if (log.isDebugEnabled()) {
+            log.debug("Failed to achieve an answer", e);
+          }
         }
       }
       return answers.toArray(new Answer[] {});
@@ -273,8 +275,8 @@ public class MultiLanguages implements FAQNodeTypes {
       answer.setLanguage(reader.string(EXO_RESPONSE_LANGUAGE, ""));
       return answer;
     } catch (Exception e) {
+      return null;
     }
-    return null;
   }
 
   public static void saveAnswer(Node questionNode, Answer answer, String language) throws Exception {

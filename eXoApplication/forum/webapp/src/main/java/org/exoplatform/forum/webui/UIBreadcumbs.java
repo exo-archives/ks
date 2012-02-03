@@ -165,6 +165,7 @@ public class UIBreadcumbs extends UIContainer {
             ++i;
           }
         } catch (Exception e) {
+          log.warn(String.format("Failed to find object with path %s", path), e);
         }
       }
     } else {

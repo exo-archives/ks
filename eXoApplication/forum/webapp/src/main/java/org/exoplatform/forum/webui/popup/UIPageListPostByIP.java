@@ -78,7 +78,7 @@ public class UIPageListPostByIP extends BaseForumForm implements UIPopupComponen
     return hasEnableIPLogging;
   }
 
-  public UserProfile getUserProfile() throws Exception {
+  public UserProfile getUserProfile() {
     if (this.userProfile == null) {
       UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
       this.userProfile = forumPortlet.getUserProfile();
@@ -119,6 +119,9 @@ public class UIPageListPostByIP extends BaseForumForm implements UIPopupComponen
       posts = pageList.getPage(forumPageIterator.getPageSelected());
       forumPageIterator.setSelectPage(pageList.getCurrentPage());
     } catch (Exception e) {
+      if (log.isDebugEnabled()) {
+        log.debug(String.format("Failed to get posts of user %s", userProfile.getFullName()), e);
+      }
     }
     if (posts == null)
       posts = new ArrayList<Post>();
@@ -183,15 +186,9 @@ public class UIPageListPostByIP extends BaseForumForm implements UIPopupComponen
       String forumId = path[length - 3];
       String categoryId = path[length - 4];
       if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(postId)) {
-        try {
-          uiForm.getForumService().removeTopic(categoryId, forumId, topicId);
-        } catch (Exception e) {
-        }
+        uiForm.getForumService().removeTopic(categoryId, forumId, topicId);
       } else {
-        try {
-          uiForm.getForumService().removePost(categoryId, forumId, topicId, postId);
-        } catch (Exception e) {
-        }
+        uiForm.getForumService().removePost(categoryId, forumId, topicId, postId);
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
     }

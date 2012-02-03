@@ -142,10 +142,7 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
       if (!haveCheck) {
         warning("UIPageListPostUnApprove.sms.notCheck", false);
       } else {
-        try {
-          postHidden.forumService.modifyPost(posts, Utils.HIDDEN);
-        } catch (Exception e) {
-        }
+        postHidden.forumService.modifyPost(posts, Utils.HIDDEN);
       }
       if (posts.size() == postHidden.listPost.size()) {
         UIForumPortlet forumPortlet = postHidden.getAncestorOfType(UIForumPortlet.class);

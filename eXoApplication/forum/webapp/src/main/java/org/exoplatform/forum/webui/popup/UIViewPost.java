@@ -91,18 +91,8 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
     this.setActions(actions);
   }
 
-  protected UserProfile getUserProfile() throws Exception {
-    try {
-      userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
-    } catch (Exception e) {
-      String userName = UserHelper.getCurrentUser();
-      if (userName != null) {
-        try {
-          userProfile = forumService.getQuickProfile(userName);
-        } catch (Exception ex) {
-        }
-      }
-    }
+  protected UserProfile getUserProfile() {
+    userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
     return userProfile;
   }
 

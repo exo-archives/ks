@@ -309,16 +309,13 @@ public class AnswerDataInjector extends DataInjector {
   }
 
   private void saveHistoryInject() {
-    try {
-      String s = getCategoryRoot(true).getDescription();
-      if (s != null && s.trim().length() > 0) {
-        categoryIds.addAll(convertStringToList(s));
-      }
-      Category category = getCategoryRoot(false);
-      category.setDescription(categoryIds.toString());
-      faqService.saveCategory(null, category, false);
-    } catch (Exception e) {
+    String s = getCategoryRoot(true).getDescription();
+    if (s != null && s.trim().length() > 0) {
+      categoryIds.addAll(convertStringToList(s));
     }
+    Category category = getCategoryRoot(false);
+    category.setDescription(categoryIds.toString());
+    faqService.saveCategory(null, category, false);
   }
 
   public static List<String> convertStringToList(String s) {

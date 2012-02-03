@@ -72,7 +72,7 @@ public interface DataStorage {
 
   boolean isAdminRole(String userName) throws Exception;
 
-  void setDefaultAvatar(String userName) throws Exception;
+  void setDefaultAvatar(String userName);
 
   ForumAttachment getUserAvatar(String userName) throws Exception;
 
@@ -86,7 +86,7 @@ public interface DataStorage {
 
   SortSettings getTopicSortSettings() throws Exception;
 
-  List<Category> getCategories() throws Exception;
+  List<Category> getCategories();
 
   Category getCategory(String categoryId) throws Exception;
 
@@ -108,7 +108,7 @@ public interface DataStorage {
 
   List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception;
 
-  Forum getForum(String categoryId, String forumId) throws Exception;
+  Forum getForum(String categoryId, String forumId);
 
   void modifyForum(Forum forum, int type) throws Exception;
 
@@ -142,11 +142,11 @@ public interface DataStorage {
 
   JCRPageList getPageTopicByUser(String userName, boolean isMod, String strOrderBy) throws Exception;
 
-  void modifyTopic(List<Topic> topics, int type) throws Exception;
+  void modifyTopic(List<Topic> topics, int type);
 
   void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, MessageBuilder messageBuilder) throws Exception;
 
-  Topic removeTopic(String categoryId, String forumId, String topicId) throws Exception;
+  Topic removeTopic(String categoryId, String forumId, String topicId);
 
   void moveTopic(List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception;
 
@@ -164,13 +164,13 @@ public interface DataStorage {
 
   void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, MessageBuilder messageBuilder) throws Exception;
 
-  void modifyPost(List<Post> posts, int type) throws Exception;
+  void modifyPost(List<Post> posts, int type);
 
-  Post removePost(String categoryId, String forumId, String topicId, String postId) throws Exception;
+  Post removePost(String categoryId, String forumId, String topicId, String postId);
 
   void addTag(List<Tag> tags, String userName, String topicPath) throws Exception;
 
-  void unTag(String tagId, String userName, String topicPath) throws Exception;
+  void unTag(String tagId, String userName, String topicPath);
 
   Tag getTag(String tagId) throws Exception;
 
@@ -234,7 +234,7 @@ public interface DataStorage {
 
   void removePrivateMessage(String messageId, String userName, String type) throws Exception;
 
-  ForumSubscription getForumSubscription(String userId) throws Exception;
+  ForumSubscription getForumSubscription(String userId);
 
   void saveForumSubscription(ForumSubscription forumSubscription, String userId) throws Exception;
 
@@ -250,7 +250,7 @@ public interface DataStorage {
 
   List<ForumSearch> getQuickSearch(String textQuery, String type_, String pathQuery, String userId, List<String> listCateIds, List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception;
 
-  List<ForumSearch> getAdvancedSearch(ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds) throws Exception;
+  List<ForumSearch> getAdvancedSearch(ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds);
 
   void addWatch(int watchType, String path, List<String> values, String currentUser) throws Exception;
 
@@ -266,13 +266,13 @@ public interface DataStorage {
 
   Iterator<SendMessageInfo> getPendingMessages() throws Exception;
 
-  List<ForumSearch> getJobWattingForModerator(String[] paths) throws Exception;
+  List<ForumSearch> getJobWattingForModerator(String[] paths);
 
   int getJobWattingForModeratorByUser(String userId) throws Exception;
 
   NodeIterator search(String queryString) throws Exception;
 
-  void evaluateActiveUsers(String query) throws Exception;
+  void evaluateActiveUsers(String query);
 
   Object exportXML(String categoryId, String forumId, List<String> objectIds, String nodePath, ByteArrayOutputStream bos, boolean isExportAll) throws Exception;
 
@@ -280,9 +280,9 @@ public interface DataStorage {
 
   // void updateDataImported() throws Exception;
 
-  void updateTopicAccess(String userId, String topicId) throws Exception;
+  void updateTopicAccess(String userId, String topicId);
 
-  void updateForumAccess(String userId, String forumId) throws Exception;
+  void updateForumAccess(String userId, String forumId);
 
   List<String> getBookmarks(String userName) throws Exception;
 
@@ -314,7 +314,7 @@ public interface DataStorage {
 
   long checkPrune(PruneSetting pSetting) throws Exception;
 
-  List<TopicType> getTopicTypes() throws Exception;
+  List<TopicType> getTopicTypes();
 
   TopicType getTopicType(String Id) throws Exception;
 
@@ -360,7 +360,7 @@ public interface DataStorage {
 
   KSDataLocation getDataLocation();
 
-  void setViewCountTopic(String path, String userRead) throws Exception;
+  void setViewCountTopic(String path, String userRead);
 
   JCRPageList getPostForSplitTopic(String topicPath) throws Exception;
 

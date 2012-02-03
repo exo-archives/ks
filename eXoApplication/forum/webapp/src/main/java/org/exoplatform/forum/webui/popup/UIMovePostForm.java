@@ -73,14 +73,11 @@ public class UIMovePostForm extends BaseDataForm implements UIPopupComponent {
     return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
   }
 
-  public void updatePost(String topicId, List<Post> posts) throws Exception {
+  public void updatePost(String topicId, List<Post> posts) {
     this.topicId = topicId;
     this.posts = posts;
     this.isMovePost = true;
-    try {
-      this.pathPost = posts.get(0).getPath();
-    } catch (Exception e) {
-    }
+    this.pathPost = posts.get(0).getPath();
   }
 
   protected boolean getSelectForum(String forumId) throws Exception {

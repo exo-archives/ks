@@ -247,9 +247,8 @@ abstract public class JCRPageList {
    * then set <code>page</code> to be current page else throw exception
    * 
    * @param page        index of page
-   * @throws Exception  if the index <code>page</code> is less than 0 or larger than max index
    */
-  protected void checkAndSetPage(long page) throws Exception {
+  protected void checkAndSetPage(long page){
     if (page < 0) {
       page = 1;
     } else if (page > availablePage_) {

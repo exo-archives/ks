@@ -273,9 +273,8 @@ public class Utils implements ForumNodeTypes {
    * A blank entry is the 'space' value (aka " ").
    * @param list List of Strings to transform
    * @return String array cleared of blanks
-   * @throws Exception
    */
-  public static String[] getStringsInList(List<String> list) throws Exception {
+  public static String[] getStringsInList(List<String> list){
     if (list.size() > 1) {
       while (list.contains(" ")) {
         list.remove(" ");

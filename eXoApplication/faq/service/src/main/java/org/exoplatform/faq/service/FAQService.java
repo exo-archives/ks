@@ -70,9 +70,8 @@ public interface FAQService extends FAQServiceLegacy {
    * @param    isAddNew is true when add new category else update category
    * @return  List parent category or list sub category
    * @see     list category
-   * @throws Exception the exception
    */
-  public void saveCategory(String parentId, Category cat, boolean isAddNew) throws Exception;
+  public void saveCategory(String parentId, Category cat, boolean isAddNew);
 
   /**
    * This method should change view of category
@@ -286,10 +285,8 @@ public interface FAQService extends FAQServiceLegacy {
    * @param questionId  the id of question
    * 
    * @return list languages are support by the question
-   * 
-   * @throws Exception  when question not found
    */
-  public List<QuestionLanguage> getQuestionLanguages(String questionId) throws Exception;
+  public List<QuestionLanguage> getQuestionLanguages(String questionId);
 
   /**
    * This method should lookup languageNode of question
@@ -451,9 +448,8 @@ public interface FAQService extends FAQServiceLegacy {
 
   /**
    * This method will get messages to send notify
-   * @throws Exception the exception
    */
-  public Iterator<NotifyInfo> getPendingMessages() throws Exception;
+  public Iterator<NotifyInfo> getPendingMessages();
 
   /**
    * Add language for question node, this function only use for Question node, 
@@ -916,10 +912,9 @@ public interface FAQService extends FAQServiceLegacy {
   /**
    * Check view author information or not
    * @param id id of question
-   * @return is view author information or not 
-   * @throws Exception
+   * @return is view author information or not
    */
-  public boolean isViewAuthorInfo(String id) throws Exception;
+  public boolean isViewAuthorInfo(String id);
 
   /**
    * Get number of categories

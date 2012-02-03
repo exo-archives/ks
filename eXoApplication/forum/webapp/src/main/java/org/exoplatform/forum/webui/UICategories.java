@@ -149,11 +149,8 @@ public class UICategories extends UIContainer {
 
   private String getEmailWatching(String path) throws Exception {
     for (Watch watch : listWatches) {
-      try {
-        if (watch.getNodePath().endsWith(path))
-          return watch.getEmail();
-      } catch (Exception e) {
-      }
+      if (watch.getNodePath().endsWith(path))
+        return watch.getEmail();
     }
     return ForumUtils.EMPTY_STR;
   }

@@ -41,15 +41,11 @@ public class UITopicDetailContainer extends UIContainer {
     this.isRender = isRender;
   }
 
-  protected boolean getRenderPoll(boolean isShow) throws Exception {
-    try {
-      boolean isRdByDeff = this.getAncestorOfType(UIForumPortlet.class).isShowPoll();
-      if (isShow && isRender && isRdByDeff)
-        return true;
-      else
-        return false;
-    } catch (Exception e) {
-    }
-    return isShow;
+  protected boolean getRenderPoll(boolean isShow) {
+    boolean isRdByDeff = this.getAncestorOfType(UIForumPortlet.class).isShowPoll();
+    if (isShow && isRender && isRdByDeff)
+      return true;
+    else
+      return false;
   }
 }

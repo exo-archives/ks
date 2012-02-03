@@ -601,8 +601,6 @@ public class UITopicForm extends BaseForumForm implements UISelector {
                 try {
                   email = UserHelper.getUserByUserId(userName).getEmail();
                 } catch (Exception e) {
-                }
-                if (ForumUtils.isEmpty(email)) {
                   email = "true";
                 }
               }

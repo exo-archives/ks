@@ -270,12 +270,9 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
       String question = advancedSearch.getUIFormTextAreaInput(FIELD_QUESTION).getValue();
       String response = advancedSearch.getUIFormTextAreaInput(FIELD_RESPONSE).getValue();
       String comment = advancedSearch.getUIFormTextAreaInput(FIELD_COMMENT).getValue();
-      try {
-        if (fromDate.getTimeInMillis() >= toDate.getTimeInMillis()) {
-          advancedSearch.warning("UIAdvancedSearchForm.msg.erro-from-less-than-to");
-          return;
-        }
-      } catch (Exception e) {
+      if (fromDate.getTimeInMillis() >= toDate.getTimeInMillis()) {
+        advancedSearch.warning("UIAdvancedSearchForm.msg.erro-from-less-than-to");
+        return;
       }
 
       /**

@@ -79,10 +79,7 @@ public class UIPollManagement extends BasePollForm {
     setActions(new String[] { "AddPoll", "Save" });
     selectPoll = new UIFormSelectBox(FIELD_SELECT_POLL_SELECTBOX, FIELD_SELECT_POLL_SELECTBOX, new ArrayList<SelectItemOption<String>>());
     addUIFormInput(selectPoll);
-    try {
-      dateUnit = new String[] { getLabel("Never"), getLabel("Closed"), getLabel("day"), getLabel("hour"), getLabel("minutes") };
-    } catch (Exception e) {
-    }
+    dateUnit = new String[] { getLabel("Never"), getLabel("Closed"), getLabel("day"), getLabel("hour"), getLabel("minutes") };   
   }
 
   public long getCurrentPage() {

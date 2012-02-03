@@ -87,7 +87,7 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
     return df.format(cal.getTime());
   }
   
-  protected Wiki getWiki(SearchResult result) throws Exception {
+  protected Wiki getWiki(SearchResult result){
     Wiki searchWiki = null;
     try {
       if (WikiNodeType.WIKI_PAGE_CONTENT.equals(result.getType()) || WikiNodeType.WIKI_ATTACHMENT.equals(result.getType())) {
@@ -97,9 +97,10 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
         PageImpl page = (PageImpl) org.exoplatform.wiki.utils.Utils.getObject(result.getPath(), WikiNodeType.WIKI_PAGE);
         searchWiki = page.getWiki();
       }
+      return searchWiki;
     } catch (Exception e) {
-    }
-    return searchWiki;
+      return null;
+    }    
   }
 
   protected String getPageSearchName(Wiki wiki, String pageTitle) throws Exception {

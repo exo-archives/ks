@@ -377,7 +377,7 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
     return pollSmr;
   }
 
-  public Poll removePoll(String pollId) throws Exception {
+  public Poll removePoll(String pollId){
     SessionProvider sProvider = SessionProvider.createSystemProvider();
     Poll poll = null;
     try {
@@ -439,10 +439,7 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
         pollNode = parentNode.getNode(pollId);
         pollNode.setProperty(EXO_VOTE, poll.getVote());
         pollNode.setProperty(EXO_USER_VOTE, poll.getUserVote());
-        try {
-          pollNode.setProperty(EXO_LASTVOTE, Utils.getGreenwichMeanTime());// new property 2.0 to 2.1
-        } catch (RepositoryException e) {
-        }
+        pollNode.setProperty(EXO_LASTVOTE, Utils.getGreenwichMeanTime());// new property 2.0 to 2.1
       } else {
         if (isNew) {
           if (parentNode.hasNode(pollId))
@@ -494,7 +491,7 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
 
   }
 
-  public void setClosedPoll(Poll poll) throws Exception {
+  public void setClosedPoll(Poll poll) {
     SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
       Node appNode = getParentNode(sProvider, poll.getParentPath());

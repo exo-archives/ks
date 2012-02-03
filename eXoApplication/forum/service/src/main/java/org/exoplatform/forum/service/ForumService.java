@@ -62,9 +62,8 @@ public interface ForumService extends ForumServiceLegacy {
    * Gets the categories.
    * 
    * @return the list category
-   * @throws Exception the exception
    */
-  List<Category> getCategories() throws Exception;
+  List<Category> getCategories();
 
   /**
    * Gets the category.
@@ -136,9 +135,8 @@ public interface ForumService extends ForumServiceLegacy {
    * @param categoryId is the id of category identify.
    * @param forumId is the id of forum identify.
    * @return the forum
-   * @throws Exception the exception
    */
-  Forum getForum(String categoryId, String forumId) throws Exception;
+  Forum getForum(String categoryId, String forumId);
 
   /**
    * Modify this forum identify.
@@ -281,9 +279,8 @@ public interface ForumService extends ForumServiceLegacy {
    * 
    * @param path path of topic
    * @param userRead the user read
-   * @throws Exception the exception
    */
-  void setViewCountTopic(String path, String userRead) throws Exception;
+  void setViewCountTopic(String path, String userRead);
 
   /**
    * Gets the topic by path.
@@ -319,9 +316,8 @@ public interface ForumService extends ForumServiceLegacy {
    * 
    * @param topics the topics
    * @param type the type
-   * @throws Exception the exception
    */
-  void modifyTopic(List<Topic> topics, int type) throws Exception;
+  void modifyTopic(List<Topic> topics, int type);
 
   /**
    * Save topic.
@@ -342,9 +338,8 @@ public interface ForumService extends ForumServiceLegacy {
    * @param forumId the forum id
    * @param topicId the topic id
    * @return the topic
-   * @throws Exception the exception
    */
-  Topic removeTopic(String categoryId, String forumId, String topicId) throws Exception;
+  Topic removeTopic(String categoryId, String forumId, String topicId);
 
   /**
    * Move topic.
@@ -463,9 +458,8 @@ public interface ForumService extends ForumServiceLegacy {
    * 
    * @param posts the posts
    * @param type type of post
-   * @throws Exception the exception
    */
-  void modifyPost(List<Post> posts, int type) throws Exception;
+  void modifyPost(List<Post> posts, int type);
 
   /**
    * Removes the post.
@@ -475,9 +469,8 @@ public interface ForumService extends ForumServiceLegacy {
    * @param topicId the topic id
    * @param postId the post id
    * @return the post
-   * @throws Exception the exception
    */
-  Post removePost(String categoryId, String forumId, String topicId, String postId) throws Exception;
+  Post removePost(String categoryId, String forumId, String topicId, String postId);
 
   /**
    * Move post.
@@ -541,9 +534,8 @@ public interface ForumService extends ForumServiceLegacy {
    * @param tagId the tag id
    * @param userName the user id
    * @param topicPath the topic path
-   * @throws Exception the exception
    */
-  void unTag(String tagId, String userName, String topicPath) throws Exception;
+  void unTag(String tagId, String userName, String topicPath);
 
   /**
    * Gets the tag.
@@ -728,9 +720,8 @@ public interface ForumService extends ForumServiceLegacy {
    * 
    * @param eventQuery the event query
    * @return the advanced search
-   * @throws Exception the exception
    */
-  List<ForumSearch> getAdvancedSearch(ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds) throws Exception;
+  List<ForumSearch> getAdvancedSearch(ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds);
 
   /**
    * Save forum statistic.
@@ -866,9 +857,8 @@ public interface ForumService extends ForumServiceLegacy {
    * 
    * @param userId username of an user
    * @return subscription of forum
-   * @throws Exception the exception
    */
-  ForumSubscription getForumSubscription(String userId) throws Exception;
+  ForumSubscription getForumSubscription(String userId);
 
   /**
    * Save descriptions of forum
@@ -904,9 +894,8 @@ public interface ForumService extends ForumServiceLegacy {
    * 
    * @param paths the paths
    * @return list of forum
-   * @throws Exception the exception
    */
-  List<ForumSearch> getJobWattingForModerator(String[] paths) throws Exception;
+  List<ForumSearch> getJobWattingForModerator(String[] paths);
 
   /**
    * Get number of jobs are waiting for moderator.
@@ -975,9 +964,8 @@ public interface ForumService extends ForumServiceLegacy {
    * evaluate active of users 
    * 
    * @param query input a query
-   * @throws Exception the exception
    */
-  void evaluateActiveUsers(String query) throws Exception;
+  void evaluateActiveUsers(String query);
 
   /**
    * create a user profile
@@ -992,18 +980,16 @@ public interface ForumService extends ForumServiceLegacy {
    * 
    * @param userId username of an user
    * @param topicId id of a topic
-   * @throws Exception the exception
    */
-  void updateTopicAccess(String userId, String topicId) throws Exception;
+  void updateTopicAccess(String userId, String topicId);
 
   /**
    * update user access a forum 
    * 
    * @param userId username of an user
    * @param forumId id of a forum
-   * @throws Exception the exception
    */
-  void updateForumAccess(String userId, String forumId) throws Exception;
+  void updateForumAccess(String userId, String forumId);
 
   /**
    * export to xml object 
@@ -1217,9 +1203,8 @@ public interface ForumService extends ForumServiceLegacy {
    * set default avatar
    * 
    * @param userName username
-   * @throws Exception the exception
    */
-  void setDefaultAvatar(String userName) throws Exception;
+  void setDefaultAvatar(String userName);
 
   /**
    * get watches
@@ -1293,9 +1278,8 @@ public interface ForumService extends ForumServiceLegacy {
    * get list types of topic
    * 
    * @return list of topic type
-   * @throws Exception the exception
    */
-  List<TopicType> getTopicTypes() throws Exception;
+  List<TopicType> getTopicTypes();
 
   /**
    * get type of a topic

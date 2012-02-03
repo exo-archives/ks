@@ -147,8 +147,8 @@ public class UISettingEditModeForm extends BaseForumForm implements UIPopupCompo
 
   protected List<Category> getCategoryList() throws Exception {
     List<Category> categoryList = new ArrayList<Category>();
-    try {
-      String userId = getUserProfile().getUserId();
+    String userId = getUserProfile().getUserId();
+    try {      
       if (userProfile.getUserRole() > 0) {
         for (Category category : getForumService().getCategories()) {
           String[] uesrs = category.getUserPrivate();
@@ -164,6 +164,9 @@ public class UISettingEditModeForm extends BaseForumForm implements UIPopupCompo
         categoryList.addAll(getForumService().getCategories());
       }
     } catch (Exception e) {
+      if (log.isDebugEnabled()) {
+        log.debug(String.format("Failed to check permission for user %s", userId), e);
+      }
     }
     if (!isSave) {
       listCategoryinv = ((UIForumPortlet) this.getParent()).getInvisibleCategories();
