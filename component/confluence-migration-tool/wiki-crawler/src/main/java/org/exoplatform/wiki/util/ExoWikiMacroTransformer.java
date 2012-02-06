@@ -35,18 +35,22 @@ public class ExoWikiMacroTransformer {
     Set<String> params = new LinkedHashSet<String>();
     String[] macros = macroContent.substring(1, macroContent.length() - 1).split("\\:");
     String head = macros[0];
-    String result = "{" + head;
+    StringBuilder result = new StringBuilder("{").append(head);
     if (macros.length > 1) {
       String[] macros2 = macros[1].split("\\|");
       boolean start = true;
       for (String param : macros2) {
-        result += start ? ":" : "|";
+        if (start) {
+          result.append(":");
+        } else {
+          result.append("|");
+        }
         start = false;
-        result += fixParam(head, param);
+        result.append(fixParam(head, param));
       }
     }
-    result += "}";
-    return result;
+    result.append("}");
+    return result.toString();
   }
 
   public static String fixParam(String head, String param) {

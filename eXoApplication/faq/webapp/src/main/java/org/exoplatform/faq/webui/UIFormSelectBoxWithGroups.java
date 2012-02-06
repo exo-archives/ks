@@ -259,8 +259,8 @@ public class UIFormSelectBoxWithGroups extends UIFormStringInput {
         try {
           label = res.getString(formId + ".label.option." + ((SelectOption) item).getValue());
         } catch (MissingResourceException ex) {
+          label = formId + ".label.option." + ((SelectOption) item).getValue();
         }
-
         w.write(renderOption(((SelectOption) item), label));
 
       } else if (item instanceof SelectOptionGroup) {
@@ -278,6 +278,7 @@ public class UIFormSelectBoxWithGroups extends UIFormStringInput {
           try {
             label = res.getString(formId + ".label.option." + opt.getValue());
           } catch (MissingResourceException ex) {
+            label = formId + ".label.option." + opt.getValue();
           }
           w.write(renderOption(opt, label));
 

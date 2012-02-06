@@ -660,8 +660,8 @@ public class WikiServiceImpl implements WikiService, Startable {
       PageImpl page = wStore.getSession().findByPath(PageImpl.class, relPath);
       return page.getTitle();
     } catch (Exception e) {
+      return null;
     }
-    return null;
   }
 
   public InputStream getAttachmentAsStream(String path) throws Exception {
@@ -670,8 +670,8 @@ public class WikiServiceImpl implements WikiService, Startable {
       WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
       return jcrDataStorage.getAttachmentAsStream(path, wStore.getSession());
     } catch (Exception e) {
+      return null;
     }
-    return null;
   }
 
   public List<BreadcrumbData> getBreadcumb(String wikiType, String wikiOwner, String pageId) throws Exception {

@@ -6975,7 +6975,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             queryLastTopic(sProvider, forumN.getPath());
           }
         } catch (Exception e) {
-          
+          log.warn("Failed to run prune on a forum", e); 
         }
       }
       // update last run for prune setting

@@ -280,21 +280,21 @@ public class ConfluenceCrawler {
         String pagePath = path + "/" + newPageName;
         createdPageName = newPageName;
 
-        String content = page.getContent();
+        StringBuilder content = new StringBuilder(page.getContent());
 
         if (transferComments) {
           // Add Comments in the content
           List<Comment> comments = confluence.getComments(page.getId());
           if (comments.size() > 0) {
-            content += "\r\n\r\nComments:\r\n";
+            content.append("\r\n\r\nComments:\r\n");
             for (Comment comment : comments) {
               String commentContent = comment.getContent();
               String commentCreator = comment.getCreator();
-              content += "\r\n{panel}\r\n";
-              content += commentCreator;
-              content += " : ";
-              content += commentContent;
-              content += "\r\n{panel}\r\n";
+              content.append("\r\n{panel}\r\n");
+              content.append(commentCreator);
+              content.append(" : ");
+              content.append(commentContent);
+              content.append("\r\n{panel}\r\n");
             }
           }
         }
@@ -303,15 +303,15 @@ public class ConfluenceCrawler {
         if (transferLabels) {
           List<Label> labels = confluence.getLabelsById(Long.valueOf(page.getId()));
           if (labels.size() > 0) {
-            content += "\r\n\r\n{info}Labels: ";
+            content.append("\r\n\r\n{info}Labels: ");
             for (Label label : labels) {
-              content += label.getName() + ", ";
+              content.append(label.getName()).append(", ");
             }
-            content += "{info}\r\n";
+            content.append("{info}\r\n");
           }
         }
 
-        wikiHandler.transfertContent(content, pagePath);
+        wikiHandler.transfertContent(content.toString(), pagePath);
 
         // Transfert attachments
         if (transferAttachments) {

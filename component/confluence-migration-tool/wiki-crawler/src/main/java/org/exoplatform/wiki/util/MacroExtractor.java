@@ -97,20 +97,20 @@ public class MacroExtractor {
     String[] split = result.split("\\{" + tag);
     boolean matching = true;
     boolean starting = true;
-    String content = "";
+    StringBuilder content = new StringBuilder();
     for (String piece : split) {
       if (matching) {
         if (!starting) {
           // remove content until }
           piece = piece.substring(piece.indexOf("}") + 1);
         }
-        content += piece;
+        content.append(piece);
       } else {
-        content += "{" + tag + "}";
+        content.append("{").append(tag).append("}");
       }
       matching = !matching;
       starting = false;
     }
-    return content;
+    return content.toString();
   }
 }

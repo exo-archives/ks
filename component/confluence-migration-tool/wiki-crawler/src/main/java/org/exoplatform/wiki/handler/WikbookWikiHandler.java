@@ -103,6 +103,9 @@ public class WikbookWikiHandler implements IWikiHandler {
           bufferedWriter.flush();
           bufferedWriter.close();
         } catch (IOException e) {
+          if (log.isDebugEnabled()) {
+            log.debug("Failed to close the buffer writer", e);
+          }
         }
       }
     }

@@ -327,11 +327,8 @@ public class UIPoll extends BasePollForm {
   static public class RemovePollActionListener extends EventListener<UIPoll> {
     public void execute(Event<UIPoll> event) throws Exception {
       UIPoll topicPoll = event.getSource();
-      try {
-        topicPoll.getPollService().removePoll(topicPoll.pollId);
-        topicPoll.removeChilren();
-      } catch (Exception e) {
-      }
+      topicPoll.getPollService().removePoll(topicPoll.pollId);
+      topicPoll.removeChilren();
       UIPollPortlet pollPortlet = topicPoll.getAncestorOfType(UIPollPortlet.class);
       topicPoll.setRendered(false);
       event.getRequestContext().addUIComponentToUpdateByAjax(pollPortlet);
