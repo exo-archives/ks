@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
@@ -37,6 +38,7 @@ import org.exoplatform.forum.webui.popup.UIMoveForumForm;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.social.core.space.SpaceUtils;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -91,8 +93,8 @@ public class UICategory extends BaseForumForm {
 
   private boolean            isEditForum     = false;
 
-  protected boolean            useAjax         = true;
-
+  private boolean            useAjax         = true;
+  
   private int                dayForumNewPost = 0;
 
   private List<Forum>        forums          = new ArrayList<Forum>();
@@ -112,8 +114,10 @@ public class UICategory extends BaseForumForm {
     dayForumNewPost = forumPortlet.getDayForumNewPost();
     setListWatches();
   }
-  
-  
+
+  protected boolean useAjax() {
+    return useAjax;
+  }
 
   protected String getActionViewInfoUser(String linkType, String userName) {
     return getAncestorOfType(UIForumPortlet.class).getPortletLink(linkType, userName);
@@ -140,6 +144,7 @@ public class UICategory extends BaseForumForm {
       this.forums = forums;
     }
     categoryId = category.getId();
+    setActionInSpace();
     this.getAncestorOfType(UIForumPortlet.class).getChild(UIBreadcumbs.class).setUpdataPath((categoryId));
   }
 
@@ -147,6 +152,19 @@ public class UICategory extends BaseForumForm {
     this.categoryId = categoryId;
     this.isEditCategory = true;
     this.isEditForum = true;
+    setActionInSpace();
+  }
+  
+  private void setActionInSpace() {
+    // The category open is category of spaces  
+    if (categoryId.indexOf(SpaceUtils.SPACE_GROUP.replace(ForumUtils.SLASH, ForumUtils.EMPTY_STR)) > 0) {
+      String[] actions = getActions();
+      actions = (String[]) ArrayUtils.removeElement(actions, "DeleteCategory");
+      actions = (String[]) ArrayUtils.removeElement(actions, "AddForum");
+      actions = (String[]) ArrayUtils.removeElement(actions, "RemoveForum");
+      actions = (String[]) ArrayUtils.removeElement(actions, "MoveForum");
+      setActions(actions);
+    }
   }
 
   public void updateByLink(Category category) {
@@ -154,6 +172,7 @@ public class UICategory extends BaseForumForm {
     this.isEditCategory = false;
     this.isEditForum = true;
     this.category = category;
+    setActionInSpace();
   }
 
   public String getCategoryId() {

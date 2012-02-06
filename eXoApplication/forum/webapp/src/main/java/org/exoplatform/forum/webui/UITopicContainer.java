@@ -25,6 +25,7 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletSession;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
@@ -201,7 +202,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     if (page == 0)
       pageSelect = getPageTopicRemember(forumId);
     UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
-    this.isUseAjax = forumPortlet.isUseAjax();
+    isUseAjax = forumPortlet.isUseAjax();
     enableIPLogging = forumPortlet.isEnableIPLogging();
     forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + ForumUtils.SLASH + forumId));
     forumPortlet.updateAccessForum(forumId);
@@ -428,11 +429,12 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   }
 
   public String[] getActionMenuForum() throws Exception {
-    String[] actions;
-    if (userProfile.getUserRole() == 0)
-      actions = new String[] { "EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", "SetCloseForum", "MoveForum", "RemoveForum", "ExportForum", "WatchOption", "BanIpForumTools" };
-    else
-      actions = new String[] { "EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", "SetCloseForum", "ExportForum", "WatchOption", "BanIpForumTools" };
+    String[] actions = new String[] { "EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", 
+                                      "SetCloseForum", "MoveForum", "RemoveForum", "ExportForum", "WatchOption", "BanIpForumTools" };
+    if (userProfile.getUserRole() > 0 || (userProfile.getUserRole() == 0 && (forumId.indexOf(Utils.FORUM_SPACE_ID_PREFIX) == 0))) {
+      actions = (String[]) ArrayUtils.removeElement(actions, "RemoveForum");
+      actions = (String[]) ArrayUtils.removeElement(actions, "MoveForum");
+    }
     return actions;
   }
 

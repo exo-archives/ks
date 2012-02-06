@@ -21,8 +21,12 @@
 		<tr>
 			<td class="ControlButtonContainer">
 				<%String[] actions = [""];
-					if(isAdmin) { 
-						actions = ["AddCategory","AddForum","ManageModerator","Administrations","EditProfile","OpenBookMark"];
+					if(isAdmin) {
+						if(uicomponent.isSpace()) {
+							actions = ["ManageModerator","Administrations","EditProfile","OpenBookMark"];
+						} else {
+							actions = ["AddCategory","AddForum","ManageModerator","Administrations","EditProfile","OpenBookMark"];						
+						}
 					} else {
 						actions = ["EditProfile","OpenBookMark"];
 					}

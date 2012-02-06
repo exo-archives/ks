@@ -78,18 +78,26 @@ public class UIForumActionBar extends UIContainer {
 
   private ForumService        forumService;
 
+  private boolean             isSpace = false;
+
   private static final String RELOAD = "RELOAD".intern();
 
   public UIForumActionBar() throws Exception {
     forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
   }
 
-  private UserProfile getUserProfile() throws Exception {
-    userProfile = ((UIForumPortlet) this.getParent()).getUserProfile();
+  private UserProfile getUserProfile() {
+    UIForumPortlet forumPortlet = (UIForumPortlet) getParent();
+    userProfile = forumPortlet.getUserProfile();
+    isSpace = !ForumUtils.isEmpty(forumPortlet.getForumIdOfSpace());
     return userProfile;
   }
+  
+  protected boolean isSpace() {
+    return isSpace;
+  }
 
-  protected String[] getActionMenu() throws Exception {
+  protected String[] getActionMenu() {
     return (ForumUtils.enableIPLogging()) ? (new String[] { "SortSetting", "CensorKeyword", "Notification", "BBCodeManager", "AutoPrune", "TopicTypeManager", "OpenIPBan", "ExportCategory", "ImportCategory" }) : (new String[] { "SortSetting", "CensorKeyword", "Notification", "BBCodeManager", "AutoPrune", "TopicTypeManager", "ExportCategory", "ImportCategory" });
   }
 
@@ -97,7 +105,7 @@ public class UIForumActionBar extends UIContainer {
     return forumService.getJobWattingForModeratorByUser(this.userProfile.getUserId());
   }
 
-  protected long getNewMessage() throws Exception {
+  protected long getNewMessage() {
     try {
       String username = this.userProfile.getUserId();
       return forumService.getNewPrivateMessage(username);

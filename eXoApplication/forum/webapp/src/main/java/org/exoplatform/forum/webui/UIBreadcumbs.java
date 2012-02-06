@@ -33,7 +33,6 @@ import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.portal.account.UIAccountSetting;
 import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
@@ -123,8 +122,7 @@ public class UIBreadcumbs extends UIContainer {
           addBreadcumbs(tempPath, ((Topic) obj).getTopicName(), ForumUtils.TOPIC);
         } else if (obj instanceof Tag) {
           Forum forum = (Forum) forumService.getObjectNameById(frspId, Utils.FORUM);
-          addBreadcumbs(forum.getPath().replace(ForumUtils.SLASH + forumService.getForumHomePath() + ForumUtils.SLASH + Locations.FORUM_DATA + 
-                                                ForumUtils.SLASH + Locations.FORUM_CATEGORIES_HOME + ForumUtils.SLASH, ""), 
+          addBreadcumbs(new StringBuilder(forum.getCategoryId()).append(ForumUtils.SLASH).append(forum.getId()).toString(), 
                                                 forum.getForumName(), ForumUtils.FORUM);
           addBreadcumbs(tempPath, ((Tag) obj).getName(), ForumUtils.TAG);
         }

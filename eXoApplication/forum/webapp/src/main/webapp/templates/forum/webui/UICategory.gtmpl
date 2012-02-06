@@ -20,7 +20,7 @@
 <% 
 	jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('"+uicomponent.id+"') ;") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('"+uicomponent.id+"') ;") ;
-	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.useAjax+"') ;") ;
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.useAjax()+"') ;") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.goLastPost('top');") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.submitSearch('SearchInCategory');") ;
 	String categoryId = category.getId();

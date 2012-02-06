@@ -144,6 +144,8 @@ public class UIForumPortlet extends UIPortletApplication {
   
   private String       categorySpId        = "";
 
+  private String       forumSpId           = null;
+
   private List<String> invisibleForums     = new ArrayList<String>();
 
   private List<String> invisibleCategories = new ArrayList<String>();
@@ -244,11 +246,11 @@ public class UIForumPortlet extends UIPortletApplication {
   public String getForumIdOfSpace() {
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletPreferences pref = pcontext.getRequest().getPreferences();
-    if (pref.getValue("SPACE_URL", null) != null) {
+    if (pref.getValue("SPACE_URL", null) != null && ForumUtils.isEmpty(forumSpId)) {
       String url = pref.getValue("SPACE_URL", null);
       SpaceService sService = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class);
       Space space = sService.getSpaceByUrl(url);
-      String forumId = Utils.FORUM_SPACE_ID_PREFIX + space.getPrettyName();
+      forumSpId = Utils.FORUM_SPACE_ID_PREFIX + space.getPrettyName();
       try {
         OrganizationService service = (OrganizationService) PortalContainer.getInstance()
                                                                            .getComponentInstanceOfType(OrganizationService.class);
@@ -259,9 +261,8 @@ public class UIForumPortlet extends UIPortletApplication {
           log.debug("Failed to set category id of space " + space.getPrettyName(), e);
         }
       }
-      return forumId;
     }
-    return null;
+    return forumSpId;
   }
 
   public void updateIsRendered(String selected){
