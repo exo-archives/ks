@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.exoplatform.commons.utils.PageList;
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.GroupHandler;
@@ -41,7 +41,8 @@ import org.exoplatform.services.security.MembershipEntry;
 public class UserHelper {
 
   public static OrganizationService getOrganizationService() {
-    OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+    OrganizationService organizationService = (OrganizationService) ExoContainerContext.getCurrentContainer()
+                                                .getComponentInstanceOfType(OrganizationService.class);
     return organizationService;
   }
 

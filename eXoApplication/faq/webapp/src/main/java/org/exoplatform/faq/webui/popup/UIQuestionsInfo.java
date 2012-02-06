@@ -71,24 +71,45 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 
 @SuppressWarnings("unused")
 public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
-  private static final String LIST_QUESTION_INTERATOR = "FAQUserPageIteratorTab1" ;
-  private static final String LIST_QUESTION_NOT_ANSWERED_INTERATOR = "FAQUserPageIteratorTab2" ;
-  private static final String LIST_CATEGORIES = "ListCategories";
-  private FAQSetting faqSetting_ = new FAQSetting();
-  private JCRPageList pageList ;
-  private JCRPageList pageListNotAnswer ;
-  private UIAnswersPageIterator pageIterator ;
-  private UIAnswersPageIterator pageQuesNotAnswerIterator ;
-  private List<Question> listQuestion_ = new ArrayList<Question>() ;
-  private List<Question> listQuestionNotYetAnswered_ = new ArrayList<Question>() ;
-  private List<SelectItemOption<String>> listCategories = new ArrayList<SelectItemOption<String>>() ;
-  private long pageSelect = 1 ;
-  private long pageSelectNotAnswer = 1 ;
-  private List<String> moderateCates  = new ArrayList<String>() ;
-  private boolean isEditTab_ = true ;
-  private boolean isResponseTab_ = false ;
-  private boolean isChangeTab_ = false;
-  private String cateId_ = Utils.ALL;
+  private static final String            LIST_QUESTION_INTERATOR              = "FAQUserPageIteratorTab1";
+
+  private static final String            LIST_QUESTION_NOT_ANSWERED_INTERATOR = "FAQUserPageIteratorTab2";
+
+  private static final String            LIST_CATEGORIES                      = "ListCategories";
+
+  private FAQSetting                     faqSetting_                          = new FAQSetting();
+
+  private JCRPageList                    pageList;
+
+  private JCRPageList                    pageListNotAnswer;
+
+  private UIAnswersPageIterator          pageIterator;
+
+  private UIAnswersPageIterator          pageQuesNotAnswerIterator;
+
+  private List<Question>                 listQuestion_                        = new ArrayList<Question>();
+
+  private List<Question>                 listQuestionNotYetAnswered_          = new ArrayList<Question>();
+
+  private List<SelectItemOption<String>> listCategories                       = new ArrayList<SelectItemOption<String>>();
+
+  private long                           pageSelect                           = 1;
+
+  private long                           pageSelectNotAnswer                  = 1;
+
+  private List<String>                   moderateCates                        = new ArrayList<String>();
+
+  private boolean                        isEditTab_                           = true;
+
+  private boolean                        isResponseTab_                       = false;
+
+  private boolean                        isChangeTab_                         = false;
+
+  private String                         cateId_                              = Utils.ALL;
+
+  public static final String             SEMICOLON                            = ";";
+  
+  
   
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
@@ -134,8 +155,9 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
   		moderateCates.clear() ;
   		for(String str : listCate) {
   			try{
-  				this.listCategories.add(new SelectItemOption<String>(str.substring(40), str.substring(0, 40))) ;
-    			moderateCates.add(str.substring(0,40)) ;
+  			  int idxOfSemicolon = str.indexOf(SEMICOLON) ;
+          this.listCategories.add(new SelectItemOption<String>(str.substring(idxOfSemicolon + 1), str.substring(0, idxOfSemicolon)));
+          moderateCates.add(str.substring(0, idxOfSemicolon));
   			}catch(StringIndexOutOfBoundsException e) {
   				if(str.indexOf(Utils.CATEGORY_HOME) == 0) {
   					this.listCategories.add(new SelectItemOption<String>(str.substring(Utils.CATEGORY_HOME.length()), Utils.CATEGORY_HOME)) ;

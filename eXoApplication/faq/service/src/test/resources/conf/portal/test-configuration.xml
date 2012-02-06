@@ -192,12 +192,11 @@
     </init-params>
   </component>
   -->
-<!--
+
 	<component>
 	  <key>org.exoplatform.services.organization.OrganizationService</key>
-	  <type>org.exoplatform.services.organization.jdbc.OrganizationServiceImpl</type>
+	  <type>org.exoplatform.faq.test.AnswerDummyOrganizationService</type>
  	</component>
--->
 
  <external-component-plugins>
     <target-component>org.exoplatform.ks.common.jcr.KSDataLocation</target-component>

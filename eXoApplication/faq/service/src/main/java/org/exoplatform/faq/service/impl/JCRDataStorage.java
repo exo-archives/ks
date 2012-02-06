@@ -115,6 +115,8 @@ import com.sun.syndication.io.SyndFeedOutput;
 public class JCRDataStorage implements DataStorage {
 
   private static final Log log = ExoLogger.getLogger(JCRDataStorage.class);
+  
+  public static final String      SEMICOLON            = ";";
 
   final private static String MIMETYPE_TEXTHTML = "text/html".intern() ;
   @SuppressWarnings("unused")
@@ -2083,11 +2085,30 @@ public class JCRDataStorage implements DataStorage {
   public List<String> getListCateIdByModerator(String user) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
+      List<String> allOfUser = UserHelper.getAllGroupAndMembershipOfUser(user);
+      StringBuilder builder = new StringBuilder();
+      int i = 0;
+      if (allOfUser != null && allOfUser.size() > 0) {
+        builder.append(" ( ");
+        for (String strUser : allOfUser) {
+          strUser = strUser.trim();
+          if (strUser.length() > 0) {
+            if (i > 0) {
+              builder.append(" or ");
+              i = 1;
+            }
+            builder.append("@").append("exo:moderators").append("= '").append(strUser).append("' ");
+          }
+          i++;
+        }
+        builder.append(" ) ");
+        builder.append(" and @exo:isView='true'  ");
+      }
+      
       Node categoryHome = getCategoryHome(sProvider, null) ;
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-      StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getParent().getPath()). 
-      append("//element(*,exo:faqCategory)[@exo:moderators='").
-      append(user.trim()).append("'").append(" and @exo:isView='true' ]") ;
+      StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getParent() .getPath())
+                                                           .append("//element(*,exo:faqCategory)[ " + builder.toString() + " ]");
       Query query = qm.createQuery(queryString.toString(), Query.XPATH);
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes() ;
@@ -2095,7 +2116,7 @@ public class JCRDataStorage implements DataStorage {
       while(iter.hasNext()) {
         Node cate = iter.nextNode() ;
         try{
-          listCateId.add(cate.getName() + cate.getProperty("exo:name").getString()) ;
+          listCateId.add(cate.getName() + SEMICOLON + cate.getProperty("exo:name").getString());
         }catch(Exception e) {
           log.debug("Getting property of " + cate + " node failed: ", e);
         }				
