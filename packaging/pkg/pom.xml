@@ -847,6 +847,12 @@
     </dependency><!-- 2.2.0-SNAPSHOT-->
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.component.macro.iframe</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.component.common</artifactId>
       <version>${project.version}</version>
       <type>jar</type>

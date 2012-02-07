@@ -1,0 +1,75 @@
+/*
+ * Copyright (C) 2003-2010 eXo Platform SAS.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ */
+package org.exoplatform.wiki.rendering.macro.iframe;
+
+import java.util.Collections;
+import java.util.List;
+
+import org.xwiki.component.annotation.Component;
+import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.block.RawBlock;
+import org.xwiki.rendering.macro.AbstractMacro;
+import org.xwiki.rendering.macro.MacroExecutionException;
+import org.xwiki.rendering.macro.descriptor.DefaultContentDescriptor;
+import org.xwiki.rendering.syntax.Syntax;
+import org.xwiki.rendering.transformation.MacroTransformationContext;
+
+/**
+ * Manage an iframe node
+ */
+@Component("iframe")
+public class IFrameMacro extends AbstractMacro<IFrameMacroParameters> {
+
+  /**
+   * The description of the macro.
+   */
+  private static final String DESCRIPTION = "Embraces a block of text within a fully customizable panel";
+
+  /**
+   * The description of the macro content.
+   */
+  private static final String CONTENT_DESCRIPTION = "The content to put in the iframe";
+
+  /**
+   * Create and initialize the descriptor of the macro.
+   */
+  public IFrameMacro() {
+    super("IFrame", DESCRIPTION, new DefaultContentDescriptor(CONTENT_DESCRIPTION), IFrameMacroParameters.class);
+    setDefaultCategory(DEFAULT_CATEGORY_FORMATTING);
+  }
+
+  public List<Block> execute(IFrameMacroParameters parameters, String content, MacroTransformationContext context)
+      throws MacroExecutionException {
+    StringBuilder rawContent = new StringBuilder("<iframe ");
+    if (parameters.getWidth().length() > 0) {
+      rawContent.append("width=\"").append(parameters.getWidth()).append("\" ");
+    }
+
+    if (parameters.getHeight().length() > 0) {
+      rawContent.append("height=\"").append(parameters.getHeight()).append("\" ");
+    }
+
+    rawContent.append("src=\"").append(parameters.getSrc()).append("\"");
+    rawContent.append("></iframe>");
+    RawBlock panelBlock = new RawBlock(rawContent.toString(), Syntax.XHTML_1_0);
+    return Collections.singletonList((Block) panelBlock);
+  }
+
+  public boolean supportsInlineMode() {
+    return true;
+  }
+}

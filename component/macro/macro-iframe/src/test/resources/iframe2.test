@@ -1,0 +1,18 @@
+.runTransformations
+.#-----------------------------------------------------
+.input|confluence/1.0
+.# Test the macro in standalone mode
+.#-----------------------------------------------------
+{iframe:src=http://www.google.com?hl=1|width=10px}
+.#-----------------------------------------------------
+.expect|xhtml/1.0
+.#-----------------------------------------------------
+<iframe width="10px" src="http://www.google.com?hl=1"></iframe>
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginMacroMarkerStandalone [iframe] [src=http://www.google.com?hl=1|width=10px] []
+onRawText [<iframe width="10px" src="http://www.google.com?hl=1"></iframe>] [xhtml/1.0]
+endMacroMarkerStandalone [iframe] [src=http://www.google.com?hl=1|width=10px] []
+endDocument

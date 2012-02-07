@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <groupId>org.exoplatform.ks</groupId>
+    <artifactId>exo.ks.component.macro</artifactId>
+    <version>2.2.8-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>exo.ks.component.macro.iframe</artifactId>
+  <name>Knowledge Wiki IFrame Macro</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-syntax-wikimodel</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-transformation-macro</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+    </dependency>
+    <!-- Testing dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-test</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>${commons-lang.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>

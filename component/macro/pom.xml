@@ -6,11 +6,10 @@
     <artifactId>exo.ks.component</artifactId>
     <version>2.2.8-SNAPSHOT</version>
   </parent>
-  <artifactId>exo.ks.component.confluence-migration-tool</artifactId>
+  <artifactId>exo.ks.component.macro</artifactId>
   <packaging>pom</packaging>
-  <name>Knowledge Confluence Migration Tool</name>
+  <name>Knowledge Wiki Macro</name>
   <modules>
-    <module>jenkins-runner</module>
-    <module>wiki-crawler</module>
+    <module>macro-iframe</module>
   </modules>
 </project>

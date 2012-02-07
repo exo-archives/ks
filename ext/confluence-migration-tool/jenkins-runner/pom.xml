@@ -9,7 +9,7 @@
     <version>2.2.8-SNAPSHOT</version>
   </parent>
   <packaging>pom</packaging>
-  <artifactId>exo.ks.component.confluence-migration-tool.jenkins-runner</artifactId>
+  <artifactId>exo.ks.ext.confluence-migration-tool.jenkins-runner</artifactId>
 	<name>Confluence Migration Jenkin Runner</name>
 
   <properties>
@@ -20,7 +20,7 @@
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
-      <artifactId>exo.ks.component.confluence-migration-tool.crawler</artifactId>
+      <artifactId>exo.ks.ext.confluence-migration-tool.crawler</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
