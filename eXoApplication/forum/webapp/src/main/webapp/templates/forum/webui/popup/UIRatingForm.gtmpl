@@ -6,7 +6,7 @@
 <div class="UIRatingForm">
 	<div class="VoteFormContainer">
 		<div class="RatingInfoContainer">
-			<div class="OptionsContainer">
+			<div class="OptionsContainer ClearFix">
 				<%	
 				int i = 0; 
 				while(i < 5) {
@@ -17,7 +17,7 @@
 				<div class="NormalVote" onclick="$onclick" title="$title"><span></span></div>
 			 <% i = i + 1;
 				 } %>
-				<div style="clear:left;"><span></span></div>
+				
 			</div>
 		</div>
 			

@@ -87,7 +87,7 @@
 											 	<div class="NodeLabel" onclick='eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'>
 											 		<div class="NodeSelected"><a class="Cursor">$categoryName</a></div> 
 												</div> 			
-												<div style="clear:left;"><span></span></div>
+											
 												<div class="ChildNodeContainer ParentNode" style="$display">
 												<% 
 													for(forum in forums) {
@@ -99,7 +99,7 @@
 														if(forum.getIsLock()) classForumIcon = "MoveForumLockIcon";
 														if(forum.getIsClosed())classForumIcon = "SetCloseIcon"; 
 												%>
-													<div class="Node">
+													<div class="Node ClearFix">
 														<div onclick='eXo.forum.UIForumPortlet.checkedChildNode(this);' style="float:left; padding-top:3px;"><%uicomponent.renderChild(forum.getId())%></div>
 														<div class="Icon $classForumIcon"><span></span></div>
 														<div class="NodeLabel"> 

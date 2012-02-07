@@ -8,7 +8,7 @@
 %>
 
 <div class="FAQUIQuestionManagerForm $uicomponent.id" style="height:auto;" id="Parent$uicomponent.id">
-	<div>
+	<div class="ClearFix">
 		<div id="FAQViewTabContent" style="float:left; width:100%; min-width:625px;">
 			<% uicomponent.renderChild("QuestionInfo") ; %>
 		</div>
@@ -22,7 +22,7 @@
 			}
 			%>
 		</div>
-		<div style="clear:left"><span></span></div>
+
 	</div>
 	<% uiform.begin() %>
 	 <div class="UIAction">

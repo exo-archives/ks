@@ -40,14 +40,14 @@
 					<td style="text-align:left"><%=bbcode.getDescription();%></td>
 					<td style="width:40px;text-align:center"><% uiform.renderField(uiform.getIdCheckBox(bbcodeId)); %></td>
 					<td style="width:60px;text-align:center">
-						<div class="ActionContainer" style="margin:0px auto; width:42px;">
+						<div class="ActionContainer ClearFix" style="margin:0px auto; width:42px;">
 							<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("EditBBCode", bbcodeId)%>">
 								 <div title="<%=_ctx.appRes("UIBBCodeManagerForm.label.EditBBCode");%>" class="Icon16x16 EditIcon"><span></span></div>							
 							</div>
 							<div style="cursor:pointer; float:left; margin:2px;" onclick="if(confirm('<%=_ctx.appRes("UIBBCodeManagerForm.msg.confirm-delete-BBCode")%>')){<%=uiform.event("DeleteBBCode", bbcodeId)%>;}">
 								 <div title="<%=_ctx.appRes("UIBBCodeManagerForm.label.DeleteBBCode");%>" class="Icon16x16 DeleteIcon"><span></span></div>							
 							</div>
-							<div style="clear:left;"><span></span></div>
+
 						</div>
 					</td>
 				</tr>

@@ -59,9 +59,9 @@
 		</div>
 	</div>
 <% if(uicomponent.getIsShowIter()){ %>
-<div style="overflow:auto;">
+<div style="overflow:auto;" class="ClearFix">
   <% uicomponent.renderChild(uicomponent.SEARCH_ITERATOR); %>
-	<div style="clear:right; height:0px;"><span></span></div>
+
 </div>
 <% } %>
 <%uiform.end()%>

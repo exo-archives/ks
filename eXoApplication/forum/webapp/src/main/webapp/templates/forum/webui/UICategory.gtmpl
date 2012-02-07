@@ -312,7 +312,8 @@
 						 %>
 									<td >
 								 		<!-- <div class="LastPostIcon $topicNewPostIcon"><span></span></div> -->
-								 		<%if(topicNewPost.getIsPoll()){%>
+								 		<div class="ClearFix">
+										<%if(topicNewPost.getIsPoll()){%>
 										<div class="LastPostIcon $topicNewPostIcon" style="margin-right:20px;">
 											<div class="LastPostIcon Stats" style="margin-left:18px;cursor:pointer;" title="This topic has a poll"><span></span></div>
 										</div>
@@ -332,7 +333,8 @@
 												<ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><span></span></ul>
 											</div>
 										</div>
-										<div style="clear:left;"><span></span></div>
+										</div>
+										
 										<% String screemNamePost =  uicomponent.getScreenName(lastPostBy);%>
 										<div class="LastPostInfos">
 											<span><%=_ctx.appRes("UITopicContainer.label.by");%>&nbsp;</span>

@@ -35,7 +35,7 @@
 						<td style="width:40px; padding:0px; border-right:1px solid #f4f4f4;"></td>
 					 	<td >
 							<div class="text"><%=_ctx.appRes("UICategoryInfo.label.MostUsers");%> : $mostUserOnline</div>
-							<div class="text" style="padding-bottom:5px;">
+							<div class="text ClearFix" style="padding-bottom:5px;">
 								<div class="FloatLeft"><%=_ctx.appRes("UICategoryInfo.label.OnlineUsers");%> :</div> 
 							<% int t = 0 ;
 								for(user in userOnlines) {
@@ -73,7 +73,7 @@
 									
 								</div>
 							<% } %>
-								<div style="clear:left;"><span></span></div>
+								
 							</div>
 						</td>
 		 			</tr>

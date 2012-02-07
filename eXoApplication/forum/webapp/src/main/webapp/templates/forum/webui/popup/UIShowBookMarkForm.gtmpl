@@ -11,11 +11,11 @@
 <div class="UIShowBookMarkForm">
 	<% uiform.begin() %>
 		<div class="HorizontalLayout" style="_width:88%;">
-		  <div style="overflow:auto; padding-bottom:2px;">
+		  <div style="overflow:auto; padding-bottom:2px;" class="ClearFix">
 				<% 
 				  uiform.renderChild(uiform.BOOKMARK_ITERATOR);
 				%>
-				<div style="clear:right;"><span></span></div>
+
 			</div>
 			<table class="UIGrid">
 				<thead>

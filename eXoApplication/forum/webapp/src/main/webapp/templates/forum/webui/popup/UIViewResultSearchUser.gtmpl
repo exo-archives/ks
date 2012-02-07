@@ -60,14 +60,14 @@
 			</div>
 		</div>
 		<div><span></span></div>
-		<div>
-			<%if(uicomponent.totalPage > 1){
+		<div class="ClearFix">
+			<% if(uicomponent.totalPage > 1){
 					uicomponent.renderChild(UIForumPageIterator.class) ; 
 			%>
-			<div style="clear:right; height:0px;"><span></span></div>
+
 			<%} %>
 		</div>
-		<div><span></span></div>
+
 	</div>
 
 	<div class="UIAction">

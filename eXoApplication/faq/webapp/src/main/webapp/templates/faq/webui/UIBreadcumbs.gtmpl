@@ -12,7 +12,7 @@
       <tbody>
         <tr>
           <td class="ControlButtonContainer">
-            <div style="padding-left:5px;">
+            <div style="padding-left:5px;" class="ClearFix">
               <%  
                 if(uicomponent.getBreadcumbs().size() > 1){
               %>
@@ -59,7 +59,7 @@
                 <div title="<%=_ctx.appRes("UIBreadcumbs.label.Next")%>"><span></span></div>
               </div>
             </div>
-              <div style="clear:left"><span></span></div>
+
               <% } %>
              </div>
           </td>
@@ -67,7 +67,7 @@
             <div class="SearchForm">
               <%uicomponent.renderChild(uicomponent.QUICK_SEARCH) ;%>
             </div>
-            <div style="clear:right;"><span></span></div>
+
           </td>
         </tr>
       </tbody>

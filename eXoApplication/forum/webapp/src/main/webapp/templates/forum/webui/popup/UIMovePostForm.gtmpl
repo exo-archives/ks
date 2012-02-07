@@ -32,9 +32,9 @@
 			<div class="Node $iconClass">
 				<div class="Icon CategoryNormalIcon"><span></span></div>	
 				<div class="NodeLabel" onclick='eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'>
-		 		<div class="NodeSelected"><a>$categoryName</a></div> 
+					<div class="NodeSelected"><a>$categoryName</a></div> 
 				</div> 			
-				<div style="clear:left;"><span></span></div>
+				
 				<div class="ChildNodeContainer ParentNode" style="$display">
 				<% 
 					for(forum in forums) {
@@ -60,7 +60,7 @@
 						<div class="NodeLabel"	onclick='eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'> 
 							<a>$forumName</a>
 						</div>
-						<div style="clear:left;"><span></span></div>
+						
 						<div class="ChildNodeContainer" style="$display">
 							<%	
 								for(topic in topics) {

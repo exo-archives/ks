@@ -857,12 +857,10 @@
 }
 
 .UIAnswersPortlet .ResponseContent .AttachmentContent .LabelBox {
-	float: left;
+
 }
 
 .UIAnswersPortlet .ResponseContent .AttachmentContent .Image {
-	float: left;
-	margin: 0px 10px 0px 0px;
 	width: 100px; height: 100px;
 }
 

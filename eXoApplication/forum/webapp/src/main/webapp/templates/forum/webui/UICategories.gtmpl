@@ -254,27 +254,29 @@
                       %>
                       <td>
                         <!-- <div class="LastPostIcon $topicNewPostIcon"><span></span></div> -->
-                        <%if(topicNewPost.getIsPoll()){%>
-                            <div class="LastPostIcon $topicNewPostIcon" style="margin-right:20px;">
-                              <div class="LastPostIcon Stats" style="margin-left:18px;cursor:pointer;" title="<%=_ctx.appRes("UITopicContainer.label.TopicHasPoll");%>"><span></span></div>
-                            </div>
-                        <%} else {%>
-                            <div class="LastPostIcon $topicNewPostIcon">
-                              <span></span>
-                            </div>
-                        <%}%>
-                        <div style="float:left;">
-                            <% ++rCNB; %>
-                          <%if(uicomponent.useAjax){%>
-                              <a ctxMenuId="UIPopupCategory${rCNB}" actions="$openLinkLastPost;" href="$urlLastPost" title="$titleTopic" class="LastPostTitle ActionLink" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
-                          <%} else {%>
-                              <a ctxMenuId="UIPopupCategory${rCNB}" href="$urlLastPost" title="$titleTopic" class="LastPostTitle ActionLink" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
-                          <%}%>
-                          <div id="UIPopupCategory${rCNB}" style="display:none">
-                              <ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><span></span></ul>
-                          </div>
+												<div class="ClearFix">
+													<%if(topicNewPost.getIsPoll()){%>
+															<div class="LastPostIcon $topicNewPostIcon" style="margin-right:20px;">
+																<div class="LastPostIcon Stats" style="margin-left:18px;cursor:pointer;" title="<%=_ctx.appRes("UITopicContainer.label.TopicHasPoll");%>"><span></span></div>
+															</div>
+													<%} else {%>
+															<div class="LastPostIcon $topicNewPostIcon">
+																<span></span>
+															</div>
+													<%}%>
+													<div style="float:left;">
+															<% ++rCNB; %>
+														<%if(uicomponent.useAjax){%>
+																<a ctxMenuId="UIPopupCategory${rCNB}" actions="$openLinkLastPost;" href="$urlLastPost" title="$titleTopic" class="LastPostTitle ActionLink" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+														<%} else {%>
+																<a ctxMenuId="UIPopupCategory${rCNB}" href="$urlLastPost" title="$titleTopic" class="LastPostTitle ActionLink" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+														<%}%>
+														<div id="UIPopupCategory${rCNB}" style="display:none">
+																<ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><span></span></ul>
+														</div>
+													</div>
                         </div>
-                        <div style="clear:left;"><span></span></div>
+                        
                         <% String screemNamePost =  uicomponent.getScreenName(lastPostBy);%>
                         <div class="LastPostInfos">
                           <span><%=_ctx.appRes("UITopicContainer.label.by");%>&nbsp;</span>

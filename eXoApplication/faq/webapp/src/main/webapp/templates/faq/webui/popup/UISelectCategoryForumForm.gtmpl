@@ -30,7 +30,7 @@
 				 			<a>$categoryName</a>
 				 		</div> 
 					</div> 			
-				<div style="clear:left;"><span></span></div>
+
 				<div class="ChildNodeContainer" style="$display">
 				<% 
 					for(forum in forums) {

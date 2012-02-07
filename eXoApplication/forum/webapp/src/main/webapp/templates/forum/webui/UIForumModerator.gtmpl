@@ -12,7 +12,7 @@
 		</div>
 		<div class="ContentContainer">
 			<div class="ForumList">
-				<div class="text">
+				<div class="text ClearFix">
 				<% boolean isMod = false ;
 				int i = 1;
 				String userView;
@@ -57,7 +57,7 @@
 				 ++i;
 				}	
 				%>
-				<div style="clear:left;"><span></span></div>
+		
 				<%if(!isMod){%>
 				<div><%=_ctx.appRes("UIForumPortlet.label.NotModerator");%></div>
 				<% } %>

@@ -32,14 +32,14 @@
 						<td style="width:60px; text-align:center"><div class="Icon16x16 <%=topicType.getIcon()%>" style="margin:auto"><span></span></div></td>
 						<td style="text-align:left"><%=topicType.getName()%></td>
 						<td width="80px">
-							<div class="ActionContainer" style="margin:0px auto; width:60px;">
+							<div class="ActionContainer ClearFix" style="margin:0px auto; width:60px;">
 								<div style="cursor:pointer; float:left; margin:4px;" onclick="<%=uiform.event("EditTopicType", topicTId)%>">
 									 <div title="<%=_ctx.appRes("UITopicTypeManagerForm.title.Edit"); %>" class="Icon16x16 EditIcon"><span></span></div>							
 								</div>
 								<div style="cursor:pointer; float:left; margin:4px;" onclick="<%=uiform.event("DeleteTopicType", topicTId)%>">
 									 <div title="<%=_ctx.appRes("UITopicTypeManagerForm.title.Delete"); %>" class="Icon16x16 DeleteIcon"><span></span></div>							
 								</div>
-								<div style="clear:left;"><span></span></div>
+
 							</div>
 						</td>
 					</tr>

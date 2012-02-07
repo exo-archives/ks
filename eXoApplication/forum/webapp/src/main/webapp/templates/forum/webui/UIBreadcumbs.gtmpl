@@ -6,8 +6,8 @@
 <div class="UIBreadcumbs" id="$uicomponent.id">
 	<div class="LeftBreadcumbs">
 		<div class="RightBreadcumbs"> 
-			<div class="CenterBreadcumbs">
-				<div class="BreadcumbsInfoBar">
+			<div class="CenterBreadcumbs ClearFix">
+				<div class="BreadcumbsInfoBar ClearFix">
 				<% int t = 0 ;
 					String link = "";
 					String checkPath = ""; 
@@ -54,9 +54,9 @@
 					t = t + 1 ;
 					} 
 				 %>
-					<div style="clear:left"><span></span></div>
+
 				</div>
-				<div class="RSSBar">
+				<div class="RSSBar ClearFix">
 				  <%String toolTip = uicomponent.getToolTip();
 				    if(!checkPath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL) && !toolTip.equals("tag")){
 					    toolTip = _ctx.appRes("UIBreadcumbs.title." + toolTip);
@@ -73,9 +73,9 @@
 							uicomponent.renderChildren() ;
 						%>
 					</div>
-					<div style="clear:both"><span></span></div>
+
 				</div>
-				<div style="clear:both"><span></span></div>
+
 			</div>
 		</div>
 	</div>

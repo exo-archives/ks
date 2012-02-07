@@ -85,10 +85,10 @@
 									String link_ =  uicomponent.event("DeletePostLink", post.getId());
 									%>
 										<td class="Tdbox">
-											<div style="margin:0 auto; width:48px">
+											<div style="margin:0 auto; width:48px" class="ClearFix">
 												<div class="ItemIcon SetDeleteIcon" onclick="$link_" title="<%=_ctx.appRes("UIViewPost.action.DeletePost");%>" style="width:20px; height:24px; cursor:pointer; float:left"><span></span></div>
 												<a style="display:block; width:24px;float: left;" title="<%=_ctx.appRes("UIViewPost.action.OpenTopicLink");%>" class="HotThreadNoNewPost" href="<%=uicomponent.event("OpenTopicLink", post.getId());%>">&nbsp; &nbsp; &nbsp;</a>
-												<div style="clear:left;"><span></span></div>
+
 											</div>
 										</td>
 									<%} else {%>

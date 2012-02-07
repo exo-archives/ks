@@ -16,8 +16,8 @@
 		<div class="ModeratorsManagementContainer">
 		
 			<div class="ManagementContent">
-				<div style="overflow:auto;">
-					<div style="margin:2px 0px; float:right; padding:0px 0px 0px 14px;">
+				<div style="overflow:auto;" class="ClearFix">
+					<div style="margin:2px 0px; float:right; padding:0px 0px 0px 14px;" class="ClearFix">
 						<%if(uicomponent.isViewSearchUser){%>
 								<a class="Refresh" style="float:right; margin-top:0px; margin-right: 5px;" title="<%=_ctx.appRes("UIQuickSearchForm.label.GetAllUser")%>" href="<%=uicomponent.event("GetAllUser");%>">
 									<span></span>
@@ -30,11 +30,10 @@
 							%>
 						</div>
 						<div class="Label" style="float:right; line-height:20px;"><label for="<%=uicomponent.FIELD_SEARCH_USER%>"><%=_ctx.appRes("UIQuickSearchForm.label.Search")%>:&nbsp;</label></div>
-						<div style="clear:right;"><span></span></div>
+
 					</div>
-					<div style="clear:right;"><span></span></div>
+
 				</div>
-				<div><span></span></div>
 		 
 				<table cellspacing="0" border="0" cellpadding="0" id="PermissionInfo" class="UIGrid">
 					<thead>
@@ -72,14 +71,14 @@
 							<td class="text"><%=userRole;%></td>
 							<td class="text">$isBanned</td>
 							<td>				 
-								<div style="margin:0px auto;" class="ActionContainer">
+								<div style="margin:0px auto;" class="ActionContainer ClearFix">
 									<div style="float:left; cursor:pointer" onclick="<%=uicomponent.event("EditProfile",user.getUserId());%>">
 										 <div title="<%=_ctx.appRes("UIModeratorManagementForm.label.EditProfile");%>" class="Icon16x16 EditIcon"><span></span></div>							
 									</div>
 									<div style="float:left; cursor:pointer" onclick="<%=uicomponent.event("ViewProfile",user.getUserId());%>">
 										 <div title="<%=_ctx.appRes("UIModeratorManagementForm.label.ViewProfile");%>" class="Icon16x16 ViewPublicUserInfo"><span></span></div>							
 									</div>
-									<div style="clear:left;"><span></span></div>
+
 								</div>
 							</td>
 						</tr>
@@ -93,10 +92,10 @@
 			 
 			</div>
 		</div>
-		<div><span></span></div>
-		<div>
+
+		<div class="ClearFix">
 			<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
-			<div style="clear:right; height:0px;"><span></span></div>
+
 		</div>
 		<div><span></span></div>
 		<% if(uiform.getIsEdit()) { %>
@@ -138,14 +137,14 @@
 											for(tabconten in uiform.getChildren()){
 												if(tabconten.id.equals("ForumUserPageIterator") || tabconten.id.equals(uiform.FIELD_SEARCH_USER)) continue;
 										%>
-												<div style="display:$display;" id="UITabContent" class="UITabContent">
+												<div style="display:$display;" id="UITabContent" class="UITabContent ClearFix">
 													<%if(tabconten.id.equals("ForumUserProfile")){%>
 															<div style="float:left; width:150px; text-align:center;">
 																<img src="<%=uicomponent.userAvartarUrl%>" class="SmallImgAvatar ImgAvatarBorder" alt="<%=_ctx.appRes("UIForumUserSettingForm.label.Avatar")%>"/>
 																<div style="color:blue; cursor:pointer;" onclick="javaScirpt:if(confirm('<%=_ctx.appRes("UIModeratorManagementForm.msg.setDefaultAvartar")%>'))<%=uicomponent.event("SetDeaultAvatar")%>">[<%=_ctx.appRes("UIModeratorManagementForm.label.SetDefaultAvatar")%>]</div>
 															</div>
 															<div style="float:left; width:500px;"><%uiform.renderChild(tabconten.id);%></div>
-															<div style="clear:left;"><span></span></div>
+															
 													<%}else{%>
 															<%uiform.renderChild(tabconten.id);%>
 													<%}%>

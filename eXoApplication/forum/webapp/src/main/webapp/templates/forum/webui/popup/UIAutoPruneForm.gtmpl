@@ -45,14 +45,14 @@
 						<td width="40px"><div onclick="<%=uiform.event("ActivatePrune", pruneId)%>"><% uiform.renderField(pruneId); %></div></td>
 						<td>$lastRun</td>
 						<td width="60px">
-							<div class="ActionContainer" style="margin:0px auto; width:52px;">
+							<div class="ActionContainer ClearFix" style="margin:0px auto; width:52px;">
 								<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("PruneSetting", pruneId)%>">
 									 <div title="<%=_ctx.appRes("UIAutoPruneForm.label.PruneSetting");%>" class="PruneSettingIcon"><span></span></div>							
 								</div>
 								<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("RunPrune", pruneId)%>">
 									 <div title="<%=_ctx.appRes("UIRunPruneForm.action.Run");%>" class="RunIcon"><span></span></div>							
 								</div>
-								<div style="clear:left;"><span></span></div>
+
 							</div>
 						</td>
 					</tr>
@@ -75,14 +75,14 @@
 						<td width="40px"><div onclick="<%=uiform.event("ActivatePrune", pruneId)%>"><% uiform.renderField(pruneId); %></div></td>
 						<td>$lastRun</td>
 						<td width="60px">
-							<div class="ActionContainer" style="margin:0px auto; width:52px;">
+							<div class="ActionContainer ClearFix" style="margin:0px auto; width:52px;">
 								<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("PruneSetting", pruneId)%>">
 									 <div title="<%=_ctx.appRes("UIAutoPruneForm.label.PruneSetting");%>" class="PruneSettingIcon"><span></span></div>							
 								</div>
 								<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("RunPrune", pruneId)%>">
 									 <div title="<%=_ctx.appRes("UIRunPruneForm.action.Run");%>" class="RunIcon"><span></span></div>							
 								</div>
-								<div style="clear:left;"><span></span></div>
+
 							</div>
 						</td>
 					</tr>

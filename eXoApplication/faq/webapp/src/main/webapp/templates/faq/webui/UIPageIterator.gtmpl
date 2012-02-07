@@ -3,9 +3,9 @@
 	def currentPage = uicomponent.getCurrentPage();
 %>
 
-<div class="UIPageIterator">
+<div class="UIPageIterator ClearFix">
 	<div class="PageIteratorContainer">
-	  <div class="RightPageIteratorBlock">
+	  <div class="RightPageIteratorBlock ClearFix">
 	    <%if(currentPage > 10) { %>
 	    	  <a href="<%=uicomponent.event("ShowPage","${currentPage -10}")%>" class="Icon LastTopPageIcon" title="<%=_ctx.appRes("UIPageIterator.label.backTenPages")%>"></a>
 	    <% }else { %>
@@ -51,13 +51,13 @@
 	    <% } else {%>
 	    	   <a class="Icon DisableNextTopPageIcon" title="<%=_ctx.appRes("UIPageIterator.label.nextTenPages")%>"></a>
 	    <% }%>
-	    <div style="clear:left"><span></span></div>
+
 	  </div>
-	  <div class="LeftPageIteratorBlock">
+	  <div class="LeftPageIteratorBlock ClearFix">
 	  	<div class="TotalPages"><%=_ctx.appRes("UIPageIterator.label.totalPage")%>:</div>
 	  	<div class="PagesTotalNumber"><%=totalPage%></div>
-	  	<div style="clear:left"><span></span></div>
+	  	
 	  </div>
   </div>
-  <div style="clear:right"><span></span></div>
+
 </div>

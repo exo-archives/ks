@@ -52,7 +52,7 @@
 									  <div onclick="<%=uicomponent.event("AddValuesUser", uiform.FIELD_SEARCHUSER_INPUT);%>" title="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>" style="float:left; cursor:pointer; width:16px;">
 									    <img alt="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>" class="SelectUserIcon" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
 									  </div>
-									  <div style="clear:left;"><span></span></div>
+
 									</td>
 							</tr>
 							<%  
@@ -67,7 +67,7 @@
 									  <div style="float:left; padding-left:5px; width:65px;"><label for="<%=uicomponent.FIELD_ISLOCK_CHECKBOX%>"><%=uicomponent.getLabel(uiform.FIELD_ISLOCK_CHECKBOX); %></label></div>
 									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISUNLOCK_CHECKBOX);%></div>
 									  <div style="float:left; padding-left:5px;"><label for="<%=uicomponent.FIELD_ISUNLOCK_CHECKBOX%>"><%=uicomponent.getLabel(uiform.FIELD_ISUNLOCK_CHECKBOX); %></label></div>
-									  <div style="clear:left;"><span></span></div>
+
 									</td>
 							</tr>
 							<%  
@@ -80,7 +80,7 @@
 									<td class="FieldComponent" colspan="2">
 									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISOPEN_CHECKBOX);%></div><div style="float:left; padding-left:5px; width:65px;"><label for="<%=uicomponent.FIELD_ISOPEN_CHECKBOX%>"><%=uicomponent.getLabel(uiform.FIELD_ISOPEN_CHECKBOX); %></label></div>
 									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISCLOSED_CHECKBOX);%></div><div style="float:left; padding-left:5px;"><label for="<%=uicomponent.FIELD_ISCLOSED_CHECKBOX%>"><%=uicomponent.getLabel(uiform.FIELD_ISCLOSED_CHECKBOX); %></label></div>
-									  <div style="clear:left;"><span></span></div>
+
 									</td>
 							</tr>
 							<%} 
@@ -93,7 +93,7 @@
 									<td class="FieldComponent FieldCalendar">
 										<div style="float:left;"><%uiform.renderField(uiform.FROMDATECREATED); %></div>
 										<div style="float:left; padding-left:5px;"><label for="<%=uicomponent.TODATECREATED%>"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></label></div>
-										<div style="clear:left;"><span></span></div>
+
 									</td>
 									<td class="FieldComponent FieldCalendar"><%uiform.renderField(uiform.TODATECREATED); %></td>
 							</tr>
@@ -105,7 +105,7 @@
 									<td class="FieldComponent FieldCalendar">
 										<div style="float:left;"><%uiform.renderField(uiform.FROMDATECREATEDLASTPOST); %></div>
 										<div style="float:left; padding-left:5px;"><label for="<%=uicomponent.TODATECREATEDLASTPOST%>"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></label></div>
-										<div style="clear:left;"><span></span></div>
+
 									</td>
 									<td class="FieldComponent FieldCalendar"><%uiform.renderField(uiform.TODATECREATEDLASTPOST); %></td>
 							</tr>
@@ -155,7 +155,7 @@
 									  <div onclick="<%=uicomponent.event("AddValuesUser", uiform.FIELD_MODERATOR_INPUT);%>" title="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>" style="float:left; cursor:pointer; width:16px;">
 									    <img alt="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>" class="SelectUserIcon" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
 									  </div>
-									  <div style="clear:left;"><span></span></div>
+
 									</td>
 							</tr>
 							<%} %>

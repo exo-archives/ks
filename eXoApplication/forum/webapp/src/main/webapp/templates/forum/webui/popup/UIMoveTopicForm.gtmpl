@@ -26,12 +26,12 @@
 		%>
 			<div class="Node $iconClass">
 			 	<div class="Icon CategoryNormalIcon"><span></span></div>	
-				 	<div class="NodeLabel" onclick ='eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'>
-				 		<div class="NodeSelected">
-				 			<a>$categoryName</a>
-				 		</div> 
-					</div> 			
-				<div style="clear:left;"><span></span></div>
+				<div class="NodeLabel" onclick ='eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'>
+					<div class="NodeSelected">
+						<a>$categoryName</a>
+					</div> 
+				</div> 			
+				
 				<div class="ChildNodeContainer" style="$display">
 				<% 
 					for(forum in forums) {
@@ -42,12 +42,12 @@
 						if(forum.getIsLock()) classForumIcon = "MoveForumLockIcon";
 						if(forum.getIsClosed())classForumIcon = "SetCloseIcon"; 
 				%>
-					<div class="Node">
+					<div class="Node ClearFix">
 						<div class="Icon $classForumIcon"><span></span></div>
 							<div class="NodeLabel"> 
 								<a href="$link">$forumName</a>	
 							</div>
-						<div style="clear:left;"><span></span></div>
+						
 					</div>
 				<% } %>		
 				</div>

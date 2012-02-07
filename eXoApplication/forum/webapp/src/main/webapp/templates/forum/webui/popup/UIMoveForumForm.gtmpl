@@ -15,14 +15,14 @@
 				String categoryName = category.getCategoryName() ;
 				String link = uicomponent.event("Save", category.getPath());
 		%>
-			<div class="Node">
+			<div class="Node ClearFix">
 			 	<div class="Icon CategoryNormalIcon"><span></span></div>
 				 	<div class="NodeLabel">
 				 		<div class="NodeSelected">
 				 			<a href="$link">$categoryName</a>
 				 		</div>
 					</div>
-				<div style="clear:left;"><span></span></div>
+
 			</div>
 		<% } %>
 		 </div>

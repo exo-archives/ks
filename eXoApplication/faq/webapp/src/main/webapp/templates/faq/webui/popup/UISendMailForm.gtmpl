@@ -79,7 +79,7 @@
 												<div style="float:left;width:10px;">*</div>
 										<%}%>
 									</div>
-									<div style="clear:left"><span></span></div>
+
 							<%}
 							}
 						}

@@ -13,12 +13,12 @@
 	%>
 	<div id="UITabContent" restPath="<%=uicomponent.getRestPath();%>" forumId="$forumId" link="$linkOp" class="UITabContent">
 		<div style="width:400px; margin:auto;">
-			<div class="UIQuickSearchForm" style="padding:10px 0px;">
+			<div class="UIQuickSearchForm ClearFix" style="padding:10px 0px;">
 				<div style="float:left;">
 					<label for="<%=uicomponent.SEARCH_IP_BAN%>"><%=_ctx.appRes("UIBanIPForumManagerForm.label.Filter")%>:&nbsp;</label>
 					<% uiform.renderField(uicomponent.SEARCH_IP_BAN) ;%>
 				</div>
-				<div style="clear:left;"><span></span></div>
+
 			</div>
 			<table class="UIGrid" width="100%">
 				<tbody>
@@ -60,11 +60,11 @@
 				</tbody>
 			</table>
 		</div>
-		<div style="overflow:auto; width:400px;">
+		<div style="overflow:auto; width:400px;" class="ClearFix">
 		<% 
 			uicomponent.renderChild(UIForumPageIterator.class) ;
 		%>
-			<div style="clear:right;"><span></span></div>
+
 		</div>
 
 	</div>

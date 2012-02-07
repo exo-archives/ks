@@ -7,7 +7,7 @@
 <div class="UIRatingForm">
 	<div class="VoteFormContainer">
 		<div class="RatingInfoContainer">
-			<div class="OptionsContainer">
+			<div class="OptionsContainer ClearFix">
 				<div onmouseout="eXo.faq.UIAnswersPortlet.changeStarForVoteQuestion('-1', 'FAQStarVote')" onblur="eXo.faq.UIAnswersPortlet.changeStarForVoteQuestion('-1', 'FAQStarVote')">
 				<%	
 				String action = "Vote";
@@ -19,7 +19,7 @@
 					<div id="FAQStarVote$i" class="RatedVote" onmouseover="eXo.faq.UIAnswersPortlet.changeStarForVoteQuestion('$i', 'FAQStarVote')" onfocus="eXo.faq.UIAnswersPortlet.changeStarForVoteQuestion('$i', 'FAQStarVote')" onclick="$onclick" title=""><span></span></div>
 		 <%}%>
 		 		</div>
-				<div style="clear: left;"><span></span></div>
+
 			</div>
 		</div>
 			

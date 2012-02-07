@@ -190,7 +190,7 @@
       </div>
     </div>
   </div>
-  <div style="clear:left;"><span></span></div>
+
   <div class="AnswersContainer ViewQuestionContent">
     <div class="FAQContent">
 <!--  View question  -->
@@ -511,7 +511,7 @@
                                         } %>
                                       </tr>
                                     </table>
-                                    <div style="clear:left;"><span></span></div>
+                                    
                                     <%
                                     if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
                                     %>
@@ -1021,9 +1021,9 @@
                           <%}
                             if(uicomponent.getChildById(uicomponent.ANSWER_ITER + question.getId())!= null){
                           %>
-                              <div style="overflow:auto">
+                              <div style="overflow:auto" class="ClearFix">
                                 <% uicomponent.renderChild(uicomponent.ANSWER_ITER + question.getId()) %>
-                                <div style="clear:right;"><span></span></div>
+                               
                               </div>  
                         <%  }
                           } else { %>
