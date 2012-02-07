@@ -27,9 +27,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.util.MacroExtractor;
 import org.exoplatform.wiki.util.MacroMap;
 
@@ -55,7 +54,7 @@ public class ConfluenceDBAnalyzer {
   HashMap<String, WikiSpace> pagesMap = new HashMap<String, WikiSpace>();
   HashMap<String, Integer> macrosMap = new HashMap<String, Integer>();
   
-  private static final Log log = ExoLogger.getLogger(ConfluenceDBAnalyzer.class);
+  private static final Logger log = Logger.getLogger(ConfluenceDBAnalyzer.class.toString());
 
   public static void main(String args[]) {
     ConfluenceDBAnalyzer confluenceDBAnalyzer = new ConfluenceDBAnalyzer();
@@ -66,7 +65,7 @@ public class ConfluenceDBAnalyzer {
       confluenceDBAnalyzer.scanAttachments();
       confluenceDBAnalyzer.scanContentForMacros();
     } catch (Exception e) {
-      log.error("Error when analyze the Confluence DB", e);
+      log.warning("Error when analyze the Confluence DB");
       return;
     }
 
@@ -126,7 +125,7 @@ public class ConfluenceDBAnalyzer {
       if (space != null) {
         space.registerPage(page);
       } else {
-        log.warn(String.format("Not found space %s for page %s", spaceId, pageId));
+        log.warning(String.format("Not found space %s for page %s", spaceId, pageId));
       }
 
       count++;
@@ -141,7 +140,7 @@ public class ConfluenceDBAnalyzer {
           if (page.pageParent != null) {
             page.pageParent.registerChild(page);
           } else {
-            log.warn(String.format("Page %s not found in space %s", page.pageParentId, space.spaceKey));
+            log.warning(String.format("Page %s not found in space %s", page.pageParentId, space.spaceKey));
           }
         }
       }
@@ -179,7 +178,7 @@ public class ConfluenceDBAnalyzer {
       for (Page page : values) {
         totalSizeKo += page.bodySize;
       }
-      log.info("%s,%s,%s", space.spaceKey, values.size(), totalSizeKo);
+      log.info(String.format("%s,%s,%s", space.spaceKey, values.size(), totalSizeKo));
     }
   }
 

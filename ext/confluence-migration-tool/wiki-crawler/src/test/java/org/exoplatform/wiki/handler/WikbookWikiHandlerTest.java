@@ -24,12 +24,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 
 /**
  * Created by The eXo Platform SAS
@@ -38,7 +37,7 @@ import org.exoplatform.services.log.Log;
  * Feb 02, 2012  
  */
 public class WikbookWikiHandlerTest extends TestCase {
-  private static final Log log = ExoLogger.getLogger(WikbookWikiHandlerTest.class);
+  private static final Logger log = Logger.getLogger(WikbookWikiHandlerTest.class.toString());
   
   private boolean deleteCreateFilesAndDir = true;
   private List<File> files;

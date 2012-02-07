@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -37,8 +38,6 @@ import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.IWikiHandler;
 
 /**
@@ -52,7 +51,7 @@ import org.exoplatform.wiki.IWikiHandler;
 public class ExoWikiHandler implements IWikiHandler {
   public static final String CHAR_TO_REPLACE = " *'\"+?&";
   
-  private static final Log log = ExoLogger.getLogger(ExoWikiHandler.class);
+  private static final Logger log = Logger.getLogger(ExoWikiHandler.class.toString());
 
   private DefaultHttpClient httpClient;
   private String targetHost;
@@ -88,16 +87,16 @@ public class ExoWikiHandler implements IWikiHandler {
     try {
       int statusCode = getHttpStatusOfPageOnTarget(targetSpace, targetPage);
       if (statusCode != 200) {
-        log.warn("Target page not found or error : " + statusCode);
+        log.warning("Target page not found or error : " + statusCode);
         return false;
       } else if (statusCode == 404) {
         log.info(String.format("Target page ok : %s/%s", targetSpace, targetPage));
         return true;
       } else {
-        log.warn(String.format("Can't check target page, FAILURE with Http code %s : %s/%s", statusCode, targetSpace, targetPage));
+        log.warning(String.format("Can't check target page, FAILURE with Http code %s : %s/%s", statusCode, targetSpace, targetPage));
       }
     } catch (IOException e) {
-      log.warn("Target Page not found target: " + targetPage);
+      log.warning("Target Page not found target: " + targetPage);
     }
     return false;
   }
@@ -123,7 +122,7 @@ public class ExoWikiHandler implements IWikiHandler {
           pageName = IOUtils.toString(responseCreate.getEntity().getContent());
         } else {
           String message = IOUtils.toString(responseCreate.getEntity().getContent());
-          log.warn(String.format("[Create] ERROR During Page creation : %s/%s (Cause: %s)", path, pageName, message));
+          log.warning(String.format("[Create] ERROR During Page creation : %s/%s (Cause: %s)", path, pageName, message));
           return null;
         }
 
@@ -133,16 +132,16 @@ public class ExoWikiHandler implements IWikiHandler {
         int statusCodeRC2 = responseCheck2.getStatusLine().getStatusCode();
         responseCheck2.getEntity().consumeContent();
         if (statusCodeRC2 != 200) {
-          log.warn(String.format("[Create] ERROR Created page %s/%s not found.", path, pageName));
+          log.warning(String.format("[Create] ERROR Created page %s/%s not found.", path, pageName));
           return pageName;
         }
         return pageName;
       } else if (statusCode == 200) {
-        log.warn(String.format("[Create] WARNING page already exists : %s : %s/%s", statusCode, path, pageName));
+        log.warning(String.format("[Create] WARNING page already exists : %s : %s/%s", statusCode, path, pageName));
         return null;
       }
     } catch (Exception exception) {
-      log.warn(String.format("[Create] Error creating WIKI_PAGE : %s/%s", path, pageName));
+      log.warning(String.format("[Create] Error creating WIKI_PAGE : %s/%s", path, pageName));
     }
     return null;
   }
@@ -166,7 +165,7 @@ public class ExoWikiHandler implements IWikiHandler {
       HttpResponse response = httpClient.execute(httppost);
       response.getEntity().consumeContent();
     } catch (Exception exception) {
-      log.warn("[Transfert] Error uploading content to : " + path);
+      log.warning("[Transfert] Error uploading content to : " + path);
     }
     return true;
   }
@@ -178,7 +177,7 @@ public class ExoWikiHandler implements IWikiHandler {
       responseGet.getEntity().consumeContent();
       return responseGet.getStatusLine().getStatusCode() == 200;
     } catch (Exception exception) {
-      log.warn("[URL] Error getting Url for : " + path);
+      log.warning("[URL] Error getting Url for : " + path);
     }
     return false;
   }
@@ -195,7 +194,7 @@ public class ExoWikiHandler implements IWikiHandler {
       String result = IOUtils.toString(response.getEntity().getContent());
       response.getEntity().consumeContent();
     } catch (Exception exception) {
-      log.warn("Upload attachment fail", exception);
+      log.warning("Upload attachment fail");
     }
   }
 

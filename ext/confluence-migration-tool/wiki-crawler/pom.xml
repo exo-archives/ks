@@ -49,11 +49,5 @@
       <artifactId>jsr311-api</artifactId>
       <version>${javax.ws.rs.jsr311-api.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.exoplatform.kernel</groupId>
-      <artifactId>exo.kernel.commons</artifactId>
-      <version>${org.exoplatform.kernel.version}</version>
-      <scope>provided</scope>
-    </dependency>
   </dependencies>
 </project>
