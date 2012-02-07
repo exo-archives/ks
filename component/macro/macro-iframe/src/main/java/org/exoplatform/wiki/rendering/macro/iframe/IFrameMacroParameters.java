@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2010 eXo Platform SAS.
+ * Copyright (C) 2003-2012 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -19,6 +19,14 @@ package org.exoplatform.wiki.rendering.macro.iframe;
 import org.apache.commons.lang.StringUtils;
 import org.xwiki.properties.annotation.PropertyDescription;
 
+/**
+ * Created by The eXo Platform SAS
+ * Author : Dimitri BAELI
+ *          dbaeli@exoplatform.com
+ * 7 Jan 2012
+ * 
+ * Manage an iframe node
+ */
 public class IFrameMacroParameters {
 
   /**
@@ -36,8 +44,7 @@ public class IFrameMacroParameters {
   }
 
   /**
-   * @param src
-   *          refer to {@link #getSrc()}
+   * @param src refer to {@link #getSrc()}
    */
   @PropertyDescription("The src to declare in the iframe")
   public void setSrc(String src) {
@@ -79,8 +86,7 @@ public class IFrameMacroParameters {
   }
 
   /**
-   * @param height
-   *          refer to {@link #getHeight()}
+   * @param height refer to {@link #getHeight()}
    */
   @PropertyDescription("The height to declare in the iframe")
   public void setHeight(String height) {

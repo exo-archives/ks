@@ -21,7 +21,8 @@ import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS
- * Author : Dimitri BAELI
+ * Author: Dimitri BAELI
+ *         dbaeli@exoplatform.com
  * Feb 02, 2012
  * 
  * Utility class to fix some macro content from confluence to eXoWiki format

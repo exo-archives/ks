@@ -43,7 +43,8 @@ import org.exoplatform.wiki.IWikiHandler;
 
 /**
  * Created by The eXo Platform SAS
- * Author : Dimitri BAELI
+ * Author: Dimitri BAELI
+ *         dbaeli@exoplatform.com
  * Feb 02, 2012
  * 
  * A class to interact with the ExoWikiRestService See Wikiloader.groovy class
@@ -106,7 +107,7 @@ public class ExoWikiHandler implements IWikiHandler {
    * 
    * @param path
    * @param name
-   * @return
+   * @return page name
    */
   public String createPage(String path, String name, boolean hasChildren) {
     String pageName = normalizePageName(name, CHAR_TO_REPLACE, '_');
@@ -170,12 +171,6 @@ public class ExoWikiHandler implements IWikiHandler {
     return true;
   }
 
-  /**
-   * Get the
-   * 
-   * @param path
-   * @return
-   */
   public boolean checkPageExists(String path) {
     try {
       HttpGet httpGet = new HttpGet(targetHost + "/rest/private/wikiloader/pageurl?path=" + URLEncoder.encode(path, "UTF-8"));
@@ -210,7 +205,7 @@ public class ExoWikiHandler implements IWikiHandler {
    * @param title
    * @param replacedChars
    * @param replacementChar
-   * @return
+   * @return new title
    */
   public static String normalizePageName(String title, String replacedChars, char replacementChar) {
     String newContent = title;

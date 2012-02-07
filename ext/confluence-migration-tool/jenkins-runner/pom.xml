@@ -10,7 +10,7 @@
   </parent>
   <packaging>pom</packaging>
   <artifactId>exo.ks.ext.confluence-migration-tool.jenkins-runner</artifactId>
-	<name>Confluence Migration Jenkin Runner</name>
+  <name>Confluence Migration Jenkin Runner</name>
 
   <properties>
     <wiki.migration.file>migration.properties</wiki.migration.file>

@@ -23,7 +23,8 @@ import junit.framework.TestCase;
 
 /**
  * Created by The eXo Platform SAS
- * Author : Dimitri BAELI
+ * Author:  Dimitri BAELI
+ *          dbaeli@exoplatform.com
  * Feb 02, 2012  
  */
 public class MacroExtractorTest extends TestCase {

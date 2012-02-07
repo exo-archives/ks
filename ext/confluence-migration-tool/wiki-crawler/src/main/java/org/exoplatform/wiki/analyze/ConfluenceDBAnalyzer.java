@@ -38,6 +38,7 @@ import com.mysql.jdbc.Driver;
 /**
  * Created by The eXo Platform SAS
  * Author : Dimitri BAELI
+ *          dbaeli@exoplatform.com
  * Feb 02, 2012  
  * 
  * Tooling to quickly analyze the content of a Confluence DB

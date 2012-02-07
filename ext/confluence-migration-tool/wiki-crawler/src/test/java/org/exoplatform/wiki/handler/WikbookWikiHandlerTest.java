@@ -33,7 +33,8 @@ import org.exoplatform.services.log.Log;
 
 /**
  * Created by The eXo Platform SAS
- * Author : Dimitri BAELI
+ * Author:  Dimitri BAELI
+ *          dbaeli@exoplatform.com
  * Feb 02, 2012  
  */
 public class WikbookWikiHandlerTest extends TestCase {

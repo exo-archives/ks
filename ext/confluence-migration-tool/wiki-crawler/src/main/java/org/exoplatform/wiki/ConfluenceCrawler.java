@@ -42,6 +42,7 @@ import org.exoplatform.wiki.util.MacroMap;
 /**
  * Created by The eXo Platform SAS
  * Author : Dimitri BAELI
+ *          dbaeli@exoplatform.com
  * Feb 02, 2012  
  */
 public class ConfluenceCrawler {

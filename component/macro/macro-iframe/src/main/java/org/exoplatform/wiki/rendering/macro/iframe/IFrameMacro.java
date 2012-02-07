@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2010 eXo Platform SAS.
+ * Copyright (C) 2003-2012 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -29,6 +29,11 @@ import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 
 /**
+ * Created by The eXo Platform SAS
+ * Author : Dimitri BAELI
+ *          dbaeli@exoplatform.com
+ * 7 Jan 2012
+ * 
  * Manage an iframe node
  */
 @Component("iframe")

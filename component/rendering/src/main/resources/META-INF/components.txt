@@ -16,6 +16,7 @@ org.exoplatform.wiki.rendering.macro.anchor.AnchorMacro
 org.exoplatform.wiki.rendering.macro.textcolor.ColorMacro
 org.exoplatform.wiki.rendering.macro.floatmacro.FloatMacro
 org.exoplatform.wiki.rendering.macro.excerpt.ExcerptMacro
+org.exoplatform.wiki.rendering.macro.iframe.IFrameMacro
 500:org.exoplatform.wiki.rendering.macro.code.CodeMacro
 org.exoplatform.wiki.rendering.macro.section.column.ColumnMacro
 org.exoplatform.wiki.rendering.macro.section.SectionMacro

@@ -22,6 +22,7 @@ import java.util.Map;
 /**
  * Created by The eXo Platform SAS
  * Author : Dimitri BAELI
+ *          dbaeli@exoplatform.com
  * Feb 02, 2012  
  */
 public class Page {

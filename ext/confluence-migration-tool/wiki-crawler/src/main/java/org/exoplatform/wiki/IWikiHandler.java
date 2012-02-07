@@ -19,6 +19,7 @@ package org.exoplatform.wiki;
 /**
  * Created by The eXo Platform SAS
  * Author : Dimitri BAELI
+ *          dbaeli@exoplatform.com
  * Feb 02, 2012  
  */
 public interface IWikiHandler {

@@ -23,7 +23,8 @@ import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS
- * Author : Dimitri BAELI
+ * Author: Dimitri BAELI
+ *         dbaeli@exoplatform.com
  * Feb 02, 2012
  * 
  * Extract macro list from Confluence Content
