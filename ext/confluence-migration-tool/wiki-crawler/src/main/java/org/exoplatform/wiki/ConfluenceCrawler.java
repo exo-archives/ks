@@ -92,7 +92,7 @@ public class ConfluenceCrawler {
     try {
       properties.load(new FileInputStream(propertiesFile));
     } catch (IOException e) {
-      log.warning("Can not load property file");
+      log.warning("Can not load property file : " + propertiesFile);
       return;
     }
 
