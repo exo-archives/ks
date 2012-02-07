@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import org.codehaus.swizzle.confluence.Attachment;
 import org.codehaus.swizzle.confluence.Comment;
@@ -38,6 +37,8 @@ import org.exoplatform.wiki.handler.ExoWikiHandler;
 import org.exoplatform.wiki.handler.WikbookWikiHandler;
 import org.exoplatform.wiki.util.MacroExtractor;
 import org.exoplatform.wiki.util.MacroMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by The eXo Platform SAS
@@ -46,7 +47,7 @@ import org.exoplatform.wiki.util.MacroMap;
  * Feb 02, 2012  
  */
 public class ConfluenceCrawler {
-  private static final Logger log = Logger.getLogger(ConfluenceCrawler.class.toString());
+  private static final Logger log = LoggerFactory.getLogger(ConfluenceCrawler.class.toString());
   
   public final String TYPE_EXOWIKI = "exowiki";
   public final String TYPE_WIKBOOK = "wikbook";
@@ -92,7 +93,7 @@ public class ConfluenceCrawler {
     try {
       properties.load(new FileInputStream(propertiesFile));
     } catch (IOException e) {
-      log.warning("Can not load property file : " + propertiesFile);
+      log.error("Can not load property file : " + propertiesFile);
       return;
     }
 
@@ -194,11 +195,11 @@ public class ConfluenceCrawler {
             log.info("Crawling page : " + pageToTransfer);
             crawlPage(confluence, null, page, targetPage);
           } else {
-            log.warning(String.format("[ERROR] Target page %s not found.", targetPath.toString()));
+            log.error(String.format("[ERROR] Target page %s not found.", targetPath.toString()));
           }
 
         } catch (Exception e) {
-          log.warning("[LOAD] Source page not found in source wiki :" + pageToTransfer);
+          log.error("[LOAD] Source page not found in source wiki :" + pageToTransfer);
         }
       }
 
@@ -218,9 +219,9 @@ public class ConfluenceCrawler {
       log.info(macroText.toString());
 
       if (erroredPaths.size() > 0) {
-        log.warning("* Errored pages : " + erroredPaths.size());
+        log.error("* Errored pages : " + erroredPaths.size());
         for (String path : erroredPaths) {
-          log.warning("** " + path);
+          log.error("** " + path);
         }
       }
     } finally {
@@ -331,7 +332,7 @@ public class ConfluenceCrawler {
         // confluence.addComment(comment);
         // }
       } else {
-        log.warning("* Page not transferred : " + newPageName);
+        log.error("* Page not transferred : " + newPageName);
         erroredPaths.add(subPath + "/" + page.getTitle());
       }
     }
@@ -348,7 +349,7 @@ public class ConfluenceCrawler {
       Long fileSize = Long.parseLong(attachment.getFileSize()) / 1024;
 
       if (fileSize > 2048) {
-        log.warning(String.format("[Upload] REJECTED Too big (%s ko) : %s/%s/%s", fileSize, targetSpace, createdPageName, fileName));
+        log.error(String.format("[Upload] REJECTED Too big (%s ko) : %s/%s/%s", fileSize, targetSpace, createdPageName, fileName));
       } else {
         String version = url.replaceAll(".*version=", "");
         version = version.replaceAll("&.*", "");

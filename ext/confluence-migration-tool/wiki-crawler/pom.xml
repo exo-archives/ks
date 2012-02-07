@@ -49,5 +49,20 @@
       <artifactId>jsr311-api</artifactId>
       <version>${javax.ws.rs.jsr311-api.version}</version>
     </dependency>
+     <dependency>
+       <groupId>org.slf4j</groupId>
+       <artifactId>slf4j-api</artifactId>
+       <version>1.6.4</version>
+     </dependency>
+     <dependency>
+       <groupId>ch.qos.logback</groupId>
+       <artifactId>logback-core</artifactId>
+       <version>0.9.28</version>
+     </dependency>
+     <dependency>
+       <groupId>ch.qos.logback</groupId>
+       <artifactId>logback-classic</artifactId>
+       <version>0.9.28</version>
+     </dependency>
   </dependencies>
 </project>
