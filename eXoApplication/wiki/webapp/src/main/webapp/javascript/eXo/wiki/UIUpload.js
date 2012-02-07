@@ -311,7 +311,7 @@ UIUpload.prototype.upload = function(clickEle, id) {
   var uploadFrame = parent.document.getElementById(id+"uploadFrame");
   var form = uploadFrame.contentWindow.document.getElementById(id);
 
-  var file  = DOMUtil.findDescendantById(form, "file");
+  var file  = DOMUtil.findDescendantById(form, "WikiUploadFile");
   if(file.value == null || file.value == '') return;  
   var infoUploaded = eXo.core.DOMUtil.findFirstDescendantByClass(container, "div", "FileNameLabel") ;
   var temp = file.value;
