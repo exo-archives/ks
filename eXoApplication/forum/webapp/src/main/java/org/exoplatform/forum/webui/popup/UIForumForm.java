@@ -175,9 +175,13 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
     if (ForumUtils.isEmpty(categoryId)) {
       List<Category> categorys = getForumService().getCategories();
       for (Category category : categorys) {
-        list.add(new SelectItemOption<String>(category.getCategoryName(), category.getId()));
+        if(category.getId().indexOf(ForumUtils.SPACE_GROUP_ID) < 0){
+          list.add(new SelectItemOption<String>(category.getCategoryName(), category.getId()));
+        }
       }
-      categoryId = categorys.get(0).getId();
+      if(list.size() > 0){
+        categoryId = list.get(0).getValue();
+      }
     } else {
       Category category = getForumService().getCategory(categoryId);
       list.add(new SelectItemOption<String>(category.getCategoryName(), categoryId));

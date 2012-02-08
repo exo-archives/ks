@@ -38,7 +38,6 @@ import org.exoplatform.forum.webui.popup.UIMoveForumForm;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.webui.BaseEventListener;
-import org.exoplatform.social.core.space.SpaceUtils;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -105,7 +104,6 @@ public class UICategory extends BaseForumForm {
 
   public UICategory() throws Exception {
     addUIFormInput(new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null));
-    setActions(new String[] { "EditCategory", "ExportCategory", "ImportForum", "DeleteCategory", "WatchOption", "AddForum", "EditForum", "SetLocked", "SetUnLock", "SetOpen", "SetClose", "MoveForum", "RemoveForum" });
   }
 
   public void initForm() throws Exception {
@@ -144,7 +142,7 @@ public class UICategory extends BaseForumForm {
       this.forums = forums;
     }
     categoryId = category.getId();
-    setActionInSpace();
+    setActionsCategory();
     this.getAncestorOfType(UIForumPortlet.class).getChild(UIBreadcumbs.class).setUpdataPath((categoryId));
   }
 
@@ -152,18 +150,15 @@ public class UICategory extends BaseForumForm {
     this.categoryId = categoryId;
     this.isEditCategory = true;
     this.isEditForum = true;
-    setActionInSpace();
+    setActionsCategory();
   }
   
-  private void setActionInSpace() {
-    // The category open is category of spaces  
-    if (categoryId.indexOf(SpaceUtils.SPACE_GROUP.replace(ForumUtils.SLASH, ForumUtils.EMPTY_STR)) > 0) {
-      String[] actions = getActions();
-      actions = (String[]) ArrayUtils.removeElement(actions, "DeleteCategory");
-      actions = (String[]) ArrayUtils.removeElement(actions, "AddForum");
-      actions = (String[]) ArrayUtils.removeElement(actions, "RemoveForum");
-      actions = (String[]) ArrayUtils.removeElement(actions, "MoveForum");
-      setActions(actions);
+  private void setActionsCategory() {
+    // The category open is category of spaces
+    if (categoryId.indexOf(ForumUtils.SPACE_GROUP_ID) > 0) {
+      setActions(new String[] { "EditCategory", "ExportCategory", "ImportForum", "WatchOption", "EditForum", "SetLocked", "SetUnLock", "SetOpen", "SetClose" });
+    } else {
+      setActions(new String[] { "EditCategory", "ExportCategory", "ImportForum", "DeleteCategory", "WatchOption", "AddForum", "EditForum", "SetLocked", "SetUnLock", "SetOpen", "SetClose", "MoveForum", "RemoveForum" });
     }
   }
 
@@ -172,7 +167,7 @@ public class UICategory extends BaseForumForm {
     this.isEditCategory = false;
     this.isEditForum = true;
     this.category = category;
-    setActionInSpace();
+    setActionsCategory();
   }
 
   public String getCategoryId() {

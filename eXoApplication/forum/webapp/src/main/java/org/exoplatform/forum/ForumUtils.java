@@ -49,6 +49,7 @@ import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.social.core.space.SpaceUtils;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 
@@ -96,6 +97,8 @@ public class ForumUtils {
 
   public static final String EMPTY_STR               = "".intern();
 
+  public static final String SPACE_GROUP_ID          = SpaceUtils.SPACE_GROUP.replace(SLASH, EMPTY_STR);
+  
   public static final int    MAXSIGNATURE            = 300;
 
   public static final int    MAXTITLE                = 100;

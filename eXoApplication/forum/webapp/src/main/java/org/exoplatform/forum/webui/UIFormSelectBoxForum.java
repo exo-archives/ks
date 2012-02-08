@@ -193,10 +193,11 @@ public class UIFormSelectBoxForum extends UIFormStringInput {
     for (SelectItemOption<String> item : options_) {
       String labelAndCss = item.getLabel();
       String temp[] = labelAndCss.split(ForumUtils.SLASH);
+      String label;
       try {
-        temp[0] = res.getString(formId + ".label.option." + item.getValue());
+        label = res.getString(formId + ".label.option." + temp[0]);
       } catch (MissingResourceException ex) {
-        temp[0] = formId + ".label.option." + item.getValue();
+        label = temp[0];
       }
       String classCss = "optionNormal";
       if (temp.length > 1)
@@ -214,7 +215,7 @@ public class UIFormSelectBoxForum extends UIFormStringInput {
         w.write(item.getValue());
         w.write("\">");
       }
-      w.write(temp[0]);
+      w.write(label);
       w.write("</option>\n");
     }
     w.write("</select>\n");
