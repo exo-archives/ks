@@ -30,12 +30,11 @@ import java.util.Set;
  * Extract macro list from Confluence Content
  */
 public class MacroExtractor {
+
   public static Map<String, Integer> extractMacro(Map<String, Integer> macrosMap, String body) {
     Map<String, Integer> foundMacros = new HashMap<String, Integer>();
 
-    // Remove {code}content{code}
-    body = removeBlocks("code", body);
-    body = removeBlocks("style", body);
+    body = cleanupBody(body);
 
     String macros[] = body.split("\\{");
     String previousPiece = ""; // To check for escaped macros
@@ -64,12 +63,25 @@ public class MacroExtractor {
     return foundMacros;
   }
 
-  public static Set<String> extractMacroWithParams(String body) {
+    private static String cleanupBody(String body) {
+        // Remove {code}content{code}
+        String newbody = body;
+
+        //Cleanup {{noformat text}}
+        newbody = newbody.replaceAll("\\{\\{.*\\}\\}", "");
+
+
+        newbody = removeBlocks("code", newbody);
+        newbody = removeBlocks("noformat", newbody);
+        newbody = removeBlocks("style", newbody);
+        return newbody;
+    }
+
+    public static Set<String> extractMacroWithParams(String body) {
     Set<String> foundMacros = new HashSet<String>();
 
     // Remove {code}content{code}
-    body = removeBlocks("code", body);
-    body = removeBlocks("style", body);
+    body = cleanupBody(body);
 
     String macros[] = body.split("\\{");
     String previousPiece = ""; // To check for escaped macros
@@ -94,7 +106,7 @@ public class MacroExtractor {
     return foundMacros;
   }
 
-  static String removeBlocks(String tag, String result) {
+  public static String removeBlocks(String tag, String result) {
     String[] split = result.split("\\{" + tag);
     boolean matching = true;
     boolean starting = true;
@@ -107,6 +119,7 @@ public class MacroExtractor {
         }
         content.append(piece);
       } else {
+        //leave one instance of the tag
         content.append("{").append(tag).append("}");
       }
       matching = !matching;

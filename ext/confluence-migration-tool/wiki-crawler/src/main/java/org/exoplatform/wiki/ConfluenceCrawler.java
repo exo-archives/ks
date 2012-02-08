@@ -19,12 +19,7 @@ package org.exoplatform.wiki;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import org.codehaus.swizzle.confluence.Attachment;
 import org.codehaus.swizzle.confluence.Comment;
@@ -78,7 +73,9 @@ public class ConfluenceCrawler {
   private boolean actionTransfertPageEnabled = false;
 
   private IWikiHandler wikiHandler;
-  final HashMap<String, Integer> macrosMap = new HashMap<String, Integer>();
+  final HashMap<String, Integer> supportedMacrosMap = new HashMap<String, Integer>();
+  final HashMap<String, Integer> unsupportedMacrosMap = new HashMap<String, Integer>();
+  final HashMap<String, Integer> unknownMacrosMap = new HashMap<String, Integer>();
 
   public static void main(String args[]) {
     ConfluenceCrawler cc = new ConfluenceCrawler();
@@ -98,6 +95,7 @@ public class ConfluenceCrawler {
     }
 
     cc.init(properties);
+    cc.initMacros();
     cc.run();
   }
 
@@ -178,6 +176,38 @@ public class ConfluenceCrawler {
     wikiHandler.start(targetUser, targetPwd);
   }
 
+  /**
+    *
+    */
+  public void initMacros() {
+      //Supported macros list
+      MacroMap.addMacro(supportedMacrosMap,
+              "*", "_",
+              "panel",
+              "code",
+              "color",
+              "column",
+              "info",
+              "note",
+              "pagetree",
+              "toc",
+              "section");
+      MacroMap.addMacro(unsupportedMacrosMap,
+              "jiraissues",
+              "contentbylabel",
+              "include",
+              "mockup",
+              "gliffy",
+              "excerpt",
+              "recently-updated",
+              "float",
+              "noformat",
+              "tip",
+              "jira");
+
+      //Unsupported macros list
+  }
+
   public void run() {
     try {
       if (confluence == null)
@@ -207,16 +237,10 @@ public class ConfluenceCrawler {
       log.info("* Visited pages : " + visitedPages);
       log.info("* Created pages : " + transferredPages);
       log.info("* Uploaded attachements : " + transferredAttachments);
-      log.info("* Macros : " + macrosMap.keySet().size());
-      
-      StringBuffer macroText = new StringBuffer("** ");
-      final ArrayList<String> sortedMacros = new ArrayList<String>();
-      sortedMacros.addAll(macrosMap.keySet());
-      Collections.sort(sortedMacros);
-      for (String macro : sortedMacros) {
-        macroText.append(macro + ", ");
-      }
-      log.info(macroText.toString());
+      log.info("* Macros usage :");
+      dumpMacroUsage("** Supported : ", supportedMacrosMap);
+      dumpMacroUsage("** Unsupported : ", unsupportedMacrosMap);
+      dumpMacroUsage("** Unknow  : ", unknownMacrosMap);
 
       if (erroredPaths.size() > 0) {
         log.error("* Errored pages : " + erroredPaths.size());
@@ -230,7 +254,22 @@ public class ConfluenceCrawler {
     }
   }
 
-  private boolean crawlPage(Confluence confluence, Page parentPage, Page page, String subPath) throws SwizzleException {
+    private void dumpMacroUsage(String title, Map<String, Integer> macroMap) {
+        log.info("* " + title);
+        StringBuffer macroText = new StringBuffer("*** ");
+        final ArrayList<String> sortedMacros = new ArrayList<String>();
+        sortedMacros.addAll(macroMap.keySet());
+        Collections.sort(sortedMacros);
+        for (String macro : sortedMacros) {
+          int usageCount = macroMap.get(macro);
+          if (usageCount>0) {
+             macroText.append(macro + "(" + usageCount + "), ");
+          }
+        }
+        log.info(macroText.toString());
+    }
+
+    private boolean crawlPage(Confluence confluence, Page parentPage, Page page, String subPath) throws SwizzleException {
     String createdPageName = processPage(confluence, parentPage, page, subPath);
     visitedPages++;
     boolean pageProcessed = createdPageName != null;
@@ -257,18 +296,7 @@ public class ConfluenceCrawler {
     String createdPageName = page.getTitle();
 
     if (actionCheckPageEnabled) {
-      final HashMap<String, Integer> newMacros = new HashMap<String, Integer>();
-      MacroExtractor.extractMacro(newMacros, page.getContent());
-      MacroMap.mergeMaps(newMacros, macrosMap);
-      final ArrayList<String> sortedMacros = new ArrayList<String>();
-      sortedMacros.addAll(newMacros.keySet());
-      Collections.sort(sortedMacros);
-      
-      StringBuffer macroText = new StringBuffer("** Macros : ");
-      for (String macro : sortedMacros) {
-        macroText.append(macro + ", ");
-      }
-      log.info(macroText.toString());
+        performCheckPageContent(page);
     }
 
     if (actionTransfertPageEnabled) {
@@ -339,7 +367,34 @@ public class ConfluenceCrawler {
     return createdPageName;
   }
 
-  private void uploadAttachments(Confluence confluence, Page page, String targetSpace, String createdPageName)
+    private void performCheckPageContent(Page page) {
+        final HashMap<String, Integer> newMacros = new HashMap<String, Integer>();
+        MacroExtractor.extractMacro(newMacros, page.getContent());
+
+        final Set<String> supportedMacros = supportedMacrosMap.keySet();
+        final Set<String> unsupportedMacros = unsupportedMacrosMap.keySet();
+        for (String macro : newMacros.keySet()) {
+            if (supportedMacros.contains(macro)) {
+                MacroMap.addMacro(supportedMacrosMap, macro);
+            } else if (unsupportedMacros.contains(macro)) {
+                MacroMap.addMacro(unsupportedMacrosMap, macro);
+            } else {
+                MacroMap.addMacro(unknownMacrosMap, macro);
+            }
+        }
+
+        //Dump macros sorted
+        final ArrayList<String> sortedMacros = new ArrayList<String>();
+        sortedMacros.addAll(newMacros.keySet());
+        Collections.sort(sortedMacros);
+        StringBuffer macroText = new StringBuffer("** Macros : ");
+        for (String macro : sortedMacros) {
+          macroText.append(macro + ", ");
+        }
+        log.info(macroText.toString());
+    }
+
+    private void uploadAttachments(Confluence confluence, Page page, String targetSpace, String createdPageName)
       throws SwizzleException {
 
     List<Attachment> attachments = confluence.getAttachments(page.getId());
