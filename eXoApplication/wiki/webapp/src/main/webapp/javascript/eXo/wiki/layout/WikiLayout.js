@@ -149,35 +149,28 @@ WikiLayout.prototype.setHeightRightContent = function() {
   var WikiLayout = eXo.wiki.WikiLayout;
   var DOMUtil = eXo.core.DOMUtil;
   if(!WikiLayout.layoutContainer) WikiLayout.init('');
-  var pageArea = DOMUtil.findFirstDescendantByClass(WikiLayout.layoutContainer, "div", "UIWikiPageArea");
-  var bottomArea = DOMUtil.findFirstDescendantByClass(WikiLayout.layoutContainer, "div", "UIWikiBottomArea");
-  var content = DOMUtil.findFirstDescendantByClass(WikiLayout.layoutContainer, "div", "WikiContent");
-  var delta = 18;
-  if(content) {
-    var wm = 0;
-    var divs = DOMUtil.findDescendantsByTagName(WikiLayout.layoutContainer, "div");
-    var tables = DOMUtil.findDescendantsByTagName(WikiLayout.layoutContainer, "table");
-    for (var i = 0; i < divs.length; ++i) {
-      if(wm < divs[i].offsetWidth) {
-        wm = divs[i].offsetWidth;
+  var pageArea = DOMUtil.findFirstDescendantByClass(WikiLayout.rightArea, "div", "UIWikiPageArea");
+  if(pageArea) {
+    var bottomArea = DOMUtil.findFirstDescendantByClass(WikiLayout.rightArea, "div", "UIWikiBottomArea");
+    var pageContainer = DOMUtil.findFirstDescendantByClass(WikiLayout.rightArea, "div", "UIWikiPageContainer");
+    if(bottomArea) {
+      if(eXo.core.Browser.getBrowserType() == "ie") {
+        pageArea.style.height = "auto";
+        pageArea.style.minHeight = "auto";
+        var delta = WikiLayout.rightArea.offsetHeight - (pageContainer.offsetHeight + bottomArea.offsetHeight) ;
+        if(delta > 0) {
+          pageArea.style.minHeight = (pageArea.offsetHeight + delta) + "px";
+        }
+        bottomArea.style.padding = "5px 15px";
+        bottomArea.style.width = "auto";
+      } else {
+        pageContainer.style.minHeight = (WikiLayout.rightArea.offsetHeight - 12) + "px";
+        pageArea.style.paddingBottom = bottomArea.offsetHeight + "px";
       }
     }
-    for (var i = 0; i < tables.length; ++i) {
-      if(wm < tables[i].offsetWidth) {
-        wm = tables[i].offsetWidth;
-      }
-    }
-    if(wm > WikiLayout.rightArea.offsetWidth){
-      delta += 18;
-    }
-  }
-  if (pageArea && bottomArea) {
-    pageArea.style.height = "auto";
-    var h = eXo.wiki.WikiLayout.layoutContainer.offsetHeight - (bottomArea.offsetHeight + delta);
-    var x = pageArea.offsetHeight;
-    pageArea.style.height = ((h < x)?x:h) + "px";
   }
 };
+
 
 WikiLayout.prototype.exeRowSplit = function(e) {
   _e = (window.event) ? window.event : e;

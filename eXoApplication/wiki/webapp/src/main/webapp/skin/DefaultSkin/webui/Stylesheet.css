@@ -328,9 +328,8 @@ table.UIFormGrid div.Id {
 }
 
 .UIWikiPortlet .UIWikiPageControlArea {
-	margin: 10px 0px;
 	border-bottom: 1px solid #C7C7C7;
- 
+	padding-top: 10px;
 }
 
 .UIWikiPortlet .WikiLayout {
@@ -380,6 +379,8 @@ table.UIFormGrid div.Id {
 .UIWikiPortlet .UIWikiMiddleArea .UIWikiPageContainer {
 	margin: 0;
 	overflow: visible;
+	position: relative;
+	*position: static;
 }
 
 .UIWikiPortlet .UIWikiMiddleArea .Related {
@@ -406,7 +407,7 @@ table.UIFormGrid div.Id {
 
 /* wiki homepage */
 .UIWikiPortlet .UIWikiPageArea {
-	padding: 0 15px;
+	padding: 0px 15px 45px 15px;
 	overflow: visible;
 	min-height: 300px;
 }
@@ -524,7 +525,7 @@ table.UIFormGrid div.Id {
 }
 
 .UIWikiPortlet .UIWikiContentDisplay {
-	padding: 10px;
+	padding: 20px 10px 10px;
 }
 
 .UIWikiPageVersionsList {
@@ -1035,9 +1036,13 @@ table.UIFormGrid div.Id {
 	font-size: 14px;
 }
 
-/* wiki attachment */
 .UIWikiBottomArea {
-	padding: 15px 15px 0;
+	position: absolute;
+	bottom:0px;
+	left: 15px;
+	padding: 0px 0px 5px;
+  width: 97.5%;
+  *position: static;
 }
 
 .UIWikiPageInfoArea {
