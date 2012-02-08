@@ -21,11 +21,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.exoplatform.wiki.IWikiHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by The eXo Platform SAS
@@ -36,8 +37,9 @@ import org.exoplatform.wiki.IWikiHandler;
  * Creates a wikbook structure from a confluence site
  */
 public class WikbookWikiHandler implements IWikiHandler {
-  private static final Logger log = Logger.getLogger(WikbookWikiHandler.class.toString());
-  
+
+  private static final Logger log = LoggerFactory.getLogger(WikbookWikiHandler.class.toString());
+
   File rootDir;
   File homeFile;
   File homeDir;
@@ -52,7 +54,7 @@ public class WikbookWikiHandler implements IWikiHandler {
 
   public void start(String targetUser, String targetPwd) {
     if (homeDir.exists()) {
-      log.warning("WARNING The export dir already exists, the existing content won't be removed but may be altered.");
+      log.warn("WARNING The export dir already exists, the existing content won't be removed but may be altered.");
     }
 
     rootDir.mkdirs();
@@ -62,7 +64,7 @@ public class WikbookWikiHandler implements IWikiHandler {
       try {
         homeFile.createNewFile();
       } catch (IOException e) {
-        log.warning("Can't create file : ");
+        log.error("Can't create file : ");
       }
     }
   }
@@ -96,7 +98,7 @@ public class WikbookWikiHandler implements IWikiHandler {
         pageFile.createNewFile();
       }
     } catch (IOException e) {
-      log.warning("File creation failed : " + pageName);
+      log.error("File creation failed : " + pageName);
     } finally {
       if (bufferedWriter != null) {
         try {
@@ -123,7 +125,7 @@ public class WikbookWikiHandler implements IWikiHandler {
     try {
       FileUtils.writeStringToFile(file, content);
     } catch (IOException e) {
-      log.warning("Transfer content failed : " + fileName);
+      log.error("Transfer content failed : " + fileName);
       return false;
     }
     return true;
@@ -151,7 +153,7 @@ public class WikbookWikiHandler implements IWikiHandler {
     try {
       IOUtils.write(data, new FileOutputStream(attachment));
     } catch (IOException e) {
-      log.warning("Attachment can't be saved");
+      log.error("Attachment can't be saved");
     }
   }
 }
