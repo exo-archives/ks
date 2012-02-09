@@ -34,7 +34,7 @@
     <org.exoplatform.portal.version>3.2.3-PLF-SNAPSHOT</org.exoplatform.portal.version>
     <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
     <org.exoplatform.exopackage.version>1.1.4</org.exoplatform.exopackage.version>
-    <org.chromattic.version>1.1.1</org.chromattic.version>
+    <org.chromattic.version>1.1.2</org.chromattic.version>
     <!--commons dependencies -->
     <org.exoplatform.commons.version>1.1.7-SNAPSHOT</org.exoplatform.commons.version>
     <!-- eXo extended service -->
