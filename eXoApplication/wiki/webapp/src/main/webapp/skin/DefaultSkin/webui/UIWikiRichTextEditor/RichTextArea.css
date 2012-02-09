@@ -96,8 +96,6 @@ body.UIWikiPortletWysiwygCss { /*
   overflow: visible;
   padding: 1px;
   text-align: left;
-  /* Prevent word wrapping inside a macro container in IE */
-  white-space: nowrap;
 }
 
 .UIWikiPortletWysiwygCss .main .macro .macro-placeholder {
