@@ -22,8 +22,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.rendering.context.MarkupContextManager;
@@ -53,7 +51,6 @@ import org.xwiki.rendering.wiki.WikiModel;
 
 @Component("includepage")
 public class IncludePageMacro extends AbstractMacro<IncludePageMacroParameters> {
-  private Log log = ExoLogger.getLogger(this.getClass());
   /**
    * The description of the macro
    */
@@ -73,10 +70,6 @@ public class IncludePageMacro extends AbstractMacro<IncludePageMacroParameters> 
    */
   @Inject
   private MarkupContextManager markupContextManager;
-
-  private RenderingService    renderingservice;
-
-  private WikiService         wservice;
   
   public IncludePageMacro() {
     super("Include Page", DESCRIPTION, IncludePageMacroParameters.class);
@@ -87,44 +80,50 @@ public class IncludePageMacro extends AbstractMacro<IncludePageMacroParameters> 
   public List<Block> execute(IncludePageMacroParameters parameters,
                              String content,
                              MacroTransformationContext context) throws MacroExecutionException {
-
-    String documentName = parameters.getPage();
-    renderingservice = getRenderingService();
-    wservice = getWikiService();
-    WikiPageParams params = markupContextManager.getMarkupContext(documentName, ResourceType.DOCUMENT);
-    WikiContext currentContext = null;
-    WikiContext pageContext = null;
     StringBuilder includeContent = new StringBuilder();
     ExecutionContext ec = execution.getContext();
+    WikiContext currentCtx = (WikiContext) ec.getProperty(WikiContext.WIKICONTEXT);
+    WikiContext includeCtx = currentCtx.clone();
+    WikiPageParams includeParams = markupContextManager.getMarkupContext(parameters.getPage(), ResourceType.DOCUMENT);
+    PageImpl page = null;
     try {
-      if (ec != null) {
-        currentContext = (WikiContext) ec.getProperty(WikiContext.WIKICONTEXT);
-        pageContext = currentContext.clone();
-        pageContext.setOwner(params.getOwner());
-        pageContext.setType(params.getType());
-        pageContext.setPageId(params.getPageId());
-        // Set page context as current context
-        ec.setProperty(WikiContext.WIKICONTEXT, pageContext);
-      }
-      includeContent.append("<div class=\"IncludePage \" >");
-      PageImpl page = (PageImpl) wservice.getPageById(params.getType(),
-                                                      params.getOwner(),
-                                                      params.getPageId());
+      page = (PageImpl) getWikiService().getPageById(includeParams.getType(), includeParams.getOwner(), includeParams.getPageId());
+      includeParams = new WikiPageParams(includeParams.getType(), includeParams.getOwner(), page.getName());
+    } catch (Exception e) {
+      throw new MacroExecutionException(String.format("Failed to resolve page [%s.%s:%s]",
+                                                      currentCtx.getType(),
+                                                      currentCtx.getOwner(),
+                                                      currentCtx.getPageTitle()));
+    }
+    
+    if (isRecursiveInclude(currentCtx, includeParams)) {      
+      throw new MacroExecutionException(String.format("Found recursive inclusion of page [%s.%s:%s]",
+                                                      currentCtx.getType(),
+                                                      currentCtx.getOwner(),
+                                                      currentCtx.getPageTitle()));
+    }
+    try {
+      includeCtx.includePageCtx.add(includeParams);
+      // Set page context as current context
+      ec.setProperty(WikiContext.WIKICONTEXT, includeCtx);      
       if (page != null) {
-        includeContent.append(renderingservice.render(page.getContent().getText(),
+        includeContent.append("<div class=\"IncludePage \" >");
+        includeContent.append(getRenderingService().render(page.getContent().getText(),
                                                       page.getSyntax(),
                                                       Syntax.XHTML_1_0.toIdString(),
                                                       false));
-      }
-      includeContent.append("</div>");
+        includeContent.append("</div>");
+      }      
       Block result = new RawBlock(includeContent.toString(), Syntax.XHTML_1_0);
       return Collections.singletonList(result);
     } catch (Exception e) {
-      log.debug("Failed to execute page macro", e);
-      return Collections.emptyList();
+      throw new MacroExecutionException(String.format("Failed to render include page's content [%s.%s:%s]",
+                                                      currentCtx.getType(),
+                                                      currentCtx.getOwner(),
+                                                      currentCtx.getPageTitle()));
     } finally {
       // Restore current context
-      ec.setProperty(WikiContext.WIKICONTEXT, currentContext);
+      ec.setProperty(WikiContext.WIKICONTEXT, currentCtx);
     }
   }
 
@@ -157,6 +156,10 @@ public class IncludePageMacro extends AbstractMacro<IncludePageMacroParameters> 
   protected WikiService getWikiService() {
     return (WikiService) ExoContainerContext.getCurrentContainer()
                                                  .getComponentInstanceOfType(WikiService.class);
+  }
+  
+  private boolean isRecursiveInclude(WikiContext context, WikiPageParams params) {
+    return context.includePageCtx.contains(params);
   }
   
 }

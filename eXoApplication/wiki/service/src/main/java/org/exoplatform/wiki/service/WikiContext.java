@@ -17,6 +17,7 @@
 package org.exoplatform.wiki.service;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import org.xwiki.rendering.syntax.Syntax;
 
@@ -41,6 +42,8 @@ public class WikiContext extends WikiPageParams implements Cloneable, Serializab
   public static final String WIKITYPE    = "wikiType";
 
   public static final String WIKI        = "wiki";
+  
+  public ArrayList<WikiPageParams> includePageCtx   = new ArrayList<WikiPageParams>();
   
   private String             pageTitle;
   
@@ -129,7 +132,7 @@ public class WikiContext extends WikiPageParams implements Cloneable, Serializab
   }
 
   @Override
-  public WikiContext clone() throws CloneNotSupportedException {
+  public WikiContext clone() {
     WikiContext obj = new WikiContext();
     obj.setAttachmentName(this.getAttachmentName());
     obj.setOwner(this.getOwner());
@@ -144,6 +147,7 @@ public class WikiContext extends WikiPageParams implements Cloneable, Serializab
     obj.setTreeRestURI(this.getTreeRestURI());
     obj.setType(this.getType());
     obj.setSyntax(this.getSyntax());
+    obj.includePageCtx = (ArrayList<WikiPageParams>) this.includePageCtx.clone();
     return obj;
   }
   

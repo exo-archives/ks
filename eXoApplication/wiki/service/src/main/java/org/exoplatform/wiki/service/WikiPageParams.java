@@ -75,4 +75,41 @@ public class WikiPageParams {
     this.parameters = parameters;
   }
 
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    WikiPageParams other = (WikiPageParams) obj;
+    if (attachmentName == null) {
+      if (other.attachmentName != null)
+        return false;
+    } else if (!attachmentName.equals(other.attachmentName))
+      return false;
+    if (owner == null) {
+      if (other.owner != null)
+        return false;
+    } else if (!owner.equals(other.owner))
+      return false;
+    if (pageId == null) {
+      if (other.pageId != null)
+        return false;
+    } else if (!pageId.equals(other.pageId))
+      return false;
+    if (parameters == null) {
+      if (other.parameters != null)
+        return false;
+    } else if (!parameters.equals(other.parameters))
+      return false;
+    if (type == null) {
+      if (other.type != null)
+        return false;
+    } else if (!type.equals(other.type))
+      return false;
+    return true;
+  }
+
 }

@@ -16,6 +16,7 @@
  */
 package org.exoplatform.wiki.rendering.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.wiki.mow.api.Model;
@@ -117,11 +118,20 @@ public class TestMacroRendering extends AbstractRenderingTestCase {
     String content = "Test include contents of a page";
     home.getContent().setText(content);
     String expectedHtml = "<div class=\"IncludePage \" ><p>" + content + "</p></div>";
-    model.save();
+    model.save();    
     assertEquals(expectedHtml, renderingService.render("{{includepage page=\"Wiki Home\"/}}",
                                                        Syntax.XWIKI_2_0.toIdString(),
                                                        Syntax.XHTML_1_0.toIdString(),
                                                        false));
+    // Test recursive inclusion
+    String content2 = "{includepage:page=\"Wiki Home\"}";
+    home.getContent().setText(content2);   
+    model.save();
+    String renderedHTML =   renderingService.render("{includepage:page=\"Wiki Home\"}",
+                                                    Syntax.CONFLUENCE_1_0.toIdString(),
+                                                    Syntax.XHTML_1_0.toIdString(),
+                                                    false);
+    assertEquals(1, (StringUtils.countMatches(renderedHTML, "<div class=\"IncludePage \" >")));        
   }
 
   public void testChildrenMacro() throws Exception {
