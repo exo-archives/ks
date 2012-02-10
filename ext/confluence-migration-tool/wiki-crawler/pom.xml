@@ -12,7 +12,7 @@
   <name>Confluence Migration Wiki Crawler</name>
 
   <properties>
-    <org.logback.version>0.9.28</org.logback.version>
+    <org.logback.version>0.9.15</org.logback.version>
     <commons-fileupload.version>1.2.1</commons-fileupload.version>
   </properties>
 
