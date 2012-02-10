@@ -67,6 +67,7 @@ public class UIWikiSelectTemplateForm extends UIWikiTemplateForm implements UIPo
   
   public UIWikiSelectTemplateForm() throws Exception {
     super();
+    grid.setParent(this);
     grid.configure(TEMPLATE_ID, TEMPLATE_FIELD, USER_ACTION);
   }
   
