@@ -19,19 +19,57 @@ package org.exoplatform.wiki;
 /**
  * Created by The eXo Platform SAS
  * Author : Dimitri BAELI
- *          dbaeli@exoplatform.com
- * Feb 02, 2012  
+ * dbaeli@exoplatform.com
+ * Feb 02, 2012
  */
 public interface IWikiHandler {
-  public void start(String targetUser, String targetPwd);
 
-  public void stop();
+  /**
+   * Initialise the Handler
+   *
+   * @param targetUser  user
+   * @param targetPwd  password
+   */
+  void start(String targetUser, String targetPwd);
 
-  public String createPage(String path, String pageName, boolean hasChildren);
+  /**
+   * Clean up context informations
+   */
+  void stop();
 
-  public boolean transfertContent(String content, String path);
+  /**
+   * Create a new page
+   *
+   * @param path  page path in the target (
+   * @param pageName name of the page
+   * @param hasChildren indicate if the page has some children (for wikbook export only)
+   * @return created page path
+   */
+  String createPage(String path, String pageName, boolean hasChildren);
 
-  public boolean checkPageExists(String path);
+  /**
+   * Put some content in a page
+   *
+   * @param content content to push
+   * @param path page path
+   * @return
+   */
+  boolean transferContent(String content, String path);
 
-  public void uploadAttachment(String targetSpace, String pageName, String attachmentName, String contentType, byte[] data);
+  /**
+   * @param path  page path
+   * @return true if the page already exists
+   */
+  boolean checkPageExists(String path);
+
+  /**
+   * Upload an attachment file
+   *
+   * @param targetSpace target space
+   * @param pageName
+   * @param attachmentName
+   * @param contentType
+   * @param data
+   */
+  void uploadAttachment(String targetSpace, String pageName, String attachmentName, String contentType, byte[] data);
 }

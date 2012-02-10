@@ -16,12 +16,6 @@
  */
 package org.exoplatform.wiki.handler;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -41,31 +35,25 @@ import org.exoplatform.wiki.IWikiHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Created by The eXo Platform SAS
- * Author: Dimitri BAELI
- *         dbaeli@exoplatform.com
- * Feb 02, 2012
- * 
- * A class to interact with the ExoWikiRestService See Wikiloader.groovy class
+ * A class to interact with an Exo RestService represented by wikiloader.groovy file (deployed one the server side)
  */
 public class ExoWikiHandler implements IWikiHandler {
   public static final String CHAR_TO_REPLACE = " *'\"+?&";
-  
-  private static final Logger log = LoggerFactory.getLogger(ExoWikiHandler.class.toString());
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(ExoWikiHandler.class.toString());
+  private static final String DEFAULT_ENCODING = "UTF-8";
 
   private DefaultHttpClient httpClient;
   private String targetHost;
 
   public ExoWikiHandler(String targetHost) {
-    this.targetHost = targetHost;
-  }
-
-  public String getTargetHost() {
-    return targetHost;
-  }
-
-  public void setTargetHost(String targetHost) {
     this.targetHost = targetHost;
   }
 
@@ -84,101 +72,84 @@ public class ExoWikiHandler implements IWikiHandler {
     return httpclient;
   }
 
-  public boolean checkTargetPageUrl(String targetSpace, String targetPage) {
-    try {
-      int statusCode = getHttpStatusOfPageOnTarget(targetSpace, targetPage);
-      if (statusCode != 200) {
-        log.error("Target page not found or error : " + statusCode);
-        return false;
-      } else if (statusCode == 404) {
-        log.info(String.format("Target page ok : %s/%s", targetSpace, targetPage));
-        return true;
-      } else {
-        log.error(String.format("Can't check target page, FAILURE with Http code %s : %s/%s", statusCode, targetSpace, targetPage));
-      }
-    } catch (IOException e) {
-      log.error("Target Page not found target: " + targetPage);
-    }
-    return false;
-  }
-
   /**
    * Create a new Page, returns the new name, or null if already exists.
-   * 
-   * @param path
-   * @param name
+   *
+   * @param path  where the page have to be created
+   * @param name  of the page to create
    * @return page name
    */
   public String createPage(String path, String name, boolean hasChildren) {
     String pageName = normalizePageName(name, CHAR_TO_REPLACE, '_');
-    try {
+    try
+    {
       int statusCode = getHttpStatusOfPageOnTarget(path, pageName);
       if (statusCode == 404) {
 
-        log.info(String.format("[Create] %s//%s", path, pageName));
-        HttpGet httpGet = new HttpGet(targetHost + "/rest/private/wikiloader/create?path=" + URLEncoder.encode(path, "UTF-8") + "&name=" + URLEncoder.encode(pageName, "UTF-8"));
+        LOGGER.info(String.format("[Create] %s//%s", path, pageName));
+        HttpGet httpGet = new HttpGet(targetHost + "/rest/private/wikiloader/create?path=" + URLEncoder.encode(path, DEFAULT_ENCODING) + "&name=" + URLEncoder.encode(pageName, DEFAULT_ENCODING));
         HttpResponse responseCreate = httpClient.execute(httpGet);
         int statusCodeRC1 = responseCreate.getStatusLine().getStatusCode();
         if (statusCodeRC1 == 200) {
           pageName = IOUtils.toString(responseCreate.getEntity().getContent());
         } else {
           String message = IOUtils.toString(responseCreate.getEntity().getContent());
-          log.error(String.format("[Create] ERROR During Page creation : %s/%s (Cause: %s)", path, pageName, message));
+          LOGGER.error(String.format("[Create] ERROR During Page creation : %s/%s (Cause: %s)", path, pageName, message));
           return null;
         }
 
         HttpGet httpCheckCreated = new HttpGet(targetHost + "/rest/private/wikiloader/check?path="
-            + URLEncoder.encode(path + "/" + pageName, "UTF-8"));
+            + URLEncoder.encode(path + "/" + pageName, DEFAULT_ENCODING));
         HttpResponse responseCheck2 = httpClient.execute(httpCheckCreated);
         int statusCodeRC2 = responseCheck2.getStatusLine().getStatusCode();
         responseCheck2.getEntity().consumeContent();
         if (statusCodeRC2 != 200) {
-          log.error(String.format("[Create] ERROR Created page %s/%s not found.", path, pageName));
+          LOGGER.error(String.format("[Create] ERROR Created page %s/%s not found.", path, pageName));
           return pageName;
         }
         return pageName;
       } else if (statusCode == 200) {
-        log.error(String.format("[Create] WARNING page already exists : %s : %s/%s", statusCode, path, pageName));
+        LOGGER.error(String.format("[Create] WARNING page already exists : %s : %s/%s", statusCode, path, pageName));
         return null;
       }
-    } catch (Exception exception) {
-      log.error(String.format("[Create] Error creating WIKI_PAGE : %s/%s", path, pageName));
+    } catch (IOException exception) {
+      LOGGER.error(String.format("[Create] Error creating WIKI_PAGE : %s/%s", path, pageName));
     }
     return null;
   }
 
   public int getHttpStatusOfPageOnTarget(String path, String pageName) throws IOException {
-    HttpGet httpCheck = new HttpGet(targetHost + "/rest/private/wikiloader/check?path=" + URLEncoder.encode(path + "/" + pageName, "UTF-8"));
+    HttpGet httpCheck = new HttpGet(targetHost + "/rest/private/wikiloader/check?path=" + URLEncoder.encode(path + "/" + pageName, DEFAULT_ENCODING));
     HttpResponse responseCheck = httpClient.execute(httpCheck);
     int statusCode = responseCheck.getStatusLine().getStatusCode();
     responseCheck.getEntity().consumeContent();
     return statusCode;
   }
 
-  public boolean transfertContent(String content, String path) {
+  public boolean transferContent(String content, String path) {
     try {
       HttpPost httppost = new HttpPost(targetHost + "/rest/private/wikiloader/content");
       List<NameValuePair> formparams = new ArrayList<NameValuePair>();
       formparams.add(new BasicNameValuePair("path", path));
       formparams.add(new BasicNameValuePair("content", content));
-      UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
+      UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, DEFAULT_ENCODING);
       httppost.setEntity(entity);
       HttpResponse response = httpClient.execute(httppost);
       response.getEntity().consumeContent();
-    } catch (Exception exception) {
-      log.error("[Transfert] Error uploading content to : " + path);
+    } catch (IOException exception) {
+      LOGGER.error("[Transfert] Error uploading content to : " + path);
     }
     return true;
   }
 
   public boolean checkPageExists(String path) {
     try {
-      HttpGet httpGet = new HttpGet(targetHost + "/rest/private/wikiloader/pageurl?path=" + URLEncoder.encode(path, "UTF-8"));
+      HttpGet httpGet = new HttpGet(targetHost + "/rest/private/wikiloader/pageurl?path=" + URLEncoder.encode(path, DEFAULT_ENCODING));
       HttpResponse responseGet = httpClient.execute(httpGet);
       responseGet.getEntity().consumeContent();
       return responseGet.getStatusLine().getStatusCode() == 200;
-    } catch (Exception exception) {
-      log.error("[URL] Error getting Url for : " + path);
+    } catch (IOException exception) {
+      LOGGER.error("[URL] Error getting Url for : " + path);
     }
     return false;
   }
@@ -192,19 +163,18 @@ public class ExoWikiHandler implements IWikiHandler {
       post.setEntity(multipartEntity);
 
       HttpResponse response = httpClient.execute(post);
-      String result = IOUtils.toString(response.getEntity().getContent());
       response.getEntity().consumeContent();
-    } catch (Exception exception) {
-      log.error("Upload attachment fail");
+    } catch (IOException exception) {
+      LOGGER.error("Upload attachment fail");
     }
   }
 
   /**
    * Change the name of a page to an acceptable one for the wiki engine
-   * 
-   * @param title
-   * @param replacedChars
-   * @param replacementChar
+   *
+   * @param title page title
+   * @param replacedChars chars to be replaced
+   * @param replacementChar the char to use
    * @return new title
    */
   public static String normalizePageName(String title, String replacedChars, char replacementChar) {

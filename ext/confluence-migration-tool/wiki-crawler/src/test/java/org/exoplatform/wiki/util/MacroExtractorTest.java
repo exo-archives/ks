@@ -16,16 +16,16 @@
  */
 package org.exoplatform.wiki.util;
 
+import junit.framework.TestCase;
+
 import java.util.Map;
 import java.util.Set;
-
-import junit.framework.TestCase;
 
 /**
  * Created by The eXo Platform SAS
  * Author:  Dimitri BAELI
- *          dbaeli@exoplatform.com
- * Feb 02, 2012  
+ * dbaeli@exoplatform.com
+ * Feb 02, 2012
  */
 public class MacroExtractorTest extends TestCase {
   public Set<String> extractMacro(String content) {
@@ -194,38 +194,38 @@ public class MacroExtractorTest extends TestCase {
     TestCase.assertTrue(result.contains("macro1:java"));
   }
 
-    public void testNoFormatParsing() {
-        Map<String, Integer> result = MacroExtractor.extractMacro(null, "{noformat}commons.upgrade.plugins.order={Plugin1_Name},{Plugin2_Name},{Plugin3_Name}{noformat} ");
-        TestCase.assertEquals(1, (int) result.get("noformat"));
-        TestCase.assertEquals(null, result.get("Plugin1_Name"));
-    }
+  public void testNoFormatParsing() {
+    Map<String, Integer> result = MacroExtractor.extractMacro(null, "{noformat}commons.upgrade.plugins.order={Plugin1_Name},{Plugin2_Name},{Plugin3_Name}{noformat} ");
+    TestCase.assertEquals(1, (int) result.get("noformat"));
+    TestCase.assertEquals(null, result.get("Plugin1_Name"));
+  }
 
-    public void testNoFormatParsing_ExtractWithParams() {
-        Set<String> result = MacroExtractor.extractMacroWithParams("{noformat} text {macro} text {noformat}");
-        TestCase.assertTrue(result.contains("noformat"));
-        TestCase.assertTrue(!result.contains("macro"));
-    }
+  public void testNoFormatParsing_ExtractWithParams() {
+    Set<String> result = MacroExtractor.extractMacroWithParams("{noformat} text {macro} text {noformat}");
+    TestCase.assertTrue(result.contains("noformat"));
+    TestCase.assertTrue(!result.contains("macro"));
+  }
 
 
-    public void testNoFormatDoubleBracket() {
-        Map<String, Integer> result = MacroExtractor.extractMacro(null, "text {{notamacro}} text");
-        TestCase.assertEquals(null, result.get("notamacro"));
-    }
+  public void testNoFormatDoubleBracket() {
+    Map<String, Integer> result = MacroExtractor.extractMacro(null, "text {{notamacro}} text");
+    TestCase.assertEquals(null, result.get("notamacro"));
+  }
 
-    public void testNoFormatDoubleBracket_ExtractWithParams() {
-        Set<String> result = MacroExtractor.extractMacroWithParams("text {{notamacro}} text");
-        TestCase.assertTrue(!result.contains("notamacro"));
-        TestCase.assertTrue(result.isEmpty());
-    }
+  public void testNoFormatDoubleBracket_ExtractWithParams() {
+    Set<String> result = MacroExtractor.extractMacroWithParams("text {{notamacro}} text");
+    TestCase.assertTrue(!result.contains("notamacro"));
+    TestCase.assertTrue(result.isEmpty());
+  }
 
-    public void testRemoveBlocks() {
-        final String content = MacroExtractor.removeBlocks("noformat", "before{noformat}inside{noformat}after");
-        assertEquals("before{noformat}after", content);
-    }
+  public void testRemoveBlocks() {
+    final String content = MacroExtractor.removeBlocks("noformat", "before{noformat}inside{noformat}after");
+    assertEquals("before{noformat}after", content);
+  }
 
-    public void testRemoveBlocksExtreme() {
-        final String content = MacroExtractor.removeBlocks("noformat", "{noformat}inside{noformat}");
-        assertEquals("{noformat}", content);
-    }
+  public void testRemoveBlocksExtreme() {
+    final String content = MacroExtractor.removeBlocks("noformat", "{noformat}inside{noformat}");
+    assertEquals("{noformat}", content);
+  }
 
 }

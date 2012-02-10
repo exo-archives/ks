@@ -16,25 +16,25 @@
  */
 package org.exoplatform.wiki.util;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 /**
- * Created by The eXo Platform SAS
- * Author: Dimitri BAELI
- *         dbaeli@exoplatform.com
- * Feb 02, 2012
- * 
  * Utility class to fix some macro content from confluence to eXoWiki format
  */
-public class ExoWikiMacroTransformer {
+public final class ExoWikiMacroTransformer {
+
+  private ExoWikiMacroTransformer() {
+  }
+
+  /**
+   *
+   * @param macroContent  text to be changed
+   * @return content compatible with eXo Wiki features support
+   */
   public static String transformMacroContent(String macroContent) {
     if (!macroContent.startsWith("{iframe")) {
       return macroContent;
     }
 
-    Set<String> params = new LinkedHashSet<String>();
-    String[] macros = macroContent.substring(1, macroContent.length() - 1).split("\\:");
+    String[] macros = macroContent.substring(1, macroContent.length() - 1).split(":");
     String head = macros[0];
     StringBuilder result = new StringBuilder("{").append(head);
     if (macros.length > 1) {
@@ -54,7 +54,7 @@ public class ExoWikiMacroTransformer {
     return result.toString();
   }
 
-  public static String fixParam(String head, String param) {
+  protected static String fixParam(String head, String param) {
     if ("iframe".equals(head) && param.startsWith("src=") && !param.startsWith("src=\"")) {
       return "src=\"" + param.substring(4) + "\"";
     }

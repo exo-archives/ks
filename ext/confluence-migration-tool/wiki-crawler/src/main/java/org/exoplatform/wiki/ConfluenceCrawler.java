@@ -16,18 +16,7 @@
  */
 package org.exoplatform.wiki;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.*;
-
-import org.codehaus.swizzle.confluence.Attachment;
-import org.codehaus.swizzle.confluence.Comment;
-import org.codehaus.swizzle.confluence.Confluence;
-import org.codehaus.swizzle.confluence.Label;
-import org.codehaus.swizzle.confluence.Page;
-import org.codehaus.swizzle.confluence.PageSummary;
-import org.codehaus.swizzle.confluence.SwizzleException;
+import org.codehaus.swizzle.confluence.*;
 import org.exoplatform.wiki.handler.ExoWikiHandler;
 import org.exoplatform.wiki.handler.WikbookWikiHandler;
 import org.exoplatform.wiki.util.MacroExtractor;
@@ -35,275 +24,342 @@ import org.exoplatform.wiki.util.MacroMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.*;
+
 /**
- * Created by The eXo Platform SAS
- * Author : Dimitri BAELI
- *          dbaeli@exoplatform.com
- * Feb 02, 2012  
+ * Main class for Confluence to wiki migration
+ * Browse a confluence server and perform content check, stats and transfer
  */
-public class ConfluenceCrawler {
-  private static final Logger log = LoggerFactory.getLogger(ConfluenceCrawler.class.toString());
-  
-  public final String TYPE_EXOWIKI = "exowiki";
-  public final String TYPE_WIKBOOK = "wikbook";
+public class ConfluenceCrawler implements CrawlerConstants {
+  private static final Logger LOGGER = LoggerFactory.getLogger(ConfluenceCrawler.class.toString());
+
 
   private Confluence confluence;
   private String sourceHost = "";
   private String sourceUser = "";
   private String sourcePwd = "";
 
-  private boolean recurseOnChildren = false;
-  private boolean stopOnFailure = false;
-  private boolean transferAttachments = true;
-  private boolean transferComments = true;
-  private boolean transferLabels = true;
+  private boolean optionRecursiveCrawling = false;
+  private boolean optionStopOnFailure = false;
+  private boolean optionTransferAttachments = true;
+  private boolean optionTransferComments = true;
+  private boolean optionTransferLabels = true;
 
   private int visitedPages = 0;
   private int transferredPages = 0;
   private int transferredAttachments = 0;
-  private List<String> erroredPaths = new ArrayList<String>();
+  private List<String> pagesInError = new ArrayList<String>();
+
   private String sourceSpace;
-  private String sourcePage;
   private String targetSpace;
   private String targetPage;
 
-  private String crawlerActions = "check";
+  private String crawlerActions = ACTION_CHECK;
 
   private boolean actionCheckPageEnabled = true;
   private boolean actionTransfertPageEnabled = false;
 
   private IWikiHandler wikiHandler;
-  final HashMap<String, Integer> supportedMacrosMap = new HashMap<String, Integer>();
-  final HashMap<String, Integer> unsupportedMacrosMap = new HashMap<String, Integer>();
-  final HashMap<String, Integer> unknownMacrosMap = new HashMap<String, Integer>();
+  private final Map<String, Integer> supportedMacrosMap = new HashMap<String, Integer>();
+  private final Map<String, Integer> unsupportedMacrosMap = new HashMap<String, Integer>();
+  private final Map<String, Integer> unknownMacrosMap = new HashMap<String, Integer>();
+  private int maxAttachmentSize = 2048;
+  private String[] sourcePages;
+  private String targetHost;
+  private String targetUser;
+  private String targetPwd;
+  private String targetType;
 
   public static void main(String args[]) {
+
     ConfluenceCrawler cc = new ConfluenceCrawler();
+
     String propertiesFile = args.length > 0 ? args[0] : "migration.properties";
-    String envMigrationFile = System.getProperty("wiki.migration.file");
+    String envMigrationFile = System.getProperty(ENV_VARIABLE_MIGRATION_FILE);
     if (envMigrationFile != null) {
       propertiesFile = envMigrationFile;
     }
 
-    log.info("Using input file : " + propertiesFile);
-    Properties properties = new Properties();
-    try {
-      properties.load(new FileInputStream(propertiesFile));
-    } catch (IOException e) {
-      log.error("Can not load property file : " + propertiesFile);
-      return;
-    }
+    cc.processMigration(propertiesFile);
 
-    cc.init(properties);
-    cc.initMacros();
-    cc.run();
   }
 
   public ConfluenceCrawler() {
   }
 
-  public void init(Properties properties) {
-    sourceHost = properties.getProperty("sourceHost");
-    sourceSpace = properties.getProperty("sourceSpace");
-    sourcePage = properties.getProperty("sourcePage");
+  protected void processMigration(String propertiesFile) {
+    loadPropertiesFromFile(propertiesFile);
+    initConnectors();
+    initMacros();
+    boolean processed = run();
+    dumpStatistics();
+    stop();
 
-    sourceUser = properties.getProperty("sourceUser");
-    sourcePwd = properties.getProperty("sourcePwd");
-    String sourcePwdFromEnv = System.getProperty("wiki.source.pwd");
+    if (!processed) {
+      throw new ConfluenceCrawlerException("Page processing failed");
+    }
+
+  }
+
+  public void loadPropertiesFromFile(String propertiesFile) {
+
+    LOGGER.info("Using input file : " + propertiesFile);
+    Properties properties = new Properties();
+    try {
+      properties.load(new FileInputStream(propertiesFile));
+    } catch (IOException e) {
+      LOGGER.error("Can not load property file : " + propertiesFile);
+      return;
+    }
+
+    sourceHost = properties.getProperty(PARAMETER_SOURCE_HOST);
+    sourceSpace = properties.getProperty(PARAMETER_SOURCE_SPACE);
+
+    String sourcePage = properties.getProperty(PARAMETER_SOURCE_PAGE);
+    sourcePages = sourcePage.split("\\|");
+
+    sourceUser = properties.getProperty(PARAMETER_SOURCE_USER);
+    sourcePwd = properties.getProperty(PARAMETER_SOURCE_PWD);
+    String sourcePwdFromEnv = System.getProperty(ENV_VARIABLE_WIKI_SOURCE_PWD);
     if (sourcePwdFromEnv != null && !"".equals(sourcePwdFromEnv)) {
       sourcePwd = sourcePwdFromEnv;
     }
 
-    String targetHost = properties.getProperty("targetHost");
-    targetSpace = properties.getProperty("targetSpace");
-    targetPage = properties.getProperty("targetPage");
+    targetHost = properties.getProperty(PARAMETER_TARGET_HOST);
+    targetSpace = properties.getProperty(PARAMETER_TARGET_SPACE);
+    targetPage = properties.getProperty(PARAMETER_TARGET_PAGE);
 
-    String targetUser = properties.getProperty("targetUser");
-    String targetPwd = properties.getProperty("targetPwd");
-    String targetPwdFromEnv = System.getProperty("wiki.target.pwd");
+    targetUser = properties.getProperty(PARAMETER_TARGET_USER);
+    targetPwd = properties.getProperty(PARAMETER_TARGET_PWD);
+    String targetPwdFromEnv = System.getProperty(ENV_VARIABLE_WIKI_TARGET_PWD);
     if (targetPwdFromEnv != null && !"".equals(targetPwdFromEnv)) {
       targetPwd = targetPwdFromEnv;
     }
 
-    log.info(String.format("%s:%s:%s", sourceHost, sourceUser, sourcePwd));
-    log.info(String.format("%s:%s:%s", targetHost, targetUser, targetPwd));
+    LOGGER.info(String.format("%s:%s:%s", sourceHost, sourceUser, sourcePwd));
+    LOGGER.info(String.format("%s:%s:%s", targetHost, targetUser, targetPwd));
 
-    recurseOnChildren = Boolean.valueOf(properties.getProperty("recurseOnChildren"));
-    stopOnFailure = Boolean.valueOf(properties.getProperty("stopOnFailure"));
-    transferAttachments = Boolean.valueOf(properties.getProperty("transferAttachments"));
-    transferComments = Boolean.valueOf(properties.getProperty("transferComments"));
-    transferLabels = Boolean.valueOf(properties.getProperty("transferLabels"));
+    optionRecursiveCrawling = Boolean.valueOf(properties.getProperty(PARAMETER_OPTION_RECURSIVE));
+    optionStopOnFailure = Boolean.valueOf(properties.getProperty(PARAMETER_OPTION_STOP_ON_FAIL));
+    optionTransferAttachments = Boolean.valueOf(properties.getProperty(PARAMETER_OPTION_TRANSFER_ATTACHMENTS));
+    optionTransferComments = Boolean.valueOf(properties.getProperty(PARAMETER_OPTION_TRANSFER_COMMENTS));
+    optionTransferLabels = Boolean.valueOf(properties.getProperty(PARAMETER_OPTION_TRANSFER_LABELS));
 
-    crawlerActions = properties.getProperty("migrationActions");
+    int paramMaxAttachmentSize = Integer.valueOf(properties.getProperty(PARAMETER_OPTION_MAX_ATT_SIZE, "0"));
+    if (paramMaxAttachmentSize > 0) {
+      maxAttachmentSize = paramMaxAttachmentSize;
+    }
+
+    crawlerActions = properties.getProperty(PARAMETER_ACTIONS);
 
     String[] actions = crawlerActions.split(",");
     Arrays.sort(actions);
-    if (Arrays.binarySearch(actions, "check") >= 0) {
+    if (Arrays.binarySearch(actions, ACTION_CHECK) >= 0) {
       actionCheckPageEnabled = true;
     }
-    if (Arrays.binarySearch(actions, "perform") >= 0) {
+    if (Arrays.binarySearch(actions, ACTION_PERFORM) >= 0) {
       actionTransfertPageEnabled = true;
     }
 
-    // Init Confluence Connector
-    try {
-      confluence = new Confluence(sourceHost);
-    } catch (MalformedURLException e) {
-      throw new RuntimeException("Invalid Confluence URL : " + sourceHost, e);
-    }
-    try {
-      log.info(String.format("Check login %s on %s", sourceUser, sourceHost));
-      confluence.login(sourceUser, sourcePwd);
-    } catch (SwizzleException e) {
-      throw new RuntimeException("Cannot login into Confluence", e);
-    }
-
     // Init Target Wiki Connector
-    log.info(String.format("Login %s  on %s", targetUser, targetHost));
+    LOGGER.info(String.format("Login %s  on %s", targetUser, targetHost));
 
-    String targetType = properties.getProperty("targetType");
+    targetType = properties.getProperty(PARAMETER_TARGET_TYPE);
     if (targetType == null) {
       targetType = TYPE_EXOWIKI;
     }
-    
+
+  }
+
+  private void initConnectors() {
+    initializeConfluence();
+    initializeHandler(targetHost, targetUser, targetPwd, targetType);
+  }
+
+
+  private void initializeHandler(String targetHost, String targetUser, String targetPwd, String targetType) {
     if (TYPE_WIKBOOK.equals(targetType)) {
-      log.info("Export to Wikbook format");
+      LOGGER.info("Export to Wikbook format");
       wikiHandler = new WikbookWikiHandler(targetHost, new StringBuilder(targetSpace).append("/").append(targetPage).toString());
     } else {
-      log.info("Export to ExoWiki format on " + targetHost);
+      LOGGER.info("Export to ExoWiki format on " + targetHost);
       wikiHandler = new ExoWikiHandler(targetHost);
     }
     wikiHandler.start(targetUser, targetPwd);
   }
 
   /**
-    *
-    */
-  public void initMacros() {
-      //Supported macros list
-      MacroMap.addMacro(supportedMacrosMap,
-              "*", "_",
-              "panel",
-              "code",
-              "color",
-              "column",
-              "info",
-              "note",
-              "pagetree",
-              "toc",
-              "section");
-      MacroMap.addMacro(unsupportedMacrosMap,
-              "jiraissues",
-              "contentbylabel",
-              "include",
-              "mockup",
-              "gliffy",
-              "excerpt",
-              "recently-updated",
-              "float",
-              "noformat",
-              "tip",
-              "jira");
-
-      //Unsupported macros list
-  }
-
-  public void run() {
+   * Init Confluence Connector
+   */
+  private void initializeConfluence() {
     try {
-      if (confluence == null)
-        throw new RuntimeException("Confluence not connected");
+      confluence = new Confluence(sourceHost);
+    } catch (MalformedURLException e) {
+      throw new ConfluenceCrawlerException("Invalid Confluence URL : " + sourceHost, e);
+    }
 
-      String[] pages = sourcePage.split("\\|");
-      for (String pageToTransfer : pages) {
-        pageToTransfer = pageToTransfer.replace('+', ' ');
-        if (pageToTransfer.length() == 0)
-          continue;
-        try {
-          Page page = confluence.getPage(sourceSpace, pageToTransfer);
-          StringBuilder targetPath = new StringBuilder(targetSpace).append("/").append(targetPage);
-          if (wikiHandler.checkPageExists(targetPath.toString())) {
-            log.info("Crawling page : " + pageToTransfer);
-            crawlPage(confluence, null, page, targetPage);
-          } else {
-            log.error(String.format("[ERROR] Target page %s not found.", targetPath.toString()));
-          }
-
-        } catch (Exception e) {
-          log.error("[LOAD] Source page not found in source wiki :" + pageToTransfer);
-        }
-      }
-
-      log.info("Processing Done.");
-      log.info("* Visited pages : " + visitedPages);
-      log.info("* Created pages : " + transferredPages);
-      log.info("* Uploaded attachements : " + transferredAttachments);
-      log.info("* Macros usage :");
-      dumpMacroUsage("** Supported : ", supportedMacrosMap);
-      dumpMacroUsage("** Unsupported : ", unsupportedMacrosMap);
-      dumpMacroUsage("** Unknow  : ", unknownMacrosMap);
-
-      if (erroredPaths.size() > 0) {
-        log.error("* Errored pages : " + erroredPaths.size());
-        for (String path : erroredPaths) {
-          log.error("** " + path);
-        }
-      }
-    } finally {
-      wikiHandler.stop();
-      logoutConfluence();
+    // Check Confluence Login
+    try {
+      LOGGER.info(String.format("Check login %s on %s", sourceUser, sourceHost));
+      confluence.login(sourceUser, sourcePwd);
+    } catch (SwizzleException e) {
+      throw new ConfluenceCrawlerException("Cannot login into Confluence", e);
     }
   }
 
-    private void dumpMacroUsage(String title, Map<String, Integer> macroMap) {
-        log.info("* " + title);
-        StringBuffer macroText = new StringBuffer("*** ");
-        final ArrayList<String> sortedMacros = new ArrayList<String>();
-        sortedMacros.addAll(macroMap.keySet());
-        Collections.sort(sortedMacros);
-        for (String macro : sortedMacros) {
-          int usageCount = macroMap.get(macro);
-          if (usageCount>0) {
-             macroText.append(macro + "(" + usageCount + "), ");
-          }
-        }
-        log.info(macroText.toString());
+  /**
+   * Init Supported macro lists
+   */
+  public void initMacros() {
+    //Supported macros list
+    MacroMap.addMacro(supportedMacrosMap,
+        "*", "_", "+",
+        "panel",
+        "code",
+        "color",
+        "column",
+        "info",
+        "note",
+        "pagetree",
+        "toc",
+        "section");
+    MacroMap.addMacro(unsupportedMacrosMap,
+        "jiraissues",
+        "contentbylabel",
+        "include",
+        "mockup",
+        "gliffy",
+        "excerpt",
+        "recently-updated",
+        "float",
+        "noformat",
+        "tip",
+        "warning",
+        "jira");
+
+    // Detail status for those
+    // "color", "+", "-", "_", "*", "panel", "column", "section",
+    // "info", "code", "excerpt", "note", "warning", "toc", "noformat", "chart", "jiraissues", "tip", "cloak", "table-plus",
+    // "attachments", "mockup", "toggle-cloak", "viewfile", "anchor", "quote", "children", "td", "jira", "float", "include",
+    // "excel", "contentbylabel", "pagetree", "tasklist", "composition-setup", "gliffy", "card", "gadget", "recently-updated",
+    // "iframe", "align"
+
+    //Unsupported macros list
+  }
+
+  public boolean run() {
+    boolean processed = true;
+
+    if (confluence == null) {
+      throw new ConfluenceCrawlerException("Confluence not connected");
     }
 
-    private boolean crawlPage(Confluence confluence, Page parentPage, Page page, String subPath) throws SwizzleException {
-    String createdPageName = processPage(confluence, parentPage, page, subPath);
-    visitedPages++;
-    boolean pageProcessed = createdPageName != null;
-    if (createdPageName != null && recurseOnChildren) {
-      List<PageSummary> children = confluence.getChildren(page.getId());
-      if (createdPageName != null) {
-        subPath += ("/" + createdPageName);
+    for (String pageToTransfer : sourcePages) {
+      pageToTransfer = pageToTransfer.replace('+', ' ');
+      if (pageToTransfer.length() == 0) {
+        continue;
       }
-      
+      try {
+        Page page = confluence.getPage(sourceSpace, pageToTransfer);
+        StringBuilder targetPath = new StringBuilder(targetSpace).append("/").append(targetPage);
+        if (wikiHandler.checkPageExists(targetPath.toString())) {
+          LOGGER.info("Crawling page : " + pageToTransfer);
+          crawlPage(page, targetPage);
+        } else {
+          LOGGER.error(String.format("[ERROR] Target page %s not found.", targetPath.toString()));
+          processed = false;
+        }
+      } catch (SwizzleException e) {
+        LOGGER.error("[LOAD] Source page not found in source wiki :" + pageToTransfer);
+        processed = false;
+      }
+    }
+
+    processed &= pagesInError.isEmpty();
+
+    return processed;
+  }
+
+  private void stop() {
+    wikiHandler.stop();
+    logoutConfluence();
+  }
+
+  private void dumpStatistics() {
+    LOGGER.info("Processing Done.");
+    LOGGER.info("* Visited pages : " + visitedPages);
+    LOGGER.info("* Created pages : " + transferredPages);
+    LOGGER.info("* Uploaded attachements : " + transferredAttachments);
+    LOGGER.info("* Macros usage :");
+
+    dumpMacroUsage("** Supported : ", supportedMacrosMap);
+    dumpMacroUsage("** Unsupported : ", unsupportedMacrosMap);
+    dumpMacroUsage("** Unknow  : ", unknownMacrosMap);
+
+    if (pagesInError.size() > 0) {
+      LOGGER.error("* Errored pages : " + pagesInError.size());
+      for (String path : pagesInError) {
+        LOGGER.error("** " + path);
+      }
+    }
+  }
+
+  private void dumpMacroUsage(String title, Map<String, Integer> macroMap) {
+    LOGGER.info("* " + title);
+    StringBuilder macroText = new StringBuilder("*** ");
+    final ArrayList<String> sortedMacros = new ArrayList<String>();
+    sortedMacros.addAll(macroMap.keySet());
+    Collections.sort(sortedMacros);
+    for (String macro : sortedMacros) {
+      int usageCount = macroMap.get(macro);
+      if (usageCount > 0) {
+        macroText.append(macro).append("(").append(usageCount).append("), ");
+      }
+    }
+    LOGGER.info(macroText.toString());
+  }
+
+  private boolean crawlPage(Page page, String subPath) throws SwizzleException {
+    visitedPages++;
+    LOGGER.info(String.format("---- Processing -- " + visitedPages + " : %s/%s", subPath, page.getTitle()));
+
+    String createdPageName = processPage(page, subPath);
+
+    boolean pageProcessed = createdPageName != null;
+    if (createdPageName != null && optionRecursiveCrawling) {
+      List<PageSummary> children = confluence.getChildren(page.getId());
+      String newPath = subPath + "/" + createdPageName;
+
       for (PageSummary childSummary : children) {
         Page childPage = confluence.getPage(childSummary);
-        pageProcessed &= crawlPage(confluence, page, childPage, subPath);
+        pageProcessed &= crawlPage(childPage, newPath);
 
         // Stop on failure ?
-        if (stopOnFailure && !pageProcessed)
+        if (optionStopOnFailure && !pageProcessed) {
           return false;
+        }
       }
     }
     return pageProcessed;
   }
 
-  private String processPage(Confluence confluence, Page parentPage, Page page, String subPath) throws SwizzleException {
-    log.info(String.format("---- Processing : %s/%s", subPath, page.getTitle()));
+  protected String processPage(Page page, String subPath) throws SwizzleException {
+
     String createdPageName = page.getTitle();
 
     if (actionCheckPageEnabled) {
-        performCheckPageContent(page);
+      performCheckPageContent(page);
     }
 
     if (actionTransfertPageEnabled) {
       // Check not exist && Create
       String path = targetSpace;
-      if (subPath.length() > 0)
+      if (subPath.length() > 0) {
         path = targetSpace + "/" + subPath;
+      }
 
       String newPageName = wikiHandler.createPage(path, page.getTitle(), confluence.getChildren(page.getId()).size() > 0);
 
@@ -313,7 +369,7 @@ public class ConfluenceCrawler {
 
         StringBuilder content = new StringBuilder(page.getContent());
 
-        if (transferComments) {
+        if (optionTransferComments) {
           // Add Comments in the content
           List<Comment> comments = confluence.getComments(page.getId());
           if (comments.size() > 0) {
@@ -331,7 +387,7 @@ public class ConfluenceCrawler {
         }
 
         // Labels
-        if (transferLabels) {
+        if (optionTransferLabels) {
           List<Label> labels = confluence.getLabelsById(Long.valueOf(page.getId()));
           if (labels.size() > 0) {
             content.append("\r\n\r\n{info}Labels: ");
@@ -342,10 +398,10 @@ public class ConfluenceCrawler {
           }
         }
 
-        wikiHandler.transfertContent(content.toString(), pagePath);
+        wikiHandler.transferContent(content.toString(), pagePath);
 
-        // Transfert attachments
-        if (transferAttachments) {
+        // Transfer attachments
+        if (optionTransferAttachments) {
           uploadAttachments(confluence, page, targetSpace, createdPageName);
         }
 
@@ -360,41 +416,41 @@ public class ConfluenceCrawler {
         // confluence.addComment(comment);
         // }
       } else {
-        log.error("* Page not transferred : " + newPageName);
-        erroredPaths.add(subPath + "/" + page.getTitle());
+        LOGGER.error("* Page not transferred : " + newPageName);
+        pagesInError.add(subPath + "/" + page.getTitle());
       }
     }
     return createdPageName;
   }
 
-    private void performCheckPageContent(Page page) {
-        final HashMap<String, Integer> newMacros = new HashMap<String, Integer>();
-        MacroExtractor.extractMacro(newMacros, page.getContent());
+  protected void performCheckPageContent(Page page) {
+    final HashMap<String, Integer> newMacros = new HashMap<String, Integer>();
+    MacroExtractor.extractMacro(newMacros, page.getContent());
 
-        final Set<String> supportedMacros = supportedMacrosMap.keySet();
-        final Set<String> unsupportedMacros = unsupportedMacrosMap.keySet();
-        for (String macro : newMacros.keySet()) {
-            if (supportedMacros.contains(macro)) {
-                MacroMap.addMacro(supportedMacrosMap, macro);
-            } else if (unsupportedMacros.contains(macro)) {
-                MacroMap.addMacro(unsupportedMacrosMap, macro);
-            } else {
-                MacroMap.addMacro(unknownMacrosMap, macro);
-            }
-        }
-
-        //Dump macros sorted
-        final ArrayList<String> sortedMacros = new ArrayList<String>();
-        sortedMacros.addAll(newMacros.keySet());
-        Collections.sort(sortedMacros);
-        StringBuffer macroText = new StringBuffer("** Macros : ");
-        for (String macro : sortedMacros) {
-          macroText.append(macro + ", ");
-        }
-        log.info(macroText.toString());
+    final Set<String> supportedMacros = supportedMacrosMap.keySet();
+    final Set<String> unsupportedMacros = unsupportedMacrosMap.keySet();
+    for (String macro : newMacros.keySet()) {
+      if (supportedMacros.contains(macro)) {
+        MacroMap.addMacro(supportedMacrosMap, macro);
+      } else if (unsupportedMacros.contains(macro)) {
+        MacroMap.addMacro(unsupportedMacrosMap, macro);
+      } else {
+        MacroMap.addMacro(unknownMacrosMap, macro);
+      }
     }
 
-    private void uploadAttachments(Confluence confluence, Page page, String targetSpace, String createdPageName)
+    //Dump macros sorted
+    final ArrayList<String> sortedMacros = new ArrayList<String>();
+    sortedMacros.addAll(newMacros.keySet());
+    Collections.sort(sortedMacros);
+    StringBuilder macroText = new StringBuilder("** Macros : ");
+    for (String macro : sortedMacros) {
+      macroText.append(macro).append(", ");
+    }
+    LOGGER.info(macroText.toString());
+  }
+
+  protected void uploadAttachments(Confluence confluence, Page page, String targetSpace, String createdPageName)
       throws SwizzleException {
 
     List<Attachment> attachments = confluence.getAttachments(page.getId());
@@ -403,14 +459,14 @@ public class ConfluenceCrawler {
       String fileName = attachment.getFileName();
       Long fileSize = Long.parseLong(attachment.getFileSize()) / 1024;
 
-      if (fileSize > 2048) {
-        log.error(String.format("[Upload] REJECTED Too big (%s ko) : %s/%s/%s", fileSize, targetSpace, createdPageName, fileName));
+      if (fileSize > maxAttachmentSize) {
+        LOGGER.error(String.format("[Upload] REJECTED Too big (%s ko) : %s/%s/%s", fileSize, targetSpace, createdPageName, fileName));
       } else {
         String version = url.replaceAll(".*version=", "");
         version = version.replaceAll("&.*", "");
         byte[] data = confluence.getAttachmentData(page.getId(), attachment.getFileName(), version);
 
-        log.info(String.format("[Upload] %s/%s/%s", targetSpace, createdPageName, fileName));
+        LOGGER.info(String.format("[Upload] %s/%s/%s", targetSpace, createdPageName, fileName));
         wikiHandler.uploadAttachment(targetSpace, createdPageName, fileName, attachment.getContentType(), data);
         transferredAttachments++;
       }
@@ -422,7 +478,7 @@ public class ConfluenceCrawler {
       confluence.logout();
       confluence = null;
     } catch (SwizzleException e) {
-      throw new RuntimeException("Cannot logout from Confluence", e);
+      throw new ConfluenceCrawlerException("Cannot logout from Confluence", e);
     }
   }
 }

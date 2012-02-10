@@ -11,6 +11,11 @@
   <artifactId>exo.ks.ext.confluence-migration-tool.crawler</artifactId>
   <name>Confluence Migration Wiki Crawler</name>
 
+  <properties>
+    <org.logback.version>0.9.28</org.logback.version>
+    <commons-fileupload.version>1.2.1</commons-fileupload.version>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -52,17 +57,40 @@
      <dependency>
        <groupId>org.slf4j</groupId>
        <artifactId>slf4j-api</artifactId>
-       <version>1.6.4</version>
+       <version>${org.slf4j.version}</version>
      </dependency>
      <dependency>
        <groupId>ch.qos.logback</groupId>
        <artifactId>logback-core</artifactId>
-       <version>0.9.28</version>
+       <version>${org.logback.version}</version>
      </dependency>
      <dependency>
        <groupId>ch.qos.logback</groupId>
        <artifactId>logback-classic</artifactId>
-       <version>0.9.28</version>
+       <version>${org.logback.version}</version>
      </dependency>
+
+    <!-- groovy service deps -->
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.eXoApplication.wiki.service</artifactId>
+      <version>2.2.8-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.core</groupId>
+      <artifactId>exo.core.component.security.core</artifactId>
+      <version>${org.exoplatform.core.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>${commons-fileupload.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.ws</groupId>
+      <artifactId>exo.ws.rest.core</artifactId>
+      <version>${org.exoplatform.ws.version}</version>
+    </dependency>
+
   </dependencies>
 </project>

@@ -22,84 +22,76 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by The eXo Platform SAS
- * Author: Dimitri BAELI
- *         dbaeli@exoplatform.com
- * Feb 02, 2012
- * 
  * Extract macro list from Confluence Content
  */
-public class MacroExtractor {
+public final class MacroExtractor {
+
+  private MacroExtractor() {
+  }
 
   public static Map<String, Integer> extractMacro(Map<String, Integer> macrosMap, String body) {
     Map<String, Integer> foundMacros = new HashMap<String, Integer>();
 
-    body = cleanupBody(body);
+    String newbody = cleanupBody(body);
 
-    String macros[] = body.split("\\{");
+    String macros[] = newbody.split("\\{");
     String previousPiece = ""; // To check for escaped macros
     for (String piece : macros) {
-      if (piece.contains("}")) {
-        // Avoid escaped macros
-        if (!previousPiece.endsWith("\\")) {
-          // get content before }
-          String submacros[] = piece.split("}");
-          String extractedMacro = submacros.length > 0 ? submacros[0] : "";
+      if (piece.contains("}") && !previousPiece.endsWith("\\")) {
+        // get content before }
+        String submacros[] = piece.split("}");
+        String extractedMacro = submacros.length > 0 ? submacros[0] : "";
 
-          // get content before :
-          submacros = extractedMacro.split(":");
-          extractedMacro = submacros.length > 0 ? submacros[0] : "";
-          extractedMacro = extractedMacro.trim();
-          extractedMacro = extractedMacro.replaceAll("\n", "");
-          extractedMacro = extractedMacro.replaceAll("\r", "");
+        // get content before :
+        submacros = extractedMacro.split(":");
+        extractedMacro = submacros.length > 0 ? submacros[0] : "";
+        extractedMacro = extractedMacro.trim();
+        extractedMacro = extractedMacro.replaceAll("\n", "");
+        extractedMacro = extractedMacro.replaceAll("\r", "");
 
-          // Uniq map
-          MacroMap.addMacro(macrosMap, extractedMacro);
-          MacroMap.addMacro(foundMacros, extractedMacro);
-        }
+        // Uniq map
+        MacroMap.addMacro(macrosMap, extractedMacro);
+        MacroMap.addMacro(foundMacros, extractedMacro);
       }
       previousPiece = piece;
     }
     return foundMacros;
   }
 
-    private static String cleanupBody(String body) {
-        // Remove {code}content{code}
-        String newbody = body;
+  private static String cleanupBody(String body) {
+    // Remove {code}content{code}
+    String newbody = body;
 
-        //Cleanup {{noformat text}}
-        newbody = newbody.replaceAll("\\{\\{.*\\}\\}", "");
+    //Cleanup {{noformat text}}
+    newbody = newbody.replaceAll("\\{\\{.*\\}\\}", "");
 
 
-        newbody = removeBlocks("code", newbody);
-        newbody = removeBlocks("noformat", newbody);
-        newbody = removeBlocks("style", newbody);
-        return newbody;
-    }
+    newbody = removeBlocks("code", newbody);
+    newbody = removeBlocks("noformat", newbody);
+    newbody = removeBlocks("style", newbody);
+    return newbody;
+  }
 
-    public static Set<String> extractMacroWithParams(String body) {
+  public static Set<String> extractMacroWithParams(String body) {
     Set<String> foundMacros = new HashSet<String>();
 
     // Remove {code}content{code}
-    body = cleanupBody(body);
+    String newbody = cleanupBody(body);
 
-    String macros[] = body.split("\\{");
+    String macros[] = newbody.split("\\{");
     String previousPiece = ""; // To check for escaped macros
     for (String piece : macros) {
-      if (piece.contains("}")) {
-        // Avoid escaped macros
-        if (!previousPiece.endsWith("\\")) {
-          // get content before }
-          String submacros[] = piece.split("}");
-          String extractedMacro = submacros.length > 0 ? submacros[0] : "";
+      if (piece.contains("}") && !previousPiece.endsWith("\\")) {
+        // get content before }
+        String submacros[] = piece.split("}");
+        String extractedMacro = submacros.length > 0 ? submacros[0] : "";
 
-          // get content before :
-          extractedMacro = extractedMacro.trim();
-          extractedMacro = extractedMacro.replaceAll("\n", "");
-          extractedMacro = extractedMacro.replaceAll("\r", "");
+        // get content before :
+        extractedMacro = extractedMacro.trim();
+        extractedMacro = extractedMacro.replaceAll("\n", "");
+        extractedMacro = extractedMacro.replaceAll("\r", "");
 
-          foundMacros.add(extractedMacro);
-        }
+        foundMacros.add(extractedMacro);
       }
       previousPiece = piece;
     }

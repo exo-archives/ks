@@ -16,21 +16,17 @@
  */
 package org.exoplatform.wiki.util;
 
-import java.util.HashMap;
-
 import junit.framework.TestCase;
+
+import java.util.HashMap;
 
 /**
  * Created by The eXo Platform SAS
  * Author:  Dimitri BAELI
- *          dbaeli@exoplatform.com
- * Feb 02, 2012  
+ * dbaeli@exoplatform.com
+ * Feb 02, 2012
  */
 public class MacroMapTest extends TestCase {
-  public void testIsAllowedMacro() {
-    TestCase.assertTrue(MacroMap.isAllowedMacro("code"));
-    TestCase.assertFalse(MacroMap.isAllowedMacro("toto"));
-  }
 
   public void testMergeMaps() {
     HashMap<String, Integer> sourceMap = new HashMap<String, Integer>();

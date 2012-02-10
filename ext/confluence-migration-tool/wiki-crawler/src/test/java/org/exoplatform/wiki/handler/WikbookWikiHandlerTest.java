@@ -16,29 +16,26 @@
  */
 package org.exoplatform.wiki.handler;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
+import junit.framework.TestCase;
+import org.apache.commons.io.IOUtils;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
-import junit.framework.TestCase;
-
-import org.apache.commons.io.IOUtils;
+import static org.exoplatform.wiki.handler.WikbookWikiHandler.getFilenameFromPath;
 
 /**
  * Created by The eXo Platform SAS
  * Author:  Dimitri BAELI
- *          dbaeli@exoplatform.com
- * Feb 02, 2012  
+ * dbaeli@exoplatform.com
+ * Feb 02, 2012
  */
 public class WikbookWikiHandlerTest extends TestCase {
   private static final Logger log = Logger.getLogger(WikbookWikiHandlerTest.class.toString());
-  
+
   private boolean deleteCreateFilesAndDir = true;
   private List<File> files;
   private List<File> dirs;
@@ -63,13 +60,13 @@ public class WikbookWikiHandlerTest extends TestCase {
   }
 
   public void testGetFileName() {
-    TestCase.assertEquals("name.txt", WikbookWikiHandler.getFilenameFromPath("name.txt"));
-    TestCase.assertEquals("name.txt", WikbookWikiHandler.getFilenameFromPath("test/name.txt"));
-    TestCase.assertEquals("name.txt", WikbookWikiHandler.getFilenameFromPath("test/test/name.txt"));
-    TestCase.assertEquals("name.txt", WikbookWikiHandler.getFilenameFromPath("test//name.txt"));
-    TestCase.assertEquals("", WikbookWikiHandler.getFilenameFromPath("test/"));
-    TestCase.assertEquals("", WikbookWikiHandler.getFilenameFromPath(""));
-    TestCase.assertEquals("", WikbookWikiHandler.getFilenameFromPath(null));
+    TestCase.assertEquals("name.txt", getFilenameFromPath("name.txt"));
+    TestCase.assertEquals("name.txt", getFilenameFromPath("test/name.txt"));
+    TestCase.assertEquals("name.txt", getFilenameFromPath("test/test/name.txt"));
+    TestCase.assertEquals("name.txt", getFilenameFromPath("test//name.txt"));
+    TestCase.assertEquals("", getFilenameFromPath("test/"));
+    TestCase.assertEquals("", getFilenameFromPath(""));
+    TestCase.assertEquals("", getFilenameFromPath(null));
   }
 
   public void testWikbookHandler() throws IOException {
@@ -99,7 +96,7 @@ public class WikbookWikiHandlerTest extends TestCase {
     // /-2-CheckExists
     TestCase.assertTrue(wikbookWikiHandler.checkPageExists("WikiHome/PageNoChild"));
     // /-3-TransferContent
-    wikbookWikiHandler.transfertContent("TestContent", "WikiHome/PageNoChild");
+    wikbookWikiHandler.transferContent("TestContent", "WikiHome/PageNoChild");
     String content = IOUtils.toString(new FileReader(pageNoChildFile));
     TestCase.assertEquals("TestContent", content);
 
@@ -116,7 +113,7 @@ public class WikbookWikiHandlerTest extends TestCase {
     // /-2-CheckExists
     TestCase.assertTrue(wikbookWikiHandler.checkPageExists("WikiHome/PageWithChildren"));
     // /-3-TransferContent
-    wikbookWikiHandler.transfertContent("TestContentChildren", "WikiHome/PageWithChildren");
+    wikbookWikiHandler.transferContent("TestContentChildren", "WikiHome/PageWithChildren");
     String contentWithChildren = IOUtils.toString(new FileReader(pageWithChildren));
     TestCase.assertEquals("TestContentChildren", contentWithChildren);
 

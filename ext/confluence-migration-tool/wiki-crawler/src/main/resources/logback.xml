@@ -11,6 +11,7 @@
     </layout>
   </appender>
 
+<!--
   <appender name="FILE"
     class="ch.qos.logback.core.FileAppender">
     <file>${log.output.path}/wiki-migration.log</file>
@@ -18,7 +19,7 @@
       <Pattern>%d{HH:mm:ss.SSS} %-5level - %msg%n</Pattern>
     </layout>
   </appender>
-
+-->
   <root level="trace">
     <appender-ref ref="STDOUT"/>
     <!--appender-ref ref="FILE"/-->
