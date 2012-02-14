@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
@@ -64,7 +63,7 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
         @EventConfig(listeners = UICategory.WatchOptionActionListener.class),
         @EventConfig(listeners = UICategory.ExportCategoryActionListener.class),
         @EventConfig(listeners = UICategory.ImportForumActionListener.class),
-        @EventConfig(listeners = UICategory.DeleteCategoryActionListener.class,confirm="UICategory.confirm.DeleteCategory"),
+        @EventConfig(listeners = UICategory.DeleteCategoryActionListener.class),
         @EventConfig(listeners = UICategory.AddForumActionListener.class),
         @EventConfig(listeners = UICategory.EditForumActionListener.class),
         @EventConfig(listeners = UICategory.SetLockedActionListener.class),
@@ -94,6 +93,8 @@ public class UICategory extends BaseForumForm {
 
   private boolean            useAjax         = true;
   
+  private boolean            isCategorySpace = true;
+  
   private int                dayForumNewPost = 0;
 
   private List<Forum>        forums          = new ArrayList<Forum>();
@@ -104,6 +105,7 @@ public class UICategory extends BaseForumForm {
 
   public UICategory() throws Exception {
     addUIFormInput(new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null));
+    setActions(new String[] { "EditCategory", "ExportCategory", "ImportForum", "DeleteCategory", "WatchOption", "AddForum", "EditForum", "SetLocked", "SetUnLock", "SetOpen", "SetClose", "MoveForum", "RemoveForum" });
   }
 
   public void initForm() throws Exception {
@@ -141,8 +143,8 @@ public class UICategory extends BaseForumForm {
     } else {
       this.forums = forums;
     }
-    categoryId = category.getId();
-    setActionsCategory();
+    this.categoryId = category.getId();
+    this.isCategorySpace = (categoryId.indexOf(ForumUtils.SPACE_GROUP_ID) > 0);
     this.getAncestorOfType(UIForumPortlet.class).getChild(UIBreadcumbs.class).setUpdataPath((categoryId));
   }
 
@@ -150,28 +152,23 @@ public class UICategory extends BaseForumForm {
     this.categoryId = categoryId;
     this.isEditCategory = true;
     this.isEditForum = true;
-    setActionsCategory();
+    this.isCategorySpace = (categoryId.indexOf(ForumUtils.SPACE_GROUP_ID) > 0);
   }
   
-  private void setActionsCategory() {
-    // The category open is category of spaces
-    if (categoryId.indexOf(ForumUtils.SPACE_GROUP_ID) > 0) {
-      setActions(new String[] { "EditCategory", "ExportCategory", "ImportForum", "WatchOption", "EditForum", "SetLocked", "SetUnLock", "SetOpen", "SetClose" });
-    } else {
-      setActions(new String[] { "EditCategory", "ExportCategory", "ImportForum", "DeleteCategory", "WatchOption", "AddForum", "EditForum", "SetLocked", "SetUnLock", "SetOpen", "SetClose", "MoveForum", "RemoveForum" });
-    }
-  }
-
   public void updateByLink(Category category) {
     this.categoryId = category.getId();
     this.isEditCategory = false;
     this.isEditForum = true;
     this.category = category;
-    setActionsCategory();
+    this.isCategorySpace = (categoryId.indexOf(ForumUtils.SPACE_GROUP_ID) > 0);
   }
 
   public String getCategoryId() {
     return this.categoryId;
+  }
+
+  public boolean isCategorySpace() {
+    return this.isCategorySpace;
   }
 
   private Category getCategory() throws Exception {

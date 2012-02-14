@@ -1,3 +1,14 @@
+<%  
+	if(uicomponent.forumSpDeleted) {
+%>
+<div class="UIForumPortlet" id="$uicomponent.id">
+	<div style="padding: 20px"><%=_ctx.appRes("UIForumPortlet.msg.forum-space-deleted").replace("{0}", uicomponent.spaceDisplayName);%></div>
+</div>
+<%
+		return; 
+	} 
+%>
+
 <%
 	import org.exoplatform.web.application.JavascriptManager;
 	import org.exoplatform.forum.service.UserProfile;

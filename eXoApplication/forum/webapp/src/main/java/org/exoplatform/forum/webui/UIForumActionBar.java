@@ -16,11 +16,8 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
-import java.util.List;
-
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.popup.UIAutoPruneForm;
@@ -101,7 +98,9 @@ public class UIForumActionBar extends UIContainer {
   }
 
   protected String[] getActionMenu() {
-    return (ForumUtils.enableIPLogging()) ? (new String[] { "SortSetting", "CensorKeyword", "Notification", "BBCodeManager", "AutoPrune", "TopicTypeManager", "OpenIPBan", "ExportCategory", "ImportCategory" }) : (new String[] { "SortSetting", "CensorKeyword", "Notification", "BBCodeManager", "AutoPrune", "TopicTypeManager", "ExportCategory", "ImportCategory" });
+    return (ForumUtils.enableIPLogging()) ? 
+           (new String[] { "SortSetting", "CensorKeyword", "Notification", "BBCodeManager", "AutoPrune", "TopicTypeManager", "OpenIPBan", "ExportCategory", "ImportCategory" }) : 
+           (new String[] { "SortSetting", "CensorKeyword", "Notification", "BBCodeManager", "AutoPrune", "TopicTypeManager", "ExportCategory", "ImportCategory" });
   }
 
   protected int getTotalJobWattingForModerator() throws Exception {
@@ -199,21 +198,10 @@ public class UIForumActionBar extends UIContainer {
     }
   }
 
-  private String canAddCategory() {
-    List<Category> categories = forumService.getCategories();
-    if(categories.size() == 0) return "not";
-    if(categories.size() == 1 && 
-        categories.get(0).getId().indexOf(ForumUtils.SPACE_GROUP_ID) > 0) {
-      return ForumUtils.SPACE_GROUP_ID;
-    }
-    return ForumUtils.EMPTY_STR;
-  }
-  
   static public class AddForumActionListener extends EventListener<UIForumActionBar> {
     public void execute(Event<UIForumActionBar> event) throws Exception {
       UIForumActionBar uiActionBar = event.getSource();
-      String status = uiActionBar.canAddCategory();
-      if (ForumUtils.isEmpty(status)) {
+      if (uiActionBar.forumService.getCategories().size() > 0) {
         UIForumPortlet forumPortlet = uiActionBar.getParent();
         UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
         UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
@@ -231,12 +219,8 @@ public class UIForumActionBar extends UIContainer {
         popupAction.activate(popupContainer, 650, 480);
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
       } else {
-        String key = "UIForumActionBar.msg.notCategory";
-        if(ForumUtils.SPACE_GROUP_ID.equals(status)){
-          key = "UIForumActionBar.msg.IgnoreCategorySpace";
-        }
         event.getRequestContext().getUIApplication()
-             .addMessage(new ApplicationMessage(key, null, ApplicationMessage.WARNING));        
+             .addMessage(new ApplicationMessage("UIForumActionBar.msg.notCategory", null, ApplicationMessage.WARNING));        
         return;
       }
     }

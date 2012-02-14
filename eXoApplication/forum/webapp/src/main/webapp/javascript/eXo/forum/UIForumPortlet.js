@@ -58,19 +58,16 @@ UIForumPortlet.prototype.numberIsCheckedForum = function(formName, checkAllName,
 	if(form) {
 		var checkboxs = form.elements;
 		for(var i = 0; i < checkboxs.length; i ++){
-			if(checkboxs[i].checked){
+			if(checkboxs[i].type == "checkbox" && checkboxs[i].checked && checkboxs[i].name != "checkAll"){
 				total = total + 1;
 			}
 		}
 	}
-	if(document.getElementById(checkAllName) != null && document.getElementById(checkAllName).checked){
-		total = total - 1;
-	}
 	if(total > 1){
-		var text = String(multiAns);
-		return confirm(text.replace('{0}', total));
+		var text = String(multiAns).replace("?", "").replace('{0}', total) + "?";
+		return confirm(text);
 	} else if(total == 1) {
-		return confirm(onlyAns);
+		return confirm(String(onlyAns).replace("?", "") + "?");
 	} else {
 		alert(notChecked);
 		return false;
