@@ -11,5 +11,6 @@
   <name>Knowledge Wiki Macro</name>
   <modules>
     <module>macro-iframe</module>
+    <module>macro-jira</module>
   </modules>
 </project>

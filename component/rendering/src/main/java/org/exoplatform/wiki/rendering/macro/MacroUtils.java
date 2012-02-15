@@ -37,7 +37,6 @@ import org.xwiki.rendering.util.ParserUtils;
  * 12 Jan 2011  
  */
 public class MacroUtils {
-
   /**
    * Parse provided content with the parser of the current wiki syntax.
    * 

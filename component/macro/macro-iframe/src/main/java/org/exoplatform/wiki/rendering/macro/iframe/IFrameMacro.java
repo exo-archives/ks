@@ -24,7 +24,6 @@ import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.RawBlock;
 import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.MacroExecutionException;
-import org.xwiki.rendering.macro.descriptor.DefaultContentDescriptor;
 import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 
@@ -38,6 +37,7 @@ import org.xwiki.rendering.transformation.MacroTransformationContext;
  */
 @Component("iframe")
 public class IFrameMacro extends AbstractMacro<IFrameMacroParameters> {
+  public static final String MACRO_CATEGORY_OTHER = "Other";
 
   /**
    * The description of the macro.
@@ -45,16 +45,11 @@ public class IFrameMacro extends AbstractMacro<IFrameMacroParameters> {
   private static final String DESCRIPTION = "Embraces a block of text within a fully customizable panel";
 
   /**
-   * The description of the macro content.
-   */
-  private static final String CONTENT_DESCRIPTION = "The content to put in the iframe";
-
-  /**
    * Create and initialize the descriptor of the macro.
    */
   public IFrameMacro() {
-    super("IFrame", DESCRIPTION, new DefaultContentDescriptor(CONTENT_DESCRIPTION), IFrameMacroParameters.class);
-    setDefaultCategory(DEFAULT_CATEGORY_FORMATTING);
+    super("IFrame", DESCRIPTION, IFrameMacroParameters.class);
+    setDefaultCategory(MACRO_CATEGORY_OTHER);
   }
 
   public List<Block> execute(IFrameMacroParameters parameters, String content, MacroTransformationContext context)
@@ -62,10 +57,14 @@ public class IFrameMacro extends AbstractMacro<IFrameMacroParameters> {
     StringBuilder rawContent = new StringBuilder("<iframe ");
     if (parameters.getWidth().length() > 0) {
       rawContent.append("width=\"").append(parameters.getWidth()).append("\" ");
+    } else {
+      rawContent.append("width=\"100%\"");
     }
 
     if (parameters.getHeight().length() > 0) {
       rawContent.append("height=\"").append(parameters.getHeight()).append("\" ");
+    } else {
+      rawContent.append("height=\"100%\"");
     }
 
     rawContent.append("src=\"").append(parameters.getSrc()).append("\"");

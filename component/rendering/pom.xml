@@ -181,6 +181,11 @@
       <artifactId>exo.ks.component.macro.iframe</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.component.macro.jira</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <!-- From 2.4 , difficult to integrate code macro -->
     <dependency>
       <groupId>org.xwiki.platform</groupId>

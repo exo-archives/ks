@@ -28,11 +28,11 @@ import org.xwiki.properties.annotation.PropertyDescription;
  * Manage an iframe node
  */
 public class IFrameMacroParameters {
-
-  /**
-   * @see #getSrc()
-   */
   private String src = StringUtils.EMPTY;
+  
+  private String width = StringUtils.EMPTY;
+  
+  private String height = StringUtils.EMPTY;
 
   /**
    * @return the src to be displayed in the panel header. Note that it can
@@ -52,11 +52,6 @@ public class IFrameMacroParameters {
   }
 
   /**
-   * @see #getSrc()
-   */
-  private String width = StringUtils.EMPTY;
-
-  /**
    * @return the src to be displayed in the panel header. Note that it can
    *         contain content in the current syntax and that text which will be
    *         parsed and rendered as any syntax content
@@ -72,11 +67,6 @@ public class IFrameMacroParameters {
   public void setWidth(String width) {
     this.width = width;
   }
-
-  /**
-   * @see #getHeight()
-   */
-  private String height = StringUtils.EMPTY;
 
   /**
    * @return the height to be displayed in the panel header.
