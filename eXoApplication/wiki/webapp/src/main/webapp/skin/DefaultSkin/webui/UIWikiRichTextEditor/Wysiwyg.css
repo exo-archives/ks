@@ -600,6 +600,10 @@
   padding: 4px 8px;
 }
 
+*+html .gwt-MenuBar-vertical table {
+	width: auto;
+}
+
 .gwt-MenuBar-vertical .gwt-MenuItemSeparator {
   padding: 2px 0;
 }
@@ -622,6 +626,10 @@
 
 .gwt-MenuBarPopup {
   margin: 0 0 0 3px;
+}
+
+*+html .gwt-MenuBarPopup table {
+	width: auto;
 }
 
 .gwt-MenuBarPopup .menuPopupTopLeftInner {
