@@ -394,7 +394,9 @@ public class JCRDataStorage implements DataStorage {
     try {
       Node faqServiceHome = getFAQServiceHome(sProvider) ;
       if (faqServiceHome.hasNode(Utils.CATEGORY_HOME)) {
-        log.error("root category is already created");
+        if (log.isDebugEnabled()) {
+          log.debug("root category is already created");
+        }
         return false;
       }			
       Node categoryHome = faqServiceHome.addNode(Utils.CATEGORY_HOME, "exo:faqCategory") ;
