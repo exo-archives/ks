@@ -111,7 +111,7 @@
     <caja.version>r1</caja.version>
     <!-- Begin wiki properties -->
     <org.xwiki.platform.version>3.3</org.xwiki.platform.version>
-    <org.wikimodel.version>2.0.7-20110531</org.wikimodel.version>
+    <org.wikimodel.version>2.0.7-SNAP-rev-532</org.wikimodel.version>
     <gwt.version>2.4.0</gwt.version>
     <smartgwt.version>2.5</smartgwt.version>
     <net.sourceforge.htmlcleaner.version>2.2</net.sourceforge.htmlcleaner.version>

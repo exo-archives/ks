@@ -147,7 +147,16 @@
           <groupId>net.java.dev.javacc</groupId>
           <artifactId>javacc</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>org.wikimodel</groupId>
+          <artifactId>org.wikimodel.wem</artifactId>
+        </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.wikimodel</groupId>
+      <artifactId>org.wikimodel.wem</artifactId>
+      <version>${org.wikimodel.version}</version>
     </dependency>
     <!-- Macros -->
     <dependency>
