@@ -1532,19 +1532,6 @@ table.UIFormGrid div.Id {
 	margin: 0px 0px 5px 0px;
 }
 
-.UIWikiPagePreview .UIWikiPortlet h1 {
-	font-size: 24px;
-	font-weight: bold;
-}
-
-.UIWikiPagePreview .UIWikiPortlet h4 {
-	font-size: 14px;
-	font-weight: bold;
-	border-bottom: 1px solid #e8e8e8;
-	line-height: 20px;
-	margin-top: 20px;
-}
-
 .UIWikiPagePreview .UIWikiPortlet a {
 	text-decoration: underline;
 }
