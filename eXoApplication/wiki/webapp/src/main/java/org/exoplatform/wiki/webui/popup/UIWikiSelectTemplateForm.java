@@ -35,9 +35,9 @@ import org.exoplatform.wiki.webui.UIWikiMaskWorkspace;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
+import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
 import org.exoplatform.wiki.webui.UIWikiTemplateDescriptionContainer;
 import org.exoplatform.wiki.webui.WikiMode;
-import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
 import org.exoplatform.wiki.webui.commons.UIWikiTemplateForm;
 import org.exoplatform.wiki.webui.control.action.AddPageActionComponent;
 
@@ -56,18 +56,19 @@ import org.exoplatform.wiki.webui.control.action.AddPageActionComponent;
     @EventConfig(listeners = UIWikiSelectTemplateForm.SearchTemplateActionListener.class) })
 public class UIWikiSelectTemplateForm extends UIWikiTemplateForm implements UIPopupComponent {
  
-  public static final String    ACTION_PREVIEW = "PreviewTemplate";
+  public static final String    ACTION_PREVIEW       = "PreviewTemplate";
 
-  //Note this action is change mode one
-  public static final String    ACTION_ADD     = AddPageActionComponent.ACTION + WikiConstants.WITH + "Template";
+  // Note this action is change mode one
+  public static final String    ACTION_ADD           = AddPageActionComponent.ACTION + WikiConstants.WITH + "Template";
 
-  public static final String    ACTION_SEARCH  = "SearchTemplate";
+  public static final String    ACTION_SEARCH        = "SearchTemplate";
 
-  private static final String[] USER_ACTION    = { ACTION_ADD, ACTION_PREVIEW };
+  public static final String    SELECT_TEMPLATE_ITER = "SelectTemplateIter";
+
+  private static final String[] USER_ACTION          = { ACTION_ADD, ACTION_PREVIEW };
   
   public UIWikiSelectTemplateForm() throws Exception {
     super();
-    grid.setParent(this);
     grid.configure(TEMPLATE_ID, TEMPLATE_FIELD, USER_ACTION);
   }
   
@@ -86,7 +87,7 @@ public class UIWikiSelectTemplateForm extends UIWikiTemplateForm implements UIPo
 
       String sessionId = Util.getPortalRequestContext().getRequest().getSession(false).getId();
       form.wService.createDraftNewPage(sessionId);
-      titleInput.setEditable(true);
+      titleInput.setReadOnly(false);
       commentInput.setRendered(false);
       Template template = form.wService.getTemplatePage(Utils.getCurrentWikiPageParams(),
                                                         templateId);     

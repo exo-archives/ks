@@ -72,7 +72,9 @@ public class AddPageFromTemplateActionComponent extends AbstractEventActionCompo
     protected void processEvent(Event<AddPageFromTemplateActionComponent> event) throws Exception {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
       UIPopupContainer uiPopupContainer = wikiPortlet.getPopupContainer(PopupLevel.L1);
-      uiPopupContainer.activate(UIWikiSelectTemplateForm.class, 800);
+      UIWikiSelectTemplateForm templateForm = uiPopupContainer.activate(UIWikiSelectTemplateForm.class, 800);
+      templateForm.grid.getUIPageIterator().setId(UIWikiSelectTemplateForm.SELECT_TEMPLATE_ITER);
+      templateForm.grid.getUIPageIterator().setParent(templateForm);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer);
       super.processEvent(event);
     }
