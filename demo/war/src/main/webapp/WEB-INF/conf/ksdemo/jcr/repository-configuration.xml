@@ -35,6 +35,7 @@
 							<property name="update-storage" value="true" />
 							<property name="max-buffer-size" value="200k"/>
 							<property name="swap-directory" value="../temp/swap/sample-ws${container.name.suffix}" />
+                            <property name="trigger-events-for-descendents-on-rename" value="false"/>              
 						</properties>
 						<value-storages>
 							<value-storage id="sample-ws" class="org.exoplatform.services.jcr.impl.storage.value.fs.TreeFileValueStorage">

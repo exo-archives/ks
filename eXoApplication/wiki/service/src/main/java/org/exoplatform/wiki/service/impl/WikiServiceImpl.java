@@ -262,10 +262,10 @@ public class WikiServiceImpl implements WikiService, Startable {
     if (WikiNodeType.Definition.WIKI_HOME_NAME.equals(pageName) || pageName == null)
       return false;
     PageImpl currentPage = (PageImpl) getPageById(wikiType, wikiOwner, pageName);
-    currentPage.setTitle(newTitle) ;
     PageImpl parentPage = currentPage.getParentPage();
     currentPage.setName(newName);
     getModel().save();
+    currentPage.setTitle(newTitle) ;
     if(currentPage.getRenamedMixin() != null) {
       RenamedMixin mix = currentPage.getRenamedMixin() ;
       List<String> ids = new ArrayList<String>() ;

@@ -14,6 +14,7 @@
               <property name="update-storage" value="true"/>
               <property name="max-buffer-size" value="200k"/>
               <property name="swap-directory" value="${gatein.jcr.data.dir}/swap/knowledge${container.name.suffix}"/>
+              <property name="trigger-events-for-descendents-on-rename" value="false"/>
             </properties>
             <value-storages>
               <value-storage id="knowledge" class="org.exoplatform.services.jcr.impl.storage.value.fs.TreeFileValueStorage">
