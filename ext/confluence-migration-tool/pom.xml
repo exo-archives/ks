@@ -1,19 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.exoplatform.ks</groupId>
-        <artifactId>ks</artifactId>
-        <version>2.2.8-SNAPSHOT</version>
-    </parent>
-    <artifactId>exo.ks.ext.confluence-migration-tool</artifactId>
-    <packaging>pom</packaging>
-    <name>Knowledge Confluence Migration Tool</name>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.exoplatform.ks</groupId>
+		<artifactId>ks</artifactId>
+		<version>2.2.8-SNAPSHOT</version>
+	</parent>
+	<artifactId>exo.ks.ext.confluence-migration-tool</artifactId>
+	<packaging>pom</packaging>
+	<name>Knowledge Confluence Migration Tool</name>
 
-    <modules>
-        <module>jenkins-runner</module>
-        <module>wiki-crawler</module>
-    </modules>
+	<modules>
+		<module>jenkins-runner</module>
+		<module>wiki-crawler</module>
+		<module>wiki-loader</module>
+	</modules>
+
+	<!-- Sonar 2.12 setup disabled by default -->
+    <profiles>
+		<profile>
+			<id>sonar212</id>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>sonar-maven-plugin</artifactId>
+							<version>2.0</version>
+						</plugin>
+						<plugin>
+							<groupId>org.codehaus.sonar</groupId>
+							<artifactId>sonar-maven-plugin</artifactId>
+							<version>2.12</version>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+				<plugins>
+					<!-- pom.xml, the build/plugins section -->
+					<!-- Run integration tests (*IT) -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<configuration>
+							<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+							<argLine>${jacoco.agent.argLine}</argLine>
+						</configuration>
+					</plugin>
+
+					<!-- Compute integration test coverage for Sonar BEWARE: Sonar doesn't 
+						run the verify phase, it has to be forced by setting -Dsonar.phase=verify -->
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<configuration>
+							<propertyName>jacoco.agent.argLine</propertyName>
+							<!-- default: argLine -->
+							<includes>
+								<include>com/comoyo/**</include>
+							</includes>
+							<destFile>${project.build.directory}/jacoco-integration.exec</destFile>
+							<!-- agent -->
+							<dataFile>${project.build.directory}/jacoco-integration.exec</dataFile>
+							<!-- report -->
+						</configuration>
+						<executions>
+							<execution>
+								<id>agent</id>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>

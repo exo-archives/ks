@@ -14,6 +14,7 @@
   <properties>
     <org.logback.version>0.9.15</org.logback.version>
     <commons-fileupload.version>1.2.1</commons-fileupload.version>
+    <org.xwiki.version>3.3</org.xwiki.version>
   </properties>
 
   <dependencies>
@@ -23,11 +24,7 @@
       <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>${mysql-connector-java.version}</version>
-    </dependency>
+
       <!-- CONFLUENCE Libs -->
     <dependency>
       <groupId>org.codehaus.swizzle</groupId>
@@ -70,26 +67,15 @@
        <version>${org.logback.version}</version>
      </dependency>
 
-    <!-- groovy service deps -->
     <dependency>
-      <groupId>org.exoplatform.ks</groupId>
-      <artifactId>exo.ks.eXoApplication.wiki.service</artifactId>
-      <version>2.2.8-SNAPSHOT</version>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-syntax-xwiki2</artifactId>
+      <version>${org.xwiki.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.core</groupId>
-      <artifactId>exo.core.component.security.core</artifactId>
-      <version>${org.exoplatform.core.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-fileupload</groupId>
-      <artifactId>commons-fileupload</artifactId>
-      <version>${commons-fileupload.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.ws</groupId>
-      <artifactId>exo.ws.rest.core</artifactId>
-      <version>${org.exoplatform.ws.version}</version>
+      <groupId>org.xwiki.commons</groupId>
+      <artifactId>xwiki-commons-component-default</artifactId>
+      <version>${org.xwiki.version}</version>
     </dependency>
 
   </dependencies>
