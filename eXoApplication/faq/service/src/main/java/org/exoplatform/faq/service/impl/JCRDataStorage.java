@@ -1065,7 +1065,7 @@ public class JCRDataStorage implements DataStorage {
     if(isNew){
       GregorianCalendar cal = new GregorianCalendar() ;
       cal.setTime(question.getCreatedDate()) ;
-      questionNode.setProperty("exo:createdDate", cal.getInstance()) ;
+      questionNode.setProperty("exo:createdDate", cal) ;
       questionNode.setProperty("exo:language", question.getLanguage()) ;
     } 
     String catId = question.getCategoryId() ;
@@ -2297,9 +2297,11 @@ public class JCRDataStorage implements DataStorage {
   }
 
 	private boolean hasAnswerInQuestion(QueryManager qm, Node questionNode) throws Exception {
-		StringBuffer queryString = new StringBuffer("/jcr:root").append(questionNode.getPath()).append("//element(*,exo:answer)[(@exo:approveResponses='true') and (@exo:activateResponses='true')]");
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
+		StringBuffer queryString = new StringBuffer("/jcr:root").append(questionNode.getPath()).append("//element(*,exo:answer)[(@exo:approveResponses='true') and (@exo:activateResponses='true')] order by @exo:dateResponse ascending");
+	    QueryImpl impl = (QueryImpl) qm.createQuery(queryString.toString(), Query.XPATH);
+	    impl.setOffset(0);
+	    impl.setLimit(1);
+	    QueryResult result = impl.execute();
 		NodeIterator iter = result.getNodes();
 		return (iter.getSize() > 0)?true:false;
 	}

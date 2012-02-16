@@ -30,6 +30,8 @@ import org.exoplatform.services.jcr.util.IdGenerator;
  */
 
 public class Question {
+
+  public static final String QUESTION_ID = "Question";
   
   /** The id. */
   private String id ;

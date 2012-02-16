@@ -27,6 +27,7 @@ import org.exoplatform.services.jcr.util.IdGenerator;
  * Jan 16, 2009, 9:25:29 AM
  */
 public class Answer {
+	public static final String ANSWER_ID = "Answer";
 	
 	/** The id. */
 	private String id;
