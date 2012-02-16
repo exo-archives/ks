@@ -2261,7 +2261,7 @@ Index: component/injector/pom.xml
 +  <parent>
 +    <groupId>org.exoplatform.ks</groupId>
 +    <artifactId>exo.ks.component</artifactId>
-+    <version>2.1.7-SNAPSHOT</version>
++    <version>2.1.8-SNAPSHOT</version>
 +  </parent>
 +  <artifactId>exo.ks.component.injector</artifactId>
 +  <name>eXo KS Data Injector</name>
