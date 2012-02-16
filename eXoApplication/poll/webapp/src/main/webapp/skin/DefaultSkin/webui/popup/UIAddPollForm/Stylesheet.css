@@ -59,10 +59,6 @@
 	cursor: pointer;
 }
 
-.UIPollPortlet .KSMaskLayer {
-	background:url('background/Point1x1.png') no-repeat top center ;	
-}
-
 .UIPollPortlet .UIKSPopupAction .UIPopupWindow {
 	visibility: visible;
 }

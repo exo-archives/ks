@@ -2,6 +2,38 @@ function UIForumPortlet() {
 	this.obj = null;
 	this.event = null;
 	this.wait = false;
+	this.id = "UIForumPortlet";
+};
+
+UIForumPortlet.prototype.returnFalse = function() {
+	return true;
+};
+
+UIForumPortlet.prototype.addEv = function(el, evName, myFunction) {
+	if (el.addEventListener) {
+		el.addEventListener(evName, myFunction, false);
+	} else if (el.attachEvent) {
+		el.attachEvent(evName, myFunction);
+	} else {
+		eval("el." + evName + "=" + myFunction);
+	}
+};
+
+UIForumPortlet.prototype.init = function(id) {
+	eXo.forum.UIForumPortlet.id = id;
+	var portlet = document.getElementById(id);
+	if (portlet) {
+		var oncontextmenus = eXo.core.DOMUtil.findDescendantsByClass(portlet, "tr", "oncontextmenu");
+		for ( var i = 0; i < oncontextmenus.length; i++) {
+			oncontextmenus[i].oncontextmenu = eXo.forum.UIForumPortlet.returnFalse;
+			eXo.forum.UIForumPortlet.addEv(oncontextmenus[i], "oncontextmenu", eXo.forum.UIForumPortlet.returnFalse);
+		}
+		var oncontextmenu = eXo.core.DOMUtil.findFirstDescendantByClass(portlet, "h6", "oncontextmenu");
+		if (oncontextmenu) {
+			oncontextmenu.oncontextmenu = eXo.forum.UIForumPortlet.returnFalse;
+			eXo.forum.UIForumPortlet.addEv(oncontextmenu, "oncontextmenu", eXo.forum.UIForumPortlet.returnFalse);
+		}
+	}
 };
 
 UIForumPortlet.prototype.selectItem = function(obj) {
@@ -140,7 +172,10 @@ UIForumPortlet.prototype.checkAll = function(obj) {
 UIForumPortlet.prototype.checkAction = function(obj, evt) {
 	eXo.forum.UIForumPortlet.showPopup(obj, evt) ;
 	var uiCategory = document.getElementById("UICategory") ;
-	var uiRightClickPopupMenu = eXo.core.DOMUtil.findFirstDescendantByClass(uiCategory, "div", "UIRightClickPopupMenu") ;
+	var uiRightClickPopupMenu = eXo.core.DOMUtil.findFirstDescendantByClass(uiCategory, "ul", "UIRightClickPopupMenu") ;
+	if(uiRightClickPopupMenu == null) {
+		uiRightClickPopupMenu = eXo.core.DOMUtil.findFirstDescendantByClass(uiCategory, "div", "UIRightClickPopupMenu") ;
+	}
 	var checkboxes = eXo.core.DOMUtil.findDescendantsByClass(uiCategory, "input", "checkbox") ;
 	var clen = checkboxes.length ;
 	var menuItems = uiRightClickPopupMenu.getElementsByTagName("a") ;
@@ -989,47 +1024,47 @@ UIForumPortlet.prototype.submitOnKey = function(event){
 eXo.forum.UIForumPortlet = new UIForumPortlet() ;
 
 eXo.forum.CheckBox = {
-	init : function(cont){
-		if(typeof(cont) == "string") cont = document.getElementById(cont) ;
-		if(cont){
-			var checkboxes = eXo.core.DOMUtil.findDescendantsByClass(cont, "input", "checkbox") ;
-			if(checkboxes.length <=0) return ;
-			checkboxes[0].onclick = this.checkAll ;
-			var len = checkboxes.length ;
-			for(var i = 1 ; i < len ; i ++) {
-				checkboxes[i].onclick = this.check ;
-				//if(checkboxes[i].getAttribute("checked") != "checked")checkboxes[i].checked = false;
-				eXo.ks.CheckBox.checkItem(checkboxes[i]);
+		init : function(cont){
+			if(typeof(cont) == "string") cont = document.getElementById(cont) ;
+			if(cont){
+				var checkboxes = eXo.core.DOMUtil.findDescendantsByClass(cont, "input", "checkbox") ;
+				if(checkboxes.length <=0) return ;
+				checkboxes[0].onclick = this.checkAll ;
+				var len = checkboxes.length ;
+				for(var i = 1 ; i < len ; i ++) {
+					checkboxes[i].onclick = this.check ;
+					//if(checkboxes[i].getAttribute("checked") != "checked")checkboxes[i].checked = false;
+					eXo.ks.CheckBox.checkItem(checkboxes[i]);
+				}
+			}
+		},
+		
+		check : function(){
+			eXo.ks.CheckBox.checkItem(this);
+			var row = eXo.core.DOMUtil.findAncestorByTagName(this,"tr");
+			if(this.checked) {
+				eXo.core.DOMUtil.addClass(row,"SelectedItem");
+				eXo.forum.UIForumPortlet.setChecked(true);
+			}else{
+				eXo.forum.UIForumPortlet.setChecked(false);
+				eXo.core.DOMUtil.replaceClass(row,"SelectedItem","");
+			}
+		},
+		
+		checkAll : function(){
+			eXo.forum.UIForumPortlet.checkAll(this);
+			var table = eXo.core.DOMUtil.findAncestorByTagName(this,"table");
+			table = eXo.core.DOMUtil.getChildrenByTagName(table,"tbody")[0];
+			var rows = eXo.core.DOMUtil.findDescendantsByTagName(table,"tr");
+			var i = rows.length ;
+			if(this.checked){
+				while(i--) {
+					eXo.core.DOMUtil.addClass(rows[i],"SelectedItem");
+				}
+			} else{
+				while(i--){
+					eXo.core.DOMUtil.replaceClass(rows[i],"SelectedItem","");
+				}
 			}
 		}
-	},
-	
-	check : function(){
-		eXo.ks.CheckBox.checkItem(this);
-		var row = eXo.core.DOMUtil.findAncestorByTagName(this,"tr");
-		if(this.checked) {
-			eXo.core.DOMUtil.addClass(row,"SelectedItem");
-			eXo.forum.UIForumPortlet.setChecked(true);
-		}else{
-			eXo.forum.UIForumPortlet.setChecked(false);
-			eXo.core.DOMUtil.replaceClass(row,"SelectedItem","");
-		}
-	},
-	
-	checkAll : function(){
-		eXo.forum.UIForumPortlet.checkAll(this);
-		var table = eXo.core.DOMUtil.findAncestorByTagName(this,"table");
-		table = eXo.core.DOMUtil.getChildrenByTagName(table,"tbody")[0];
-		var rows = eXo.core.DOMUtil.findDescendantsByTagName(table,"tr");
-		var i = rows.length ;
-		if(this.checked){
-			while(i--) {
-				eXo.core.DOMUtil.addClass(rows[i],"SelectedItem");
-			}
-		} else{
-			while(i--){
-				eXo.core.DOMUtil.replaceClass(rows[i],"SelectedItem","");
-			}
-		}
-	}
-} ;
+	} ;

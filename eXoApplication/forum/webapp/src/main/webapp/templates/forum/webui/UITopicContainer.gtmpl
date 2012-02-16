@@ -391,7 +391,7 @@
                     classSelect = "SelectedItem";
                   }
               %>
-                <tr class="$classRow $classSelect" oncontextmenu="return false;">
+                <tr class="$classRow $classSelect oncontextmenu">
                   <td class="Tdbox"><span style="display: block;" class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"></span></td>
                   <td class="Tdbox" style="*text-align:left;">
                     <%if(topic.getIsPoll()){%>
@@ -418,7 +418,7 @@
                         <%}%>
                         
                         <div id="UIPopupCategory${rCNB}" style="display:none;">
-                            <ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><span></span></ul>
+                            <ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><li></li></ul>
                         </div>
                       
                       
@@ -614,10 +614,9 @@
       _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");
      %>
   </div>
-  <% //Begin RightClick Bookmark  %>
-  <div id="RightClickContainer" style="display:none;">
 <%if(isShowMenu){%>
-    
+  <% //Begin RightClick Bookmark  %>
+  <ul id="RightClickContainer" style="display:none;">
     <li class="MenuItem AddBookmark">
       <a class="ItemIcon AddLinkToBookIcon" href=""><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
     </li>
@@ -627,12 +626,9 @@
     <li class="MenuItem AddRSS">
       <a class="ItemIcon ForumRSSFeed" href="#"><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
     </li>
-          
-
-       <% } 
-     %>
-</div>
+  </ul>
   <% //End RightClick Bookmark %>
+ <% }  %>
   
   <%uiform.end()%>
 </div>

@@ -303,9 +303,9 @@
     <%_ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl"); %>
   </div>
   
+	<%if(isShowMenu){%>
   <% //Begin RightClick Bookmark  %>
   <div class="UIPopupCategory" id="RightClickContainer" style="display: none;">
-    <%if(isShowMenu){%>
     <ul class="UIRightClickPopupMenu" style="display:block;">
       <li class="MenuItem AddBookmark">
         <a class="ItemIcon AddLinkToBookIcon" href=""><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
@@ -317,8 +317,8 @@
         <a class="ItemIcon ForumRSSFeed" href="#" ><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
       </li>
     </ul>     
-  <% } %>
   </div>
   <% //End RightClick Bookmark %>
+  <% } %>
 </div>
 <%uiform.end()%>

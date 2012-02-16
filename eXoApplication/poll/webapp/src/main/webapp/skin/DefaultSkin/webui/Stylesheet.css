@@ -95,18 +95,6 @@ ul, li {
 	height: auto ;
 }
 
-.UIPollPortlet .ParentMaskLayer {
-	position:relative ;
-	z-index:0;
-}
-
-.UIPollPortlet .KSMaskLayer {
-	left:0px;	top:0px;
-	z-index:5;
-	position:absolute ;
-	visibility:visible;
-}
-
 .UIPollPortlet .DeletePollIcon {
 	background: url('background/DeletePollIcon.gif') no-repeat left center;
 }

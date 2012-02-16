@@ -25,7 +25,7 @@
 		jsmanager.importJavascript('eXo.forum.ForumSendNotification','/forum/javascript/') ;
 		jsmanager.addJavascript('eXo.forum.ForumSendNotification.init("'+userProfile.getUserId()+'","'+uicomponent.getUserToken()+'","'+uicomponent.getCometdContextName()+'");') ;
 	}
-
+	jsmanager.addJavascript('eXo.forum.UIForumPortlet.init("'+uicomponent.id+'");') ;
 %>
 
 <% 
@@ -38,7 +38,7 @@
 
 <div class="UIForumPortlet" id="$uicomponent.id">
 	<div class="ParentMaskLayer" id="ForumPortlet">
-		<div id="KSMaskLayer" class="KSMaskLayer" onselectstart="return false;" ondragstart="return false;" unselectable="on"><span></span></div>
+		<div id="KSMaskLayer" class="KSMaskLayer"><span></span></div>
 	</div>
 	<%
 		List children = uicomponent.getChildren() ;

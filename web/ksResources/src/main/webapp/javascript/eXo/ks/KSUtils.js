@@ -28,6 +28,9 @@ KSUtils.prototype.cancel = function(evt) {
 } ;
 
 /********************* Show markLayer popup **************************/
+KSUtils.prototype.returnFalse = function () { 
+	return false; 
+};
 KSUtils.prototype.setMaskLayer = function(id) {
 	var DOMUtil = eXo.core.DOMUtil;
 	var portlet = document.getElementById(id) ;
@@ -59,6 +62,11 @@ KSUtils.prototype.setMaskLayer = function(id) {
 				};
 			}
 	 	}
+	 	masklayer.onselectstart = eXo.ks.KSUtils.returnFalse;
+ 		masklayer.ondragstart = eXo.ks.KSUtils.returnFalse;
+ 		masklayer.attachEvent('onselectstart', eXo.ks.KSUtils.returnFalse);
+ 		masklayer.attachEvent('ondragstart', eXo.ks.KSUtils.returnFalse);
+ 		masklayer.unselectable = "no";
 	}
 };
 
@@ -267,8 +275,8 @@ eXo.ks.UIContextMenu = {
 	},
 	setPosition : function(obj,evt){		
 		var Browser = eXo.core.Browser ;
-		var x  = Browser.findMouseXInPage(evt);
-		var y = Browser.findMouseYInPage(evt);
+		var x  = Browser.findMouseXInPage(evt) - 2;
+		var y = Browser.findMouseYInPage(evt) - 2;
 		obj.style.position = "absolute";
 		obj.style.display = "block";
 		if(obj.offsetParent) x -= Browser.findPosX(obj.offsetParent);

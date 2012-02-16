@@ -70,7 +70,7 @@
       <div class="UIForumCategory">
         <div class="ForumToolbar ForumActionToolbar ClearFix" $styleForumToolBar>
           <span class="$classCssCollap" title="$titleCollap" onclick="$actionCollap;"></span>
-          <h6 class="Title" title="$title" oncontextmenu="return false;">
+          <h6 class="Title oncontextmenu" title="$title">
               <% ++rCNB; %>
               <%if(uicomponent.useAjax){%>
                   <a ctxMenuId="UIPopupCategory${rCNB}" actions="<%=uicomponent.event("OpenCategory", categoryId)%>;" href="$url" class="ActionLink UICategoryTitle">$title</a>
@@ -79,7 +79,7 @@
               <%}%>
               
                 <div id="UIPopupCategory${rCNB}" style="display:none;">
-                    <ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><span></span></ul>
+                    <ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><li></li></ul>
                 </div>
           </h6>
         </div>
@@ -215,7 +215,7 @@
                     }
                     url = ForumUtils.createdForumLink(ForumUtils.FORUM, forumId, false);
                 %>
-                    <tr class="$classRow" oncontextmenu="return false;">
+                    <tr class="$classRow oncontextmenu">
                       <td class="Tdbox"><div class="ForumStatusIcon $classIconForum" title="$titleIconForum"><span></span></div></td>
                       <td class="Tdbox"><div class="ForumStatusIcon $classIconReadForum" title="$titleNoNewPostForum"><span></span></div></td>
                       <td>
@@ -227,7 +227,7 @@
                               <a ctxMenuId="UIPopupCategory${rCNB}" href="$url" class="ForumTitle ActionLink" style="$lineHeight;font-weight:$fontWeight" >$forumTitle</a><span class="ForumQuantity"></span>
                           <%}%>
                           <div id="UIPopupCategory${rCNB}" style="display:none;">
-                              <ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><span></span></ul>
+                              <ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><li></li></ul>
                           </div>
                         </span>
                         
@@ -272,7 +272,7 @@
 																<a ctxMenuId="UIPopupCategory${rCNB}" href="$urlLastPost" title="$titleTopic" class="LastPostTitle ActionLink" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
 														<%}%>
 														<div id="UIPopupCategory${rCNB}" style="display:none">
-																<ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><span></span></ul>
+																<ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><li></li></ul>
 														</div>
 													</div>
                         </div>
@@ -331,20 +331,18 @@
   <% } %>
   </div>
   <% //Begin RightClick Bookmark  %>
-  <div id="RightClickContainer" style="display:none">
+  <ul id="RightClickContainer" style="display:none">
   <%if(uicomponent.userProfile.getUserRole() < 3){%>
-        
-          <li class="MenuItem AddBookmark">
-            <a class="ItemIcon AddLinkToBookIcon" href=""><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
-          </li>
-          <li class="MenuItem AddWatching">
-            <a href="" class="ItemIcon AddWatchingIcon"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
-          </li>
-          <li class="MenuItem AddRSS">
-            <a class="ItemIcon ForumRSSFeed" href="#"><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
-          </li>
-        
+      <li class="MenuItem AddBookmark">
+        <a class="ItemIcon AddLinkToBookIcon" href=""><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
+      </li>
+      <li class="MenuItem AddWatching">
+        <a href="" class="ItemIcon AddWatchingIcon"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
+      </li>
+      <li class="MenuItem AddRSS">
+        <a class="ItemIcon ForumRSSFeed" href="#"><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
+      </li>
     <% } %>
-  </div>
+  </ul>
   <% //End RightClick Bookmark%>
 </div>
