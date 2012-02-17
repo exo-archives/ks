@@ -566,6 +566,10 @@
 	border: 1px solid #4d67aa;
 }
 
+.UIForumPortlet .ClickPopupContent {
+	font-weight: normal;
+}
+
 .UIForumPortlet .UIRightClickPopupMenu .ClickPopupContent .AddLinkToBookIcon {
 	background-position: 5px center;
 }

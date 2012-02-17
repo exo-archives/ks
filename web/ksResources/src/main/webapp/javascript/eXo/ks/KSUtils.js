@@ -7,14 +7,27 @@ function KSUtils() {};
 /********************* Utils *****************************************/
 KSUtils.prototype.findFirstDescendantByClass = function(parent, classChild) {
 	var DOMUtil = eXo.core.DOMUtil;
-	var tags = ["a", "div", "span", "li"];
-	for ( var i = 0; i < tags.length; i++) {
-		var childrent = DOMUtil.findFirstDescendantByClass(parent, tags[i], classChild) ;
+	var tagSuports = ["a", "div", "span", "ul", "li", "tr", "td", "span","h6"];
+	for ( var i = 0; i < tagSuports.length; i++) {
+		var childrent = DOMUtil.findFirstDescendantByClass(parent, tagSuports[i], classChild) ;
 		if(childrent) {
 			return childrent ;
 		}
 	}
 	return null;
+};
+
+KSUtils.prototype.findDescendantsByClass = function(parent, classChild) {
+	var DOMUtil = eXo.core.DOMUtil;
+	var tagSuports = ["a", "div", "span", "ul", "li", "tr", "td", "span","h6"];
+	var allchildrents = [];
+	for ( var i = 0; i < tagSuports.length; i++) {
+		var childrents = DOMUtil.findDescendantsByClass(parent, tagSuports[i], classChild) ;
+		if(childrents) {
+			allchildrents = allchildrents.concat(childrents);
+		}
+	}
+	return allchildrents;
 };
 
 KSUtils.prototype.isChrome = function() {
@@ -28,16 +41,28 @@ KSUtils.prototype.cancel = function(evt) {
 } ;
 
 /********************* Show markLayer popup **************************/
+KSUtils.prototype.addEv = function(el, evName, myFunction) {
+	if (el.addEventListener) {
+		el.addEventListener(evName, myFunction, false);
+	} else if (el.attachEvent) {
+		el.attachEvent(evName, myFunction);
+	} else {
+		eval("el." + evName + "=" + myFunction+";");
+	}
+};
+
 KSUtils.prototype.returnFalse = function () { 
 	return false; 
 };
+
 KSUtils.prototype.setMaskLayer = function(id) {
 	var DOMUtil = eXo.core.DOMUtil;
+	var KSUtils = eXo.ks.KSUtils;
 	var portlet = document.getElementById(id) ;
 	if(portlet) {
   	var masklayer = DOMUtil.findFirstDescendantByClass(portlet, "div", "KSMaskLayer") ;
   	var popupAction = DOMUtil.findFirstDescendantByClass(portlet, "span", "UIKSPopupAction") ;
-  	var popupWindow = eXo.ks.KSUtils.findFirstDescendantByClass(popupAction, "UIPopupWindow") ;
+  	var popupWindow = KSUtils.findFirstDescendantByClass(popupAction, "UIPopupWindow") ;
  		masklayer.style.width = "auto";
  		masklayer.style.height = "auto";
 	 	if(popupWindow) {
@@ -45,7 +70,7 @@ KSUtils.prototype.setMaskLayer = function(id) {
 				masklayer.style.width = (portlet.offsetWidth - 3) + "px";
 				masklayer.style.height = (portlet.offsetHeight - 3) + "px";
 			}
-			var closeButton = eXo.ks.KSUtils.findFirstDescendantByClass(popupAction, "CloseButton") ;
+			var closeButton = KSUtils.findFirstDescendantByClass(popupAction, "CloseButton") ;
 			if(closeButton) {
 				var newDiv = DOMUtil.findFirstDescendantByClass(closeButton, "div", "ClosePopup") ;
 				if(!newDiv) newDiv = document.createElement("div");
@@ -62,10 +87,10 @@ KSUtils.prototype.setMaskLayer = function(id) {
 				};
 			}
 	 	}
-	 	masklayer.onselectstart = eXo.ks.KSUtils.returnFalse;
- 		masklayer.ondragstart = eXo.ks.KSUtils.returnFalse;
- 		masklayer.attachEvent('onselectstart', eXo.ks.KSUtils.returnFalse);
- 		masklayer.attachEvent('ondragstart', eXo.ks.KSUtils.returnFalse);
+	 	masklayer.onselectstart = KSUtils.returnFalse;
+ 		masklayer.ondragstart = KSUtils.returnFalse;
+ 		KSUtils.addEv(masklayer, 'onselectstart', KSUtils.returnFalse);
+ 		KSUtils.addEv(masklayer, 'ondragstart', KSUtils.returnFalse);
  		masklayer.unselectable = "no";
 	}
 };
