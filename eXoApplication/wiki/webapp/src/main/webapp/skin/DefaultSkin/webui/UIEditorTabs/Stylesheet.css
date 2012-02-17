@@ -5,8 +5,6 @@
 .UIWikiPageEditForm .UIEditorTabs {
 	float: left;
 	height: auto;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	border: 1px solid #d6d6d6;
 	padding: 6px 0px 6px 2px;

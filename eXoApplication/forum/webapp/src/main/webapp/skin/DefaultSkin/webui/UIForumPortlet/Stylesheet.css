@@ -3,7 +3,7 @@
 	background: #ffffff;
 }
 
-* html .UIForumPortlet {
+*+html .UIForumPortlet {
 	height: 470px;
 }
 
@@ -188,7 +188,7 @@
 
 .UIForumPortlet .UIForumActionBar .DefaultStyle .DisableAction {
 	opacity: 0.5;
-	filter: alpha(opacity =     50);
+	filter: alpha(opacity = 50);
 }
 
 .UIForumPortlet .ToolbarActionsTag {
@@ -272,9 +272,12 @@
 
 .UIForumPortlet .UICategoryInfo .ContentContainer {
 	border-top: solid 1px #b7b7b7;
-	*border-top: none;
 	padding-top: 1px;
-	*padding-top: 0px;
+}
+
+*+html .UIForumPortlet .UICategoryInfo .ContentContainer {
+	border-top: none;
+	padding-top: 0px;
 }
 
 .UIForumPortlet .ContentContainer .ForumStatsList a {
@@ -449,13 +452,9 @@
 }
 
 .UIForumPortlet .ContentHelp {
-	-moz-border-radius: 9px 9px 9px 9px;
-	-webkit-border-radius: 9px 9px 9px 9px;
 	border-radius: 9px 9px 9px 9px;
-	-moz-box-shadow: 1px 1px 4px #A7A7A7;
-	-webkit-box-shadow: 1px 1px 4px #A7A7A7;
 	box-shadow: 1px 1px 4px #A7A7A7;
-	background: none repeat scroll 0 0 white;
+	background: #fff;
 	border: 1px solid #717171;
 	padding: 8px;
 	white-space: normal;

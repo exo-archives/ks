@@ -151,7 +151,6 @@
 
 .UIAnswersPortlet .AnswerToolbar {
 	height: 28px;
-	_width: 99.7%;
 }
 
 .UIAnswersPortlet a {
@@ -280,12 +279,11 @@
 	padding:0px 0px 5px 10px; 
 	margin-bottom:5px; 
 	line-height:18px;
-	_width:187px;
 }
 
 .UIAnswersPortlet .CategoriesContainer {
-  min-height:339px;
-  overflow: auto;
+	min-height:339px;
+	overflow: auto;
 }
 
 .UIAnswersPortlet .HorizontalLayout {
@@ -301,7 +299,7 @@
 
 .UIAnswersPortlet .LockFunction {
 	filter: alpha(opacity=50);
-	-moz-opacity: 0.5;
+	opacity: 0.5;
 }
 
 .UIAnswersPortlet .AnswersContainer .FAQContent .FAQCategory {
@@ -314,9 +312,9 @@
 }
 
 .UIAnswersPortlet .UICategories {
-		padding-left: 5px;
-		white-space: nowrap;
-		overflow: hidden;
+	padding-left: 5px;
+	white-space: nowrap;
+	overflow: hidden;
 }
 
 .UIAnswersPortlet .UICategories .FAQCategoryRoot {
@@ -342,12 +340,12 @@
 	height: 16px;
 	line-height: 16px;
 	white-space: nowrap;
-	-moz-user-select:none;
+	user-select:none;
 	cursor:pointer;
 }
 
 .UIAnswersPortlet .UICategories .FAQCategoryRight a{
-	-moz-user-select:none;
+	user-select:none;
 }
 
 .UIAnswersPortlet .UICategories .FAQCategoryRightBlack {
@@ -357,7 +355,7 @@
 	line-height: 16px;
 	white-space: nowrap;
 	font-weight: bold;
-	-moz-user-select:none;
+	user-select:none;
 }
 
 .UIAnswersPortlet .UICategories .FAQTmpCategory {
@@ -375,7 +373,7 @@
 	height:14px;
 	border: solid 1px #333333;
 	background: #cccccc url('background/BlackBorderRightArrow.gif') no-repeat left;
-	-moz-opacity:0.5;
+	opacity:0.5;
 	filter: Alpha(Opacity=50);
 }
 
@@ -391,8 +389,7 @@
 
 .UIAnswersPortlet .UIQuestions .AnswersContainer {
 	min-height: 400px;
-	width: 99.7% !importan;
-	_height: 380px;
+	width: 99.7% !important;
 }
 
 .UIAnswersPortlet .UIQuestions .AnswersContainer .UIFAQPopupCategory {
@@ -568,7 +565,6 @@
 	float: right;
 }
 
-
 .UIAnswersPortlet .QuestionSelect .DecoratorTL{
 	background: url('background/DecoratorTL.gif') no-repeat left;
 	padding-left: 11px;
@@ -713,8 +709,6 @@
 }
 
 .UIAnswersPortlet .ImgAvatarBorder {
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	border: 1px solid #B7B7B7;
 	border-bottom: 1px solid #8D8D8D;
@@ -819,14 +813,8 @@
 	padding: 0px; 
 }
 
-.UIAnswersPortlet .AnswersContainer .FAQContent .Response {
-	_width: 100%;
-}
-
 .UIAnswersPortlet .AnswersContainer .FAQContent .RelationContent {
-	padding-bottom: 4px;
-	padding-left: 10px ;
-	_width: 90%;
+	padding: 0px 0px 4px 10px;
 }
 
 .UIAnswersPortlet .EditQuestionContent {
@@ -981,7 +969,6 @@
 	padding-left: 8px;
 	margin-top: 4px;
 	width: 394px;
-	_width: 396px;
 }
 
 .UIAnswersPortlet .AddLanguage .LanguageTitle {
@@ -1026,7 +1013,6 @@
 .UIAnswersPortlet .UIPopupViewQuestion {
 	padding: 8px;
 	background-color: #EFEFEF;
-	max-height: 
 }
 
 .UIAnswersPortlet .UIPopupViewQuestion .ViewQuestion {
@@ -1067,8 +1053,6 @@
 	padding-left: 1px;
 	font-weight:bold;
 }
-
-#xEditingArea(height: 200px;)
 
 .UIAnswersPortlet .UIWatchManager {
 	padding: 2px;
@@ -1264,7 +1248,6 @@
 	padding-bottom: 5px;
 	max-height: 400px;
 	overflow: auto;
-	_height: 400px;
 }
 
 /******************************	UIQuestinoManager	***************************************/
@@ -1275,9 +1258,6 @@
 }
 
 /******************************	UIQuestionsInfo	***************************************/
-.UITabPane .UITabContentContainer .UIIETabContent {
-	_padding: 15px 7px 30px;
-}
 
 /******************************	Icon	***************************************/
 
@@ -1629,7 +1609,7 @@
 	height: 16px;	width: 16px;
 	cursor: pointer;
 	filter: alpha(opacity: 70); 
-	-moz-opacity: 0.7;
+	opacity: 0.7;
 }
 
 .UIAnswersPortlet .VoteAnswerDown {
@@ -1638,7 +1618,7 @@
 	cursor: pointer;
 	margin: 0px 5px;
 	filter: alpha(opacity: 70); 
-	-moz-opacity: 0.7;
+	opacity: 0.7;
 }
 
 .UIAnswersPortlet .RatedVote {
@@ -2041,15 +2021,14 @@
 	display:block;
 	line-height:16px;
 	white-space:nowrap;
-	cursor: none;
+	cursor: auto;
 	margin: 0px 0px 0px 7px;
 	filter: alpha(opacity: 50);
-	-moz-opacity: 0.5;
+	opacity: 0.5;
 }
 
-.UIAnswersPortlet .DisableMenuItem {
-	*color: #b7b7b7;
-	_color: #b7b7b7;
+*+html .UIAnswersPortlet .DisableMenuItem {
+	color: #b7b7b7;
 }
 
 .UIAnswersPortlet .ForumIcon {
@@ -2088,7 +2067,7 @@
 	max-width: 530px;
 }
 
-*html .UIAnswersPortlet .ClassCode {
+*+html .UIAnswersPortlet .ClassCode {
 	width: 530px;
 }
 
@@ -2170,25 +2149,25 @@
 /*******************************************UI Page Interrator***************************/
 
 .UIAnswersPortlet .UIInsertAddress .SearchContent {
-  border:1px solid #b7b7b7;
-  padding:10px;
-  margin:10px 0px;
+	border:1px solid #b7b7b7;
+	padding:10px;
+	margin:10px 0px;
 }
 
 .UIAnswersPortlet .UIInsertAddress .AddressLabel {
-  float: left;
-  font-weight: bold;
-  line-height: 24px;
-  padding-left: 10px;
-  text-align: right;
-  width: 20%;
+	float: left;
+	font-weight: bold;
+	line-height: 24px;
+	padding-left: 10px;
+	text-align: right;
+	width: 20%;
 }
 
 .UIAnswersPortlet .UIInsertAddress .SearchIcon {
-  float: left;
-  padding: 3px;
+	float: left;
+	padding: 3px;
 	cursor: pointer;
-  background-position: center;
+	background-position: center;
 }
 
 .UIAnswersPortlet .UIInsertAddress .UIPageIterator {		
@@ -2324,6 +2303,21 @@
 .UIAnswersChildPopupAction .UIForm .UIFormGrid td.FieldLabel {
 	white-space:nowrap;
 }
+
+.UIAnswersPortlet .ParentMaskLayer {
+	position:relative ;
+	z-index:0;
+}
+
+.UIAnswersPortlet .ParentMaskLayer .KSMaskLayer {
+	left:0px;	top:0px;
+	z-index:5;
+	position:absolute ;
+	visibility:visible;
+	background:url('background/Point1x1.png') no-repeat top center ;
+	user-select: none;
+}
+
 
 /* Fix KS-2244*/
 .UIAnswersPortlet .ResizeButton {
@@ -2532,29 +2526,29 @@
 }
 
 .UIViewerSettingForm .ViewQuestionsAtMove {
-	 margin:5px 0px ;
-	 padding:10px 0px;
-	 border: 3px double #b7b7b7;
+	margin:5px 0px ;
+	padding:10px 0px;
+	border: 3px double #b7b7b7;
 }
 
 .UIViewerSettingForm .TabContentContainer {
-	 border: 1px solid white;
-	 border-top: none;
+	border: 1px solid white;
+	border-top: none;
 }
 
 .UIViewerSettingForm .UIAction {
-	 background: #F7F7F7;
-	 padding: 6px 0px 10px 0px;
+	background: #F7F7F7;
+	padding: 6px 0px 10px 0px;
 }
 
 .UIViewerSettingForm .UITabPane .UITabContentContainer .UITabContent {
-	 border: none;
-	 height: auto;
+	border: none;
+	height: auto;
 }
 
 .UIViewerSettingForm #FAQRootChildren {
-	 padding-left:30px; 
-	 margin:10px 0px;
+	padding-left:30px; 
+	margin:10px 0px;
 }
 
 .UIViewerSettingForm #ContentTemplate {

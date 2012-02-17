@@ -7,9 +7,8 @@
 }
 
 .UIForumContainer .LockActionForum {
-	filter: alpha(opacity =     50);
-	-moz-opacity: .50;
-	opacity: .50;
+	filter: alpha(opacity = 50);
+	opacity: 0.50;
 }
 
 .UIForumContainer .ButtomAndPageListContainer .UIPageIterator {

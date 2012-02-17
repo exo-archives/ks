@@ -11,7 +11,7 @@
 .UIViewPost .ViewContainer {
 	border: 1px solid #c7c7c7;
 	background: #f7f7f7;
-	-moz-box-shadow: 1px 1px #fff inset, -1px -1px #fff inset;
+	box-shadow: inset 1px 1px #fff, inset -1px -1px #fff;
 	padding: 10px;
 }
 

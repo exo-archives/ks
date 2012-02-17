@@ -69,10 +69,10 @@
 	background: white;
 }
 /* Fix only IE7 */
-.UIForumPortlet .UITopicPoll .TopicPollContainer .TopicPollContent {
-	*min-width: 300px;
-	*overflow-y: hidden;
-	*overflow-x: auto;
+*+html .UIForumPortlet .UITopicPoll .TopicPollContainer .TopicPollContent {
+	min-width: 300px;
+	overflow-y: hidden;
+	overflow-x: auto;
 }
 
 .UIForumPortlet .UITopicPoll .TopicPollContainer .UIFormTabPane .PollQuestion {
@@ -165,10 +165,14 @@
 .UIForumPortlet .UITopicPoll .ForumActionToolbar .ContentAction .TopicPollTop {
 	left: -5px;
 	top: 20px;
-	*top: 0px;
+}
+
+*+html .UIForumPortlet .UITopicPoll .ForumActionToolbar .ContentAction .TopicPollTop {
+	top: 0px;
 }
 
 /***** Fix alone Chrome******/
+
 @media screen and (-webkit-min-device-pixel-ratio:0) {
 	.UIForumPortlet .UITopicPoll .ForumActionToolbar .ContentAction .TopicPollTop {
 		left: -5px;

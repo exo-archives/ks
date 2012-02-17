@@ -69,10 +69,10 @@
 	background: white;
 }
 /* Fix only IE7 */
-.UIPollPortlet .UITopicPoll .TopicPollContainer .TopicPollContent {
-	*min-width: 300px;
-	*overflow-y: hidden;
-	*overflow-x: auto;
+*+html .UIPollPortlet .UITopicPoll .TopicPollContainer .TopicPollContent {
+	min-width: 300px;
+	overflow-y: hidden;
+	overflow-x: auto;
 }
 
 .UIPollPortlet .UITopicPoll .TopicPollContainer .TopicPollContent .PollQuestion {

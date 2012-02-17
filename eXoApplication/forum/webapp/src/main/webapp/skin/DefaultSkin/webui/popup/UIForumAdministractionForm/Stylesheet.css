@@ -84,8 +84,8 @@
 	height: auto;
 }
 
-.UIBBCodeManagerForm .BBCodeContainer .UIGrid {
-	*width: 97%;
+*+html .UIBBCodeManagerForm .BBCodeContainer .UIGrid {
+	width: 97%;
 }
 
 .UIBBCodeManagerForm .UIAction {

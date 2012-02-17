@@ -41,8 +41,7 @@
 }
 
 .ConfirmBox  .CloseButton {
-  background: url("/wiki/skin/DefaultSkin/webui/background/CloseIcon.gif")
-    no-repeat right top;
+  background: url("/wiki/skin/DefaultSkin/webui/background/CloseIcon.gif") no-repeat right top;
   float: right;
   height: 16px;
   margin: 2px 2px 0 0;

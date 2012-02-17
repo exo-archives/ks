@@ -35,7 +35,7 @@
 	width: 14px;
 	height: 17px;
 	display: block;
-	-moz-user-select: none;
+	user-select: none;
 }
 
 .UISliderControl .BoxNumber .BoxNumberInput {

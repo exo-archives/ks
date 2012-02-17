@@ -32,7 +32,10 @@
 
 .UINavigationPortlet .UINavigationBar .UIHorizontalTabs .TabsContainer {
 	float: none;
-	!position: relative;
+}
+
+*+html .UINavigationPortlet .UINavigationBar .UIHorizontalTabs .TabsContainer {
+	position: relative;
 }
 
 .UINavigationPortlet .UINavigationBar .LeftNavigationBar {
@@ -216,7 +219,7 @@
 	background: white;
 	padding-bottom: 6px;
 	opacity: 0.9;
-  filter: alpha(opacity=90);
+	filter: alpha(opacity=90);
 }
 
 .UINavigationPortlet .MenuItemContainer .MenuItem {

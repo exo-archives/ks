@@ -147,8 +147,6 @@
 
 .panel {
 	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
 	background-color: #F0F0F0;
 	border: 1px solid #BBBBBB;
 	color: black;
@@ -159,8 +157,6 @@
 
 .panel .panelHeader {
 	border-radius: 5px 5px 0 0;
-	-moz-border-radius: 5px 5px 0 0;
-	-webkit-border-radius: 5px 5px 0 0;
 	border-bottom-color: #F0F0F0;
 	color: #333333;
 	font-weight: bold;
@@ -291,31 +287,31 @@ table.UIFormGrid div.Id {
 }
 
 .UIWikiPortlet .UIWikiSettingContainer_PermissionSetting_ .HorizontalLayout  {
-  background:none;
-  border:none;
-  padding:0;
+	background:none;
+	border:none;
+	padding:0;
 }
 
 .UIWikiSettingContainer_PermissionSetting_ .UIPermissionGrid .UIGrid {
-  width: 80%;
-  table-layout: auto;
-  margin: 0px;
+	width: 80%;
+	table-layout: auto;
+	margin: 0px;
 }
 .UIWikiSettingContainer_PermissionSetting_ .UIWikiPermissionOwner .UIFormGrid {
-  border: none;
-  width: 80%;
-  margin: 0px;
+	border: none;
+	width: 80%;
+	margin: 0px;
 }
 
 .UIWikiPortlet .UIWikiPermissionOwner .Add {
-  width:53px;
-  height: 24px;
-  background: url("/wiki/skin/DefaultSkin/webui/background/ButtonAdd.png") no-repeat  0 0 ;
-  vertical-align:top;
+	width:53px;
+	height: 24px;
+	background: url("/wiki/skin/DefaultSkin/webui/background/ButtonAdd.png") no-repeat  0 0;
+	vertical-align:top;
 }
 
 .UIWikiPortlet .UIWikiPermissionOwner .UIFormGrid td {
-  border:none;
+	border:none;
 }
 
 .UIWikiPortlet .UIWikiPageTitleControlForm_PageControlArea {
@@ -344,15 +340,15 @@ table.UIFormGrid div.Id {
 	overflow: auto;
 	padding: 0px;
 	min-height: 250px;
-  float:left;
+	float:left;
 }
 
 .UIWikiPortlet .UIRightContainerArea {
 	overflow: auto;
 	padding: 0px;
-  width: 70%;
+	width: 70%;
 	min-height: 250px;
-  float:left;
+	float:left;
 }
 
 .UIWikiPortlet .Spliter {
@@ -360,7 +356,7 @@ table.UIFormGrid div.Id {
 	width: 1px;
 	cursor: col-resize;
 	padding: 0px;
-  float:left;
+	float:left;
 }
 
 .UIWikiPortlet .VerticalLine {
@@ -380,7 +376,10 @@ table.UIFormGrid div.Id {
 	margin: 0;
 	overflow: visible;
 	position: relative;
-	*position: static;
+}
+
+*+html .UIWikiPortlet .UIWikiMiddleArea .UIWikiPageContainer {
+	position: static;
 }
 
 .UIWikiPortlet .UIWikiMiddleArea .Related {
@@ -397,8 +396,6 @@ table.UIFormGrid div.Id {
 	margin-bottom: 10px;
 	color: #555555;
 	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
 }
 
 .UIWikiPortlet .UIWikiMiddleArea .Related .RelatedContent {
@@ -466,8 +463,6 @@ table.UIFormGrid div.Id {
 .UIWikiPageContentArea .DecorationVersion {
 	background: #eeeeee;
 	border-radius: 3px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	padding: 8px;
 }
 
@@ -508,8 +503,6 @@ table.UIFormGrid div.Id {
 	background: url("background/Button.gif") repeat-x;
 	padding: 3px 16px;
 	border-radius: 12px;
-	-moz-border-radius: 12px;
-	-webkit-border-radius: 12px;
 	border: 1px solid #acacac;
 }
 
@@ -538,10 +531,10 @@ table.UIFormGrid div.Id {
 }
 
 .UIWikiBottomArea .UIWikiPageVersionsList .HistoryLabel {
-  color: #636363;
-  font-size: 14px;
-  font-weight: bold;
-  padding: 4px 0;
+	color: #636363;
+	font-size: 14px;
+	font-weight: bold;
+	padding: 4px 0;
 }
 
 .UIWikiPageContentArea .Tit {
@@ -557,8 +550,6 @@ table.UIFormGrid div.Id {
 	background-color: #FFFFDD;
 	border-color: #F7DF92;
 	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
 }
 
 .UIWikiPageContentArea span.VersionInfoDescription {
@@ -620,9 +611,9 @@ table.UIFormGrid div.Id {
 	list-style: decimal;
 }
 
-.UIWikiPortlet .WikiContent table {
-  !table-layout: auto;
-  !width: 100%;
+*+html .UIWikiPortlet .WikiContent table {
+  table-layout: auto;
+  width: 100%;
 }
 
 #UIMoveTree .Hover {
@@ -635,8 +626,7 @@ table.UIFormGrid div.Id {
 
 /* wiki mask workspace */
 .UIWikiMaskWorkspace {
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
+	border-radius: 4px;
 	background-color: #E1E1E1;
 	padding: 9px 3px 6px 3px;
 	width: 100%;
@@ -724,8 +714,6 @@ table.UIFormGrid div.Id {
 	padding: 2px 0 2px 8px;
 	width: 395px;
 	border-radius: 3px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	background: #f7f7f7;
 }
 
@@ -1041,8 +1029,11 @@ table.UIFormGrid div.Id {
 	bottom:0px;
 	left: 15px;
 	padding: 0px 0px 5px;
-  width: 97.5%;
-  *position: static;
+	width: 97.5%;
+}
+
+*+html .UIWikiBottomArea {
+	position: static;
 }
 
 .UIWikiPageInfoArea {
@@ -1384,9 +1375,12 @@ table.UIFormGrid div.Id {
 
 .UIWikiPageArea .UIWikiPageEditForm .UIColsLeftsEditForm {
 	margin-right: 280px;
-	*margin-right: 270px;
 	padding: 0px;
 	margin-bottom: 15px;
+}
+
+*+html .UIWikiPageArea .UIWikiPageEditForm .UIColsLeftsEditForm {
+	margin-right: 270px;
 }
 
 /******************************************************** UIWikiPageEditForm *************************************************************/
@@ -1394,12 +1388,10 @@ table.UIFormGrid div.Id {
 	background: #f8f8f8;
 	border: 1px solid #dcdcdc;
 	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
 	width: 50%;
 	float:left;
 	padding: 6px 0 6px 6px;
-  margin-top: 15px;
+	margin-top: 15px;
 }
 
 .UIWikiPageEditForm .UIWikiPageTitleControlForm_PageEditForm #TitleInput {
@@ -1407,7 +1399,7 @@ table.UIFormGrid div.Id {
 	border: none;
 	font-size: 18px;
 	line-height: 20px;
-  height: 20px;
+	height: 20px;
 	width: 99%;
 }
 
@@ -1420,23 +1412,22 @@ table.UIFormGrid div.Id {
 	background: #f8f8f8;
 	border: 1px solid #dcdcdc;
 	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
 	height: auto;
 	padding: 6px;
-	*padding: 6px 0px 6px 6px;
 	width: 96%;
-	*width: 95%;
 	overflow: auto;
 	font-size: 10pt;
+}
+
+*+html .UIWikiPageEditForm .UIForm .UIWikiPageContentInputContainer textarea {
+	padding: 6px 0px 6px 6px;
+	width: 95%;
 }
 
 .UIWikiPageEditForm .UIWikiTemplateDescriptionContainer {
 	background: #f8f8f8;
 	border: 1px solid #dcdcdc;
 	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
 	margin: 6px 0px 0px;
 	width: 35%;
 	padding: 6px 0 6px 6px;
@@ -1465,8 +1456,6 @@ table.UIFormGrid div.Id {
 	background: #f8f8f8;
 	border: 1px solid #dcdcdc;
 	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
 	padding: 6px;
 	font-size: 14px;
 }
@@ -1481,9 +1470,10 @@ table.UIFormGrid div.Id {
 	border: 1px solid #dcdcdc;
 	border-top: none;
 	border-radius: 5px 5px 0 0;
-	-moz-border-radius: 5px 5px 0 0;
-	-webkit-border-radius: 5px 5px 0 0;
-	*margin-top: 4px;
+}
+
+*+html .UIWikiSidePanelArea {
+	margin-top: 4px;
 }
 
 .UIWikiSidePanelArea .Tit {
@@ -1507,9 +1497,7 @@ table.UIFormGrid div.Id {
 .UIWikiSidePanelArea .BarTit {
 	background: url('background/TitBarBG.png') repeat-x left top;
 	border-radius: 5px 5px 0 0;
-	-moz-border-radius: 5px 5px 0 0;
-	-moz-border-radius: 5px 5px 0 0;
-  border-top: 1px solid #DCDCDC;
+	border-top: 1px solid #DCDCDC;
 	font-weight: bold;
 	color: #555555;
 	line-height: 29px;
@@ -1532,6 +1520,19 @@ table.UIFormGrid div.Id {
 	margin: 0px 0px 5px 0px;
 }
 
+.UIWikiPagePreview .UIWikiPortlet h1 {
+	font-size: 24px;
+	font-weight: bold;
+}
+
+.UIWikiPagePreview .UIWikiPortlet h4 {
+	font-size: 14px;
+	font-weight: bold;
+	border-bottom: 1px solid #e8e8e8;
+	line-height: 20px;
+	margin-top: 20px;
+}
+
 .UIWikiPagePreview .UIWikiPortlet a {
 	text-decoration: underline;
 }
@@ -1549,8 +1550,6 @@ table.UIFormGrid div.Id {
 	padding: 0px 16px;
 	line-height: 21px;
 	border-radius: 12px;
-	-moz-border-radius: 12px;
-	-webkit-border-radius: 12px;
 	border: 1px solid #acacac;
 	color: #464646;
 	float: left;
@@ -1585,8 +1584,7 @@ table.UIFormGrid div.Id {
 	color: #555555;
 	line-height: 15px;
 	border: 1px solid #acacac;
-	-moz-border-radius: 12px;
-	-webkit-border-radius: 12px;
+	border-radius: 12px;
 	padding: 3px 10px;
 	margin-left: 5px;
 }
@@ -1669,18 +1667,12 @@ table.UIFormGrid div.Id {
   width:60%;
 }
 
-.UIWikiPortlet .UITemplateSettingForm .UIGrid a {
-	width:16px;
-	height: 16px;
-	display:inline-block;	
-	text-indent:-9999999px;
-	outline: none;
- }
- 
-*+html .UIWikiPortlet .UITemplateSettingForm .UIGrid a {
-	text-indent: 0px;
-	font-size: 0px;
-	line-height: 0;
+.UIWikiPortlet .UITemplateSettingForm  .UIGrid a{
+  width:16px;
+  height: 16px;
+  display:inline-block;	
+  text-indent:-9999999px;
+  outline: none;
 }
 
 .UIWikiPortlet .UIWikiTemplateForm .UIGrid .EditTemplateIcon { 

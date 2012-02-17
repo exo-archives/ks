@@ -1,10 +1,5 @@
 @import url('DefaultSkin/icons/16x16/Stylesheet.css');
 
-.UIWikiPortlet .UITreeExplorer {
-  _overflow-x: hidden;
-  _width: 183px;
-}
-
 .UIWikiPortlet .UITreeExplorer .Node {
   white-space: normal;
   padding: 2px 0px;
