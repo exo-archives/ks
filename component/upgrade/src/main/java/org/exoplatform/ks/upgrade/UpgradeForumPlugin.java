@@ -55,16 +55,18 @@ import org.exoplatform.services.organization.OrganizationService;
  */
 public class UpgradeForumPlugin extends UpgradeProductPlugin {
 
-  private static final Log    log              = ExoLogger.getLogger(UpgradeForumPlugin.class);
+  private static final Log    log               = ExoLogger.getLogger(UpgradeForumPlugin.class);
 
-  private static final String NEW_DOAMIN_FORUM = "new.domain.forum";
+  private static final String NEW_DOAMIN_FORUM  = "new.domain.forum";
 
-  private static final String GROUP_SPACE_ID   = "/spaces";
+  private static final String GROUP_SPACE_ID    = "/spaces";
 
-  private String              newDomain        = "";
+  private static final String CATEGORY_SPACE_ID = Utils.CATEGORY + "spaces";
+
+  private String              newDomain         = "";
 
   private KSDataLocation      dataLocation;
-
+  
   public UpgradeForumPlugin(InitParams initParams) {
     super(initParams);
     ExoContainer container = ExoContainerContext.getCurrentContainer();
@@ -73,8 +75,7 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
   }
 
   public void processUpgrade(String oldVersion, String newVersion) {
-    // Upgrade from KS 2.1.x to 2.2.3
-    log.info("\n\n\n\n -----------> processUpgrade Forum Migration......\n\n\n");
+    log.info(String.format("\n\n -----------> Migrating data from %s to %s for Forum......\n\n", oldVersion, newVersion));
     SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
       // register new nodeTypes
@@ -82,15 +83,15 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
       UpgradeUtils.registerNodeTypes("jar:/conf/portal/forum-nodetypes.xml", ExtendedNodeTypeManager.IGNORE_IF_EXISTS);
       UpgradeUtils.registerNodeTypes("jar:/conf/portal/forum-migrate-nodetypes.xml", ExtendedNodeTypeManager.REPLACE_IF_EXISTS);
       log.info("\n\nMigration forum data....\n");
-      migrationForumData(sProvider);
+      migrationForumData(sProvider, oldVersion, newVersion);
       log.info("\n\nMigration space....\n");
-      migrationSpaceOfPLF(sProvider);
+      migrationSpaceOfPLF(sProvider, oldVersion, newVersion);
     } catch (Exception e) {
-      log.warn("[UpgradeForumPlugin] Exception when migrate data from 2.1.x to 2.2.3 for Forum.", e);
+      log.warn("[UpgradeForumPlugin] Exception when migrate data for Forum.", e);
     } finally {
       sProvider.close();
     }
-    log.info("\n\n\n\n -----------> The end Forum Migration......\n\n\n");
+    log.info("\n\n -----------> The end Forum Migration......\n\n");
   }
 
   private void getNewDomain() {
@@ -104,35 +105,38 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
     }
   }
 
-  private void migrationForumData(SessionProvider sProvider) throws Exception {
-    Node forumHome = getForumHomeNode(sProvider);
+  private void migrationForumData(SessionProvider sProvider, String oldVersion, String newVersion) throws Exception {
     // Migration 2.1.x to 2.2.3
     // properties new: exo:isWatting in nodetype: exo:post
-    NodeIterator pIter = getNodeIterator(sProvider, forumHome, Utils.EXO_POST, new StringBuilder(""));
-    log.info("\nThe size of list post migration: " + pIter.getSize());
-    while (pIter.hasNext()) {
-      Node pNode = pIter.nextNode();
-      try {
-        pNode.getProperty(Utils.EXO_IS_WAITING);
-      } catch (Exception e) {
-        pNode.addMixin("exo:forumMigrate");
-        pNode.setProperty(Utils.EXO_IS_WAITING, false);
-        log.info(String.format("Migration node %s property: exo:isWatting=false", pNode.getName()));
+    if(oldVersion.indexOf("2.1.") > 0) {
+      log.info("[UpgradeForumPlugin] Start migrate forum data from " + oldVersion + " to " + newVersion);
+      Node forumHome = getForumHomeNode(sProvider);
+      NodeIterator pIter = getNodeIterator(sProvider, forumHome, Utils.EXO_POST, new StringBuilder(""));
+      log.info("\nThe size of list post migration: " + pIter.getSize());
+      while (pIter.hasNext()) {
+        Node pNode = pIter.nextNode();
+        try {
+          pNode.getProperty(Utils.EXO_IS_WAITING);
+        } catch (Exception e) {
+          pNode.addMixin("exo:forumMigrate");
+          pNode.setProperty(Utils.EXO_IS_WAITING, false);
+          log.info(String.format("Migration node %s property: exo:isWatting=false", pNode.getName()));
+        }
+        // set new link for this post.
+        if (!Utils.isEmpty(newDomain)) {
+          saveLink(pNode);
+        }
       }
-      // set new link for this post.
+      // set new link for topics.
       if (!Utils.isEmpty(newDomain)) {
-        saveLink(pNode);
+        NodeIterator tIter = getNodeIterator(sProvider, forumHome, Utils.EXO_TOPIC, new StringBuilder(""));
+        log.info("The size of list topic migration: " + tIter.getSize());
+        while (tIter.hasNext()) {
+          saveLink(tIter.nextNode());
+        }
       }
+      forumHome.getSession().save();
     }
-    // set new link for topics.
-    if (!Utils.isEmpty(newDomain)) {
-      NodeIterator tIter = getNodeIterator(sProvider, forumHome, Utils.EXO_TOPIC, new StringBuilder(""));
-      log.info("The size of list topic migration: " + tIter.getSize());
-      while (tIter.hasNext()) {
-        saveLink(tIter.nextNode());
-      }
-    }
-    forumHome.getSession().save();
   }
 
   private void saveLink(Node node) throws Exception {
@@ -148,69 +152,72 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
     }
   }
 
-  private void migrationSpaceOfPLF(SessionProvider sProvider) throws Exception {
-    Node forumHome = getForumHomeNode(sProvider);
-    NodeIterator cIter = getOldAllNodeCateSpace(sProvider, forumHome);
-    log.info("\nNumber categories space migration: " + cIter.getSize());
-    if (cIter.getSize() > 0) {
-      NodeIterator fIter;
-      String[] permission;
-      PropertyReader reader;
-      String nodeName = null, fName;
-      Node newSpNode = getCatNSPNode(sProvider, false);
-      String newSpPath = newSpNode.getPath();
-      log.info("\nPath of category Spaces: " + newSpPath);
-      Session session = forumHome.getSession();
-      List<String> groups = getAllGroupOfSpaces();
-      List<String> lastGroupIds = new ArrayList<String>();
-      for (String string : groups) {
-        lastGroupIds.add(string.replaceFirst(GROUP_SPACE_ID+"/", ""));
-      }
-      log.info("\nGet all groups of spaces: " + lastGroupIds.toString());
-      while (cIter.hasNext()) {
-        Node cNode = cIter.nextNode();
-        reader = new PropertyReader(cNode);
-        permission = reader.strings(Utils.EXO_USER_PRIVATE, new String[] { "" });
-        log.info("\nMigration category : " + cNode.getName());
-        fIter = cNode.getNodes();
-        while (fIter.hasNext()) {
-          Node fNode = fIter.nextNode();
-          nodeName = fNode.getName();
-          log.info("\nMigration forum : " + nodeName);
-          try {
-            if (fNode.isNodeType(Utils.EXO_FORUM)) {
-              fName = getGroupId(permission);
-              log.info("\n Forum migration has group: " + fName);
-              if (lastGroupIds.contains(fName)) {
-                fNode.setProperty(Utils.EXO_POSTER, permission);
-                fNode.setProperty(Utils.EXO_CREATE_TOPIC_ROLE, permission);
-                fNode.setProperty(Utils.EXO_VIEWER, permission);
-                fNode.save();
-                fName = Utils.FORUM_SPACE_ID_PREFIX + fName;
-              } else {
-                fNode.setProperty(Utils.EXO_FORUM_ORDER, 100);
-                fNode.save();
-                fName = nodeName;
-              }
-              if (!hasNodeInSP(sProvider, fName)) {
-                session.move(fNode.getPath(), newSpPath + "/" + fName);
-                session.save();
-                log.info(String.format("Move forum %s in to category Spaces with new node name %s", nodeName, fName));
-              } else {
-                moveTopicsToForumSpace(session, fNode, newSpPath + "/" + fName);
-                log.info(String.format("Move all topics from %s in to forum category spaces %s", nodeName, fName));
-              }
-            }
-          } catch (Exception e) {
-            log.info(String.format("Can not moving the forum %s in to category Spaces...", nodeName));
-          }
+  private void migrationSpaceOfPLF(SessionProvider sProvider, String oldVersion, String newVersion) throws Exception {
+    if(oldVersion.indexOf("2.1.") > 0) {
+      log.info("[UpgradeForumPlugin] Start migrate forum data space in platform from version " + oldVersion + " to " + newVersion);
+      Node forumHome = getForumHomeNode(sProvider);
+      NodeIterator cIter = getOldAllNodeCateSpace(sProvider, forumHome);
+      log.info("\nNumber categories space migration: " + cIter.getSize());
+      if (cIter.getSize() > 0) {
+        NodeIterator fIter;
+        String[] permission;
+        PropertyReader reader;
+        String nodeName = null, fName;
+        Node newSpNode = getCatNSPNode(sProvider, false);
+        String newSpPath = newSpNode.getPath();
+        log.info("\nPath of category Spaces: " + newSpPath);
+        Session session = forumHome.getSession();
+        List<String> groups = getAllGroupOfSpaces();
+        List<String> lastGroupIds = new ArrayList<String>();
+        for (String string : groups) {
+          lastGroupIds.add(string.replaceFirst(GROUP_SPACE_ID+"/", ""));
         }
-        log.info(String.format("Remove old category space: %s ", cNode.getName()));
-        cNode.remove();
-        session.save();
+        log.info("\nGet all groups of spaces: " + lastGroupIds.toString());
+        while (cIter.hasNext()) {
+          Node cNode = cIter.nextNode();
+          reader = new PropertyReader(cNode);
+          permission = reader.strings(Utils.EXO_USER_PRIVATE, new String[] { "" });
+          log.info("\nMigration category : " + cNode.getName());
+          fIter = cNode.getNodes();
+          while (fIter.hasNext()) {
+            Node fNode = fIter.nextNode();
+            nodeName = fNode.getName();
+            log.info("\nMigration forum : " + nodeName);
+            try {
+              if (fNode.isNodeType(Utils.EXO_FORUM)) {
+                fName = getGroupId(permission);
+                log.info("\n Forum migration has group: " + fName);
+                if (lastGroupIds.contains(fName)) {
+                  fNode.setProperty(Utils.EXO_POSTER, permission);
+                  fNode.setProperty(Utils.EXO_CREATE_TOPIC_ROLE, permission);
+                  fNode.setProperty(Utils.EXO_VIEWER, permission);
+                  fNode.save();
+                  fName = Utils.FORUM_SPACE_ID_PREFIX + fName;
+                } else {
+                  fNode.setProperty(Utils.EXO_FORUM_ORDER, 100);
+                  fNode.save();
+                  fName = nodeName;
+                }
+                if (!hasNodeInSP(sProvider, fName)) {
+                  session.move(fNode.getPath(), newSpPath + "/" + fName);
+                  session.save();
+                  log.info(String.format("Move forum %s in to category Spaces with new node name %s", nodeName, fName));
+                } else {
+                  moveTopicsToForumSpace(session, fNode, newSpPath + "/" + fName);
+                  log.info(String.format("Move all topics from %s in to forum category spaces %s", nodeName, fName));
+                }
+              }
+            } catch (Exception e) {
+              log.info(String.format("Can not moving the forum %s in to category Spaces...", nodeName));
+            }
+          }
+          log.info(String.format("Remove old category space: %s ", cNode.getName()));
+          cNode.remove();
+          session.save();
+        }
+        newSpNode.setProperty(Utils.EXO_USER_PRIVATE, groups.toArray(new String[groups.size()]));
+        forumHome.save();
       }
-      newSpNode.setProperty(Utils.EXO_USER_PRIVATE, groups.toArray(new String[groups.size()]));
-      forumHome.save();
     }
   }
 
@@ -257,19 +264,18 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
   private Node getCatNSPNode(SessionProvider sProvider, boolean isClear) throws Exception {
     Node categoryHome = getNodeByPath(dataLocation.getForumCategoriesLocation(), sProvider);
     Node catNode = null;
-    String id = Utils.CATEGORY + "spaces";
     try {
-      catNode = categoryHome.getNode(id);
+      catNode = categoryHome.getNode(CATEGORY_SPACE_ID);
       if (isClear) {
         catNode.remove();
         categoryHome.getSession().save();
       }
     } catch (PathNotFoundException e) {
-      log.warn(String.format("Failed to get category node %s", id), e);
+      log.warn(String.format("Failed to get category node %s", CATEGORY_SPACE_ID), e);
     }
     if (catNode == null) {
-      catNode = categoryHome.addNode(id, Utils.EXO_FORUM_CATEGORY);
-      catNode.setProperty(Utils.EXO_ID, id);
+      catNode = categoryHome.addNode(CATEGORY_SPACE_ID, Utils.EXO_FORUM_CATEGORY);
+      catNode.setProperty(Utils.EXO_ID, CATEGORY_SPACE_ID);
       catNode.setProperty(Utils.EXO_OWNER, "");
       catNode.setProperty(Utils.EXO_CREATED_DATE, GregorianCalendar.getInstance());
       catNode.setProperty(Utils.EXO_NAME, "Spaces");
@@ -284,7 +290,7 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
   }
 
   private NodeIterator getOldAllNodeCateSpace(SessionProvider sProvider, Node forumHome) throws Exception {
-    StringBuilder strQuery = new StringBuilder("[(@").append(Utils.EXO_NAME).append("='spaces') or (jcr:contains(@").append(Utils.EXO_USER_PRIVATE).append(", 'spaces'))]");
+    StringBuilder strQuery = new StringBuilder("[((@").append(Utils.EXO_NAME).append("='spaces') or (jcr:contains(@").append(Utils.EXO_USER_PRIVATE).append(", 'spaces'))) and (fn:name()!='").append(CATEGORY_SPACE_ID).append("')]");
     return getNodeIterator(sProvider, forumHome, Utils.EXO_FORUM_CATEGORY, strQuery);
   }
 
@@ -303,8 +309,8 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
     return getSession(sessionProvider).getRootNode().getNode(nodePath);
   }
 
-  public boolean shouldProceedToUpgrade(String newVersion, String previousVersion) {
-    return VersionComparator.isBefore(previousVersion, newVersion);
+  public boolean shouldProceedToUpgrade(String newVersion, String oldVersion) {
+    return VersionComparator.isBefore(oldVersion, newVersion);
   }
 
   @SuppressWarnings("deprecation")
