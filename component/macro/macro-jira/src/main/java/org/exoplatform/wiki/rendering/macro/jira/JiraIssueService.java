@@ -33,6 +33,7 @@ import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.RawBlock;
 import org.xwiki.rendering.block.TableBlock;
 import org.xwiki.rendering.block.TableCellBlock;
+import org.xwiki.rendering.block.TableHeadCellBlock;
 import org.xwiki.rendering.block.TableRowBlock;
 import org.xwiki.rendering.syntax.Syntax;
 
@@ -82,10 +83,10 @@ public class JiraIssueService {
     tableBlock.addChild(headRowBlock);
     
     // Display Column names
-    for (Iterator<String> i = params.getColumns().iterator(); i.hasNext();) {
+    for (Iterator<String> i = params.getColumnsInList().iterator(); i.hasNext();) {
       String name = i.next();
       
-      TableCellBlock cellBlock = new TableCellBlock(Collections.<Block> emptyList(), new LinkedHashMap<String, String>());
+      TableHeadCellBlock cellBlock = new TableHeadCellBlock(Collections.<Block> emptyList(), new LinkedHashMap<String, String>());
       RawBlock rawBlock = new RawBlock(name, Syntax.XHTML_1_0);
       cellBlock.addChild(rawBlock);
       headRowBlock.addChild(cellBlock);
@@ -98,7 +99,7 @@ public class JiraIssueService {
       // the URL link to the issue
       String link = issue.getLink();
 
-      for (Iterator<String> i = params.getColumns().iterator(); i.hasNext();) {
+      for (Iterator<String> i = params.getColumnsInList().iterator(); i.hasNext();) {
         String name = i.next();
         TableCellBlock cellBlock = new TableCellBlock(Collections.<Block> emptyList(), new LinkedHashMap<String, String>());
 

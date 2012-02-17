@@ -38,9 +38,7 @@ function getModule(params) {
                             addDependency(new Project("org.exoplatform.commons", "exo.platform.commons.component", "jar", commonsVersion)).
                             addDependency(new Project("org.exoplatform.commons", "exo.platform.commons.webui", "jar", commonsVersion));
   module.component.rendering = new Project("org.exoplatform.ks", "exo.ks.component.rendering", "jar", module.version).
-                            addDependency(new Project("org.exoplatform.ks", "exo.ks.component.macro.iframe", "jar", module.version)).
-                            addDependency(new Project("org.exoplatform.ks", "exo.ks.component.macro.jira", "jar", module.version)).
-                            addDependency(new Project("org.codehaus.swizzle", "swizzle-jira", "jar", "${org.codehaus.swizzle.version}"));
+                            addDependency(new Project("org.exoplatform.ks", "exo.ks.component.macro.iframe", "jar", module.version);
   module.component.bbcode = new Project("org.exoplatform.ks", "exo.ks.component.bbcode", "jar", module.version);
 
   // KS apps

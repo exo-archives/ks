@@ -18,7 +18,9 @@ package org.exoplatform.wiki.rendering.macro.jira;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
+import org.apache.commons.lang.StringUtils;
 import org.xwiki.properties.annotation.PropertyDescription;
 
 /**
@@ -59,16 +61,42 @@ public class JiraIssueMacroParameters {
   /**
    * @return the columns names.
    */
-  public List<String> getColumns() {
+  public List<String> getColumnsInList() {
     if (columns == null) {
       columns = new ArrayList<String>(DEFAULT_COLUMNS);
     }
     return this.columns;
   }
   
+  public String getColumns() {
+    StringBuilder builder = new StringBuilder();
+    List<String> columns = getColumnsInList();
+    for (String column : columns) {
+      builder.append(column);
+      builder.append(",");
+    }
+    return builder.toString();
+  }
+  
   @PropertyDescription("JIRA Field Columns to Display. Sample: type,key,summary")
-  public void setColumns(List<String> columns) {
-    this.columns = columns;
+  public void setColumns(String columns) {
+    if (StringUtils.isEmpty(columns)) {
+      return;
+    }
+    
+    StringTokenizer tokenizer = new StringTokenizer(columns, ",");
+    if (this.columns == null) {
+      this.columns = new ArrayList<String>();
+    } else {
+      this.columns.clear();
+    }
+    
+    while (tokenizer.hasMoreElements()) {
+      String field = ((String) tokenizer.nextElement()).trim();
+      if (!StringUtils.isEmpty(field)) {
+        this.columns.add(field);
+      }
+    }
   }
 
   /**
