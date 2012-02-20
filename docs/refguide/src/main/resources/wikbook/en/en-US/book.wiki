@@ -4,7 +4,7 @@ h1. Prerequisites {anchor:id=KSref.Prerequisites}
 * [http://wiki.exoplatform.org/xwiki/bin/view/WS/|REST APIs]
 
 h1. Applications {anchor:id=KSref.Applications}
-
+{include:document="Application.wiki"}
 h2. Portlets {anchor:id=KSref.Applications.Portlets}
 
 h3. Forum Portlet {anchor:id=KSref.Applications.Forum Portlet}
@@ -23,7 +23,7 @@ h2. Gadgets {anchor:id=KSref.Applications.Gadgets}
 {include:document="Gadget_poll.wiki"}
 
 h1. Configuration {anchor:id=KSref.Configuration}
-
+{include:document="Configuration.wiki"}
 h2. Components {anchor:id=KSref.Configuration.Components}
 {include:document="Components.wiki"}
 
@@ -76,6 +76,7 @@ h1. JCR structure {anchor:id=KSref.JCRStructure}
 {include:document="KS_JCR_structure.wiki"}
 
 h1. Developer reference {anchor:id=KSref.DeveloperReference}
+{include:document="Developer_reference.wiki"}
 
 h2. Extension points {anchor:id=KSref.DeveloperReference.ExtensionPoints}
 {include:document="Extension_points.wiki"}

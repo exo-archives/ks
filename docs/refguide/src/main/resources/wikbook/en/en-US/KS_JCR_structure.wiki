@@ -1,4 +1,3 @@
-h1. Overview {anchor:id=KSref.JCRStructure.Overview}
 eXo Knowledge is a JCR-based product, it uses JCR to store data.
 The root node of eXo Knowledge is exo:application which includes these child nodes: exo:forumHome, exo:faqHome. 
 

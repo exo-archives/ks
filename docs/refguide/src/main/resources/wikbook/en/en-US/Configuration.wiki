@@ -1,0 +1,5 @@
+This chapter describes about configurations used in eXo Knowledge. It consists of the following main sections:
+
+* [Components|#KSref.Configuration.Components]
+* [External-component-plugin|#KSref.Configuration.External-component-plugins]
+* [Data Injector Servive|#KSref.Configuration.Data_Injector_Service]

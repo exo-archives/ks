@@ -1,0 +1,12 @@
+This chapter supplies you with the basic knowledge about overridden components, internal APIs implemented in eXo Knowledge. Also,
+you will know how to set up a default template for the FAQ portlet, and how to create a sample action extension in Wiki.
+
+In this chapter, there are the following main topics:
+
+* [Extension points|#KSref.DeveloperReference.ExtensionPoints]
+
+* [Internal API|#KSref.DeveloperReference.InternalAPI]
+
+* [FAQ Template Configuration|#KSref.DeveloperReference.FAQTemplateConfiguration]
+
+* [Extend actions over a wiki page from external jars|#KSref.DeveloperReference.Extend_actions_over_a_wiki_page_from_external_jars]
