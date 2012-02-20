@@ -76,10 +76,10 @@ public class ExoWikiHandler implements IWikiHandler {
    * Create a new Page, returns the new name, or null if already exists.
    *
    * @param path  where the page have to be created
-   * @param name  of the page to create
+ * @param name  of the page to create
    * @return page name
    */
-  public String createPage(String path, String name, boolean hasChildren) {
+  public String createPage(String path, String name, boolean hasChildren, String syntax) {
     String pageName = normalizePageName(name, CHAR_TO_REPLACE, '_');
     try
     {
@@ -87,7 +87,7 @@ public class ExoWikiHandler implements IWikiHandler {
       if (statusCode == 404) {
 
         LOGGER.info(String.format("[Create] %s//%s", path, pageName));
-        HttpGet httpGet = new HttpGet(targetHost + "/rest/private/wikiloader/create?path=" + URLEncoder.encode(path, DEFAULT_ENCODING) + "&name=" + URLEncoder.encode(pageName, DEFAULT_ENCODING));
+        HttpGet httpGet = new HttpGet(targetHost + "/rest/private/wikiloader/create?path=" + URLEncoder.encode(path, DEFAULT_ENCODING) + "&name=" + URLEncoder.encode(pageName, DEFAULT_ENCODING) + "&syntax=" + syntax);
         HttpResponse responseCreate = httpClient.execute(httpGet);
         int statusCodeRC1 = responseCreate.getStatusLine().getStatusCode();
         if (statusCodeRC1 == 200) {

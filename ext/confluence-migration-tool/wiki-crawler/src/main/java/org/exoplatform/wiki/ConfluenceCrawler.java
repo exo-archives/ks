@@ -16,18 +16,32 @@
  */
 package org.exoplatform.wiki;
 
-import org.codehaus.swizzle.confluence.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import org.codehaus.swizzle.confluence.Attachment;
+import org.codehaus.swizzle.confluence.Comment;
+import org.codehaus.swizzle.confluence.Confluence;
+import org.codehaus.swizzle.confluence.Label;
+import org.codehaus.swizzle.confluence.Page;
+import org.codehaus.swizzle.confluence.PageSummary;
+import org.codehaus.swizzle.confluence.SwizzleException;
 import org.exoplatform.wiki.handler.ExoWikiHandler;
 import org.exoplatform.wiki.handler.WikbookWikiHandler;
+import org.exoplatform.wiki.transform.SyntaxTransformer;
 import org.exoplatform.wiki.util.MacroExtractor;
 import org.exoplatform.wiki.util.MacroMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.*;
 
 /**
  * Main class for Confluence to wiki migration
@@ -56,6 +70,7 @@ public class ConfluenceCrawler implements CrawlerConstants {
   private String sourceSpace;
   private String targetSpace;
   private String targetPage;
+  private String targetSyntax;
 
   private String crawlerActions = ACTION_CHECK;
 
@@ -131,6 +146,7 @@ public class ConfluenceCrawler implements CrawlerConstants {
     targetHost = properties.getProperty(PARAMETER_TARGET_HOST);
     targetSpace = properties.getProperty(PARAMETER_TARGET_SPACE);
     targetPage = properties.getProperty(PARAMETER_TARGET_PAGE);
+    targetSyntax = properties.getProperty(PARAMETER_TARGET_SYNTAX);
 
     targetUser = properties.getProperty(PARAMETER_TARGET_USER);
     targetPwd = properties.getProperty(PARAMETER_TARGET_PWD);
@@ -330,7 +346,9 @@ public class ConfluenceCrawler implements CrawlerConstants {
 
     boolean pageProcessed = createdPageName != null;
     if (createdPageName != null && optionRecursiveCrawling) {
-      List<PageSummary> children = confluence.getChildren(page.getId());
+    
+    @SuppressWarnings("unchecked")
+	List<PageSummary> children = confluence.getChildren(page.getId());
       String newPath = subPath + "/" + createdPageName;
 
       for (PageSummary childSummary : children) {
@@ -361,43 +379,59 @@ public class ConfluenceCrawler implements CrawlerConstants {
         path = targetSpace + "/" + subPath;
       }
 
-      String newPageName = wikiHandler.createPage(path, page.getTitle(), confluence.getChildren(page.getId()).size() > 0);
+      String newPageName = wikiHandler.createPage(path, page.getTitle(), confluence.getChildren(page.getId()).size() > 0, targetSyntax);
 
       if (newPageName != null) {
         String pagePath = path + "/" + newPageName;
         createdPageName = newPageName;
 
-        StringBuilder content = new StringBuilder(page.getContent());
+        StringBuilder content = new StringBuilder();
 
+        String mainContent = formatContent(page.getContent());
+        content.append(mainContent);
+        
+        boolean xwiki2format = "xwiki2".equals(targetSyntax);
+        
         if (optionTransferComments) {
           // Add Comments in the content
+          @SuppressWarnings("unchecked")
           List<Comment> comments = confluence.getComments(page.getId());
           if (comments.size() > 0) {
             content.append("\r\n\r\nComments:\r\n");
             for (Comment comment : comments) {
               String commentContent = comment.getContent();
               String commentCreator = comment.getCreator();
-              content.append("\r\n{panel}\r\n");
+              content.append("\r\n");
+              content.append(xwiki2format ? "{{box}}" : "{pane}");
+              content.append("\r\n");
               content.append(commentCreator);
               content.append(" : ");
-              content.append(commentContent);
-              content.append("\r\n{panel}\r\n");
+              content.append(formatContent(commentContent));
+              content.append("\r\n");
+              content.append(xwiki2format ? "{{/box}}" : "{pane}");
+              content.append("\r\n");
             }
           }
         }
 
         // Labels
         if (optionTransferLabels) {
-          List<Label> labels = confluence.getLabelsById(Long.valueOf(page.getId()));
+          @SuppressWarnings("unchecked")
+		List<Label> labels = confluence.getLabelsById(Long.valueOf(page.getId()));
           if (labels.size() > 0) {
-            content.append("\r\n\r\n{info}Labels: ");
+            content.append("\r\n\r\n");
+            content.append("{{info}}");
+            content.append("Labels: ");
+            content.append("\r\n\r\n");
             for (Label label : labels) {
               content.append(label.getName()).append(", ");
             }
-            content.append("{info}\r\n");
+            content.append("\r\n");
+            content.append(xwiki2format ? "{{/info}}" : "{info}");
+            content.append("\r\n");
           }
         }
-
+        
         wikiHandler.transferContent(content.toString(), pagePath);
 
         // Transfer attachments
@@ -421,6 +455,13 @@ public class ConfluenceCrawler implements CrawlerConstants {
       }
     }
     return createdPageName;
+  }
+
+  private String formatContent(String content) {
+    if ("xwiki2".equals(targetSyntax)) {
+      return SyntaxTransformer.transformContent(content);
+    }
+    return content;
   }
 
   protected void performCheckPageContent(Page page) {
@@ -453,6 +494,7 @@ public class ConfluenceCrawler implements CrawlerConstants {
   protected void uploadAttachments(Confluence confluence, Page page, String targetSpace, String createdPageName)
       throws SwizzleException {
 
+      @SuppressWarnings("unchecked")
     List<Attachment> attachments = confluence.getAttachments(page.getId());
     for (Attachment attachment : attachments) {
       String url = attachment.getUrl();

@@ -64,7 +64,7 @@ public class WikbookWikiHandler implements IWikiHandler {
   public void stop() {
   }
 
-  public String createPage(String path, String pageName, boolean hasChildren) {
+  public String createPage(String path, String pageName, boolean hasChildren, String syntax) {
     File parentDir = new File(rootDir, path);
     File pageDir = parentDir;
     if (hasChildren) {
@@ -78,9 +78,12 @@ public class WikbookWikiHandler implements IWikiHandler {
     BufferedWriter bufferedWriter = null;
     try {
       bufferedWriter = new BufferedWriter(new FileWriter(parentFile, true));
-      bufferedWriter.write("{include:name=" + pageName + ".wiki}\n");
+      
+      bufferedWriter.write("{{include name=" + pageName + ".wiki}}\n");
+      
       if (!pageFile.exists()) {
         pageFile.createNewFile();
+        LOGGER.info("[Create] new file :" + pageFile.getAbsolutePath());
       }
     } catch (IOException e) {
       LOGGER.error("File creation failed : " + pageName);

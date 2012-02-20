@@ -88,7 +88,7 @@ public class WikbookWikiHandlerTest extends TestCase {
 
     // Page No Child
     // /-1-Create
-    wikbookWikiHandler.createPage("WikiHome", "PageNoChild", false);
+    wikbookWikiHandler.createPage("WikiHome", "PageNoChild", false, "xwiki2");
     File pageNoChildFile = registerFile(wikiHomeDir, "PageNoChild.wiki");
     TestCase.assertTrue("WikiHomeNoChild.wiki should be a file", pageNoChildFile.isFile() && pageNoChildFile.exists());
     TestCase.assertTrue("WikiHomeNoChild.wiki should be a file in homeDir directory", pageNoChildFile.getParentFile()
@@ -102,7 +102,7 @@ public class WikbookWikiHandlerTest extends TestCase {
 
     // Page with children
     // /-1-Create
-    wikbookWikiHandler.createPage("WikiHome", "PageWithChildren", true);
+    wikbookWikiHandler.createPage("WikiHome", "PageWithChildren", true, "xwiki2");
     File pageWithChildrenDir = registerDir(wikiHomeDir, "PageWithChildren");
     File pageWithChildren = registerFile(pageWithChildrenDir, "PageWithChildren.wiki");
     TestCase.assertTrue("WikiHomeWithChildren should be a directory its own directory", pageWithChildrenDir.isDirectory()

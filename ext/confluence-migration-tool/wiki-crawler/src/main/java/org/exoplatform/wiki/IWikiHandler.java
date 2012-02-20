@@ -41,11 +41,12 @@ public interface IWikiHandler {
    * Create a new page
    *
    * @param path  page path in the target (
-   * @param pageName name of the page
-   * @param hasChildren indicate if the page has some children (for wikbook export only)
+ * @param pageName name of the page
+ * @param hasChildren indicate if the page has some children (for wikbook export only)
+ * @param syntax target syntax
    * @return created page path
    */
-  String createPage(String path, String pageName, boolean hasChildren);
+  String createPage(String path, String pageName, boolean hasChildren, String syntax);
 
   /**
    * Put some content in a page
