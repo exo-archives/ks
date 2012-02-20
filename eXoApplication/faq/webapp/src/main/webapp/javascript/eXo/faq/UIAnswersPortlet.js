@@ -14,6 +14,11 @@ UIAnswersPortlet.prototype.init = function (portletId) {
   if(portlet) {
     eXo.faq.UIAnswersPortlet.updateContainersHeight(portlet);
     eXo.faq.UIAnswersPortlet.controlWorkSpace();
+    var KSUtils = eXo.ks.KSUtils;
+		var oncontextmenus = KSUtils.findDescendantsByClass(portlet, "oncontextmenu");
+		for ( var i = 0; i < oncontextmenus.length; i++) {
+			KSUtils.addEv(oncontextmenus[i], "oncontextmenu", KSUtils.returnFalse);
+		}
   }
 };
 
@@ -252,8 +257,8 @@ UIAnswersPortlet.prototype.showMenu = function (obj, evt) {
 UIAnswersPortlet.prototype.printPreview = function (obj) {
   var DOMUtil = eXo.core.DOMUtil;
   var uiPortalApplication = document.getElementById("UIPortalApplication");
-  var tmp = DOMUtil.findAncestorByClass(obj, "AnswersContainer");
-  var printArea = DOMUtil.findFirstDescendantByClass(tmp, "div", "QuestionSelect");
+  var answerContainer = DOMUtil.findAncestorByClass(obj, "AnswersContainer");
+  var printArea = DOMUtil.findFirstDescendantByClass(answerContainer, "div", "QuestionSelect");
   printArea = printArea.cloneNode(true);
   var dummyPortlet = document.createElement("div");
   var FAQContainer = document.createElement("div");
@@ -261,15 +266,15 @@ UIAnswersPortlet.prototype.printPreview = function (obj) {
   var printActions = document.createElement("div");
   printActions.className = "UIAction";
   printActions.style.display = "block";
-  var printActionInApp = document.getElementById("PrintAction");
 
+  var printActionInApp = DOMUtil.findFirstDescendantByClass(answerContainer, "div", "PrintAction");
   var cancelAction = document.createElement("a");
-  cancelAction.innerHTML = printActionInApp.getAttribute("cancel");
+  cancelAction.innerHTML = printActionInApp.getAttribute("title");
   cancelAction.className = "ActionButton LightBlueStyle";
   cancelAction.href = "javascript:void(0);";
   var printAction = document.createElement("a");
   printAction.href = "javascript:void(0);";
-  printAction.innerHTML = printActionInApp.getAttribute("print");
+  printAction.innerHTML = printActionInApp.innerHTML;
   printAction.className = "ActionButton LightBlueStyle";
 
   printActions.appendChild(printAction);

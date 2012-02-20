@@ -57,13 +57,13 @@
 								<tbody>
 								<% 
 									if(!FAQUtils.isFieldEmpty(email)) {
-									  email = "<a target=\"_blank\" href=\"mailto:"+email+"\">"+email+"</a>" ;
+									  email = "<a href=\"mailto:"+email+"\">"+email+"</a>" ;
 									}
 									if (!FAQUtils.isFieldEmpty(siteOfUser)) {
                     String []websites = FAQUtils.splitForFAQ(siteOfUser) ;
                     siteOfUser = "";
                     for (int i = 0; i < websites.length; ++i) {
-                      siteOfUser += "<a target=\"_blank\" href=\"" + websites[i] +"\">"+ websites[i] +"</a> " ;
+                      siteOfUser += "<a href=\"" + websites[i] +"\" onclick=\"window.open(this.href); return false;\">"+ websites[i] +"</a> " ;
                     }
                   }
 									String []labels = uiform.getLabelProfile();	

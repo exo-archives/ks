@@ -12,7 +12,6 @@ UIForumPortlet.prototype.init = function(id) {
 		var KSUtils = eXo.ks.KSUtils;
 		var oncontextmenus = KSUtils.findDescendantsByClass(portlet, "oncontextmenu");
 		for ( var i = 0; i < oncontextmenus.length; i++) {
-			oncontextmenus[i].oncontextmenu = KSUtils.returnFalse;
 			KSUtils.addEv(oncontextmenus[i], "oncontextmenu", KSUtils.returnFalse);
 		}
 	}
@@ -657,7 +656,7 @@ UIForumPortlet.prototype.RightClickBookMark = function(elmId) {
 	if(itemmenuWatching == null || itemmenuBookMark == null) return;
 	var labelWatchings = String(itemmenuWatching.innerHTML).split(";");
 	for(var i = 0; i < popupContents.length; i++){
-		var action = popupContents[i].getAttribute('action');
+		var action = popupContents[i].getAttribute('title');
 		if(action.indexOf(";") < 0){
 			itemmenuBookMark.href= action ;
 			itemmenuWatching.parentNode.style.display ="none";
@@ -685,6 +684,7 @@ UIForumPortlet.prototype.RightClickBookMark = function(elmId) {
 			}
 			itemmenuWatching.parentNode.style.display ="block";
 		}
+		popupContents[i].removeAttribute('title');
 		popupContents[i].innerHTML = popupContainer.innerHTML;
 	}
 };
@@ -869,7 +869,7 @@ UIForumPortlet.prototype.setTagContainerWidth = function(container){
 };
 
 UIForumPortlet.prototype.executeLink = function(evt) {
-  var onclickAction = String(this.getAttribute("actions")) ;
+  var onclickAction = String(this.getAttribute("rel")) ;
 	eval(onclickAction) ;
 	eXo.core.EventManager.cancelEvent(evt);
 	return false;

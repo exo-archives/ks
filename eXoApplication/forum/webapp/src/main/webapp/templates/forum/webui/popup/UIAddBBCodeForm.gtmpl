@@ -13,7 +13,7 @@
 							<td class="FieldComponent" colspan="2">
 								<%uiform.renderField(uiform.FIELD_TAGNAME_INPUT);%>
 								<% id = uiform.FIELD_TAGNAME_INPUT + "Help"; %>
-                <div class="IconBBCodeHelp ShowHelpIcon" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')" onfocus="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')" onblur="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
+                <div class="IconBBCodeHelp ShowHelpIcon" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')" onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
                   <span>&nbsp;&nbsp;</span>
 								  <div id="$id" class="UIBBCodeHelpPopup">
                     <div id="${id}ID" class="LeftBBCodeHelpPopup" style="display:none;">
@@ -29,7 +29,7 @@
 							<td class="FieldComponent" colspan="2">
 								<%uiform.renderField(uiform.FIELD_REPLACEMENT_TEXTARE);%>
 								<% id = uiform.FIELD_REPLACEMENT_TEXTARE + "Help"; %>
-								<div class="IconBBCodeHelp ShowHelpIcon" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')" onfocus="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')" onblur="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
+								<div class="IconBBCodeHelp ShowHelpIcon" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')" onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
                   <span>&nbsp;&nbsp;</span>
                   <div id="$id" class="UIBBCodeHelpPopup">
 									  <div id="${id}ID" class="LeftBBCodeHelpPopup" style="display:none;">
@@ -45,7 +45,7 @@
 							<td class="FieldComponent" colspan="2">
 								<%uiform.renderField(uiform.FIELD_DESCRIPTION_TEXTARE);%>
 								<% id = uiform.FIELD_DESCRIPTION_TEXTARE + "Help"; %>
-								<div class="IconBBCodeHelp ShowHelpIcon" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')" onfocus="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')" onblur="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
+								<div class="IconBBCodeHelp ShowHelpIcon" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')" onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
 								  <div id="$id" class="UIBBCodeHelpPopup">
 										<div id="${id}ID" class="LeftBBCodeHelpPopup" style="display:none;">
 											<span class="LeftBBCodeHelp"></span>
@@ -60,7 +60,7 @@
 							<td class="FieldComponent" style="width:360px;">
 								<%uiform.renderField(uiform.FIELD_EXAMPLE_TEXTARE);%>
 								<% id = uiform.FIELD_EXAMPLE_TEXTARE + "Help"; %>
-								<div class="IconBBCodeHelp ShowHelpIcon" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')" onfocus="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')" onblur="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
+								<div class="IconBBCodeHelp ShowHelpIcon" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')" onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
                   <span>&nbsp;&nbsp;</span>
 								  <div id="$id" class="UIBBCodeHelpPopup">
 										<div id="${id}ID" class="LeftBBCodeHelpPopup" style="display:none;">
@@ -81,7 +81,7 @@
 							<td class="FieldComponent" colspan="2">
 								<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_USEOPTION_CHECKBOX);%></div>
 								<% id = uiform.FIELD_USEOPTION_CHECKBOX + "Help"; %>
-								<div class="IconBBCodeHelp ShowHelpIcon" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')" onfocus="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')" onblur="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
+								<div class="IconBBCodeHelp ShowHelpIcon" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')" onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
                   <span>&nbsp;&nbsp;</span>
   								<div id="$id" class="UIBBCodeHelpPopup">
 										<div id="${id}ID" class="LeftBBCodeHelpPopup" style="display:none;">

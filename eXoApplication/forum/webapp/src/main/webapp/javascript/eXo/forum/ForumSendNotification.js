@@ -8,6 +8,17 @@ function ForumSendNotification() {
 	this.GoDirectly="Go directly to the TYPE: LINK Click here.";
 } ;
 
+ForumSendNotification.prototype.initParam = function (notification, message, post, 
+																											titeName, from, briefContent, GoDirectly) {
+	this.notification = notification;
+	this.message = message;
+	this.post = post;
+	this.titeName = titeName;
+	this.from = from;
+	this.briefContent = briefContent;
+	this.GoDirectly = GoDirectly;
+};
+
 ForumSendNotification.prototype.init = function(eXoUser, eXoToken, contextName){
 	if (!eXo.core.Cometd) {
 		eXo.require('eXo.core.Cometd');
@@ -22,16 +33,6 @@ ForumSendNotification.prototype.init = function(eXoUser, eXoToken, contextName){
 		} else {
 			this.subcribeCometdSendNotification();
 		}
-	}
-	var i18n = document.getElementById('NotificationMessage');
-	if(i18n) {
-		this.notification = i18n.getAttribute("notification") ;
-		this.message		= i18n.getAttribute("message");
-		this.post			= i18n.getAttribute("post");
-		this.titeName		= i18n.getAttribute("titeName");
-		this.from			= i18n.getAttribute("from");
-		this.briefContent = i18n.getAttribute("briefContent");
-		this.GoDirectly	= i18n.getAttribute("goDirectly");
 	}
 } ;
 

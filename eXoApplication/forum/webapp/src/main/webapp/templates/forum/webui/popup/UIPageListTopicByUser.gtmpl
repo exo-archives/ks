@@ -122,7 +122,7 @@
 										<% if(topic.getIsSticky()) {%>
 											<span class="Text StickyIcon"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
 										<% } %>
-											<a actions="<%=uicomponent.event("OpenTopic", topicId)%>" href="$linkOpen" title="$titlePost" class="ActionLink $title">$topicTitle</a>
+											<a rel="<%=uicomponent.event("OpenTopic", topicId)%>" href="$linkOpen" title="$titlePost" class="ActionLink $title">$topicTitle</a>
 										</div>
 									</td>
 									<td class="Tdbox">

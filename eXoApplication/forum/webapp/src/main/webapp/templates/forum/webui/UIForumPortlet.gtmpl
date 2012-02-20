@@ -47,7 +47,16 @@
 				uicomponent.renderChild(component.getClass()) ; 
 			}
 		}
-	%>	
-	<div style="display:none;" id="NotificationMessage" notification="<%=_ctx.appRes("UIForumPortlet.label.Notification");%>" message="<%=_ctx.appRes("UIForumPortlet.type.message");%>" post="<%=_ctx.appRes("UIForumPortlet.type.post");%>" titeName="<%=_ctx.appRes("UIForumPortlet.label.titeName");%>" from="<%=_ctx.appRes("UIForumPortlet.label.from");%>" briefContent="<%=_ctx.appRes("UIForumPortlet.label.briefContent");%>" goDirectly="<%=_ctx.appRes("UIForumPortlet.label.GoDirectly");%>"><span></span></div>
+	
+	jsmanager.addJavascript(
+	  'eXo.forum.ForumSendNotification.initParam("'
+		+ _ctx.appRes("UIForumPortlet.label.Notification") +  '", "'
+		+ _ctx.appRes("UIForumPortlet.type.message") + '", "'
+		+ _ctx.appRes("UIForumPortlet.type.post") + '", "'
+		+ _ctx.appRes("UIForumPortlet.label.titeName") + '", "'
+		+ _ctx.appRes("UIForumPortlet.label.from") + '", "'
+		+ _ctx.appRes("UIForumPortlet.label.briefContent") + '", "'
+		+ _ctx.appRes("UIForumPortlet.label.GoDirectly") + '");') ;
+	%>
 	<div><span></span></div>
 </div>

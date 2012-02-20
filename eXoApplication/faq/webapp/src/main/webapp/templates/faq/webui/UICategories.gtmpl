@@ -9,7 +9,6 @@
   uicomponent.setListCate();
   
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
-  jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
   if(uicomponent.isModerator) jsmanager.addJavascript('eXo.faq.DragDrop.init("'+compId+'") ;') ;
   String [] categoryAction;
   
@@ -89,9 +88,10 @@
             canEdit = uicomponent.isCategoryModerator(category.getPath()) ; 
         %>
           <div class="FAQTmpCategory"><span></span></div>
-          <div id="<%=category.getId()%>" class="$classCss FAQCategory" unselectable="on" ctxMenuId="UIFAQPopupCategories$i" actionLink="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>">
-            <div unselectable="on">
-	            <a title="<%=category.getName()%>" oncontextmenu="return false;" unselectable="on" onclick="<%=uicomponent.event("OpenCategory", category.getPath())%>">
+          <div id="<%=category.getId()%>" class="$classCss FAQCategory UIPopupMenuCategory$i">
+          	<input type="hidden" value="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>" title="input hidden" name="UIFAQPopupCategories$i"/>
+            <div>
+	            <a title="<%=category.getName()%>" class="oncontextmenu" onclick="<%=uicomponent.event("OpenCategory", category.getPath())%>">
 	              <span><%=FAQUtils.getSubString(category.getName(), 20);%></span>
 	            </a>
                 <%
@@ -101,7 +101,7 @@
                 <%}%>
                 
                 <!-- action of this category -->
-                <div class="UIFAQPopupCategory" id="UIFAQPopupCategories$i" style="display:none;">
+                <div class="UIFAQPopupCategory" id="UIPopupMenuCategory$i" style="display:none;">
                   <div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
                     <div class="MiddleLeftRightClickPopupMenu">
                         <div class="MiddleRightRightClickPopupMenu">
@@ -134,7 +134,7 @@
                                 String rssLink = uicomponent.getRSSLink(category.getPath()) ;
                               %>
                               <div class="MenuItem">
-                                <a class="ItemIcon FAQRSS" href="$rssLink" target="_blank"><%= _ctx.appRes("UICategories.label.RSS"); %></a>
+                                <a class="ItemIcon FAQRSS" href="$rssLink" onclick="window.open(this.href); return false;"><%= _ctx.appRes("UICategories.label.RSS"); %></a>
                               </div>
                             <%}%>
                           </div>

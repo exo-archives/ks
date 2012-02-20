@@ -13,7 +13,6 @@
   import org.exoplatform.web.application.JavascriptManager;
   def rcontext = _ctx.getRequestContext() ;
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
-  jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('UICategories') ;") ;
   jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UICategories') ;") ;
   UserProfile userProfile = uicomponent.getUserProfile();
   jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"','" + uicomponent.useAjax + "');") ;
@@ -71,16 +70,16 @@
         <div class="ForumToolbar ForumActionToolbar ClearFix" $styleForumToolBar>
           <span class="$classCssCollap" title="$titleCollap" onclick="$actionCollap;"></span>
           <h6 class="Title oncontextmenu" title="$title">
-              <% ++rCNB; %>
-              <%if(uicomponent.useAjax){%>
-                  <a ctxMenuId="UIPopupCategory${rCNB}" actions="<%=uicomponent.event("OpenCategory", categoryId)%>;" href="$url" class="ActionLink UICategoryTitle">$title</a>
-              <%} else {%>
-                  <a ctxMenuId="UIPopupCategory${rCNB}" href="$url" class="ActionLink UICategoryTitle">$title</a>
-              <%}%>
-              
-                <div id="UIPopupCategory${rCNB}" style="display:none;">
-                    <ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><li></li></ul>
-                </div>
+	          <% ++rCNB; %>
+	          <%if(uicomponent.useAjax){%>
+	              <a class="ActionLink UICategoryTitle UIPopupMenuCategory${rCNB}" rel="<%=uicomponent.event("OpenCategory", categoryId)%>;" href="$url">$title</a>
+	          <%} else {%>
+	              <a class="ActionLink UICategoryTitle UIPopupMenuCategory${rCNB}"  href="$url">$title</a>
+	          <%}%>
+	          
+	            <div id="UIPopupMenuCategory${rCNB}" style="display:none;">
+	            	<ul title="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><li></li></ul>
+	            </div>
           </h6>
         </div>
         <div class="ContentContainer" style="display:$display">
@@ -222,12 +221,12 @@
                         <span>
                             <% ++rCNB; %>
                           <%if(uicomponent.useAjax){%>
-                              <a ctxMenuId="UIPopupCategory${rCNB}" actions="<%=uicomponent.event("OpenForumLink", ids)%>;" href="$url" class="ForumTitle ActionLink" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a><span class="ForumQuantity"></span>
+                              <a class="ForumTitle ActionLink UIPopupMenuCategory${rCNB}" rel="<%=uicomponent.event("OpenForumLink", ids)%>;" href="$url" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a><span class="ForumQuantity"></span>
                           <%} else {%>
-                              <a ctxMenuId="UIPopupCategory${rCNB}" href="$url" class="ForumTitle ActionLink" style="$lineHeight;font-weight:$fontWeight" >$forumTitle</a><span class="ForumQuantity"></span>
+                              <a class="ForumTitle ActionLink UIPopupMenuCategory${rCNB}" href="$url" style="$lineHeight;font-weight:$fontWeight" >$forumTitle</a><span class="ForumQuantity"></span>
                           <%}%>
-                          <div id="UIPopupCategory${rCNB}" style="display:none;">
-                              <ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><li></li></ul>
+                          <div id="UIPopupMenuCategory${rCNB}" style="display:none;">
+                              <ul title="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><li></li></ul>
                           </div>
                         </span>
                         
@@ -267,12 +266,12 @@
 													<div style="float:left;">
 															<% ++rCNB; %>
 														<%if(uicomponent.useAjax){%>
-																<a ctxMenuId="UIPopupCategory${rCNB}" actions="$openLinkLastPost;" href="$urlLastPost" title="$titleTopic" class="LastPostTitle ActionLink" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+																<a class="LastPostTitle ActionLink UIPopupMenuCategory${rCNB}" rel="$openLinkLastPost;" href="$urlLastPost" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
 														<%} else {%>
-																<a ctxMenuId="UIPopupCategory${rCNB}" href="$urlLastPost" title="$titleTopic" class="LastPostTitle ActionLink" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+																<a class="LastPostTitle ActionLink UIPopupMenuCategory${rCNB}" href="$urlLastPost" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
 														<%}%>
-														<div id="UIPopupCategory${rCNB}" style="display:none">
-																<ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><li></li></ul>
+														<div id="UIPopupMenuCategory${rCNB}" style="display:none">
+																<ul title="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><li></li></ul>
 														</div>
 													</div>
                         </div>

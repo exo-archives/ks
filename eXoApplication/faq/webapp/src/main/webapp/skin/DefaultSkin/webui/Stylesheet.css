@@ -149,6 +149,10 @@
 	height: 100%;
 }
 
+.UIAnswersPortlet .UIQuestions .PrintAction {
+	display: none;
+}
+
 .UIAnswersPortlet .AnswerToolbar {
 	height: 28px;
 }
