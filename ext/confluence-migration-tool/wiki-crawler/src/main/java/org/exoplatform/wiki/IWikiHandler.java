@@ -17,18 +17,16 @@
 package org.exoplatform.wiki;
 
 /**
- * Created by The eXo Platform SAS
- * Author : Dimitri BAELI
- * dbaeli@exoplatform.com
+ * Created by The eXo Platform SAS Author : Dimitri BAELI dbaeli@exoplatform.com
  * Feb 02, 2012
  */
 public interface IWikiHandler {
 
   /**
    * Initialise the Handler
-   *
-   * @param targetUser  user
-   * @param targetPwd  password
+   * 
+   * @param targetUser user
+   * @param targetPwd password
    */
   void start(String targetUser, String targetPwd);
 
@@ -39,18 +37,25 @@ public interface IWikiHandler {
 
   /**
    * Create a new page
-   *
-   * @param path  page path in the target (
- * @param pageName name of the page
- * @param hasChildren indicate if the page has some children (for wikbook export only)
- * @param syntax target syntax
+   * 
+   * @param path page path in the target (
+   * @param pageName name of the page
+   * @param hasChildren indicate if the page has some children (for wikbook
+   *          export only)
+   * @param syntax target syntax
    * @return created page path
    */
   String createPage(String path, String pageName, boolean hasChildren, String syntax);
 
   /**
+   * @title the page name to normalize
+   * @return Normalized page name (no special chars)
+   **/
+  String normalizePageName(String title);
+
+  /**
    * Put some content in a page
-   *
+   * 
    * @param content content to push
    * @param path page path
    * @return
@@ -58,19 +63,23 @@ public interface IWikiHandler {
   boolean transferContent(String content, String path);
 
   /**
-   * @param path  page path
+   * @param path page path
    * @return true if the page already exists
    */
   boolean checkPageExists(String path);
 
   /**
    * Upload an attachment file
-   *
+   * 
    * @param targetSpace target space
    * @param pageName
    * @param attachmentName
    * @param contentType
    * @param data
    */
-  void uploadAttachment(String targetSpace, String pageName, String attachmentName, String contentType, byte[] data);
+  void uploadAttachment(String targetSpace,
+                        String pageName,
+                        String attachmentName,
+                        String contentType,
+                        byte[] data);
 }

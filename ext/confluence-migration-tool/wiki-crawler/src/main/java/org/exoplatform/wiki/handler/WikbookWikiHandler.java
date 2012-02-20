@@ -16,13 +16,17 @@
  */
 package org.exoplatform.wiki.handler;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.exoplatform.wiki.IWikiHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.*;
 
 /**
  * Creates a wikbook structure from a confluence site
@@ -62,6 +66,10 @@ public class WikbookWikiHandler implements IWikiHandler {
   }
 
   public void stop() {
+  }
+
+  public String normalizePageName(String title) {
+    return title;
   }
 
   public String createPage(String path, String pageName, boolean hasChildren, String syntax) {

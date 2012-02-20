@@ -16,6 +16,12 @@
  */
 package org.exoplatform.wiki.handler;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -34,12 +40,6 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.exoplatform.wiki.IWikiHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A class to interact with an Exo RestService represented by wikiloader.groovy file (deployed one the server side)
@@ -80,7 +80,7 @@ public class ExoWikiHandler implements IWikiHandler {
    * @return page name
    */
   public String createPage(String path, String name, boolean hasChildren, String syntax) {
-    String pageName = normalizePageName(name, CHAR_TO_REPLACE, '_');
+    String pageName = normalizePageName(name);
     try
     {
       int statusCode = getHttpStatusOfPageOnTarget(path, pageName);
@@ -104,7 +104,7 @@ public class ExoWikiHandler implements IWikiHandler {
         int statusCodeRC2 = responseCheck2.getStatusLine().getStatusCode();
         responseCheck2.getEntity().consumeContent();
         if (statusCodeRC2 != 200) {
-          LOGGER.error(String.format("[Create] ERROR Created page %s/%s not found.", path, pageName));
+          LOGGER.info(String.format("[Create] ERROR Created page %s/%s not found.", path, pageName));
           return pageName;
         }
         return pageName;
@@ -167,6 +167,10 @@ public class ExoWikiHandler implements IWikiHandler {
     } catch (IOException exception) {
       LOGGER.error("Upload attachment fail");
     }
+  }
+
+  public String normalizePageName(String title) {
+    return normalizePageName(title, CHAR_TO_REPLACE, '_');
   }
 
   /**

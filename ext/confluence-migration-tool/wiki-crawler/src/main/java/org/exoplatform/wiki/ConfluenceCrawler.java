@@ -44,49 +44,71 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Main class for Confluence to wiki migration
- * Browse a confluence server and perform content check, stats and transfer
+ * Main class for Confluence to wiki migration Browse a confluence server and
+ * perform content check, stats and transfer
  */
 public class ConfluenceCrawler implements CrawlerConstants {
-  private static final Logger LOGGER = LoggerFactory.getLogger(ConfluenceCrawler.class.toString());
+  private static final Logger        LOGGER                     = LoggerFactory.getLogger(ConfluenceCrawler.class.toString());
 
+  private Confluence                 confluence;
 
-  private Confluence confluence;
-  private String sourceHost = "";
-  private String sourceUser = "";
-  private String sourcePwd = "";
+  private String                     sourceHost                 = "";
 
-  private boolean optionRecursiveCrawling = false;
-  private boolean optionStopOnFailure = false;
-  private boolean optionTransferAttachments = true;
-  private boolean optionTransferComments = true;
-  private boolean optionTransferLabels = true;
+  private String                     sourceUser                 = "";
 
-  private int visitedPages = 0;
-  private int transferredPages = 0;
-  private int transferredAttachments = 0;
-  private List<String> pagesInError = new ArrayList<String>();
+  private String                     sourcePwd                  = "";
 
-  private String sourceSpace;
-  private String targetSpace;
-  private String targetPage;
-  private String targetSyntax;
+  private boolean                    optionRecursiveCrawling    = false;
 
-  private String crawlerActions = ACTION_CHECK;
+  private boolean                    optionStopOnFailure        = false;
 
-  private boolean actionCheckPageEnabled = true;
-  private boolean actionTransfertPageEnabled = false;
+  private boolean                    optionTransferAttachments  = true;
 
-  private IWikiHandler wikiHandler;
-  private final Map<String, Integer> supportedMacrosMap = new HashMap<String, Integer>();
-  private final Map<String, Integer> unsupportedMacrosMap = new HashMap<String, Integer>();
-  private final Map<String, Integer> unknownMacrosMap = new HashMap<String, Integer>();
-  private int maxAttachmentSize = 2048;
-  private String[] sourcePages;
-  private String targetHost;
-  private String targetUser;
-  private String targetPwd;
-  private String targetType;
+  private boolean                    optionTransferComments     = true;
+
+  private boolean                    optionTransferLabels       = true;
+
+  private int                        visitedPages               = 0;
+
+  private int                        transferredPages           = 0;
+
+  private int                        transferredAttachments     = 0;
+
+  private List<String>               pagesInError               = new ArrayList<String>();
+
+  private String                     sourceSpace;
+
+  private String                     targetSpace;
+
+  private String                     targetPage;
+
+  private String                     targetSyntax;
+
+  private String                     crawlerActions             = ACTION_CHECK;
+
+  private boolean                    actionCheckPageEnabled     = true;
+
+  private boolean                    actionTransfertPageEnabled = false;
+
+  private IWikiHandler               wikiHandler;
+
+  private final Map<String, Integer> supportedMacrosMap         = new HashMap<String, Integer>();
+
+  private final Map<String, Integer> unsupportedMacrosMap       = new HashMap<String, Integer>();
+
+  private final Map<String, Integer> unknownMacrosMap           = new HashMap<String, Integer>();
+
+  private int                        maxAttachmentSize          = 2048;
+
+  private String[]                   sourcePages;
+
+  private String                     targetHost;
+
+  private String                     targetUser;
+
+  private String                     targetPwd;
+
+  private String                     targetType;
 
   public static void main(String args[]) {
 
@@ -164,7 +186,8 @@ public class ConfluenceCrawler implements CrawlerConstants {
     optionTransferComments = Boolean.valueOf(properties.getProperty(PARAMETER_OPTION_TRANSFER_COMMENTS));
     optionTransferLabels = Boolean.valueOf(properties.getProperty(PARAMETER_OPTION_TRANSFER_LABELS));
 
-    int paramMaxAttachmentSize = Integer.valueOf(properties.getProperty(PARAMETER_OPTION_MAX_ATT_SIZE, "0"));
+    int paramMaxAttachmentSize = Integer.valueOf(properties.getProperty(PARAMETER_OPTION_MAX_ATT_SIZE,
+                                                                        "0"));
     if (paramMaxAttachmentSize > 0) {
       maxAttachmentSize = paramMaxAttachmentSize;
     }
@@ -195,11 +218,16 @@ public class ConfluenceCrawler implements CrawlerConstants {
     initializeHandler(targetHost, targetUser, targetPwd, targetType);
   }
 
-
-  private void initializeHandler(String targetHost, String targetUser, String targetPwd, String targetType) {
+  private void initializeHandler(String targetHost,
+                                 String targetUser,
+                                 String targetPwd,
+                                 String targetType) {
     if (TYPE_WIKBOOK.equals(targetType)) {
       LOGGER.info("Export to Wikbook format");
-      wikiHandler = new WikbookWikiHandler(targetHost, new StringBuilder(targetSpace).append("/").append(targetPage).toString());
+      wikiHandler = new WikbookWikiHandler(targetHost,
+                                           new StringBuilder(targetSpace).append("/")
+                                                                         .append(targetPage)
+                                                                         .toString());
     } else {
       LOGGER.info("Export to ExoWiki format on " + targetHost);
       wikiHandler = new ExoWikiHandler(targetHost);
@@ -230,40 +258,45 @@ public class ConfluenceCrawler implements CrawlerConstants {
    * Init Supported macro lists
    */
   public void initMacros() {
-    //Supported macros list
+    // Supported macros list
     MacroMap.addMacro(supportedMacrosMap,
-        "*", "_", "+",
-        "panel",
-        "code",
-        "color",
-        "column",
-        "info",
-        "note",
-        "pagetree",
-        "toc",
-        "section");
+                      "*",
+                      "_",
+                      "+",
+                      "panel",
+                      "code",
+                      "color",
+                      "column",
+                      "info",
+                      "note",
+                      "pagetree",
+                      "toc",
+                      "section");
     MacroMap.addMacro(unsupportedMacrosMap,
-        "jiraissues",
-        "contentbylabel",
-        "include",
-        "mockup",
-        "gliffy",
-        "excerpt",
-        "recently-updated",
-        "float",
-        "noformat",
-        "tip",
-        "warning",
-        "jira");
+                      "jiraissues",
+                      "contentbylabel",
+                      "include",
+                      "mockup",
+                      "gliffy",
+                      "excerpt",
+                      "recently-updated",
+                      "float",
+                      "noformat",
+                      "tip",
+                      "warning",
+                      "jira");
 
     // Detail status for those
     // "color", "+", "-", "_", "*", "panel", "column", "section",
-    // "info", "code", "excerpt", "note", "warning", "toc", "noformat", "chart", "jiraissues", "tip", "cloak", "table-plus",
-    // "attachments", "mockup", "toggle-cloak", "viewfile", "anchor", "quote", "children", "td", "jira", "float", "include",
-    // "excel", "contentbylabel", "pagetree", "tasklist", "composition-setup", "gliffy", "card", "gadget", "recently-updated",
+    // "info", "code", "excerpt", "note", "warning", "toc", "noformat", "chart",
+    // "jiraissues", "tip", "cloak", "table-plus",
+    // "attachments", "mockup", "toggle-cloak", "viewfile", "anchor", "quote",
+    // "children", "td", "jira", "float", "include",
+    // "excel", "contentbylabel", "pagetree", "tasklist", "composition-setup",
+    // "gliffy", "card", "gadget", "recently-updated",
     // "iframe", "align"
 
-    //Unsupported macros list
+    // Unsupported macros list
   }
 
   public boolean run() {
@@ -338,35 +371,44 @@ public class ConfluenceCrawler implements CrawlerConstants {
     LOGGER.info(macroText.toString());
   }
 
-  private boolean crawlPage(Page page, String subPath) throws SwizzleException {
+  private boolean crawlPage(Page page, String subPath) {
     visitedPages++;
-    LOGGER.info(String.format("---- Processing -- " + visitedPages + " : %s/%s", subPath, page.getTitle()));
 
-    String createdPageName = processPage(page, subPath);
+    String pageName = wikiHandler.normalizePageName(page.getTitle());
+    LOGGER.info(String.format("---- Processing -- " + visitedPages + " : %s/%s",
+                              subPath,
+ pageName));
+    try {
 
-    boolean pageProcessed = createdPageName != null;
-    if (createdPageName != null && optionRecursiveCrawling) {
-    
-    @SuppressWarnings("unchecked")
-	List<PageSummary> children = confluence.getChildren(page.getId());
-      String newPath = subPath + "/" + createdPageName;
+      String createdPageName = processPage(page, subPath, pageName);
+      boolean pageProcessed = createdPageName != null;
+      if (createdPageName != null && optionRecursiveCrawling) {
 
-      for (PageSummary childSummary : children) {
-        Page childPage = confluence.getPage(childSummary);
-        pageProcessed &= crawlPage(childPage, newPath);
+        @SuppressWarnings("unchecked")
+        List<PageSummary> children = confluence.getChildren(page.getId());
+        String newPath = subPath + "/" + createdPageName;
 
-        // Stop on failure ?
-        if (optionStopOnFailure && !pageProcessed) {
-          return false;
+        for (PageSummary childSummary : children) {
+          Page childPage = confluence.getPage(childSummary);
+          pageProcessed &= crawlPage(childPage, newPath);
+
+          // Stop on failure ?
+          if (optionStopOnFailure && !pageProcessed) {
+            return false;
+          }
         }
       }
+      return pageProcessed;
+    } catch (SwizzleException e) {
+      LOGGER.error("[Crawl] Page processing failed :" + e.getMessage());
     }
-    return pageProcessed;
+    return false;
   }
 
-  protected String processPage(Page page, String subPath) throws SwizzleException {
+  protected String processPage(Page page, String subPath, String pageName) throws SwizzleException {
 
-    String createdPageName = page.getTitle();
+    String expectedPageName = pageName;
+    String createdPageName = null;
 
     if (actionCheckPageEnabled) {
       performCheckPageContent(page);
@@ -379,7 +421,10 @@ public class ConfluenceCrawler implements CrawlerConstants {
         path = targetSpace + "/" + subPath;
       }
 
-      String newPageName = wikiHandler.createPage(path, page.getTitle(), confluence.getChildren(page.getId()).size() > 0, targetSyntax);
+      String newPageName = wikiHandler.createPage(path,
+                                                  pageName,
+                                                  confluence.getChildren(page.getId()).size() > 0,
+                                                  targetSyntax);
 
       if (newPageName != null) {
         String pagePath = path + "/" + newPageName;
@@ -389,9 +434,9 @@ public class ConfluenceCrawler implements CrawlerConstants {
 
         String mainContent = formatContent(page.getContent());
         content.append(mainContent);
-        
+
         boolean xwiki2format = "xwiki2".equals(targetSyntax);
-        
+
         if (optionTransferComments) {
           // Add Comments in the content
           @SuppressWarnings("unchecked")
@@ -417,7 +462,7 @@ public class ConfluenceCrawler implements CrawlerConstants {
         // Labels
         if (optionTransferLabels) {
           @SuppressWarnings("unchecked")
-		List<Label> labels = confluence.getLabelsById(Long.valueOf(page.getId()));
+          List<Label> labels = confluence.getLabelsById(Long.valueOf(page.getId()));
           if (labels.size() > 0) {
             content.append("\r\n\r\n");
             content.append("{{info}}");
@@ -431,7 +476,7 @@ public class ConfluenceCrawler implements CrawlerConstants {
             content.append("\r\n");
           }
         }
-        
+
         wikiHandler.transferContent(content.toString(), pagePath);
 
         // Transfer attachments
@@ -450,8 +495,14 @@ public class ConfluenceCrawler implements CrawlerConstants {
         // confluence.addComment(comment);
         // }
       } else {
-        LOGGER.error("* Page not transferred : " + newPageName);
-        pagesInError.add(subPath + "/" + page.getTitle());
+        LOGGER.error("* Page content not transferred : " + expectedPageName);
+        if (wikiHandler.checkPageExists(path + "/" + pageName)) {
+          // Page exists, only by pass the content creation
+          createdPageName = pageName;
+        } else {
+          // Page really in error
+          pagesInError.add(subPath + "/" + pageName);
+        }
       }
     }
     return createdPageName;
@@ -480,7 +531,7 @@ public class ConfluenceCrawler implements CrawlerConstants {
       }
     }
 
-    //Dump macros sorted
+    // Dump macros sorted
     final ArrayList<String> sortedMacros = new ArrayList<String>();
     sortedMacros.addAll(newMacros.keySet());
     Collections.sort(sortedMacros);
@@ -491,10 +542,12 @@ public class ConfluenceCrawler implements CrawlerConstants {
     LOGGER.info(macroText.toString());
   }
 
-  protected void uploadAttachments(Confluence confluence, Page page, String targetSpace, String createdPageName)
-      throws SwizzleException {
+  protected void uploadAttachments(Confluence confluence,
+                                   Page page,
+                                   String targetSpace,
+                                   String createdPageName) throws SwizzleException {
 
-      @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     List<Attachment> attachments = confluence.getAttachments(page.getId());
     for (Attachment attachment : attachments) {
       String url = attachment.getUrl();
@@ -502,15 +555,30 @@ public class ConfluenceCrawler implements CrawlerConstants {
       Long fileSize = Long.parseLong(attachment.getFileSize()) / 1024;
 
       if (fileSize > maxAttachmentSize) {
-        LOGGER.error(String.format("[Upload] REJECTED Too big (%s ko) : %s/%s/%s", fileSize, targetSpace, createdPageName, fileName));
+        LOGGER.error(String.format("[Upload] REJECTED Too big (%s ko) : %s/%s/%s",
+                                   fileSize,
+                                   targetSpace,
+                                   createdPageName,
+                                   fileName));
       } else {
         String version = url.replaceAll(".*version=", "");
         version = version.replaceAll("&.*", "");
-        byte[] data = confluence.getAttachmentData(page.getId(), attachment.getFileName(), version);
-
         LOGGER.info(String.format("[Upload] %s/%s/%s", targetSpace, createdPageName, fileName));
-        wikiHandler.uploadAttachment(targetSpace, createdPageName, fileName, attachment.getContentType(), data);
-        transferredAttachments++;
+        try {
+          byte[] data = confluence.getAttachmentData(page.getId(),
+                                                     attachment.getFileName(),
+                                                     version);
+          wikiHandler.uploadAttachment(targetSpace,
+                                       createdPageName,
+                                       fileName,
+                                       attachment.getContentType(),
+                                       data);
+          transferredAttachments++;
+        } catch (Exception e) {
+          LOGGER.error(String.format("[Upload] Attachment failed to upload : %s in %s",
+                                    fileName,
+                                    createdPageName));
+        }
       }
     }
   }
