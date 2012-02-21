@@ -80,7 +80,7 @@ public class ExoWikiHandler implements IWikiHandler {
    * @return page name
    */
   public String createPage(String path, String name, boolean hasChildren, String syntax) {
-    String pageName = normalizePageName(name);
+    String pageName = name;
     try
     {
       int statusCode = getHttpStatusOfPageOnTarget(path, pageName);
