@@ -374,10 +374,8 @@ public class ConfluenceCrawler implements CrawlerConstants {
   private boolean crawlPage(Page page, String subPath) {
     visitedPages++;
 
-    String pageName = wikiHandler.normalizePageName(page.getTitle());
-    LOGGER.info(String.format("---- Processing -- " + visitedPages + " : %s/%s",
-                              subPath,
- pageName));
+    String pageName = page.getTitle();
+    LOGGER.info(String.format("---- Processing -- " + visitedPages + " : %s/%s", subPath, pageName));
     try {
 
       String createdPageName = processPage(page, subPath, pageName);
@@ -407,7 +405,6 @@ public class ConfluenceCrawler implements CrawlerConstants {
 
   protected String processPage(Page page, String subPath, String pageName) throws SwizzleException {
 
-    String expectedPageName = pageName;
     String createdPageName = null;
 
     if (actionCheckPageEnabled) {
@@ -495,8 +492,10 @@ public class ConfluenceCrawler implements CrawlerConstants {
         // confluence.addComment(comment);
         // }
       } else {
-        LOGGER.error("* Page content not transferred : " + expectedPageName);
-        if (wikiHandler.checkPageExists(path + "/" + pageName)) {
+        LOGGER.error("* Page content not transferred : " + pageName);
+        String expectedPageName = wikiHandler.normalizePageName(pageName);
+        // Check if page exists or not
+        if (wikiHandler.checkPageExists(path + "/" + expectedPageName)) {
           // Page exists, only by pass the content creation
           createdPageName = pageName;
         } else {
@@ -505,6 +504,7 @@ public class ConfluenceCrawler implements CrawlerConstants {
         }
       }
     }
+    // Return page name if page exists or created
     return createdPageName;
   }
 
@@ -580,8 +580,8 @@ public class ConfluenceCrawler implements CrawlerConstants {
           transferredAttachments++;
         } catch (Exception e) {
           LOGGER.error(String.format("[Upload] Attachment failed to upload : %s in %s",
-                                    fileName,
-                                    createdPageName));
+                                     fileName,
+                                     createdPageName));
         }
       }
     }
