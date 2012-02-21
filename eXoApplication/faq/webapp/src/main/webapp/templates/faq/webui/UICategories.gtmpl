@@ -9,6 +9,7 @@
   uicomponent.setListCate();
   
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
+  jsmanager.addJavascript('eXo.faq.UIAnswersPortlet.initContextMenu("'+compId+'") ;') ;
   if(uicomponent.isModerator) jsmanager.addJavascript('eXo.faq.DragDrop.init("'+compId+'") ;') ;
   String [] categoryAction;
   
@@ -80,18 +81,19 @@
         	<div style="padding:4px 0px 0px 0px;">
         <%
           String classCss = "";
-          int i = 0;
+          long i = 0;
           boolean canEdit = false;
           for(category in uicomponent.getListCate()){
             if(category.getPath().equals(uicomponent.categoryId_)) classCss = "FAQCategoryRightBlack";
             else classCss = "FAQCategoryRight";
             canEdit = uicomponent.isCategoryModerator(category.getPath()) ; 
+            i = new Date().getTime();
         %>
           <div class="FAQTmpCategory"><span></span></div>
-          <div id="<%=category.getId()%>" class="$classCss FAQCategory UIPopupMenuCategory$i">
-          	<input type="hidden" value="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>" title="input hidden" name="UIFAQPopupCategories$i"/>
+          <div class="$classCss FAQCategory oncontextmenu" id="UIContextPopupMenu$i">
+          	<input type="hidden" class="InfoCategory" id="<%=category.getId()%>" value="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>" title="input hidden" name="<%=category.getId()%>"/>
             <div>
-	            <a title="<%=category.getName()%>" class="oncontextmenu" onclick="<%=uicomponent.event("OpenCategory", category.getPath())%>">
+	            <a title="<%=category.getName()%>" onclick="<%=uicomponent.event("OpenCategory", category.getPath())%>">
 	              <span><%=FAQUtils.getSubString(category.getName(), 20);%></span>
 	            </a>
                 <%
@@ -101,7 +103,7 @@
                 <%}%>
                 
                 <!-- action of this category -->
-                <div class="UIFAQPopupCategory" id="UIPopupMenuCategory$i" style="display:none;">
+                <div class="UIFAQPopupCategory" id="UIPopupMenu$i" style="display:none;">
                   <div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
                     <div class="MiddleLeftRightClickPopupMenu">
                         <div class="MiddleRightRightClickPopupMenu">
@@ -124,8 +126,8 @@
                                   linkView = "javaScript:if(confirm('" + _ctx.appRes("UIQuestions.msg.confirm-delete-category") + "')) {" + linkView.replace("javascript:", "") + "}";
                                 }
                             %>
-                                <div class="MenuItem">
-                                  <a class="ItemIcon $viewAction" href="javascript:void(0) ;" onmousedown="$linkView" onkeydown="$linkView">$itemLabelView</a>
+                                <div class="MenuItem" onclick="$linkView">
+                                  <a class="ItemIcon $viewAction" href="javascript:void(0) ;">$itemLabelView</a>
                                 </div>
                                 
                             <%
@@ -146,8 +148,7 @@
                 
               </div>
             </div>
-        <%  i ++;
-          }%>
+        <% } %>
         <div class="FAQTmpCategory"><span></span></div>
       </div>
       </div>

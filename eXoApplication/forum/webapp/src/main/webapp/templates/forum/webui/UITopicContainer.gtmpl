@@ -411,12 +411,12 @@
                       
                         <% ++rCNB; %>
                         <%if(uicomponent.isUseAjax){%>
-                            <a class="ActionLink $title UIPopupMenuTopic${rCNB}" rel="$link;" href="$url" title="$titlePost">$topicTitle</a>
+                            <a class="ActionLink $title" id="UIContextPopupMenu${rCNB}" rel="$link;" href="$url" title="$titlePost">$topicTitle</a>
                         <%} else {%>
-                            <a class="ActionLink $title UIPopupMenuTopic${rCNB}" href="$url" title="$titlePost">$topicTitle</a>
+                            <a class="ActionLink $title" id="UIContextPopupMenu${rCNB}" href="$url" title="$titlePost">$topicTitle</a>
                         <%}%>
                         
-                        <div id="UIPopupMenuTopic${rCNB}" style="display:none;">
+                        <div id="UIPopupMenu${rCNB}" style="display:none;">
                             <ul title="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><li></li></ul>
                         </div>
                       

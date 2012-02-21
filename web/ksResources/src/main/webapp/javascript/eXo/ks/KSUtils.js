@@ -263,8 +263,7 @@ eXo.ks.UIContextMenu = {
 	getMenu : function(evt) {
 		var element = this.getMenuElement(evt);
 		if(!element) return;
-		var menuId = String(element.className);
-		menuId = menuId.substring(menuId.lastIndexOf("UIPopupMenu"));
+		var menuId = String(element.id).replace("Context", "");
 		var cont = eXo.core.DOMUtil.findAncestorByClass(element, "PORTLET-FRAGMENT") ;
 		var menu = eXo.core.DOMUtil.findDescendantById(cont,menuId);
 		if(!menu) return;

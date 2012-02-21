@@ -274,11 +274,11 @@
 										<span>
 										<% ++rCNB; %>
 										<%if(uicomponent.useAjax){%>
-												<a class="ActionLink ForumTitle UIPopupMenuCategory${rCNB}" rel="$link;" href="$url" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a><span class="ForumQuantity"></span>
+												<a class="ActionLink ForumTitle" id="UIContextPopupMenu${rCNB}" rel="$link;" href="$url" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a><span class="ForumQuantity"></span>
 										<%} else {%>
-												<a class="ActionLink ForumTitle UIPopupMenuCategory${rCNB}" href="$url" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a><span class="ForumQuantity"></span>
+												<a class="ActionLink ForumTitle" id="UIContextPopupMenu${rCNB}" href="$url" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a><span class="ForumQuantity"></span>
 										<%}%>
-											<div id="UIPopupMenuCategory${rCNB}" style="display:none;">
+											<div id="UIPopupMenu${rCNB}" style="display:none;">
 												<ul title="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><li></li></ul>
 											</div>
 										</span>
@@ -316,11 +316,11 @@
 								 		<div style="float: left;">
 								 			<% ++rCNB; %>
 								 			<%if(uicomponent.useAjax){%>
-										 			<a class="ActionLink LastPostTitle UIPopupMenuCategory${rCNB}" rel="$openLinkLastPost" href="$urlLastPost" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+										 			<a class="ActionLink LastPostTitle" id="UIContextPopupMenu${rCNB}" rel="$openLinkLastPost" href="$urlLastPost" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
 											<%} else {%>
-										 			<a class="ActionLink LastPostTitle UIPopupMenuCategory${rCNB}" href="$urlLastPost" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+										 			<a class="ActionLink LastPostTitle" id="UIContextPopupMenu${rCNB}" href="$urlLastPost" title="$titleTopic" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
 											<%}%>
-											<div id="UIPopupMenuCategory${rCNB}" style="display:none;">
+											<div id="UIPopupMenu${rCNB}" style="display:none;">
 												<ul title="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><li></li></ul>
 											</div>
 										</div>

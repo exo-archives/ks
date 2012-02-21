@@ -199,7 +199,7 @@
         
         Question[] listQuestion = uicomponent.getListQuestion();
         String questionContent = new String();
-        int questionIndex = 0 ;
+        int questionIndex = new Date().getTime() ;
         
         String linkQuestion = "" ;
         
@@ -218,7 +218,7 @@
           if(!uicomponent.getQuestionView().equals(qId)){
             questionContent = question.getQuestion();
       %>
-            <div class="QuestionContainer ClearFix oncontextmenu UIPopupMenuQuestion$questionIndex" id="$qId">
+            <div class="QuestionContainer ClearFix oncontextmenu" id="$qId">
       
 <!-- style for Questions -->
               <div class="NormalQuest ClearFix">
@@ -240,7 +240,9 @@
                   questionContent = FAQUtils.getSubString(questionContent, 140);
                 }
                 %>
-                  <a class="Questions" href="$linkQuestion">$questionContent</a>
+                	<div class="QuestionContextMenu" id="UIContextPopupMenu$questionIndex">
+	                  <a class="Questions" href="$linkQuestion">$questionContent</a>
+                	</div>
                   <div class="ClearFix">
                   <%if(!question.isApproved()) {%>
                   <div class="WarningCon"><p class="Warning"><%=_ctx.appRes("UIQuestions.label.QuestionIsNotApproved")%></p></div>                  
@@ -260,7 +262,7 @@
  
               <div style="width:85%; _width:80%; float:left;">
                   <!-- action of this question -->
-                  <div class="UIFAQPopupCategory" id="UIPopupMenuQuestion$questionIndex" style="display:none;">
+                  <div class="UIFAQPopupCategory" id="UIPopupMenu$questionIndex" style="display:none;">
                     <div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
                         <div class="MiddleLeftRightClickPopupMenu">
                           <div class="MiddleRightRightClickPopupMenu">
@@ -622,22 +624,18 @@
                                 <tr>
                                   <td>
                                     <div class="LeftQuestionContainer" style="width:99%;">
-                                      <div class="$questionIcon">
+                                      <div class="$questionIcon oncontextmenu">
                                         
-                                        <div onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionIndex', '', null, null)" onkeydown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionIndex', '', null, null)">
-                                          
-                                          <!-- question content -->
-                                          <div class="ViewQuestionNotApproved">
-                                            <a href="<%=uicomponent.event("CloseQuestion")%>" style="color:$colorViewQuestion; cursor:pointer">
-                                              <span class="QuestionName" style="line-height:20px;">$questionContent</span>
-                                            </a>
-                                          </div>
-                                          
-                                        </div>
+	                                      <!-- question content -->
+	                                      <div class="ViewQuestionNotApproved QuestionContextMenu" id="UIContextPopupQuestion$questionIndex">
+	                                        <a href="<%=uicomponent.event("CloseQuestion")%>" style="color:$colorViewQuestion; cursor:pointer">
+	                                          <span class="QuestionName" style="line-height:20px;">$questionContent</span>
+	                                        </a>
+	                                      </div>
                                         
                                         <!-- action of this question -->
-                                        <div class="UIFAQPopupCategory" id="UIPopupQuestion$questionIndex" style="display:none; left:50px;">
-                                          <div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
+                                        <div class="UIFAQPopupCategory" id="UIPopupQuestion$questionIndex" style="display:none;">
+                                          <div class="UIRightClickPopupMenu" style="display:block;">
                                             <div>
                       
                                               <div class="TopLeftRightClickPopupMenu">
@@ -672,7 +670,7 @@
                                                         }
                                                         String itemLabelView = _ctx.appRes("UIQuestions.action." + viewAction);                                                       
                                                     %>
-                                                        <div onclick="javascript:void(0);" onmousedown="$linkView" onkeydown="$linkView" class="MenuItem $lockFunction" style="cursor:pointer;">
+                                                        <div onclick="$linkView" class="MenuItem $lockFunction" style="cursor:pointer;">
                                                           <a class="ItemIcon $iconView" href="javascript:void(0);">$itemLabelView</a>
                                                         </div>
                                                     <%
@@ -682,7 +680,7 @@
                                                         String itemLabelView = _ctx.appRes("UIQuestions.action.EditQuestion");
                                                         String linkView = uicomponent.event("EditQuestion", qId);                                       
                                                     %>
-                                                      <div onclick="javascript:void(0);" onmousedown="$linkView" onkeydown="$linkView" class="MenuItem" style="cursor:pointer;">
+                                                      <div onclick="$linkView" class="MenuItem" style="cursor:pointer;">
                                                         <a class="ItemIcon Edit" href="javascript:void(0);">$itemLabelView</a>
                                                       </div>
                                                     <%}%>
@@ -1164,7 +1162,7 @@
                 </div>
             </div>
     <%    }
-          questionIndex ++ ;
+          questionIndex = new Date().getTime() ;
         }
     %>
     

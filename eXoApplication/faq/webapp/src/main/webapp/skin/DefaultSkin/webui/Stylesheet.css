@@ -319,6 +319,11 @@
 	padding-left: 5px;
 	white-space: nowrap;
 	overflow: hidden;
+	user-select: none;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-o-user-select: none;
 }
 
 .UIAnswersPortlet .UICategories .FAQCategoryRoot {

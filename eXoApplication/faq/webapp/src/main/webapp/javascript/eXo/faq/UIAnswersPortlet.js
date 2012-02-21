@@ -14,12 +14,16 @@ UIAnswersPortlet.prototype.init = function (portletId) {
   if(portlet) {
     eXo.faq.UIAnswersPortlet.updateContainersHeight(portlet);
     eXo.faq.UIAnswersPortlet.controlWorkSpace();
-    var KSUtils = eXo.ks.KSUtils;
-		var oncontextmenus = KSUtils.findDescendantsByClass(portlet, "oncontextmenu");
-		for ( var i = 0; i < oncontextmenus.length; i++) {
-			KSUtils.addEv(oncontextmenus[i], "oncontextmenu", KSUtils.returnFalse);
-		}
+    eXo.faq.UIAnswersPortlet.disableContextMenu(portlet);
   }
+};
+
+UIAnswersPortlet.prototype.disableContextMenu = function (component) {
+	var KSUtils = eXo.ks.KSUtils;
+	var oncontextmenus = KSUtils.findDescendantsByClass(component, "oncontextmenu");
+	for ( var i = 0; i < oncontextmenus.length; i++) {
+		KSUtils.addEv(oncontextmenus[i], "oncontextmenu", KSUtils.returnFalse);
+	}
 };
 
 UIAnswersPortlet.prototype.updateContainersHeight = function (elm) {
@@ -544,15 +548,17 @@ UIAnswersPortlet.prototype.FAQChangeHeightToAuto = function () {
 
 UIAnswersPortlet.prototype.initContextMenu = function (id) {
   var cont = document.getElementById(id);
-  var uiContextMenu = eXo.ks.UIContextMenu;
-  cont = eXo.core.DOMUtil.findAncestorByClass(cont, "UIAnswersPortlet");
-  if (!uiContextMenu.classNames) uiContextMenu.classNames = new Array("FAQCategory", "QuestionContainer");
-  else {
-    uiContextMenu.classNames.push("FAQCategory");
-    uiContextMenu.classNames.push("QuestionContainer");
+  if(cont) {
+  	eXo.faq.UIAnswersPortlet.disableContextMenu(cont);
+  	var uiContextMenu = eXo.ks.UIContextMenu;
+  	if (!uiContextMenu.classNames) uiContextMenu.classNames = new Array("FAQCategory", "QuestionContextMenu");
+  	else {
+  		uiContextMenu.classNames.push("FAQCategory");
+  		uiContextMenu.classNames.push("QuestionContextMenu");
+  	}
+  	uiContextMenu.setContainer(cont);
+  	uiContextMenu.setup();
   }
-  uiContextMenu.setContainer(cont);
-  uiContextMenu.setup();
 };
 
 UIAnswersPortlet.prototype.setSelectboxOnchange = function (fid) {
@@ -650,15 +656,18 @@ UIAnswersPortlet.prototype.submitOnKey = function (event) {
 eXo.faq.UIAnswersPortlet = new UIAnswersPortlet();
 
 eXo.faq.DragDrop = {
+	DOMUtil : eXo.core.DOMUtil,
   dragObject: null,
   targetClass: [],
   init: function (compid) {
     var comp = document.getElementById(compid);
-    var elements = eXo.core.DOMUtil.findDescendantsByClass(comp, "div", "FAQCategory");
+    var elements = this.DOMUtil.findDescendantsByClass(comp, "div", "FAQCategory");
     var i = elements.length;
     while (i--) {
       elements[i].onmousedown = this.attach;
     }
+    eXo.ks.KSUtils.addEv(comp, 'onselectstart', eXo.ks.KSUtils.returnFalse);
+    eXo.ks.KSUtils.addEv(comp, 'ondragstart', eXo.ks.KSUtils.returnFalse);
   },
   attach: function (evt) {
     evt = evt || window.event;
@@ -676,7 +685,7 @@ eXo.faq.DragDrop = {
     };
     dnd.setup(dragObject, ["FAQCategory", "FAQBack", "FAQTmpCategory"]);
     dnd.dropCallback = function (dragObj, target) {
-      eXo.core.DOMUtil.removeElement(dragObj);
+      this.DOMUtil.removeElement(dragObj);
       if (this.lastTarget) this.lastTarget.style.border = "";
       if (target && dnd.isMoved) {
         var action = this.getAction(this.dragObject, target);
@@ -691,12 +700,12 @@ eXo.faq.DragDrop = {
     dnd.dragCallback = function (dragObj, target) {
       if (dnd.lastTarget) {
         dnd.lastTarget.style.border = "";
-        if (eXo.core.DOMUtil.hasClass(dnd.lastTarget, "FAQHighlightCategory")) eXo.core.DOMUtil.replaceClass(dnd.lastTarget, "FAQHighlightCategory", "");
+        if (this.DOMUtil.hasClass(dnd.lastTarget, "FAQHighlightCategory")) this.DOMUtil.replaceClass(dnd.lastTarget, "FAQHighlightCategory", "");
       }
       if (!target) return;
       dnd.lastTarget = target;
-      if (eXo.core.DOMUtil.hasClass(target, "FAQBack")) target.onclick();
-      if (eXo.core.DOMUtil.hasClass(target, "FAQTmpCategory")) eXo.core.DOMUtil.addClass(dnd.lastTarget, "FAQHighlightCategory");
+      if (this.DOMUtil.hasClass(target, "FAQBack")) target.onclick();
+      if (this.DOMUtil.hasClass(target, "FAQTmpCategory")) this.DOMUtil.addClass(dnd.lastTarget, "FAQHighlightCategory");
       target.style.border = "dotted 1px #cccccc";
       if (!dnd.hided) dnd.hideElement(dnd.rootNode);
 
@@ -748,7 +757,7 @@ eXo.faq.DragDrop = {
     }
   },
   hideElement: function (obj) {
-    var preElement = eXo.core.DOMUtil.findPreviousElementByTagName(obj, "div");
+    var preElement = this.DOMUtil.findPreviousElementByTagName(obj, "div");
     preElement.style.display = "none";
     obj.style.display = "none";
     this.hided = true;
@@ -756,28 +765,31 @@ eXo.faq.DragDrop = {
   showElement: function () {
     var dnd = eXo.faq.DragDrop;
     if (!dnd.rootNode) return;
-    var preElement = eXo.core.DOMUtil.findPreviousElementByTagName(dnd.rootNode, "div");
+    var preElement = this.DOMUtil.findPreviousElementByTagName(dnd.rootNode, "div");
     if (preElement) preElement.style.display = "";
     dnd.rootNode.style.display = "";
     if (dnd.lastTarget) {
       dnd.lastTarget.style.border = "";
-      if (eXo.core.DOMUtil.hasClass(dnd.lastTarget, "FAQHighlightCategory")) eXo.core.DOMUtil.replaceClass(dnd.lastTarget, "FAQHighlightCategory", "");
+      if (this.DOMUtil.hasClass(dnd.lastTarget, "FAQHighlightCategory")) this.DOMUtil.replaceClass(dnd.lastTarget, "FAQHighlightCategory", "");
     }
   },
   getAction: function (obj, target) {
-    if (eXo.core.DOMUtil.hasClass(target, "FAQTmpCategory")) {
-      var preElement = eXo.core.DOMUtil.findPreviousElementByTagName(target, "div");
+  	var info = this.DOMUtil.findFirstDescendantByClass(obj, "input", "InfoCategory");
+    if (this.DOMUtil.hasClass(target, "FAQTmpCategory")) {
+      var preElement = this.DOMUtil.findPreviousElementByTagName(target, "div");
       var top = " ";
       if (!preElement) {
-        preElement = eXo.core.DOMUtil.findNextElementByTagName(target, "div");
+        preElement = this.DOMUtil.findNextElementByTagName(target, "div");
         top = "top";
       }
-      if (obj.id == preElement.id) return false;
-      var actionLink = obj.getAttribute("actionLink");
-      actionLink = actionLink.replace("=objectId", ("=" + obj.id + "," + preElement.id + "," + top));
-    } else if (eXo.core.DOMUtil.hasClass(target, "FAQCategory")) {
-      var actionLink = obj.getAttribute("actionLink");
-      actionLink = actionLink.replace("=objectId", "=" + obj.id + "," + target.id);
+      var preElementInfo = this.DOMUtil.findFirstDescendantByClass(preElement, "input", "InfoCategory");
+      if (info.id == preElementInfo.id) return false;
+      var actionLink = info.value;
+      actionLink = actionLink.replace("=objectId", ("=" + info.id + "," + preElementInfo.id + "," + top));
+    } else if (this.DOMUtil.hasClass(target, "FAQCategory")) {
+      var actionLink = info.value;
+      var targetInfo = this.DOMUtil.findFirstDescendantByClass(target, "input", "InfoCategory");
+      actionLink = actionLink.replace("=objectId", "=" + info.id + "," + targetInfo.id);
       actionLink = actionLink.replace("ChangeIndex", "MoveCategoryInto");
     }
     return actionLink;
