@@ -563,7 +563,11 @@ public class ConfluenceCrawler implements CrawlerConstants {
       } else {
         String version = url.replaceAll(".*version=", "");
         version = version.replaceAll("&.*", "");
-        LOGGER.info(String.format("[Upload] %s/%s/%s", targetSpace, createdPageName, fileName));
+        LOGGER.info(String.format("[Upload] %s ko - %s/%s/%s",
+                                  fileSize,
+                                  targetSpace,
+                                  createdPageName,
+                                  fileName));
         try {
           byte[] data = confluence.getAttachmentData(page.getId(),
                                                      attachment.getFileName(),
