@@ -1,0 +1,330 @@
+This section explains how to create a new wiki macro compatible with XWiki Rendering 2.7.1 from external jars. See [Writing a XWiki Macro|http://rendering.xwiki.org/xwiki/bin/view/Main/ExtendingMacro] for more details.
+
+h1. Pre-requisites {anchor:id=KSref.ExtendMacrosFromExternalJar.Pre-requisites}
+
+* You need to have Maven installed.
+* You must be using the XWiki Rendering 2.7.1.
+* You should understand the [XWiki's Rendering Architecture|http://rendering.xwiki.org/xwiki/bin/view/Main/Architecture].
+
+h1. General Principles {anchor:id=KSref.ExtendMacrosFromExternalJar.GeneralPrinciples}
+
+Before going to the how-to, you should understand the [Macro execution process|http://rendering.xwiki.org/xwiki/bin/view/Main/Architecture] first.
+
+To implement a new macro, you will need to write 2 classes:
+
+* The first class is a pure Java bean and represents the parameters allowed for that macro, including mandatory parameters, default values, parameter descriptions. An instance of this class will be automatically populated when the user calls the macro Wiki syntax.
+* The second class is the macro itself. This class should implement the _macro_ interface. However, you are recommended to extend _AbstractMacro_ which does some heavy lifting for you. By doing so, you will only have to implement 2 methods:
+
+{code}
+/**
+ * @return true if the macro can be inserted in some existing content such as a paragraph, a list item, and more. For
+ *         example if I have <code>== hello {{velocity}}world{{/velocity}}</code> then the Velocity macro must
+ *         support the inline mode and not generate a paragraph.
+ */
+boolean supportsInlineMode();
+
+/**
+ * @param parameters the macro parameters in the form of a bean defined by the {@link Macro} implementation
+ * @param content the content of the macro
+ * @param context the context of the macros transformation process
+ * @return the result of the macro execution as a list of Block elements
+ * @throws MacroExecutionException error when executing the macro
+ */
+List<Block> execute(P parameters, String content, MacroTransformationContext context)
+    throws MacroExecutionException;
+{code}
+
+Then, you will need to register your macro class with the [Component Manager|http://platform.xwiki.org/xwiki/bin/view/DevGuide/WritingComponents] so that it can be called from a wiki page. Register your macro with a _Macro.class_ role and a hint corresponding to the macro name. For example, if you have registered your macro under the _mymacro_ hint, you will be able to call:
+
+{code}
+{{mymacro .../}}
+{code}
+
+In addition, you can register your macro for all syntaxes or only for a given syntax. To register a given syntax only, you must use a hint in the format _macroname/syntaxid_. For example: _mymacro/xwiki/2.0_.
+
+h1. Implement a macro {anchor:id=KSref.ExtendMacrosFromExternalJar.ImplementAMacro}
+This section will provide detailed steps explaining how to create a macro and deploy it.
+
+h2. Create a macro using Maven  {anchor:id=KSref.ExtendMacrosFromExternalJar.CreateAMacroUsingMaven}
+
+Create a Maven project having the following directory structure:
+
+!images/Macro_project_structure.png|align="center" width="80mm" fo:scalefix="1" html:scalefix="0"!
+
+Navigating in the project's folder, you will see the following structure:
+
+* _pom.xml_: the project's POM file.
+* _src/main/java/.../ExampleMacroParameters.java_: a simple bean representing the macro's parameters. This bean contains annotations to tell the macro engine the mandatory parameter, the list of allowed values, parameter descriptions, etc.
+* _src/main/java/.../internal/ExampleMacro.java_: the macro itself.
+* _src/main/resources/META-INF/components.txt_: the list of component implementations. Since your macro is a component, it needs to be listed here. Each component must have its full name written on a separate line (e.g. _com.acme.internal.ExampleMacro_).
+* _src/test/java/.../IntegrationTests.java_: JUnit Test Suite to run rendering tests for the macro.
+* _src/test/resources/example1.test_: a test file for testing the macro. It contains information describing what the macro output should be for specific inputs.
+
+{tip}
+If you are a XWiki developer or you just want to see [more examples of implemented macros|http://rendering.xwiki.org/xwiki/bin/view/Main/Macros], the place where the macros for the rendering engine are located is on the [rendering/xwiki-rendering-macros|http://svn.xwiki.org/svnroot/xwiki/rendering/trunk/xwiki-rendering-macros/] branch of the SVN repository.
+{tip}
+
+Here is the content of the _pom.xml_ file:
+
+{code}
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.acme</groupId>
+  <artifactId>example</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <name>XWiki Macro - Example</name>
+  <description>XWiki Macro - Example</description>
+  <properties>
+    <rendering.version>2.7.1</rendering.version>
+  </properties>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <includes>
+            <include>**/IntegrationTests.java</include>
+          </includes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-core-rendering-syntax-wikimodel</artifactId>
+      <version>${rendering.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-core-rendering-transformation-macro</artifactId>
+      <version>${rendering.version}</version>
+    </dependency>
+    <!-- Testing dependencies -->
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-core-rendering-tests</artifactId>
+      <version>${rendering.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>
+{code}
+
+
+h2. Macro Code {anchor:id=KSref.ExtendMacrosFromExternalJar.MacroMode}
+
+Here is the content of the generated _ExampleMacro.java_.
+
+{code}
+package com.acme.internal;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.xwiki.component.annotation.Component;
+import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.block.ParagraphBlock;
+import org.xwiki.rendering.block.WordBlock;
+import org.xwiki.rendering.macro.AbstractMacro;
+import org.xwiki.rendering.macro.MacroExecutionException;
+import org.xwiki.rendering.transformation.MacroTransformationContext;
+
+import com.acme.ExampleMacroParameters;
+
+/**
+ * Example Macro.
+ */
+@Component("example")
+public class ExampleMacro extends AbstractMacro<ExampleMacroParameters> {
+  /**
+   * The description of the macro.
+   */
+  private static final String DESCRIPTION = "Example Macro";
+
+  /**
+   * Create and initialize the descriptor of the macro.
+   */
+  public ExampleMacro() {
+    super("Example", DESCRIPTION, ExampleMacroParameters.class);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @see org.xwiki.rendering.macro.Macro#execute(Object, String,
+   *      MacroTransformationContext)
+   */
+  public List<Block> execute(ExampleMacroParameters parameters,
+                             String content,
+                             MacroTransformationContext context) throws MacroExecutionException {
+    List<Block> result;
+    List<Block> wordBlockAsList = Arrays.<Block> asList(new WordBlock(parameters.getParameter()));
+    // Handle both inline mode and standalone mode.
+    if (context.isInline()) {
+      result = wordBlockAsList;
+    } else {
+      // Wrap the result in a Paragraph Block since a WordBlock is an inline element and it needs
+      // to be inside a standalone block.
+      result = Arrays.<Block> asList(new ParagraphBlock(wordBlockAsList));
+    }
+    return result;
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @see org.xwiki.rendering.macro.Macro#supportsInlineMode()
+   */
+  public boolean supportsInlineMode() {
+    return true;
+  }
+}
+{code}
+
+As explained in the [Rendering Architecture|http://rendering.xwiki.org/xwiki/bin/view/Main/Architecture], the macro's execution method returns a list of Blocks. In the case of this simple macro, it simply returns a Word Block with the value in the _parameter_ parameter (i.e. hello if the macro is called with _ example parameter="hello"/_).
+
+Here is the _ExampleMacroParameters.java_ file:
+
+{code}
+
+package com.acme;
+
+import org.xwiki.properties.annotation.PropertyDescription;
+import org.xwiki.properties.annotation.PropertyMandatory;
+
+/**
+ * Parameters for the {@link com.acme.internal.ExampleMacro} Macro.
+ */
+public class ExampleMacroParameters {
+  /**
+   * @see {@link #getParameter()}
+   */
+  private String parameter;
+
+  /**
+   * @return the example parameter
+   */
+  public String getParameter() {
+    return this.parameter;
+  }
+
+  /**
+   * @param parameter the example parameter
+   */
+  @PropertyMandatory
+  @PropertyDescription("Example parameter")
+  public void setParameter(String parameter) {
+    this.parameter = parameter;
+  }
+}
+{code}
+
+And here is the _components.txt_ file:
+
+{code}
+com.acme.internal.ExampleMacro
+{code}
+
+h2. Test the macro {anchor:id=KSref.ExtendMacrosFromExternalJar.TestTheMacro}
+
+The XWiki Rendering system has a pretty advanced Test framework to make it easy to test macros.
+
+{code}
+.runTransformations
+.#-----------------------------------------------------
+.input|xwiki/2.0
+.# Test the macro in standalone mode
+.#-----------------------------------------------------
+{{example parameter="hello"/}}
+.#-----------------------------------------------------
+.expect|xhtml/1.0
+.#-----------------------------------------------------
+<p>hello</p>
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginMacroMarkerStandalone [example] [parameter=hello]
+beginParagraph
+onWord [hello]
+endParagraph
+endMacroMarkerStandalone [example] [parameter=hello]
+endDocument
+{code}
+
+Here is the test declaration for your macro (_example1.test_):
+
+{code}
+
+.runTransformations
+.#-----------------------------------------------------
+.input|xwiki/2.0
+.# Test the macro in inline mode
+.#-----------------------------------------------------
+This is inline {{example parameter="hello"/}}
+.#-----------------------------------------------------
+.expect|xhtml/1.0
+.#-----------------------------------------------------
+<p>This is inline hello</p>
+.#-----------------------------------------------------
+.expect|event/1.0
+.#-----------------------------------------------------
+beginDocument
+beginParagraph
+onWord [This]
+onSpace
+onWord [is]
+onSpace
+onWord [inline]
+onSpace
+beginMacroMarkerInline [example] [parameter=hello]
+onWord [hello]
+endMacroMarkerInline [example] [parameter=hello]
+endParagraph
+endDocument
+{code}
+
+This instructs the test framework to execute the macro with the given input and to compare to all specific outputs (defined using the expected keyword). In this example, you are going to input XWiki Syntax 2.0 and compare the result against XHTML 1.0 and against the internal events generated by the parser. These events are the pivot format used internally by the XWiki Rendering system. All the Renderers take those events to generate some outputs.
+
+Finally, this is how the _IntegrationTests.java_ file looks like:
+
+{code}
+package com.acme;
+
+import junit.framework.TestCase;
+import org.xwiki.test.ComponentManagerTestSetup;
+import org.xwiki.rendering.scaffolding.RenderingTestSuite;
+
+public class IntegrationTests extends TestCase {
+  public static junit.framework.Test suite() throws Exception {
+    RenderingTestSuite suite = new RenderingTestSuite("Rendering tests not requiring the wiki notion");
+    // Embedded documents
+    suite.addTestsFromResource("example1.test");
+    suite.addTestsFromResource("example2.test");
+    return new ComponentManagerTestSetup(suite);
+  }
+}
+{code}
+
+h1. Deploy the macro {anchor:id=KSref.ExtendMacrosFromExternalJar.DeployTheMacro}
+
+Now, you already have a functional macro, let's build and deploy it:
+
+* To build the macro, use the _mvn install_ command. This will generate a macro jar in the _target_ directory of your project.
+* To use it, simply make that jar available in your runtime classpath.
+
+You can now use the following as an input to the XWiki Rendering Parser:
+
+{{example parameter="hello"/}}
+
