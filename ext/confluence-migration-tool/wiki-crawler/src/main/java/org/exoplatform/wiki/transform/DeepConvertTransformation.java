@@ -26,6 +26,8 @@ import java.util.List;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.embed.EmbeddableComponentManager;
 import org.xwiki.component.manager.ComponentLookupException;
@@ -47,6 +49,8 @@ import org.xwiki.rendering.transformation.TransformationException;
 @Named("deepconvert")
 @Singleton
 public class DeepConvertTransformation extends AbstractTransformation {
+  
+  private static Logger LOG = LoggerFactory.getLogger(DeepConvertTransformation.class.toString()); ;
 
   @Override
   public void transform(Block block, TransformationContext transformationContext) throws TransformationException {
@@ -90,11 +94,10 @@ public class DeepConvertTransformation extends AbstractTransformation {
       converter.convert(new StringReader(content), Syntax.CONFLUENCE_1_0, Syntax.XWIKI_2_0, printer);
       return printer.toString();
     } catch (ComponentLookupException e) {
-      System.err.println("TRANSFORMATION FAILURE: " + e.getMessage());
+      LOG.warn("TRANSFORMATION FAILURE: " + e.getMessage());
     } catch (ConversionException e) {
-      System.err.println("TRANSFORMATION FAILURE: " + e.getMessage());
+      LOG.warn("TRANSFORMATION FAILURE: " + e.getMessage());
     }
-
     return content;
   }
 }
