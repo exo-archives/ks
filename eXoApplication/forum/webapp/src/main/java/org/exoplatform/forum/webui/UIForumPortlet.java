@@ -202,7 +202,6 @@ public class UIForumPortlet extends UIPortletApplication {
     try {
       renderComponentByURL(context);
     } catch (Exception e) {
-      e.printStackTrace();
       log.error("Can not open component by url, view exception: ", e);
     }
     super.processRender(app, context);
