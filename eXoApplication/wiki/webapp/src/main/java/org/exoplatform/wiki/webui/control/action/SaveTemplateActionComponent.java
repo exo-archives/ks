@@ -21,8 +21,6 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.jcr.datamodel.IllegalNameException;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -66,8 +64,6 @@ public class SaveTemplateActionComponent extends UIComponent {
 
   public static final String                   ACTION   = "SaveTemplate";
   
-  private static final Log log = ExoLogger.getLogger("wiki:SaveTemplateActionComponent");
-  
   private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsEditAddTemplateModeFilter() });
 
   @UIExtensionFilters
@@ -86,7 +82,7 @@ public class SaveTemplateActionComponent extends UIComponent {
   protected String getPageTitleInputId() {
     return UIWikiPageTitleControlArea.FIELD_TITLEINPUT;
   }
-
+  
   public static class SaveTemplateActionListener extends
                                                 UISubmitToolBarActionListener<SaveTemplateActionComponent> {
     @Override
@@ -126,15 +122,13 @@ public class SaveTemplateActionComponent extends UIComponent {
       String description = descriptionInput.getValue();
       String syntaxId = syntaxTypeSelectBox.getValue();
       String[] msgArg = { title };
+      boolean isExist = false; 
       try {
-        if (wikiPortlet.getWikiMode() == WikiMode.EDITTEMPLATE) {
-          Template template = wikiService.getTemplatePage(pageParams, pageEditForm.getTemplateId());
-          wikiService.modifyTemplate(pageParams, template, title, description, markup, syntaxId);          
-        } else if (wikiPortlet.getWikiMode() == WikiMode.ADDTEMPLATE) {
-          String templateId = TitleResolver.getId(title, false);
-          boolean isExist = (wikiService.getTemplatePage(pageParams, templateId) != null);
+        String idTemp = TitleResolver.getId(title, false);
+        if (wikiPortlet.getWikiMode() == WikiMode.ADDTEMPLATE
+            || (wikiPortlet.getWikiMode() == WikiMode.EDITTEMPLATE && !idTemp.equals(pageEditForm.getTemplateId()))) {
+          isExist = (wikiService.getTemplatePage(pageParams, idTemp) != null);
           if (isExist) {
-            log.error("The title '" + title + "' is already existing!");
             event.getRequestContext()
                  .getUIApplication()
                  .addMessage(new ApplicationMessage("SavePageAction.msg.warning-page-title-already-exist",
@@ -143,6 +137,12 @@ public class SaveTemplateActionComponent extends UIComponent {
             Utils.redirect(pageParams, wikiPortlet.getWikiMode());
             return;
           }
+
+        }
+        if (wikiPortlet.getWikiMode() == WikiMode.EDITTEMPLATE) {
+          Template template = wikiService.getTemplatePage(pageParams, pageEditForm.getTemplateId());
+          wikiService.modifyTemplate(pageParams, template, title, description, markup, syntaxId);
+        } else if (wikiPortlet.getWikiMode() == WikiMode.ADDTEMPLATE) {
           Template template = wikiService.createTemplatePage(title, pageParams);
           template.setDescription(description);
           template.getContent().setText(markup);
@@ -155,17 +155,18 @@ public class SaveTemplateActionComponent extends UIComponent {
                                                   ApplicationMessage.INFO));
         }
       } catch (Exception e) {
-        log.error("An exception happens when saving the page with title:" + title, e);
         event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIPageToolBar.msg.Exception",
                                                                                        null,
                                                                                        ApplicationMessage.ERROR));
       } finally {
-        UITemplateSettingForm uiTemplateSettingForm = wikiPortlet.findFirstComponentOfType(UITemplateSettingForm.class);
-        if (uiTemplateSettingForm != null) {
-          // Update template list
-          uiTemplateSettingForm.initGrid();
+        if (!isExist) {
+          UITemplateSettingForm uiTemplateSettingForm = wikiPortlet.findFirstComponentOfType(UITemplateSettingForm.class);
+          if (uiTemplateSettingForm != null) {
+            // Update template list
+            uiTemplateSettingForm.initGrid();
+          }
+          Utils.redirect(pageParams, WikiMode.SPACESETTING);
         }
-        Utils.redirect(pageParams, WikiMode.SPACESETTING);
         super.processEvent(event);
       }
     }
