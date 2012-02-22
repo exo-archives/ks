@@ -70,10 +70,7 @@ public class ResultQuickSearch extends BaseUIForm implements UIPopupComponent {
   }
 
   public void setSearchResults(List<ObjectSearchResult> searchResults) {
-    if (searchResults != null)
-      this.searchResults_ = searchResults;
-    else
-      this.searchResults_ = new ArrayList<ObjectSearchResult>();
+    searchResults_ = (searchResults != null) ? searchResults : new ArrayList<ObjectSearchResult>();
     pageList = new QuestionPageList(searchResults_, 10);
     pageList.setPageSize(10);
     pageIterator = this.getChildById(LIST_RESULT_SEARCH);

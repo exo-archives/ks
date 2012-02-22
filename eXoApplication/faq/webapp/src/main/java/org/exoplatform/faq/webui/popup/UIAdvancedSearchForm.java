@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.webui.BaseUIFAQForm;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.ks.common.CommonUtils;
@@ -39,8 +39,8 @@ import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormDateTimeInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
@@ -167,6 +167,7 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
     addUIFormInput(comment);
     addUIFormInput(fromDate);
     addUIFormInput(toDate);
+    setActions(new String[] { "Search", "Cancel" });
   }
 
   public void activate() throws Exception {
@@ -176,11 +177,11 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
   }
 
   public Calendar getFromDate() {
-    return getUIFormDateTimeInput(FIELD_FROM_DATE).getCalendar();
+    return getCalendar(getUIFormDateTimeInput(FIELD_FROM_DATE), FIELD_FROM_DATE);
   }
 
   public Calendar getToDate() {
-    return getUIFormDateTimeInput(FIELD_TO_DATE).getCalendar();
+    return getCalendar(getUIFormDateTimeInput(FIELD_TO_DATE), FIELD_TO_DATE);
   }
 
   public void setText(String value) {
@@ -213,24 +214,11 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
     comment.setValue("");
   }
 
-  public String getLabel(ResourceBundle res, String id) throws Exception {
-    String label = getId() + ".label." + id;
-    try {
-      return res.getString(label);
-    } catch (Exception e) {
-      return id;
-    }
-  }
-
-  public String[] getActions() {
-    return new String[] { "Search", "Cancel" };
-  }
-
-  private Calendar getCalendar(UIFormDateTimeInput dateTimeInput, String field) throws Exception {
+  private Calendar getCalendar(UIFormDateTimeInput dateTimeInput, String field) {
     Calendar calendar = dateTimeInput.getCalendar();
     if (!FAQUtils.isFieldEmpty(dateTimeInput.getValue())) {
       if (calendar == null) {
-        warning("UIAdvancedSearchForm.msg.error-input-text-date", new String[] { getLabel(field) });
+        warning("UIAdvancedSearchForm.msg.error-input-text-date", "UIAdvancedSearchForm.label." + field);
       }
     }
     return calendar;
@@ -262,27 +250,20 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
       String categoryName = advancedSearch.getUIStringInput(FIELD_CATEGORY_NAME).getValue();
       String modeQuestion = advancedSearch.getUIFormSelectBox(FIELD_ISMODERATEQUESTION).getValue();
       String moderator = advancedSearch.getUIStringInput(FIELD_CATEGORY_MODERATOR).getValue();
-      Calendar fromDate = advancedSearch.getCalendar(advancedSearch.getUIFormDateTimeInput(FIELD_FROM_DATE), FIELD_FROM_DATE);
-      Calendar toDate = advancedSearch.getCalendar(advancedSearch.getUIFormDateTimeInput(FIELD_TO_DATE), FIELD_TO_DATE);
       String author = advancedSearch.getUIStringInput(FIELD_AUTHOR).getValue();
       String emailAddress = advancedSearch.getUIStringInput(FIELD_EMAIL_ADDRESS).getValue();
       String language = advancedSearch.getUIFormSelectBox(FIELD_LANGUAGE).getValue();
       String question = advancedSearch.getUIFormTextAreaInput(FIELD_QUESTION).getValue();
       String response = advancedSearch.getUIFormTextAreaInput(FIELD_RESPONSE).getValue();
       String comment = advancedSearch.getUIFormTextAreaInput(FIELD_COMMENT).getValue();
-      if (fromDate.getTimeInMillis() >= toDate.getTimeInMillis()) {
-        advancedSearch.warning("UIAdvancedSearchForm.msg.erro-from-less-than-to");
-        return;
-      }
-
+      Calendar fromDate = advancedSearch.getFromDate();
+      Calendar toDate = advancedSearch.getToDate();
       /**
        * Check validation of data inputed
        */
-      if (advancedSearch.getFromDate() != null && advancedSearch.getToDate() != null) {
-        if (advancedSearch.getFromDate().after(advancedSearch.getToDate())) {
-          advancedSearch.warning("UIAdvancedSearchForm.msg.date-time-invalid");
-          return;
-        }
+      if (fromDate != null && toDate != null && fromDate.after(toDate)) {
+        advancedSearch.warning("UIAdvancedSearchForm.msg.erro-from-less-than-to");
+        return;
       }
       if (!FAQUtils.isValidEmailAddresses(emailAddress)) {
         advancedSearch.warning("UIAdvancedSearchForm.msg.email-invalid");
@@ -318,7 +299,6 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
         eventQuery.setLanguage(advancedSearch.defaultLanguage_);
         eventQuery.setSearchOnDefaultLanguage(true);
       }
-      // eventQuery.getQuery() ;
 
       /**
        * Check all values are got from UIForm, if don't have any thing then view warning
@@ -329,18 +309,21 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
       eventQuery.setUserMembers(UserHelper.getAllGroupAndMembershipOfUser(null));
       eventQuery.setAdmin(Boolean.parseBoolean(advancedSearch.faqSetting_.getIsAdmin()));
 
-      UIPopupContainer popupContainer = advancedSearch.getAncestorOfType(UIPopupContainer.class);
-      ResultQuickSearch result = popupContainer.getChild(ResultQuickSearch.class);
-      if (result == null)
-        result = popupContainer.addChild(ResultQuickSearch.class, null, null);
+      List<ObjectSearchResult> objectSearchResults = new ArrayList<ObjectSearchResult>();
       try {
-        result.setSearchResults(advancedSearch.getFAQService().getSearchResults(eventQuery));
+        objectSearchResults = advancedSearch.getFAQService().getSearchResults(eventQuery);
       } catch (javax.jcr.query.InvalidQueryException e) {
         event.getRequestContext()
              .getUIApplication()
              .addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.erro-empty-search", null, ApplicationMessage.WARNING));        
         return;
       }
+      UIPopupContainer popupContainer = advancedSearch.getAncestorOfType(UIPopupContainer.class);
+      ResultQuickSearch result = popupContainer.getChild(ResultQuickSearch.class);
+      if (result == null){
+        result = popupContainer.addChild(ResultQuickSearch.class, null, null);
+      }
+      result.setSearchResults(objectSearchResults);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
     }
   }

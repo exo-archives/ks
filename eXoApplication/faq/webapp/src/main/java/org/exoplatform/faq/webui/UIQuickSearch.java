@@ -16,6 +16,7 @@
  */
 package org.exoplatform.faq.webui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -79,7 +80,7 @@ public class UIQuickSearch extends BaseUIFAQForm {
       if (text != null && text.trim().length() > 0) {
         text = CommonUtils.encodeSpecialCharInSearchTerm(text);
         FAQService faqService = FAQUtils.getFAQService();
-        List<ObjectSearchResult> list = null;
+        List<ObjectSearchResult> list = new ArrayList<ObjectSearchResult>();
         FAQEventQuery eventQuery = new FAQEventQuery();
         eventQuery.setAdmin(uiQuickSearch.faqSetting_.isAdmin());
         eventQuery.setUserMembers(UserHelper.getAllGroupAndMembershipOfUser(null));
