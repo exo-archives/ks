@@ -1111,6 +1111,10 @@ table.UIFormGrid div.Id {
 	margin-left: 47px;
 }
 
+.UIWikiPortlet .UIFormUploadInput .LimitMessage {
+	display: none;
+}
+
 /* Wiki - Page not found */
 .UIWikiPageNotFound {
 	padding: 10px 10px 20px;

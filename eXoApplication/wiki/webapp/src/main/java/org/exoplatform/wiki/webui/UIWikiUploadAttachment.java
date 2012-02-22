@@ -117,7 +117,7 @@ public class UIWikiUploadAttachment extends UIWikiForm {
         if (SIZE_LIMIT > 0 && fileSize >= SIZE_LIMIT * 1024 * 1024) {
           event.getRequestContext()
                .getUIApplication()
-               .addMessage(new ApplicationMessage("UIWikiUploadAttachment.msg.attachment-exceed",
+               .addMessage(new ApplicationMessage("UIFormUploadInput.msg.attachment-limit",
                                                   new String[] { String.valueOf(SIZE_LIMIT) },
                                                   ApplicationMessage.WARNING));
           resetUploadInput(event);
