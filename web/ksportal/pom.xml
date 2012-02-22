@@ -22,10 +22,10 @@
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>exo.ks.web-parent</artifactId>
-    <version>1.2.10</version>
+    <version>1.2.11-SNAPSHOT</version>
   </parent>
   <artifactId>exo.ks.web.portal</artifactId>
-  <version>1.2.10</version>
+  <version>1.2.11-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>eXo KS Portal web module</name>
   <dependencies>
