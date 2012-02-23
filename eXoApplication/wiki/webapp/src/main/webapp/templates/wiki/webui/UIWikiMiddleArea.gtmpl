@@ -2,8 +2,6 @@
   import org.exoplatform.wiki.webui.UIWikiNavigationContainer;
   import org.exoplatform.wiki.webui.UIWikiPageContainer;
   import org.exoplatform.wiki.webui.UIWikiPageSettingContainer
-
-  String showHideAction = uicomponent.event(uicomponent.SHOW_HIDE_ACTION);
 %>
 <div class="UIWikiMiddleArea" id="$uicomponent.id">
   <div class="WikiLayout ClearFix">
@@ -19,7 +17,7 @@
         </div>
       <% } %>
       
-      <div class="Spliter" ondblclick="$showHideAction"><span></span></div>
+      <div class="Spliter"><span></span></div>
       
       <div class="UIRightContainerArea">
         <% uicomponent.renderChild(UIWikiPageContainer.class); %>
