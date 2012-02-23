@@ -16,16 +16,21 @@
  */
 package org.exoplatform.wiki.handler;
 
-import junit.framework.TestCase;
-import org.apache.commons.io.IOUtils;
+import static org.exoplatform.wiki.handler.WikbookWikiHandler.getFilenameFromPath;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
-import static org.exoplatform.wiki.handler.WikbookWikiHandler.getFilenameFromPath;
+import junit.framework.TestCase;
+
+import org.apache.commons.io.IOUtils;
 
 /**
  * Created by The eXo Platform SAS
@@ -118,10 +123,13 @@ public class WikbookWikiHandlerTest extends TestCase {
     TestCase.assertEquals("TestContentChildren", contentWithChildren);
 
     // Try attachment data
-    final InputStream helloFileStream = WikbookWikiHandlerTest.class.getResourceAsStream("hello.pdf");
+    InputStream helloFileStream = WikbookWikiHandlerTest.class.getResourceAsStream("hello.pdf");
     TestCase.assertNotNull(helloFileStream);
     byte[] data = IOUtils.toByteArray(helloFileStream);
-    wikbookWikiHandler.uploadAttachment("", "WikiHome/PageNoChild", "hello.pdf", "application/pdf", data);
+
+    // Read a second time
+    helloFileStream = WikbookWikiHandlerTest.class.getResourceAsStream("hello.pdf");
+    wikbookWikiHandler.uploadAttachment("", "WikiHome/PageNoChild", "hello.pdf", "application/pdf", helloFileStream);
     File attachmentUploadedFile = registerDir(targetDir, "attachments/hello.pdf");
     TestCase.assertTrue(attachmentUploadedFile.exists());
     byte[] dataLoaded = IOUtils.toByteArray(new FileInputStream(attachmentUploadedFile));
