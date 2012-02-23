@@ -108,11 +108,12 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
   private void migrationForumData(SessionProvider sProvider, String oldVersion, String newVersion) throws Exception {
     // Migration 2.1.x to 2.2.3
     // properties new: exo:isWatting in nodetype: exo:post
-    if(oldVersion.indexOf("2.1.") > 0) {
+    if (oldVersion.indexOf("2.1.") > 0) {
       log.info("[UpgradeForumPlugin] Start migrate forum data from " + oldVersion + " to " + newVersion);
       Node forumHome = getForumHomeNode(sProvider);
       NodeIterator pIter = getNodeIterator(sProvider, forumHome, Utils.EXO_POST, new StringBuilder(""));
-      log.info("\nThe size of list post migration: " + pIter.getSize());
+      long i = 0, total = pIter.getSize();
+      log.info("\nThe size of list post migration: " + total);
       while (pIter.hasNext()) {
         Node pNode = pIter.nextNode();
         try {
@@ -120,7 +121,8 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
         } catch (Exception e) {
           pNode.addMixin("exo:forumMigrate");
           pNode.setProperty(Utils.EXO_IS_WAITING, false);
-          log.info(String.format("Migration node %s property: exo:isWatting=false", pNode.getName()));
+          forumHome.getSession().save();
+          log.info(String.format("Migration node %s/%s with node name %s property: exo:isWatting=false", ++i, total, pNode.getName()));
         }
         // set new link for this post.
         if (!Utils.isEmpty(newDomain)) {
@@ -135,7 +137,6 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
           saveLink(tIter.nextNode());
         }
       }
-      forumHome.getSession().save();
     }
   }
 
@@ -145,6 +146,7 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
       if (!Utils.isEmpty(link) && link.indexOf(newDomain) < 0) {
         link = new StringBuilder(newDomain).append(link.substring(link.indexOf("/", 8))).toString();
         node.setProperty(Utils.EXO_LINK, link);
+        node.save();
         log.info(String.format("Migration node %s property: exo:link=%s", node.getName(), link));
       }
     } catch (Exception e) {
