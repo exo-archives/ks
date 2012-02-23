@@ -2963,8 +2963,10 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     try {
       SessionProvider sProvider = CommonUtils.createSystemProvider();
       Node node = getQuestionNode(sProvider, id);
-      if (node != null && node.isNodeType(EXO_FAQ_QUESTION)) {
+      if (node != null) {
         node = node.getParent().getParent();
+      } else {
+        node = getCategoryNode(sProvider, id);
       }
       return new PropertyReader(node).bool(property);
     } catch (Exception e) {
