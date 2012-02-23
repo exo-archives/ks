@@ -16,8 +16,10 @@
  */
 package org.exoplatform.wiki;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,67 +50,49 @@ import org.slf4j.LoggerFactory;
  * perform content check, stats and transfer
  */
 public class ConfluenceCrawler implements CrawlerConstants {
-  private static final Logger        LOGGER                     = LoggerFactory.getLogger(ConfluenceCrawler.class.toString());
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(ConfluenceCrawler.class.toString());
+
+  enum UPLOAD_TYPE {
+    ATTACHMENT, DOCUMENT
+  }
 
   private Confluence                 confluence;
-
   private String                     sourceHost                 = "";
-
   private String                     sourceUser                 = "";
-
   private String                     sourcePwd                  = "";
-
-  private boolean                    optionRecursiveCrawling    = false;
-
-  private boolean                    optionStopOnFailure        = false;
-
-  private boolean                    optionTransferAttachments  = true;
-
-  private boolean                    optionTransferComments     = true;
-
-  private boolean                    optionTransferLabels       = true;
-
-  private int                        visitedPages               = 0;
-
-  private int                        transferredPages           = 0;
-
-  private int                        transferredAttachments     = 0;
-
-  private List<String>               pagesInError               = new ArrayList<String>();
-
   private String                     sourceSpace;
-
-  private String                     targetSpace;
-
-  private String                     targetPage;
-
-  private String                     targetSyntax;
-
-  private String                     crawlerActions             = ACTION_CHECK;
-
-  private boolean                    actionCheckPageEnabled     = true;
-
-  private boolean                    actionTransfertPageEnabled = false;
-
-  private IWikiHandler               wikiHandler;
-
-  private final Map<String, Integer> supportedMacrosMap         = new HashMap<String, Integer>();
-
-  private final Map<String, Integer> unsupportedMacrosMap       = new HashMap<String, Integer>();
-
-  private final Map<String, Integer> unknownMacrosMap           = new HashMap<String, Integer>();
-
-  private int                        maxAttachmentSize          = 2048;
-
   private String[]                   sourcePages;
 
   private String                     targetHost;
-
   private String                     targetUser;
-
   private String                     targetPwd;
-
   private String                     targetType;
+  private String                     targetSpace;
+  private String                     targetPage;
+  private String                     targetSyntax;
+
+  private boolean                    optionRecursiveCrawling    = false;
+  private boolean                    optionStopOnFailure        = false;
+  private boolean                    optionTransferAttachments  = true;
+  private boolean                    optionTransferComments     = true;
+  private boolean                    optionTransferLabels       = true;
+  private int                        optionMaxAttachmentSize    = 2048;
+  private String                     optionUploadAs             = OPTION_UPLOAD_TYPE_ATTACHEMENT;
+  private String                     crawlerActions             = ACTION_CHECK;
+
+  private int                        visitedPages               = 0;
+  private int                        transferredPages           = 0;
+  private int                        transferredAttachments     = 0;
+  private List<String>               erroredElement             = new ArrayList<String>();
+
+  private boolean                    actionCheckPageEnabled     = true;
+  private boolean                    actionTransfertPageEnabled = false;
+  private IWikiHandler               wikiHandler;
+
+  private final Map<String, Integer> supportedMacrosMap         = new HashMap<String, Integer>();
+  private final Map<String, Integer> unsupportedMacrosMap       = new HashMap<String, Integer>();
+  private final Map<String, Integer> unknownMacrosMap           = new HashMap<String, Integer>();
 
   public static void main(String args[]) {
 
@@ -186,11 +170,12 @@ public class ConfluenceCrawler implements CrawlerConstants {
     optionTransferComments = Boolean.valueOf(properties.getProperty(PARAMETER_OPTION_TRANSFER_COMMENTS));
     optionTransferLabels = Boolean.valueOf(properties.getProperty(PARAMETER_OPTION_TRANSFER_LABELS));
 
-    int paramMaxAttachmentSize = Integer.valueOf(properties.getProperty(PARAMETER_OPTION_MAX_ATT_SIZE,
-                                                                        "0"));
+    int paramMaxAttachmentSize = Integer.valueOf(properties.getProperty(PARAMETER_OPTION_MAX_ATT_SIZE, "0"));
     if (paramMaxAttachmentSize > 0) {
-      maxAttachmentSize = paramMaxAttachmentSize;
+      optionMaxAttachmentSize = paramMaxAttachmentSize;
     }
+
+    optionUploadAs = properties.getProperty(PARAMETER_OPTION_UPLOAD_TYPE, OPTION_UPLOAD_TYPE_ATTACHEMENT);
 
     crawlerActions = properties.getProperty(PARAMETER_ACTIONS);
 
@@ -218,16 +203,10 @@ public class ConfluenceCrawler implements CrawlerConstants {
     initializeHandler(targetHost, targetUser, targetPwd, targetType);
   }
 
-  private void initializeHandler(String targetHost,
-                                 String targetUser,
-                                 String targetPwd,
-                                 String targetType) {
+  private void initializeHandler(String targetHost, String targetUser, String targetPwd, String targetType) {
     if (TYPE_WIKBOOK.equals(targetType)) {
       LOGGER.info("Export to Wikbook format");
-      wikiHandler = new WikbookWikiHandler(targetHost,
-                                           new StringBuilder(targetSpace).append("/")
-                                                                         .append(targetPage)
-                                                                         .toString());
+      wikiHandler = new WikbookWikiHandler(targetHost, new StringBuilder(targetSpace).append("/").append(targetPage).toString());
     } else {
       LOGGER.info("Export to ExoWiki format on " + targetHost);
       wikiHandler = new ExoWikiHandler(targetHost);
@@ -259,19 +238,7 @@ public class ConfluenceCrawler implements CrawlerConstants {
    */
   public void initMacros() {
     // Supported macros list
-    MacroMap.addMacro(supportedMacrosMap,
-                      "*",
-                      "_",
-                      "+",
-                      "panel",
-                      "code",
-                      "color",
-                      "column",
-                      "info",
-                      "note",
-                      "pagetree",
-                      "toc",
-                      "section");
+    MacroMap.addMacro(supportedMacrosMap, "*", "_", "+", "panel", "code", "color", "column", "info", "note", "pagetree", "toc", "section");
     MacroMap.addMacro(unsupportedMacrosMap,
                       "jiraissues",
                       "contentbylabel",
@@ -327,7 +294,7 @@ public class ConfluenceCrawler implements CrawlerConstants {
       }
     }
 
-    processed &= pagesInError.isEmpty();
+    processed &= erroredElement.isEmpty();
 
     return processed;
   }
@@ -348,9 +315,9 @@ public class ConfluenceCrawler implements CrawlerConstants {
     dumpMacroUsage("** Unsupported : ", unsupportedMacrosMap);
     dumpMacroUsage("** Unknow  : ", unknownMacrosMap);
 
-    if (pagesInError.size() > 0) {
-      LOGGER.error("* Errored pages : " + pagesInError.size());
-      for (String path : pagesInError) {
+    if (erroredElement.size() > 0) {
+      LOGGER.error("* Errored pages or attachements : " + erroredElement.size());
+      for (String path : erroredElement) {
         LOGGER.error("** " + path);
       }
     }
@@ -418,10 +385,7 @@ public class ConfluenceCrawler implements CrawlerConstants {
         path = targetSpace + "/" + subPath;
       }
 
-      String newPageName = wikiHandler.createPage(path,
-                                                  pageName,
-                                                  confluence.getChildren(page.getId()).size() > 0,
-                                                  targetSyntax);
+      String newPageName = wikiHandler.createPage(path, pageName, confluence.getChildren(page.getId()).size() > 0, targetSyntax);
 
       if (newPageName != null) {
         String pagePath = path + "/" + newPageName;
@@ -478,7 +442,7 @@ public class ConfluenceCrawler implements CrawlerConstants {
 
         // Transfer attachments
         if (optionTransferAttachments) {
-          uploadAttachments(confluence, page, targetSpace, createdPageName);
+          uploadAttachments(confluence, page, targetSpace, subPath, createdPageName);
         }
 
         transferredPages++;
@@ -492,15 +456,16 @@ public class ConfluenceCrawler implements CrawlerConstants {
         // confluence.addComment(comment);
         // }
       } else {
-        LOGGER.error("* Page content not transferred : " + pageName);
         String expectedPageName = wikiHandler.normalizePageName(pageName);
         // Check if page exists or not
         if (wikiHandler.checkPageExists(path + "/" + expectedPageName)) {
           // Page exists, only by pass the content creation
           createdPageName = pageName;
+          LOGGER.warn("[Create] Content and attachements NOT replaced");
         } else {
           // Page really in error
-          pagesInError.add(subPath + "/" + pageName);
+          LOGGER.error("[Create] Page NOT created");
+          erroredElement.add(subPath + "/" + pageName);
         }
       }
     }
@@ -542,10 +507,7 @@ public class ConfluenceCrawler implements CrawlerConstants {
     LOGGER.info(macroText.toString());
   }
 
-  protected void uploadAttachments(Confluence confluence,
-                                   Page page,
-                                   String targetSpace,
-                                   String createdPageName) throws SwizzleException {
+  protected void uploadAttachments(Confluence confluence, Page page, String targetSpace, String parentPagePath, String pageName) throws SwizzleException {
 
     @SuppressWarnings("unchecked")
     List<Attachment> attachments = confluence.getAttachments(page.getId());
@@ -554,34 +516,31 @@ public class ConfluenceCrawler implements CrawlerConstants {
       String fileName = attachment.getFileName();
       Long fileSize = Long.parseLong(attachment.getFileSize()) / 1024;
 
-      if (fileSize > maxAttachmentSize) {
-        LOGGER.error(String.format("[Upload] REJECTED Too big (%s ko) : %s/%s/%s",
-                                   fileSize,
-                                   targetSpace,
-                                   createdPageName,
-                                   fileName));
+      if (fileSize > optionMaxAttachmentSize) {
+        LOGGER.error(String.format("[Upload] REJECTED Too big (%s ko) : %s/%s/%s", fileSize, targetSpace, pageName, fileName));
       } else {
         String version = url.replaceAll(".*version=", "");
         version = version.replaceAll("&.*", "");
-        LOGGER.info(String.format("[Upload] %s ko - %s/%s/%s",
-                                  fileSize,
-                                  targetSpace,
-                                  createdPageName,
-                                  fileName));
+        LOGGER.info(String.format("[Upload] Processing %s ko - %s/%s/%s", fileSize, targetSpace, pageName, fileName));
+
         try {
-          byte[] data = confluence.getAttachmentData(page.getId(),
-                                                     attachment.getFileName(),
-                                                     version);
-          wikiHandler.uploadAttachment(targetSpace,
-                                       createdPageName,
-                                       fileName,
-                                       attachment.getContentType(),
-                                       data);
-          transferredAttachments++;
+          boolean uploaded = false;
+          byte[] data = confluence.getAttachmentData(page.getId(), attachment.getFileName(), version);
+          InputStream stream = new ByteArrayInputStream(data);
+
+          if (OPTION_UPLOAD_TYPE_DOCUMENT.equals(optionUploadAs)) {
+            uploaded = wikiHandler.uploadDocument(targetSpace, parentPagePath + "/" + pageName, fileName, attachment.getContentType(), stream);
+          } else {
+            uploaded = wikiHandler.uploadAttachment(targetSpace, pageName, fileName, attachment.getContentType(), stream);
+          }
+
+          if (uploaded) {
+            transferredAttachments++;
+          } else {
+            erroredElement.add(parentPagePath + "/" + pageName);
+          }
         } catch (Exception e) {
-          LOGGER.error(String.format("[Upload] Attachment failed to upload : %s in %s",
-                                     fileName,
-                                     createdPageName));
+          LOGGER.error(String.format("[Upload] Attachment failed to upload : %s in %s", fileName, pageName));
         }
       }
     }

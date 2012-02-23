@@ -146,18 +146,19 @@ public class WikiLoader {
          }
          if (creator != null)
             wikipage.setOwner(creator);
+    
+         System.out.println("WikiLoaderService created page : " + path + "/" + pageName + " on demand of " + creator);
+     
          return wikipage.getName();
      } else {
-       
-     }
+         return "%% Page exists : " + wikipage.getName();
+    }
      
-     System.out.println("WikiLoaderService created page : " + path + "/" + pageName + " on demand of " + creator);
     }
    } catch (Exception e) {
-     getLogger().error("Page creation failed : " + pageName + ", cause: " + e.getMessage());
+     return "%%Page creation failed : " + pageName + ", cause: " + e.getMessage();
    }
    
-   return wikipage != null;
   }
 
   @POST
@@ -193,21 +194,22 @@ public class WikiLoader {
   @GET
   @Path("toxwiki2")
   public String convertToXWiki2(@QueryParam("path") String path) {
-    if (path != null && syntax != null) {
+    if (path != null) {
       Page wikipage = getPageByPath(path)
       String currentSyntax = wikipage.getSyntax();
       
       //TODO Check that the syntax is available in the space
       
-      if (wikipage != null && !"xwiki/2.0".equals(currentSyntax) && ) {
-        wikipage.setSyntax("xwiki/2.0");
-        String content = wikipage.getText();
-        String newContent = transform_CFL1_XWK2(content);
+      if (wikipage != null && !"xwiki/2.0".equals(currentSyntax)) {
+        String content = wikipage.getContent().getText();
+        return transform_CFL1_XWK2(content);
         
-        //Transform
-        wikipage.getContent().setText(newContent);
+        //wikipage.setSyntax("xwiki/2.0");
+        //wikipage.getContent().setText(newContent);
+        //return "transformed to xwiki2"
       }   
     }
+    return "no change performed"
   } 
 
   public static String transform_CFL1_XWK2(String content) {
@@ -237,15 +239,19 @@ public class WikiLoader {
     def wStore = (WikiStore) model.getWikiStore();
     def wikis = wStore.getWikis();
     
-    def list = "";
+    def list = new ArrayList();
     wikis.each {
       def path = it.getType() + "/" + it.getOwner() + "/" + it.getWikiHome().getName();
       path = path.replaceAll("//", "/");
-      list += path + "\n";
+      list.add(path);
     }
-      
+    java.util.Collections.sort(list);
+    def content = "";
+    list.each {
+      content += it + "\n";
+    }
     //WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
-    return list;
+    return content;
   }
    
   @POST

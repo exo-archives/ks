@@ -16,6 +16,8 @@
  */
 package org.exoplatform.wiki;
 
+import java.io.InputStream;
+
 /**
  * Created by The eXo Platform SAS Author : Dimitri BAELI dbaeli@exoplatform.com
  * Feb 02, 2012
@@ -77,9 +79,17 @@ public interface IWikiHandler {
    * @param contentType
    * @param data
    */
-  void uploadAttachment(String targetSpace,
-                        String pageName,
-                        String attachmentName,
-                        String contentType,
-                        byte[] data);
+  boolean uploadAttachment(String targetSpace, String pageName, String attachmentName, String contentType, InputStream data);
+
+  /**
+   * Upload an attachment file
+   * 
+   * @param targetSpace target space
+   * @param pageName
+   * @param attachmentName
+   * @param contentType
+   * @param data
+   */
+  boolean uploadDocument(String targetSpace, String pageName, String attachmentName, String contentType, InputStream data);
+
 }

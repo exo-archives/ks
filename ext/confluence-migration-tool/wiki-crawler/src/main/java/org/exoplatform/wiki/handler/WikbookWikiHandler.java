@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -145,13 +146,20 @@ public class WikbookWikiHandler implements IWikiHandler {
     return file.exists() || fileNoDir.exists();
   }
 
-  public void uploadAttachment(String targetSpace, String pageName, String attachmentName, String contentType, byte[] data) {
+  public boolean uploadAttachment(String targetSpace, String pageName, String attachmentName, String contentType, InputStream stream) {
     // Create attachment in "/attachments" directory
     File attachment = new File(attachmentsDir, attachmentName);
     try {
-      IOUtils.write(data, new FileOutputStream(attachment));
+      IOUtils.copy(stream, new FileOutputStream(attachment));
+      return true;
     } catch (IOException e) {
       LOGGER.error("Attachment can't be saved");
     }
+    return false;
   }
+
+  public boolean uploadDocument(String targetSpace, String pageName, String attachmentName, String contentType, InputStream data) {
+    return uploadAttachment(targetSpace, pageName, attachmentName, contentType, data);
+  }
+
 }

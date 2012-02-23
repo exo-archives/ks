@@ -1,82 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.exoplatform.ks</groupId>
-    <artifactId>exo.ks.ext.confluence-migration-tool</artifactId>
-    <version>2.2.8-SNAPSHOT</version>
-  </parent>
-  <artifactId>exo.ks.ext.confluence-migration-tool.crawler</artifactId>
-  <name>Confluence Migration Wiki Crawler</name>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.exoplatform.ks</groupId>
+		<artifactId>exo.ks.ext.confluence-migration-tool</artifactId>
+		<version>2.2.8-SNAPSHOT</version>
+	</parent>
+	<artifactId>exo.ks.ext.confluence-migration-tool.crawler</artifactId>
+	<name>Confluence Migration Wiki Crawler</name>
 
-  <properties>
-    <org.logback.version>0.9.15</org.logback.version>
-    <commons-fileupload.version>1.2.1</commons-fileupload.version>
-    <org.xwiki.version>3.3</org.xwiki.version>
-  </properties>
+	<properties>
+		<org.logback.version>0.9.15</org.logback.version>
+		<commons-fileupload.version>1.2.1</commons-fileupload.version>
+		<org.xwiki.version>3.3</org.xwiki.version>
+	</properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
 
-      <!-- CONFLUENCE Libs -->
-    <dependency>
-      <groupId>org.codehaus.swizzle</groupId>
-      <artifactId>swizzle-confluence</artifactId>
-      <version>${org.codehaus.swizzle.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-      <version>${org.apache.httpcomponents.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpmime</artifactId>
-      <version>${org.apache.httpcomponents.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>${commons-io.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.ws.rs</groupId>
-      <artifactId>jsr311-api</artifactId>
-      <version>${javax.ws.rs.jsr311-api.version}</version>
-    </dependency>
-     <dependency>
-       <groupId>org.slf4j</groupId>
-       <artifactId>slf4j-api</artifactId>
-       <version>${org.slf4j.version}</version>
-     </dependency>
-     <dependency>
-       <groupId>ch.qos.logback</groupId>
-       <artifactId>logback-core</artifactId>
-       <version>${org.logback.version}</version>
-     </dependency>
-     <dependency>
-       <groupId>ch.qos.logback</groupId>
-       <artifactId>logback-classic</artifactId>
-       <version>${org.logback.version}</version>
-     </dependency>
+		<!-- CONFLUENCE Libs -->
+		<dependency>
+			<groupId>org.codehaus.swizzle</groupId>
+			<artifactId>swizzle-confluence</artifactId>
+			<version>${org.codehaus.swizzle.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${org.apache.httpcomponents.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>${org.apache.httpcomponents.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons-io.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>jsr311-api</artifactId>
+			<version>${javax.ws.rs.jsr311-api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${org.slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>${org.logback.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${org.logback.version}</version>
+		</dependency>
 
-    <dependency>
-      <groupId>org.xwiki.rendering</groupId>
-      <artifactId>xwiki-rendering-syntax-xwiki2</artifactId>
-      <version>${org.xwiki.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.commons</groupId>
-      <artifactId>xwiki-commons-component-default</artifactId>
-      <version>${org.xwiki.version}</version>
-    </dependency>
+		<dependency>
+			<groupId>org.xwiki.rendering</groupId>
+			<artifactId>xwiki-rendering-syntax-xwiki2</artifactId>
+			<version>${org.xwiki.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.xwiki.commons</groupId>
+			<artifactId>xwiki-commons-component-default</artifactId>
+			<version>${org.xwiki.version}</version>
+		</dependency>
 
-  </dependencies>
+		<dependency>
+			<groupId>org.apache.jackrabbit</groupId>
+			<artifactId>jackrabbit-webdav</artifactId>
+			<version>1.6.4</version>
+		</dependency>
+
+	</dependencies>
 </project>

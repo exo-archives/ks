@@ -16,12 +16,17 @@
  */
 package org.exoplatform.wiki.handler;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
+import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -37,89 +42,107 @@ import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
+import org.apache.jackrabbit.webdav.client.methods.DavMethod;
+import org.apache.jackrabbit.webdav.client.methods.MkColMethod;
+import org.apache.jackrabbit.webdav.client.methods.PutMethod;
 import org.exoplatform.wiki.IWikiHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A class to interact with an Exo RestService represented by wikiloader.groovy file (deployed one the server side)
+ * A class to interact with an Exo RestService represented by wikiloader.groovy
+ * file (deployed one the server side)
  */
 public class ExoWikiHandler implements IWikiHandler {
-  public static final String CHAR_TO_REPLACE = " *'\"+?&";
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ExoWikiHandler.class.toString());
+  public static final String  CHAR_TO_REPLACE  = " *'\"+?&";
+
+  private static final Logger LOGGER           = LoggerFactory.getLogger(ExoWikiHandler.class.toString());
+
   private static final String DEFAULT_ENCODING = "UTF-8";
 
-  private DefaultHttpClient httpClient;
-  private String targetHost;
+  private DefaultHttpClient   httpClient;
+
+  private HttpClient          davClient;
+
+  private String              targetHost;
 
   public ExoWikiHandler(String targetHost) {
     this.targetHost = targetHost;
   }
 
   public void start(String targetUser, String targetPwd) {
-    httpClient = buildHttpClientOnTarget(targetUser, targetPwd);
+    httpClient = new DefaultHttpClient();
+    UsernamePasswordCredentials creds = new UsernamePasswordCredentials(targetUser, targetPwd);
+    httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
+
+    davClient = new HttpClient();
+    davClient.getState().setCredentials(org.apache.commons.httpclient.auth.AuthScope.ANY,
+                                        new org.apache.commons.httpclient.UsernamePasswordCredentials(targetUser, targetPwd));
   }
 
   public void stop() {
     httpClient.getConnectionManager().shutdown();
-  }
-
-  private DefaultHttpClient buildHttpClientOnTarget(String targetUser, String targetPwd) {
-    DefaultHttpClient httpclient = new DefaultHttpClient();
-    UsernamePasswordCredentials creds = new UsernamePasswordCredentials(targetUser, targetPwd);
-    httpclient.getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
-    return httpclient;
+    davClient.getHttpConnectionManager().closeIdleConnections(1000);
   }
 
   /**
    * Create a new Page, returns the new name, or null if already exists.
-   *
-   * @param path  where the page have to be created
- * @param name  of the page to create
-   * @return page name
+   * 
+   * @param path where the page have to be created
+   * @param pageName of the page to create
+   * @return created or existing page name
    */
-  public String createPage(String path, String name, boolean hasChildren, String syntax) {
-    String pageName = name;
-    try
-    {
-      int statusCode = getHttpStatusOfPageOnTarget(path, pageName);
+  public String createPage(String path, String pageName, boolean hasChildren, String syntax) {
+    String createdPageName = null;
+    try {
+      int statusCode = getHttpStatusOfPageOnTarget(path, normalizePageName(pageName));
       if (statusCode == 404) {
 
-        LOGGER.info(String.format("[Create] %s//%s", path, pageName));
-        HttpGet httpGet = new HttpGet(targetHost + "/rest/private/wikiloader/create?path=" + URLEncoder.encode(path, DEFAULT_ENCODING) + "&name=" + URLEncoder.encode(pageName, DEFAULT_ENCODING) + "&syntax=" + syntax);
+        // LOGGER.info(String.format("[Create] %s/%s", path, pageName));
+        HttpGet httpGet = new HttpGet(targetHost + "/rest/wikiloader/create?path=" + URLEncoder.encode(path, DEFAULT_ENCODING) + "&name="
+            + URLEncoder.encode(pageName, DEFAULT_ENCODING) + "&syntax=" + syntax);
+        String uri = httpGet.getURI().toString();
         HttpResponse responseCreate = httpClient.execute(httpGet);
         int statusCodeRC1 = responseCreate.getStatusLine().getStatusCode();
+
         if (statusCodeRC1 == 200) {
-          pageName = IOUtils.toString(responseCreate.getEntity().getContent());
+          createdPageName = IOUtils.toString(responseCreate.getEntity().getContent());
+          if (createdPageName.startsWith("%%")) {
+            return null;
+          }
         } else {
-          String message = IOUtils.toString(responseCreate.getEntity().getContent());
-          LOGGER.error(String.format("[Create] ERROR During Page creation : %s/%s (Cause: %s)", path, pageName, message));
+          String message = "";
+          if (responseCreate != null && responseCreate.getEntity() != null) {
+             message = IOUtils.toString(responseCreate.getEntity().getContent());
+          }
+          LOGGER.error(String.format("[Create] Failed to create [Err = %i] - Cause: %s", statusCodeRC1, message));
           return null;
         }
 
         HttpGet httpCheckCreated = new HttpGet(targetHost + "/rest/private/wikiloader/check?path="
-            + URLEncoder.encode(path + "/" + pageName, DEFAULT_ENCODING));
+            + URLEncoder.encode(path + "/" + createdPageName, DEFAULT_ENCODING));
         HttpResponse responseCheck2 = httpClient.execute(httpCheckCreated);
         int statusCodeRC2 = responseCheck2.getStatusLine().getStatusCode();
         responseCheck2.getEntity().consumeContent();
         if (statusCodeRC2 != 200) {
-          LOGGER.info(String.format("[Create] ERROR Created page %s/%s not found.", path, pageName));
+          LOGGER.info(String.format("[Create] Created page %s/%s not found.", path, pageName));
           return pageName;
         }
-        return pageName;
+        return createdPageName;
       } else if (statusCode == 200) {
-        LOGGER.error(String.format("[Create] WARNING page already exists : %s : %s/%s", statusCode, path, pageName));
+        LOGGER.warn(String.format("[Create] Page already created"));
         return null;
       }
-    } catch (IOException exception) {
-      LOGGER.error(String.format("[Create] Error creating WIKI_PAGE : %s/%s", path, pageName));
+    } catch (Exception exception) {
+      LOGGER.error(String.format("[Create] Error creating page. Err = ", exception.getMessage()));
     }
     return null;
   }
 
   public int getHttpStatusOfPageOnTarget(String path, String pageName) throws IOException {
-    HttpGet httpCheck = new HttpGet(targetHost + "/rest/private/wikiloader/check?path=" + URLEncoder.encode(path + "/" + pageName, DEFAULT_ENCODING));
+    HttpGet httpCheck = new HttpGet(targetHost + "/rest/wikiloader/check?path=" + URLEncoder.encode(path + "/" + pageName, DEFAULT_ENCODING));
+    String uri = httpCheck.getURI().toString();
     HttpResponse responseCheck = httpClient.execute(httpCheck);
     int statusCode = responseCheck.getStatusLine().getStatusCode();
     responseCheck.getEntity().consumeContent();
@@ -154,19 +177,92 @@ public class ExoWikiHandler implements IWikiHandler {
     return false;
   }
 
-  public void uploadAttachment(String targetSpace, String pageName, String attachmentName, String contentType, byte[] data) {
+  public boolean uploadAttachment(String targetSpace, String pageName, String attachmentName, String contentType, InputStream stream) {
     try {
       httpClient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
       HttpPost post = new HttpPost(targetHost + "/rest/wikiloader/upload/" + targetSpace + "/" + pageName + "/");
       MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-      multipartEntity.addPart("File", new InputStreamBody(new ByteArrayInputStream(data), contentType, attachmentName));
+      multipartEntity.addPart("File", new InputStreamBody(stream, contentType, attachmentName));
       post.setEntity(multipartEntity);
 
       HttpResponse response = httpClient.execute(post);
       response.getEntity().consumeContent();
+      return true;
     } catch (IOException exception) {
-      LOGGER.error("Upload attachment fail");
+      LOGGER.error("[Upload] attachment fail");
     }
+    return false;
+  }
+
+  public boolean uploadDocument(String targetSpace, String path, String name, String contentType, InputStream stream) {
+
+    // Sample
+    // /rest/private/jcr/repository/collaboration/Groups/spaces/migration_test_sandbox/Documents
+
+    if (!targetSpace.startsWith("group/spaces/")) {
+      return false;
+    }
+    String space = targetSpace.substring("group/spaces/".length());
+    if (space.isEmpty()) {
+      return false;
+    }
+    try {
+      String targetUrl = targetHost + "/rest/private/jcr/repository/collaboration/Groups/spaces/" + space + "/Documents/";
+      String filePath = URLEncoder.encode(path, DEFAULT_ENCODING).replaceAll("%2F", "/");
+      String uriFile = targetUrl + filePath + "/" + URLEncoder.encode(name, DEFAULT_ENCODING);
+
+      // Check File exists
+      if (checkURIExists(uriFile)) {
+        LOGGER.error("[Upload] Document already exists [" + path + "/" + name + "], not replaced.");
+      } else {
+
+        String uriPath = targetUrl + filePath + "/";
+        // Check parent dir exists
+        if (!checkURIExists(uriPath)) {
+          // Build intermediate folders if not alredy exists
+          String[] pathArray = path.split("/");
+          String pathInProgress = targetUrl;
+          for (String pathElement : pathArray) {
+            pathInProgress += URLEncoder.encode(pathElement, DEFAULT_ENCODING) + "/";
+            // Check directory
+            if (!checkURIExists(pathInProgress)) {
+              // Create dir
+              DavMethod mkCol = new MkColMethod(pathInProgress);
+              int returnCode = davClient.executeMethod(mkCol);
+              if (returnCode != 201) {
+                LOGGER.error("[Upload] Error creating directory [" + path + "] [Err:" + returnCode + "]");
+                return false;
+              }
+            }
+          }
+          LOGGER.info("[Upload] Created directory [" + path + "]");
+        }
+
+        // Upload file
+        PutMethod method = new PutMethod(uriFile);
+        RequestEntity requestEntity = new InputStreamRequestEntity(stream);
+        method.setRequestEntity(requestEntity);
+        int returnCode = davClient.executeMethod(method);
+        if (returnCode == 201) {
+          LOGGER.info("[Upload] Document uploaded [" + path + "/" + name + "]");
+        } else {
+          LOGGER.info("[Upload] Document NOT uploaded [Err=" + returnCode + "]");
+        }
+      }
+
+      return true;
+    } catch (Exception e) {
+      LOGGER.error("[Upload] Document upload error [" + path + "/" + name + "] " + e.getMessage());
+    }
+    return false;
+  }
+
+  private boolean checkURIExists(String uriFile) throws IOException, HttpException {
+    int returnCode = 0;
+    GetMethod propFind = new GetMethod(uriFile);
+    returnCode = davClient.executeMethod(propFind);
+    davClient.getHttpConnectionManager().closeIdleConnections(0);
+    return returnCode == 200;
   }
 
   public String normalizePageName(String title) {
@@ -175,7 +271,7 @@ public class ExoWikiHandler implements IWikiHandler {
 
   /**
    * Change the name of a page to an acceptable one for the wiki engine
-   *
+   * 
    * @param title page title
    * @param replacedChars chars to be replaced
    * @param replacementChar the char to use

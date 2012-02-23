@@ -47,10 +47,13 @@ public interface CrawlerConstants {
 
   static String PARAMETER_OPTION_MAX_ATT_SIZE         = "maxAttachmentSize";
 
+  static String PARAMETER_OPTION_UPLOAD_TYPE          = "uploadType";
+  static String OPTION_UPLOAD_TYPE_ATTACHEMENT        = "attachment";
+  static String OPTION_UPLOAD_TYPE_DOCUMENT           = "document";
+
   static String PARAMETER_ACTIONS                     = "migrationActions";
 
   static String ACTION_CHECK                          = "check";
-
   static String ACTION_PERFORM                        = "perform";
 
   static String PARAMETER_TARGET_TYPE                 = "targetType";
