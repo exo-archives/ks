@@ -21,6 +21,8 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.jcr.datamodel.IllegalNameException;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -63,6 +65,8 @@ import org.exoplatform.wiki.webui.extension.UITemplateSettingForm;
 public class SaveTemplateActionComponent extends UIComponent {
 
   public static final String                   ACTION   = "SaveTemplate";
+  
+  private static final Log log = ExoLogger.getLogger("wiki:SaveTemplateActionComponent");
   
   private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsEditAddTemplateModeFilter() });
 
@@ -155,6 +159,7 @@ public class SaveTemplateActionComponent extends UIComponent {
                                                   ApplicationMessage.INFO));
         }
       } catch (Exception e) {
+        log.error("An exception happens when saving the page with title:" + title, e);
         event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIPageToolBar.msg.Exception",
                                                                                        null,
                                                                                        ApplicationMessage.ERROR));
