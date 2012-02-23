@@ -102,7 +102,7 @@ public class ExoWikiHandler implements IWikiHandler {
         // LOGGER.info(String.format("[Create] %s/%s", path, pageName));
         HttpGet httpGet = new HttpGet(targetHost + "/rest/wikiloader/create?path=" + URLEncoder.encode(path, DEFAULT_ENCODING) + "&name="
             + URLEncoder.encode(pageName, DEFAULT_ENCODING) + "&syntax=" + syntax);
-        String uri = httpGet.getURI().toString();
+        // String uri = httpGet.getURI().toString();
         HttpResponse responseCreate = httpClient.execute(httpGet);
         int statusCodeRC1 = responseCreate.getStatusLine().getStatusCode();
 
@@ -142,7 +142,7 @@ public class ExoWikiHandler implements IWikiHandler {
 
   public int getHttpStatusOfPageOnTarget(String path, String pageName) throws IOException {
     HttpGet httpCheck = new HttpGet(targetHost + "/rest/wikiloader/check?path=" + URLEncoder.encode(path + "/" + pageName, DEFAULT_ENCODING));
-    String uri = httpCheck.getURI().toString();
+    // String uri = httpCheck.getURI().toString();
     HttpResponse responseCheck = httpClient.execute(httpCheck);
     int statusCode = responseCheck.getStatusLine().getStatusCode();
     responseCheck.getEntity().consumeContent();
@@ -203,7 +203,7 @@ public class ExoWikiHandler implements IWikiHandler {
       return false;
     }
     String space = targetSpace.substring("group/spaces/".length());
-    if (space.isEmpty()) {
+    if (space.length() == 0) {
       return false;
     }
     try {
