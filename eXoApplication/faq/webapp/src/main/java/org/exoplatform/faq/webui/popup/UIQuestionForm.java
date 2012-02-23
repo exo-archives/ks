@@ -552,32 +552,26 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
         questionContent = CommonUtils.encodeSpecialCharInTitle(questionContent);
 
         Question question = questionForm.getQuestion();
-
-        if (questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1) { // Add new question
-          question = new Question();
+        if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1) { //Add new question
+          question = new Question() ;
           String catId = questionForm.getCategoryId();
           question.setCategoryId((catId.indexOf("/") > 0) ? catId.substring(catId.lastIndexOf("/") + 1) : catId);
-          question.setCategoryPath(questionForm.getCategoryId());
-          question.setRelations(new String[] {});
+          question.setCategoryPath(catId);
+          question.setRelations(new String[] {""});
+          questionForm.isModerate = questionForm.getFAQService().isModerateQuestion(catId);
         } else { // Edit question
-          isNew = false;
+          isNew = false ;
+          String questionPath = question.getPath();
+          String categorySubPath = questionPath.substring(0, questionPath.indexOf("/" + org.exoplatform.faq.service.Utils.QUESTION_HOME));
+          questionForm.isModerate = questionForm.getFAQService().isModerateQuestion(categorySubPath);
         }
 
-        if (questionForm.isModerate) {
-          if (questionForm.isAddCheckBox) {
-            question.setApproved(questionForm.getUICheckBoxInput(IS_APPROVED).isChecked());
-            question.setActivated(questionForm.getUICheckBoxInput(IS_ACTIVATED).isChecked());
-          } else if (isNew) {
-            question.setApproved(false);
-          }
-        } else {
-          if (questionForm.isAddCheckBox) {
-            question.setApproved(questionForm.getUICheckBoxInput(IS_APPROVED).isChecked());
-            question.setActivated(questionForm.getUICheckBoxInput(IS_ACTIVATED).isChecked());
-          } else if (isNew) {
-            question.setApproved(true);
-          }
+        question.setApproved(!questionForm.isModerate || (questionForm.isMode && isNew)) ;
+        if(questionForm.isAddCheckBox){
+          question.setApproved(questionForm.getUICheckBoxInput(IS_APPROVED).isChecked()) ;
+          question.setActivated(questionForm.getUICheckBoxInput(IS_ACTIVATED).isChecked()) ;
         }
+
         question.setLanguage(questionForm.getDefaultLanguage());
         question.setAuthor(author);
         question.setEmail(emailAddress);
@@ -635,23 +629,20 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
           // end discuss
           if (questionForm.getFAQService().saveQuestion(question, isNew, questionForm.faqSetting_) == null) {
             warning("UIQuestions.msg.question-deleted", false);
-            isNew = false;
-          }
-          if (isNew) {
-            if (!questionForm.isModerate || questionForm.isMode) {
-              info("UIQuestionForm.msg.add-new-question-successful", false);
-            } else {
-              info("UIQuestionForm.msg.question-not-is-approved", false);
-            }
+            portlet.cancelAction();
+            return;
           }
         } catch (Exception e) {
-          questionForm.log.error("Can not run discuss question in to forum portlet");
+          questionForm.log.error("Can not run discuss question in to forum portlet", false);
+        }
+        if(!questionForm.isModerate || questionForm.isMode) {
+          if(isNew) info("UIQuestionForm.msg.add-new-question-successful", false) ;
+        } else {
+          info("UIQuestionForm.msg.question-not-is-approved", false) ;
         }
 
         if (!questionForm.isChildOfManager) {
-          UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
-          popupAction.deActivate();
-          event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+          portlet.cancelAction();
         } else {
           UIQuestionManagerForm questionManagerForm = questionForm.getParent();
           UIResponseForm responseForm = questionManagerForm.getChild(UIResponseForm.class);
