@@ -69,7 +69,7 @@ public class WikbookWikiHandler implements IWikiHandler {
   public void stop() {
   }
 
-  public String normalizePageName(String title) {
+  public String normalizePageName(String title, boolean replaceSpaces) {
     return title;
   }
 

@@ -53,7 +53,7 @@ public interface IWikiHandler {
    * @title the page name to normalize
    * @return Normalized page name (no special chars)
    **/
-  String normalizePageName(String title);
+  String normalizePageName(String name, boolean replaceSpaces);
 
   /**
    * Put some content in a page

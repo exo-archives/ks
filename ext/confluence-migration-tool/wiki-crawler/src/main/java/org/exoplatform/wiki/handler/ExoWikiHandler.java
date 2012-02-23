@@ -55,7 +55,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ExoWikiHandler implements IWikiHandler {
 
-  public static final String  CHAR_TO_REPLACE  = " *'\"+?&";
+  public static final String  CHAR_TO_REPLACE  = "*'\"+?&";
 
   private static final Logger LOGGER           = LoggerFactory.getLogger(ExoWikiHandler.class.toString());
 
@@ -96,12 +96,14 @@ public class ExoWikiHandler implements IWikiHandler {
   public String createPage(String path, String pageName, boolean hasChildren, String syntax) {
     String createdPageName = null;
     try {
-      int statusCode = getHttpStatusOfPageOnTarget(path, normalizePageName(pageName));
+      String normalizedPageTitle = normalizePageName(pageName, false);
+      String normalizePageName = normalizePageName(pageName, true);
+      int statusCode = getHttpStatusOfPageOnTarget(path, normalizePageName);
       if (statusCode == 404) {
 
         // LOGGER.info(String.format("[Create] %s/%s", path, pageName));
         HttpGet httpGet = new HttpGet(targetHost + "/rest/wikiloader/create?path=" + URLEncoder.encode(path, DEFAULT_ENCODING) + "&name="
-            + URLEncoder.encode(pageName, DEFAULT_ENCODING) + "&syntax=" + syntax);
+            + URLEncoder.encode(normalizedPageTitle, DEFAULT_ENCODING) + "&syntax=" + syntax);
         // String uri = httpGet.getURI().toString();
         HttpResponse responseCreate = httpClient.execute(httpGet);
         int statusCodeRC1 = responseCreate.getStatusLine().getStatusCode();
@@ -265,8 +267,9 @@ public class ExoWikiHandler implements IWikiHandler {
     return returnCode == 200;
   }
 
-  public String normalizePageName(String title) {
-    return normalizePageName(title, CHAR_TO_REPLACE, '_');
+  public String normalizePageName(String title, boolean replaceSpaces) {
+    String replacedChars = CHAR_TO_REPLACE + (replaceSpaces ? " " : "");
+    return normalizePageName(title, replacedChars, '_');
   }
 
   /**

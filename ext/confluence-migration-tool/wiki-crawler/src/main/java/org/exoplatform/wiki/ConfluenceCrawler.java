@@ -456,7 +456,7 @@ public class ConfluenceCrawler implements CrawlerConstants {
         // confluence.addComment(comment);
         // }
       } else {
-        String expectedPageName = wikiHandler.normalizePageName(pageName);
+        String expectedPageName = wikiHandler.normalizePageName(pageName, true);
         // Check if page exists or not
         if (wikiHandler.checkPageExists(path + "/" + expectedPageName)) {
           // Page exists, only by pass the content creation
