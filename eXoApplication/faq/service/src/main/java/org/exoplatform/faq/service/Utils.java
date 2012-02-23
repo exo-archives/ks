@@ -126,8 +126,8 @@ public class Utils {
           return true;
       }
     }
-    for (String s : listPlugin) {
-      if (tem.contains(s))
+    for (String s : tem) {
+      if (listPlugin.contains(s))
         return true;
     }
     return false;

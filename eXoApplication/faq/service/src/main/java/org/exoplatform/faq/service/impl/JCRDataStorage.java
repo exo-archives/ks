@@ -2958,71 +2958,46 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     }
     return null;
   }
-
-  @Override
-  public boolean isModerateAnswer(String id) throws Exception {
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
+  
+  private boolean getBooleanPropertyOfCategory(String id, String property) {
     try {
-      Node node = getFAQServiceHome(sProvider).getNode(id);
-      if (node.isNodeType(EXO_FAQ_QUESTION))
+      SessionProvider sProvider = CommonUtils.createSystemProvider();
+      Node node = getQuestionNode(sProvider, id);
+      if (node != null && node.isNodeType(EXO_FAQ_QUESTION)) {
         node = node.getParent().getParent();
-      return new PropertyReader(node).bool(EXO_IS_MODERATE_ANSWERS, false);
+      }
+      return new PropertyReader(node).bool(property);
     } catch (Exception e) {
-      log.error("Failed to check moderate answer", e);
+      return false;
     }
-    return false;
   }
 
   @Override
-  public boolean isModerateQuestion(String id) throws Exception {
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
-    try {
-      Node node = getFAQServiceHome(sProvider).getNode(id);
-      if (node.isNodeType(EXO_FAQ_QUESTION))
-        node = node.getParent().getParent();
-      return node.getProperty(EXO_IS_MODERATE_QUESTIONS).getBoolean();
-    } catch (PathNotFoundException e) {
-      return false;
-    } catch (Exception e) {
-      log.error("Failed to moderate question", e);
-    }
-    return false;
+  public boolean isModerateAnswer(String id) {
+    return getBooleanPropertyOfCategory(id, EXO_IS_MODERATE_ANSWERS);
+  }
+
+  @Override
+  public boolean isModerateQuestion(String id) {
+    return getBooleanPropertyOfCategory(id, EXO_IS_MODERATE_QUESTIONS);
   }
 
   @Override
   public boolean isViewAuthorInfo(String id) {
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
-    try {
-      Node node;
-      if (id == null)
-        node = getCategoryHome(sProvider, null);
-      else
-        node = getCategoryNode(sProvider, id);
-      if (node.isNodeType(EXO_FAQ_QUESTION))
-        node = node.getParent().getParent();
-      return new PropertyReader(node).bool(EXO_VIEW_AUTHOR_INFOR, false);
-    } catch (Exception e) {
-      log.error("Failed to check view author infor", e);
-    }
-    return false;
+    return getBooleanPropertyOfCategory(id, EXO_VIEW_AUTHOR_INFOR);
   }
 
   @Override
   public boolean isCategoryModerator(String categoryId, String user) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
-    boolean isCalMod = false;
     try {
-      List<String> userGroups = UserHelper.getAllGroupAndMembershipOfUser(user);
       Node node = getCategoryNode(sProvider, categoryId);
-      PropertyReader reader = new PropertyReader(node);
-      List<String> values = reader.list(EXO_MODERATORS, new ArrayList<String>());
-      if (!values.isEmpty())
-        isCalMod = Utils.hasPermission(userGroups, values);
+      List<String> values = new PropertyReader(node).list(EXO_MODERATORS, new ArrayList<String>());
+      List<String> userGroups = UserHelper.getAllGroupAndMembershipOfUser(user);
+      return Utils.hasPermission(userGroups, values);
     } catch (Exception e) {
-      log.error("Cheking whether category moderator failed: ", e);
+      return false;
     }
-
-    return isCalMod;
   }
 
   @Override
