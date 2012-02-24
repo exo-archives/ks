@@ -77,10 +77,10 @@ UIForumPortlet.prototype.numberIsCheckedForum = function(formName, checkAllName,
 		}
 	}
 	if(total > 1){
-		var text = String(multiAns).replace("?", "").replace('{0}', total) + "?";
+		var text = String(multiAns).replace("?", "").replace('{0}', total) + " ?";
 		return confirm(text);
 	} else if(total == 1) {
-		return confirm(String(onlyAns).replace("?", "") + "?");
+		return confirm(String(onlyAns).replace("?", "") + " ?");
 	} else {
 		alert(notChecked);
 		return false;

@@ -58,16 +58,16 @@
 									String classIconItem = action + "Icon";
 									String link = uicomponent.event(action,uicomponent.id,"category") ;
 									if(action.equals("RemoveForum")){
-										String deleteMoreForum = _ctx.appRes("UICategory.confirm.DeleteMoreForum") + inSpace;
-										String removeForum = _ctx.appRes("UITopicContainer.confirm.RemoveForum") + inSpace;
-										String notCheck = _ctx.appRes("UITopicDetail.msg.notCheckForum");
+										String deleteMoreForum = uicomponent.getConfirm(_ctx.appRes("UICategory.confirm.DeleteMoreForum") + inSpace);
+										String removeForum = uicomponent.getConfirm(_ctx.appRes("UITopicContainer.confirm.RemoveForum") + inSpace);
+										String notCheck = uicomponent.getConfirm(_ctx.appRes("UITopicDetail.msg.notCheckForum"));
 							%>
 								<li class="MenuItem">
 									<a class="ItemIcon $classIconItem" href="javaScript:if(eXo.forum.UIForumPortlet.numberIsCheckedForum('UICategory', 'UIFORUMCheckAllForum', '$deleteMoreForum', '$removeForum', '$notCheck')){$link;}"><%=nameItem%></a>
 								</li>
 							<% 
 									} else if(action.equals("DeleteCategory")){
-									String confirm = _ctx.appRes("UICategory.confirm.DeleteCategory") + inSpace + "?";
+									String confirm = uicomponent.getConfirm(_ctx.appRes("UICategory.confirm.DeleteCategory") + inSpace + "?");
 							%>
 								<li class="MenuItem">
 									<a class="ItemIcon $classIconItem" href="javascript:if(confirm('$confirm')){$link;}"><%=nameItem%></a>

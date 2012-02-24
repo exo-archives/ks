@@ -122,6 +122,11 @@ public class UICategory extends BaseForumForm {
   protected String getActionViewInfoUser(String linkType, String userName) {
     return getAncestorOfType(UIForumPortlet.class).getPortletLink(linkType, userName);
   }
+  
+  protected String getConfirm(String confirm) {
+    confirm = confirm.replace("'", "\\47").replace("\"", "\\42");
+    return confirm;
+  }
 
   public String getRSSLink(String cateId) {
     PortalContainer pcontainer = PortalContainer.getInstance();
