@@ -79,7 +79,7 @@ public class TestMacroRendering extends AbstractRenderingTestCase {
   }
 
   public void testRenderCodeMacro() throws Exception {
-    String expectedHtml = "<div class=\"box code\"><span style=\"font-weight: bold; color: #008000; \">&lt;html&gt;&lt;head&gt;</span>Cool!<span style=\"font-weight: bold; color: #008000; \">&lt;/head&gt;&lt;/html&gt;</span></div>";
+    String expectedHtml = "<div class=\"box code\"><span style=\"font-weight: bold; color: #8B008B; \">&lt;html&gt;&lt;head&gt;</span>Cool!<span style=\"font-weight: bold; color: #8B008B; \">&lt;/head&gt;&lt;/html&gt;</span></div>";
     assertEquals(expectedHtml, renderingService.render("{{code language=\"html\"}}<html><head>Cool!</head></html>{{/code}}", Syntax.XWIKI_2_0.toIdString(), Syntax.XHTML_1_0.toIdString(), false));
   }
   

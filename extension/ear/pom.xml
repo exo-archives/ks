@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.ks</groupId>
@@ -85,56 +86,31 @@
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
       <version>${gwt.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-servlet</artifactId>
       <version>${gwt.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-platform-wysiwyg-client</artifactId>
       <version>${org.xwiki.platform.version}</version>
+      <scope>provided</scope>
       <exclusions>
         <exclusion>
           <groupId>org.xwiki.platform</groupId>
-          <artifactId>xwiki-web-gwt-user</artifactId>
+          <artifactId>xwiki-platform-gwt-user</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.xwiki.platform</groupId>
+          <artifactId>xwiki-platform-wysiwyg-plugin-api</artifactId>
         </exclusion>
         <exclusion>
           <groupId>com.smartgwt</groupId>
           <artifactId>smartgwt</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>javax.validation</groupId>
-      <artifactId>validation-api</artifactId>
-      <version>${javax.validation.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-validator</artifactId>
-      <version>${hibernate-validator.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>javax.validation</groupId>
-          <artifactId>validation-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>javax.xml.bind</groupId>
-          <artifactId>jaxb-impl</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>javax.xml.bind</groupId>
-          <artifactId>jaxb-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.sun.xml.bind</groupId>
-          <artifactId>jaxb-impl</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -216,16 +192,6 @@
               <bundleFileName>ksResources.war</bundleFileName>
             </webModule>
             <jarModule>
-              <groupId>org.slf4j</groupId>
-              <artifactId>slf4j-api</artifactId>
-              <excluded>true</excluded>
-            </jarModule>
-            <jarModule>
-              <groupId>javax.jcr</groupId>
-              <artifactId>jcr</artifactId>
-              <excluded>true</excluded>
-            </jarModule>
-            <jarModule>
               <groupId>com.google.gwt</groupId>
               <artifactId>gwt-user</artifactId>
               <includeInApplicationXml>true</includeInApplicationXml>
@@ -235,7 +201,21 @@
               <artifactId>gwt-servlet</artifactId>
               <includeInApplicationXml>true</includeInApplicationXml>
             </jarModule>
-             
+            <jarModule>
+              <groupId>org.xwiki.platform</groupId>
+              <artifactId>xwiki-platform-wysiwyg-client</artifactId>
+              <includeInApplicationXml>true</includeInApplicationXml>
+            </jarModule>
+            <jarModule>
+              <groupId>org.slf4j</groupId>
+              <artifactId>slf4j-api</artifactId>
+              <excluded>true</excluded>
+            </jarModule>
+            <jarModule>
+              <groupId>javax.jcr</groupId>
+              <artifactId>jcr</artifactId>
+              <excluded>true</excluded>
+            </jarModule>
           </modules>
         </configuration>
       </plugin>

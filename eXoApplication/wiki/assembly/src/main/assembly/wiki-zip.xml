@@ -1,25 +1,22 @@
 <assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.1 http://maven.apache.org/xsd/assembly-1.1.1.xsd">
-    <id>wiki-archive</id>
-    <formats>
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.1 http://maven.apache.org/xsd/assembly-1.1.1.xsd">
+  <id>wiki-archive</id>
+  <formats>
     <format>zip</format>
-    </formats>
-    <includeBaseDirectory>false</includeBaseDirectory>
-    <dependencySets>
-     <dependencySet>
-       <includes>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <dependencySets>
+    <dependencySet>
+      <includes>
         <include>org.exoplatform.ks:exo.ks.eXoApplication.wiki.service</include>
         <include>com.google.gwt:gwt-servlet</include>
         <include>com.google.gwt:gwt-user</include>
-        <include>org.xwiki.platform:xwiki-platform-wysiwyg-client</include>
-        <include>org.apache.pdfbox:fontbox</include>
         <include>org.apache.commons:commons-lang3</include>
-        <include>javax.validation:validation-api</include>      
-        <include>org.hibernate:hibernate-validator</include>
+        <include>javax.validation:validation-api</include>
+        <include>javax.inject:javax.inject</include>
         <include>org.python:jython-standalone</include>
         <include>pygments:pygments</include>
         <include>net.sourceforge.htmlcleaner:htmlcleaner</include>
-        <include>org.xwiki.platform:xwiki-platform-model</include>
         <include>org.xwiki.commons:xwiki-commons-configuration-api</include>
         <include>org.xwiki.commons:xwiki-commons-context</include>
         <include>org.xwiki.commons:xwiki-commons-component-api</include>
@@ -28,41 +25,42 @@
         <include>org.xwiki.commons:xwiki-commons-xml</include>
         <include>org.xwiki.commons:xwiki-commons-script</include>
         <include>org.xwiki.commons:xwiki-commons-legacy-component</include>
-        <include>org.xwiki.platform:xwiki-core-rendering-macro-code</include>
         <include>org.xwiki.rendering:xwiki-rendering-api</include>
         <include>org.xwiki.rendering:xwiki-rendering-syntax-wikimodel</include>
+        <include>org.xwiki.rendering:xwiki-rendering-syntax-xwiki2</include>
+        <include>org.xwiki.rendering:xwiki-rendering-syntax-xhtml</include>
         <include>org.xwiki.rendering:xwiki-rendering-macro-toc</include>
         <include>org.xwiki.rendering:xwiki-rendering-macro-box</include>
         <include>org.xwiki.rendering:xwiki-rendering-macro-message</include>
-        <include>org.xwiki.rendering:xwiki-rendering-syntax-xwiki2</include>
-        <include>org.xwiki.rendering:xwiki-rendering-syntax-xhtml</include>
-
+        <include>org.xwiki.platform:xwiki-platform-rendering-macro-code</include>
+        <include>org.xwiki.platform:xwiki-platform-model</include>
+        <include>org.xwiki.platform:xwiki-platform-wysiwyg-client</include>
         <include>org.wikimodel:org.wikimodel.wem</include>
-
         <include>org.suigeneris:jrcs.diff</include>
         <include>org.suigeneris:jrcs.rcs</include>
         <include>ecs:ecs</include>
-       </includes>
-       <unpack>false</unpack>
-       <useTransitiveDependencies>false</useTransitiveDependencies>
-       <useTransitiveFiltering>false</useTransitiveFiltering>
-       <outputDirectory>lib</outputDirectory>
+        <include>net.sourceforge.cssparser:cssparser</include>
+      </includes>
+      <unpack>false</unpack>
+      <useTransitiveDependencies>false</useTransitiveDependencies>
+      <useTransitiveFiltering>false</useTransitiveFiltering>
+      <outputDirectory>lib</outputDirectory>
     </dependencySet>
     <dependencySet>
-       <includes>
-        <include>org.exoplatform.ks:exo.ks.eXoApplication.wiki.webapp</include> 
-       </includes>
-       <outputFileNameMapping>wiki.${artifact.extension}</outputFileNameMapping>
-       <unpack>false</unpack>
+      <includes>
+        <include>org.exoplatform.ks:exo.ks.eXoApplication.wiki.webapp</include>
+      </includes>
+      <outputFileNameMapping>wiki.${artifact.extension}</outputFileNameMapping>
+      <unpack>false</unpack>
     </dependencySet>
-    </dependencySets>
-    <fileSets>
-      <fileSet>
-        <directory>src/main/assembly</directory>
-        <outputDirectory>.</outputDirectory>
-        <includes>
-          <include>INSTALL.txt</include>
-        </includes>      
-      </fileSet>
-    </fileSets>
+  </dependencySets>
+  <fileSets>
+    <fileSet>
+      <directory>src/main/assembly</directory>
+      <outputDirectory>.</outputDirectory>
+      <includes>
+        <include>INSTALL.txt</include>
+      </includes>
+    </fileSet>
+  </fileSets>
 </assembly>

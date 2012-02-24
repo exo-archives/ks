@@ -24,11 +24,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.annotation.Requirement;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.rendering.block.Block;
@@ -83,7 +83,8 @@ public class CodeMacro extends AbstractBoxMacro<CodeMacroParameters> {
   /**
    * Used to parse content when language="none".
    */
-  @Requirement("plain/1.0")
+  @Inject
+  @Named("plain/1.0")
   private Parser              plainTextParser;
 
   /**
@@ -135,26 +136,7 @@ public class CodeMacro extends AbstractBoxMacro<CodeMacroParameters> {
   protected List<Block> highlight(CodeMacroParameters parameters, String content) throws ParseException,
                                                                                  ComponentLookupException {
     HighlightParser parser = null;
-
-    if (parameters.getLanguage() != null) {
-      try {
-        parser = getComponentManager().lookup(HighlightParser.class, parameters.getLanguage());
-        return parser.highlight(parameters.getLanguage(), new StringReader(content));
-      } catch (ComponentLookupException e) {
-        if (logger.isDebugEnabled()) {
-          logger.debug("Can't find specific highlighting parser for language ["
-                                + parameters.getLanguage() + "]",
-                            e);
-        }
-      }
-    }
-
-    if (logger.isDebugEnabled()) {
-      logger.debug("Trying the default highlighting parser");
-    }
-
-    parser = getComponentManager().lookup(HighlightParser.class, "default");
-
+    parser = getComponentManager().lookup(HighlightParser.class);
     return parser.highlight(parameters.getLanguage(), new StringReader(content));
   }
   

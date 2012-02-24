@@ -23,7 +23,6 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.rendering.reference.ObjectReferenceConverter;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiContext;
-import org.xwiki.component.annotation.Requirement;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.context.Execution;

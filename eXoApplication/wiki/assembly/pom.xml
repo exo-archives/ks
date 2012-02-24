@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.ks</groupId>
@@ -7,13 +8,10 @@
   </parent>
   <artifactId>exo.ks.eXoApplication.wiki.assembly</artifactId>
   <packaging>pom</packaging>
-
   <name>eXo KS assembly</name>
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-  
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
@@ -38,14 +36,19 @@
       <version>${gwt.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${org.apache.commons.version}</version>
+    </dependency>
+    <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
       <version>${javax.validation.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-validator</artifactId>
-      <version>${hibernate-validator.version}</version>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <version>${javax.inject.version}</version>
     </dependency>
     <dependency>
       <groupId>org.python</groupId>
@@ -63,23 +66,6 @@
       <version>${net.sourceforge.htmlcleaner.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-wysiwyg-client</artifactId>
-      <version>${org.xwiki.platform.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.commons</groupId>
-      <artifactId>xwiki-commons-configuration-api</artifactId>
-      <version>${org.xwiki.platform.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-model</artifactId>
-      <version>${org.xwiki.platform.version}</version>
-    </dependency>
-
-    <dependency>
       <groupId>org.xwiki.commons</groupId>
       <artifactId>xwiki-commons-context</artifactId>
       <version>${org.xwiki.platform.version}</version>
@@ -87,6 +73,11 @@
     <dependency>
       <groupId>org.xwiki.commons</groupId>
       <artifactId>xwiki-commons-component-api</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.commons</groupId>
+      <artifactId>xwiki-commons-configuration-api</artifactId>
       <version>${org.xwiki.platform.version}</version>
     </dependency>
     <dependency>
@@ -110,6 +101,11 @@
       <version>${org.xwiki.platform.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.xwiki.commons</groupId>
+      <artifactId>xwiki-commons-legacy-component</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.xwiki.rendering</groupId>
       <artifactId>xwiki-rendering-api</artifactId>
       <version>${org.xwiki.platform.version}</version>
@@ -117,6 +113,16 @@
     <dependency>
       <groupId>org.xwiki.rendering</groupId>
       <artifactId>xwiki-rendering-syntax-wikimodel</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-syntax-xwiki2</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-syntax-xhtml</artifactId>
       <version>${org.xwiki.platform.version}</version>
     </dependency>
     <dependency>
@@ -129,29 +135,26 @@
       <artifactId>xwiki-rendering-macro-message</artifactId>
       <version>${org.xwiki.platform.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.xwiki.rendering</groupId>
-      <artifactId>xwiki-rendering-syntax-xwiki2</artifactId>
+      <artifactId>xwiki-rendering-macro-toc</artifactId>
       <version>${org.xwiki.platform.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.xwiki.rendering</groupId>
-      <artifactId>xwiki-rendering-syntax-xhtml</artifactId>
-      <version>${org.xwiki.platform.version}</version>
-    </dependency>
-
-    <!-- don't upgrade version for code macro -->
     <dependency>
       <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-core-rendering-macro-code</artifactId>
-      <version>2.3.2</version>
+      <artifactId>xwiki-platform-rendering-macro-code</artifactId>
+      <version>${org.xwiki.platform.version}</version>
     </dependency>
-    <!--dependency>
-      <groupId>org.xwiki.contrib</groupId>
-      <artifactId>xwiki-macro-column</artifactId>
-      <version>${column-macro.version}</version>
-    </dependency-->
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-model</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-wysiwyg-client</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.wikimodel</groupId>
       <artifactId>org.wikimodel.wem</artifactId>
@@ -172,14 +175,13 @@
       <artifactId>ecs</artifactId>
       <version>${ecs.version}</version>
     </dependency>
-     
     <dependency>
-      <groupId>org.xwiki.rendering</groupId>
-      <artifactId>xwiki-rendering-macro-toc</artifactId>
-      <version>${org.xwiki.platform.version}</version>
+      <groupId>net.sourceforge.cssparser</groupId>
+      <artifactId>cssparser</artifactId>
+      <version>${cssparser.version}</version>
     </dependency>
   </dependencies>
-  
+
   <profiles>
     <profile>
       <id>wiki-zip</id>
@@ -209,4 +211,5 @@
       </build>
     </profile>
   </profiles>
+
 </project>

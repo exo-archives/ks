@@ -23,7 +23,6 @@ import org.exoplatform.wiki.rendering.internal.parser.DefaultXWikiConfluenceGene
 import org.wikimodel.wem.IWikiParser;
 import org.wikimodel.wem.confluence.ConfluenceWikiParser;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.annotation.Requirement;
 import org.xwiki.rendering.internal.parser.WikiModelConfluenceParser;
 import org.xwiki.rendering.internal.parser.wikimodel.XWikiGeneratorListener;
 import org.xwiki.rendering.listener.Listener;

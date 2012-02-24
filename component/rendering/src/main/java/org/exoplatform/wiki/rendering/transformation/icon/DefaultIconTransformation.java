@@ -26,7 +26,6 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.annotation.Requirement;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.component.phase.Initializable;
@@ -58,13 +57,13 @@ public class DefaultIconTransformation extends AbstractTransformation implements
   /**
    * Used to get the icon mapping information (suite of characters mapped to an icon name).
    */
-  @Requirement
+  @Inject
   private IconTransformationConfiguration configuration;
   
   /**
    * Used to get the current syntax parser.
    */
-  @Requirement
+  @Inject
   private ComponentManager componentManager;
 
   /**

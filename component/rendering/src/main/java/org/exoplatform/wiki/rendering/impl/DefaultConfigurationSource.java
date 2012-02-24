@@ -16,7 +16,11 @@
  */
 package org.exoplatform.wiki.rendering.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.xwiki.configuration.ConfigurationSource;
@@ -29,33 +33,49 @@ import org.xwiki.configuration.ConfigurationSource;
  */
 public class DefaultConfigurationSource implements ConfigurationSource {
 
+  private Map<String, Object> properties = new HashMap<String, Object>();
+  
+  public DefaultConfigurationSource() {
+    properties.put("rendering.macro.code.pygments.style", "perldoc");
+  }
+
   @Override
   public <T> T getProperty(String key, T defaultValue) {
-    return null;
+    return this.properties.containsKey(key) ? (T) this.properties.get(key) : defaultValue;
   }
 
   @Override
   public <T> T getProperty(String key, Class<T> valueClass) {
-    return (T) new Properties();
+    T result = null;
+    if (this.properties.containsKey(key)) {
+      result = (T) this.properties.get(key);
+    } else {
+      if (List.class.getName().equals(valueClass.getName())) {
+        result = (T) Collections.emptyList();
+      } else if (Properties.class.getName().equals(valueClass.getName())) {
+        result = (T) new Properties();
+      }
+    }
+    return result;
   }
 
   @Override
   public <T> T getProperty(String key) {
-    return null;
+    return (T) this.properties.get(key);
   }
 
   @Override
   public List<String> getKeys() {
-    return null;
+    return new ArrayList<String>(this.properties.keySet());
   }
 
   @Override
   public boolean containsKey(String key) {
-    return false;
+    return this.properties.containsKey(key);
   }
 
   @Override
   public boolean isEmpty() {
-    return false;
+    return this.properties.isEmpty();
   }
 }

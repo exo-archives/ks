@@ -16,8 +16,10 @@
  */
 package org.exoplatform.wiki.rendering.render.confluence;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.annotation.Requirement;
 import org.xwiki.rendering.internal.renderer.AbstractBlockRenderer;
 import org.xwiki.rendering.renderer.PrintRendererFactory;
 
@@ -31,7 +33,8 @@ import org.xwiki.rendering.renderer.PrintRendererFactory;
 @Component("confluence/1.0")
 public class ConfluenceSyntaxBlockRenderer extends AbstractBlockRenderer {
 
-  @Requirement("confluence/1.0")
+  @Inject
+  @Named("confluence/1.0")
   private PrintRendererFactory confluenceSyntaxRendererFactory;
 
   @Override

@@ -637,11 +637,6 @@
       <version>${javax.validation.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-validator</artifactId>
-      <version>${hibernate-validator.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.python</groupId>
       <artifactId>jython-standalone</artifactId>
       <version>${jython-standalone.version}</version>
@@ -651,7 +646,6 @@
       <artifactId>pygments</artifactId>
       <version>${pygments.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
@@ -662,19 +656,6 @@
       <artifactId>htmlcleaner</artifactId>
       <version>${net.sourceforge.htmlcleaner.version}</version>
     </dependency>
-
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-wysiwyg-client</artifactId>
-      <version>${org.xwiki.platform.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-model</artifactId>
-      <version>${org.xwiki.platform.version}</version>
-    </dependency>
-
     <dependency>
       <groupId>org.xwiki.commons</groupId>
       <artifactId>xwiki-commons-configuration-api</artifactId>
@@ -710,13 +691,11 @@
       <artifactId>xwiki-commons-script</artifactId>
       <version>${org.xwiki.platform.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.xwiki.commons</groupId>
       <artifactId>xwiki-commons-legacy-component</artifactId>
       <version>${org.xwiki.platform.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.xwiki.rendering</groupId>
       <artifactId>xwiki-rendering-api</artifactId>
@@ -725,6 +704,16 @@
     <dependency>
       <groupId>org.xwiki.rendering</groupId>
       <artifactId>xwiki-rendering-syntax-wikimodel</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-syntax-xwiki2</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-syntax-xhtml</artifactId>
       <version>${org.xwiki.platform.version}</version>
     </dependency>
     <dependency>
@@ -742,29 +731,21 @@
       <artifactId>xwiki-rendering-macro-message</artifactId>
       <version>${org.xwiki.platform.version}</version>
     </dependency>
-
-    <dependency>
-      <groupId>org.xwiki.rendering</groupId>
-      <artifactId>xwiki-rendering-syntax-xwiki2</artifactId>
-      <version>${org.xwiki.platform.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.rendering</groupId>
-      <artifactId>xwiki-rendering-syntax-xhtml</artifactId>
-      <version>${org.xwiki.platform.version}</version>
-    </dependency>
-
-    <!-- don't upgrade version for code macro -->
     <dependency>
       <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-core-rendering-macro-code</artifactId>
-      <version>2.3.2</version>
+      <artifactId>xwiki-platform-rendering-macro-code</artifactId>
+      <version>${org.xwiki.platform.version}</version>
     </dependency>
-    <!--dependency>
-      <groupId>org.xwiki.contrib</groupId>
-      <artifactId>xwiki-macro-column</artifactId>
-      <version>${column-macro.version}</version>
-    </dependency-->
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-model</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+    </dependency>
+        <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-wysiwyg-client</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.wikimodel</groupId>
       <artifactId>org.wikimodel.wem</artifactId>
@@ -790,13 +771,6 @@
       <artifactId>exo.ks.component.upgrade</artifactId>
       <version>${project.version}</version>
       <type>jar</type>
-    </dependency>
-
-    <dependency>
-      <groupId>org.codehaus.swizzle</groupId>
-      <artifactId>swizzle-jira</artifactId>
-      <version>${org.codehaus.swizzle.version}</version>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>

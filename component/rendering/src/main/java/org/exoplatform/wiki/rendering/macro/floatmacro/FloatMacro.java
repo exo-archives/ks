@@ -26,7 +26,6 @@ import javax.inject.Inject;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.wiki.rendering.macro.MacroUtils;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.annotation.Requirement;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.GroupBlock;

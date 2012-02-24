@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.ks</groupId>
@@ -20,33 +21,16 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.component.common</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.exoplatform.commons</groupId>
-      <artifactId>exo.platform.commons.testing</artifactId>
-      <version>${org.exoplatform.commons.version}</version>
-      <scope>test</scope>
-    </dependency>
+
     <dependency>
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-platform-model</artifactId>
       <version>${org.xwiki.platform.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-lang</groupId>
-          <artifactId>commons-lang</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
-
     <dependency>
       <groupId>org.xwiki.commons</groupId>
       <artifactId>xwiki-commons-context</artifactId>
@@ -56,8 +40,59 @@
       <groupId>org.xwiki.commons</groupId>
       <artifactId>xwiki-commons-component-api</artifactId>
       <version>${org.xwiki.platform.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
-
+    <dependency>
+      <groupId>org.xwiki.commons</groupId>
+      <artifactId>xwiki-commons-component-default</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.xwiki.commons</groupId>
+          <artifactId>xwiki-commons-component-observation</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.commons</groupId>
+      <artifactId>xwiki-commons-script</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.xwiki.commons</groupId>
+          <artifactId>xwiki-commons-observation-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.commons</groupId>
+      <artifactId>xwiki-commons-legacy-component</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-syntax-wikimodel</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.ant</groupId>
+          <artifactId>ant</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>xerces</groupId>
+          <artifactId>xercesImpl</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.jdom</groupId>
+          <artifactId>jdom</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
     <dependency>
       <groupId>org.xwiki.rendering</groupId>
       <artifactId>xwiki-rendering-syntax-xwiki2</artifactId>
@@ -68,88 +103,26 @@
       <artifactId>xwiki-rendering-syntax-xhtml</artifactId>
       <version>${org.xwiki.platform.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.xwiki.rendering</groupId>
       <artifactId>xwiki-rendering-api</artifactId>
       <version>${org.xwiki.platform.version}</version>
       <exclusions>
         <exclusion>
-          <groupId>xml-apis</groupId>
-          <artifactId>xml-apis</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>javax.xml.bind</groupId>
-          <artifactId>jaxb-api </artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.jdom</groupId>
-          <artifactId>jdom</artifactId>
+          <groupId>org.apache.ant</groupId>
+          <artifactId>ant</artifactId>
         </exclusion>
         <exclusion>
           <groupId>dom4j</groupId>
           <artifactId>dom4j</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>commons-lang</groupId>
-          <artifactId>commons-lang</artifactId>
-        </exclusion>
-        <exclusion>
           <groupId>xerces</groupId>
           <artifactId>xercesImpl</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.sun.xml.bind</groupId>
-          <artifactId>jaxb-impl</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.commons</groupId>
-      <artifactId>xwiki-commons-component-default</artifactId>
-      <version>${org.xwiki.platform.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.xwiki.platform</groupId>
-          <artifactId>xwiki-core-component-observation</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.commons</groupId>
-      <artifactId>xwiki-commons-script</artifactId>
-      <version>${org.xwiki.platform.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.xwiki.platform</groupId>
-          <artifactId>xwiki-core-observation-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.livetribe</groupId>
-          <artifactId>livetribe-jsr223</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.rendering</groupId>
-      <artifactId>xwiki-rendering-syntax-wikimodel</artifactId>
-      <version>${org.xwiki.platform.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>net.java.dev.javacc</groupId>
-          <artifactId>javacc</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.wikimodel</groupId>
-          <artifactId>org.wikimodel.wem</artifactId>
+          <groupId>org.jdom</groupId>
+          <artifactId>jdom</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -157,6 +130,12 @@
       <groupId>org.wikimodel</groupId>
       <artifactId>org.wikimodel.wem</artifactId>
       <version>${org.wikimodel.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>net.java.dev.javacc</groupId>
+          <artifactId>javacc</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <!-- Macros -->
     <dependency>
@@ -195,27 +174,17 @@
       <artifactId>exo.ks.component.macro.jira</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <!-- From 2.4 , difficult to integrate code macro -->
     <dependency>
       <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-core-rendering-macro-code</artifactId>
-      <version>2.3.2</version>
+      <artifactId>xwiki-platform-rendering-macro-code</artifactId>
+      <version>${org.xwiki.platform.version}</version>
       <exclusions>
         <exclusion>
           <groupId>commons-io</groupId>
           <artifactId>commons-io</artifactId>
         </exclusion>
-        <exclusion>
-          <groupId>org.xwiki.platform</groupId>
-          <artifactId>xwiki-core-rendering-api</artifactId>
-        </exclusion>
       </exclusions>
     </dependency>
-    <!--dependency>
-      <groupId>org.xwiki.contrib</groupId>
-      <artifactId>xwiki-macro-column</artifactId>
-      <version>${column-macro.version}</version>
-    </dependency-->
     <!-- Code macro depends on -->
     <dependency>
       <groupId>org.python</groupId>
@@ -232,6 +201,18 @@
       <artifactId>commons-lang</artifactId>
       <version>${commons-lang.version}</version>
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.exoplatform.commons</groupId>
+      <artifactId>exo.platform.commons.testing</artifactId>
+      <version>${org.exoplatform.commons.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

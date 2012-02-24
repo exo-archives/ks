@@ -16,9 +16,11 @@
  */
 package org.exoplatform.wiki.rendering.render.confluence;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.InstantiationStrategy;
-import org.xwiki.component.annotation.Requirement;
 import org.xwiki.component.descriptor.ComponentInstantiationStrategy;
 import org.xwiki.component.phase.Initializable;
 import org.xwiki.component.phase.InitializationException;
@@ -47,10 +49,11 @@ public class ConfluenceSyntaxRenderer extends AbstractChainingPrintRenderer impl
   /**
    * Needed by XWikiSyntaxChainingRenderer to serialize wiki link references.
    */
-  @Requirement("confluence/1.0/link")
+  @Inject
+  @Named("confluence/1.0/link")
   private ResourceReferenceSerializer linkReferenceSerializer;
   
-  @Requirement
+  @Inject
   private IconTransformationConfiguration iconTransformationConfiguration;
 
   /**

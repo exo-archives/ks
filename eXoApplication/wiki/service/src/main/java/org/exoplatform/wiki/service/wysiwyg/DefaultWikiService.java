@@ -38,7 +38,6 @@ import org.exoplatform.wiki.service.search.SearchResult;
 import org.exoplatform.wiki.service.search.WikiSearchData;
 import org.exoplatform.wiki.utils.Utils;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.annotation.Requirement;
 import org.xwiki.context.Execution;
 import org.xwiki.gwt.wysiwyg.client.wiki.Attachment;
 import org.xwiki.gwt.wysiwyg.client.wiki.AttachmentReference;
