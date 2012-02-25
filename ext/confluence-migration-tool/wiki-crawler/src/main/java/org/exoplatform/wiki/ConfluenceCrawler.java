@@ -238,7 +238,13 @@ public class ConfluenceCrawler implements CrawlerConstants {
    */
   public void initMacros() {
     // Supported macros list
-    MacroMap.addMacro(supportedMacrosMap, "*", "_", "+", "panel", "code", "color", "column", "info", "note", "pagetree", "toc", "section");
+    MacroMap.addMacro(supportedMacrosMap, 
+                      "*", 
+                      "_", 
+                      "+", 
+                      "panel", 
+                      "code", "color", "column", "info", "note", "pagetree", "toc", "section", 
+                      "children");
     MacroMap.addMacro(unsupportedMacrosMap,
                       "jiraissues",
                       "contentbylabel",
@@ -251,7 +257,9 @@ public class ConfluenceCrawler implements CrawlerConstants {
                       "noformat",
                       "tip",
                       "warning",
-                      "jira");
+                      "jira",
+                      "attachments"
+                      );
 
     // Detail status for those
     // "color", "+", "-", "_", "*", "panel", "column", "section",
@@ -460,7 +468,7 @@ public class ConfluenceCrawler implements CrawlerConstants {
         // Check if page exists or not
         if (wikiHandler.checkPageExists(path + "/" + expectedPageName)) {
           // Page exists, only by pass the content creation
-          createdPageName = pageName;
+          createdPageName = expectedPageName;
           LOGGER.warn("[Create] Content and attachements NOT replaced");
         } else {
           // Page really in error
