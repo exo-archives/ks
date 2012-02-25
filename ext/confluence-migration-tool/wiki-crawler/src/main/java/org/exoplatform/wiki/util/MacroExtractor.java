@@ -67,6 +67,7 @@ public final class MacroExtractor {
 
 
     newbody = removeBlocks("code", newbody);
+    newbody = removeBlocks("csv", newbody);
     newbody = removeBlocks("noformat", newbody);
     newbody = removeBlocks("style", newbody);
     return newbody;

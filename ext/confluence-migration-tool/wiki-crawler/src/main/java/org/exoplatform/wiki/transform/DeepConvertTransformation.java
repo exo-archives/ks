@@ -83,7 +83,7 @@ public class DeepConvertTransformation extends AbstractTransformation {
 
   public String formatContent(String macro, String content) {
 
-    if (macro.equals("noformat") || macro.equals("code"))
+    if (macro.equals("noformat") || macro.equals("code") || macro.equals("csv") || macro.equals("style"))
       return content;
 
     EmbeddableComponentManager ecm = new EmbeddableComponentManager();

@@ -16,10 +16,10 @@
  */
 package org.exoplatform.wiki.util;
 
-import junit.framework.TestCase;
-
 import java.util.Map;
 import java.util.Set;
+
+import junit.framework.TestCase;
 
 /**
  * Created by The eXo Platform SAS
@@ -228,4 +228,15 @@ public class MacroExtractorTest extends TestCase {
     assertEquals("{noformat}", content);
   }
 
+  public void testExtractMacroCSV() {
+    final String content = MacroExtractor.removeBlocks("csv", "{csv}inside{csv}");
+    assertEquals("{csv}", content);
+  }
+
+  public void testCSVMacro() {
+    Set<String> result = MacroExtractor.extractMacroWithParams("{csv} text {macro} text {csv}");
+    TestCase.assertTrue(result.contains("csv"));
+    TestCase.assertTrue(!result.contains("macro"));
+
+  }
 }
