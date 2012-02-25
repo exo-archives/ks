@@ -238,13 +238,23 @@ public class ConfluenceCrawler implements CrawlerConstants {
    */
   public void initMacros() {
     // Supported macros list
-    MacroMap.addMacro(supportedMacrosMap, 
-                      "*", 
-                      "_", 
-                      "+", 
-                      "panel", 
-                      "code", "color", "column", "info", "note", "pagetree", "toc", "section", 
-                      "children");
+    MacroMap.addMacro(supportedMacrosMap,
+                      "*",
+                      "_",
+                      "+",
+                      "panel",
+                      "code",
+                      "color",
+                      "column",
+                      "info",
+                      "note",
+                      "pagetree",
+                      "toc",
+                      "section",
+                      "children",
+                      "table",
+                      "table-cell",
+                      "table-row");
     MacroMap.addMacro(unsupportedMacrosMap,
                       "jiraissues",
                       "contentbylabel",
@@ -258,8 +268,15 @@ public class ConfluenceCrawler implements CrawlerConstants {
                       "tip",
                       "warning",
                       "jira",
-                      "attachments"
-                      );
+                      "attachments",
+                      "excel",
+                      "viewppt",
+                      "viewpdf",
+                      "uml-sequence",
+                      "widget",
+                      "table-plus",
+                      "tasklist",
+                      "bookmarks");
 
     // Detail status for those
     // "color", "+", "-", "_", "*", "panel", "column", "section",
