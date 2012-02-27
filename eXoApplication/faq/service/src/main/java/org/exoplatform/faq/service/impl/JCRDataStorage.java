@@ -2945,16 +2945,17 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node node = getFAQServiceHome(sProvider).getNode(id);
-      String path;
-      if (node.isNodeType(EXO_FAQ_QUESTION))
-        path = node.getParent().getParent().getPath();
-      else if (node.isNodeType(EXO_FAQ_CATEGORY))
-        path = node.getPath();
-      else
-        return null;
-      return path.substring(path.indexOf(Utils.CATEGORY_HOME));
+      String path = null;
+      if (node != null) {
+        if (node.isNodeType(EXO_FAQ_QUESTION)) {
+          path = node.getParent().getParent().getPath();
+        } else if (node.isNodeType(EXO_FAQ_CATEGORY)) {
+          path = node.getPath();
+        }
+        return path.substring(path.indexOf(Utils.CATEGORY_HOME));
+      }
     } catch (Exception e) {
-      log.debug("Failed to get category of path: " + id + "\n" + e.getMessage());
+      logDebug("Failed to get category of path: " + id + "\n" + e.getMessage());
     }
     return null;
   }
@@ -2963,13 +2964,14 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     try {
       SessionProvider sProvider = CommonUtils.createSystemProvider();
       Node node = getQuestionNode(sProvider, id);
-      if (node != null) {
+      if (node != null && node.isNodeType(EXO_FAQ_QUESTION)) {
         node = node.getParent().getParent();
       } else {
         node = getCategoryNode(sProvider, id);
       }
       return new PropertyReader(node).bool(property);
     } catch (Exception e) {
+      e.printStackTrace();
       return false;
     }
   }
