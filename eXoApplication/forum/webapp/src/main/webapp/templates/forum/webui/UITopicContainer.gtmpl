@@ -213,11 +213,12 @@
                                   link = "javaScript: void(0);" ;
                                   classDisable = "DisableMenuItem" ;
                                 }
+                                if(action.equals("RemoveForum") || (action.equals("MoveForum") && (forum.getId().indexOf(Utils.FORUM_SPACE_ID_PREFIX) == 0))) {
+                                	link = "javascript:if(confirm('" + uicomponent.getConfirm(action) + "')){" + link + ";}";
+                                }
                              %>
                                   <li class="$classDisable">
-                                    <a class="ItemIcon $classIcon" href="$link">
-                                      $itemLabel
-                                    </a>
+                                    <a class="ItemIcon $classIcon" href="$link">$itemLabel</a>
                                   </li>
                            <% } %>
                       </ul>
