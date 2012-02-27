@@ -28,4 +28,3 @@ org.exoplatform.wiki.rendering.filter.ConfluenceMacroFilter
 500:org.exoplatform.wiki.rendering.transformation.icon.DefaultIconTransformation
 500:org.exoplatform.wiki.rendering.internal.parser.confluence.DefaultWikiModelConfluenceParser
 org.exoplatform.wiki.rendering.internal.parser.confluence.ConfluenceLinkReferenceParser
-500:org.exoplatform.wiki.rendering.transformation.DefaultMacroTransformation
