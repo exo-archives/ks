@@ -86,7 +86,7 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
     @EventConfig(listeners = UITopicContainer.SetOpenForumActionListener.class),
     @EventConfig(listeners = UITopicContainer.SetCloseForumActionListener.class),
     @EventConfig(listeners = UITopicContainer.MoveForumActionListener.class),
-    @EventConfig(listeners = UITopicContainer.RemoveForumActionListener.class),// Menu
+    @EventConfig(listeners = UITopicContainer.RemoveForumActionListener.class,confirm="UITopicContainer.confirm.RemoveForum"),// Menu
                                                                                                                               // Topic
     @EventConfig(listeners = UITopicContainer.WatchOptionActionListener.class),
     
@@ -431,28 +431,13 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   public String[] getActionMenuForum() throws Exception {
     String[] actions = new String[] { "EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", 
                                       "SetCloseForum", "MoveForum", "RemoveForum", "ExportForum", "WatchOption", "BanIpForumTools" };
-    if (userProfile.getUserRole() > 0 || (userProfile.getUserRole() == 0 && 
-        (!ForumUtils.isEmpty(getAncestorOfType(UIForumPortlet.class).getForumIdOfSpace())))) {
+    if (userProfile.getUserRole() > 0 || (userProfile.getUserRole() == 0 && (forumId.indexOf(Utils.FORUM_SPACE_ID_PREFIX) == 0))) {
       actions = (String[]) ArrayUtils.removeElement(actions, "RemoveForum");
       actions = (String[]) ArrayUtils.removeElement(actions, "MoveForum");
     }
     return actions;
   }
 
-  protected String getConfirm(String action) {
-    String confirm;
-    if (action.equals("MoveForum")) {
-      confirm = WebUIUtils.getLabel(null, "UITopicContainer.confirm.MoveForum");
-    } else {
-      confirm = WebUIUtils.getLabel(null, "UITopicContainer.confirm.RemoveForum");
-    }
-    if (forumId.indexOf(Utils.FORUM_SPACE_ID_PREFIX) == 0) {
-      confirm = new StringBuffer(confirm)
-                .append(WebUIUtils.getLabel(null, "UICategory.confirm.in-space")).toString().replace("?", "") + " ?";
-    }
-    return confirm.replace("'", "\\47").replace("\"", "\\42");
-  }
-  
   public String[] getActionMenuTopic() throws Exception {
     String[] actions = { "EditTopic", "SetOpenTopic", "SetCloseTopic", "SetLockedTopic", "SetUnLockTopic", "SetStickTopic", "SetUnStickTopic", "SetMoveTopic", "SetDeleteTopic", "MergeTopic", "SetUnWaiting", "ApproveTopics", "ActivateTopics" };
     return actions;
