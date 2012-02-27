@@ -1,45 +1,47 @@
 <div class="UIResponse $uicomponent.id">
 	<% uiform.begin() %>
-		<div class="HorizontalLayout" style="*width:92%;">
+		<div class="HorizontalLayout">
 			<div class="UIFormInput">
-				<table width="100%">
+				<table>
 					<tbody>
 						<tr>
-							<td style="white-space:nowrap;" align="right">
-							<div style="padding-right:10px;line-height:24px;*line-height:20px"><label for="<%=uicomponent.TITLE_USERNAME%>"><%=_ctx.appRes("UICommentForm.title.Author")%>:</label></div>
+							<td class="FieldLabel">
+								<p><label for="<%=uicomponent.TITLE_USERNAME%>"><%=_ctx.appRes("UICommentForm.title.Author")%>:</label></p>
 							</td>
 							<td>
-								<div style="padding-right:10px;line-height:24px"><% uiform.renderChild(uicomponent.TITLE_USERNAME) %></div>
+								<p><% uiform.renderChild(uicomponent.TITLE_USERNAME) %></p>
 							</td>
 						</tr>
 						<tr>
-							<td style="white-space:nowrap;" align="right">
-								<div style="padding-right:10px;line-height:24px"><%=_ctx.appRes("UICommentForm.title.Language")%>: </div>
+							<td class="FieldLabel">
+								<p><%=_ctx.appRes("UICommentForm.title.Language")%>: </p>
 							</td>
-							<td style="white-space:nowrap;">
-								<div style="padding-right:10px;white-space:normal;line-height:24px"><%=uicomponent.languageSelected%></div>
-							</td>
-						</tr>
-						<tr>
-							<td style="white-space:nowrap;" align="right">
-								<div style="padding-right:10px;line-height:24px"><%=_ctx.appRes("UICommentForm.title.Question")%>: </div>
-							</td>
-							<td style="white-space:nowrap;">
-								<div style="padding-right:10px;white-space:normal;line-height:24px"><%=uicomponent.questionContent%></div>
+							<td>
+								<p><%=uicomponent.languageSelected%></p>
 							</td>
 						</tr>
 						<tr>
-							<td style="white-space:nowrap;" align="right">
-								<div style="padding-right:10px;line-height:24px"><%=_ctx.appRes("UICommentForm.title.Detail")%>: </div>
+							<td class="FieldLabel">
+								<p><%=_ctx.appRes("UICommentForm.title.Question")%>: </p>
 							</td>
-							<td style="white-space:nowrap;">
-								<div class="QuestionDetail">
+							<td>
+								<p><%=uicomponent.questionContent%></p>
+							</td>
+						</tr>
+						<tr>
+							<td class="FieldLabel">
+								<p><%=_ctx.appRes("UICommentForm.title.Detail")%>: </p>
+							</td>
+							<td>
+								<p class="QuestionDetail">
 									<span><%=uicomponent.getQuestionDetail();%></span>
-								</div>
+								</p>
 							</td>
 						</tr>
 						<tr>
-							<td style="white-space:nowrap;" align="right"><div style="padding-right:10px;line-height:24px"><%=_ctx.appRes("UICommentForm.title.Comment")%>: </div></td>
+							<td class="FieldLabel">
+								<p><%=_ctx.appRes("UICommentForm.title.Comment")%>: </p>
+							</td>
 							<td><% uiform.renderChild(uicomponent.COMMENT_CONTENT) %></td>
 						</tr>
 					</tbody>

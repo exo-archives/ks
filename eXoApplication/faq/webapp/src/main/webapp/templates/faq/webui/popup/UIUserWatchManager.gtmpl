@@ -4,10 +4,9 @@
 	String compId = uicomponent.getId() ; 
   def rcontext = _ctx.getRequestContext() ;	
  %>
-<div class="UIUserWatchManager $uicomponent.id" style="padding:8px;">
+<div class="UIUserWatchManager">
 		
 		<div class="UITabPane">
-			<div style="padding:2px;">
 	    	<div class="WorkingArea">
 					<%/* RECOMMENT TAB FOR WATCH QUESTION%>
 		     	<div class="UIHorizontalTabs" >
@@ -43,9 +42,9 @@
 		      <% END RECOMMENT TAB FOR WATCH QUESTION */%>
 		      <% uiform.begin() %>
 	        <input type="hidden" id="<%=uicomponent.RENDER_TAB%>" title="<%=uicomponent.RENDER_TAB%>" name="<%=uicomponent.RENDER_TAB%>" value="$uicomponent.selectedTabId">
-					<div style="background-color:#F3F3F3;">
+
 	        	<!-- div class="UITabContentContainer" -->
-	        	<div class="UITabContentContainer" style="border: 1px solid #C7C7C7;">
+	        	<div class="UITabContentContainer">
 	        		<%
 	            String display1 = "none" ;
 	            String display2 = "none" ;
@@ -58,7 +57,7 @@
 	            }
 	        		%>
 	        		<!-- manager for watch category -->
-      				<div class="UITabContent" style="display:$display1; padding-bottom:30px;">
+      				<div class="UITabContent" style="display:$display1;">
 								<div class="UIForm">
 						 			<div class="UIHorizontalLayout">
 						 				<div class="UIPermissionManager">
@@ -67,7 +66,7 @@
 						 							<thead>
 						 								<tr>
 							 								<th><%= _ctx.appRes("UIUserWatchManager.label.pathCategory"); %></th>
-							 								<th style="width:80px"><%= _ctx.appRes("UIUserWatchManager.label.action"); %></th>
+							 								<th class="Unwatch"><%= _ctx.appRes("UIUserWatchManager.label.action"); %></th>
 						 								</tr>
 						 							</thead>
 						 							<tbody>
@@ -85,14 +84,12 @@
 						 											String title = path ;
 						 											path = uicomponent.getSubString(path,120);
 						 									 %>
-						 										<td class="text" style="text-align:left"><a title="$title" href="$link">$path</a></td>
+						 										<td class="text"><a title="$title" href="$link">$path</a></td>
 						 									<% } else { %>
-						 										<td class="text" style="text-align:left"><a href="$link">$path</a></td>
+						 										<td class="text"><a href="$link">$path</a></td>
 						 									<% } %>
-						 									<td style="width:40px;">
-						 										<div onclick="$unWatch" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" style="float:left; cursor:pointer;">
-						 											<div class="DeleteWatchIcon" ></div>
-						 										</div>
+						 									<td>
+						 											<a onclick="$unWatch" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" class="DeleteWatchIcon" ></a>
 						 									</td>
 						 								</tr>
 						 								<% 
@@ -100,7 +97,7 @@
 						 								} else {
 						 									   %>
 						 										 <tr class="EvenRow">
-																		<td class="Tdbox" colspan="2" style="text-align:center"><%= _ctx.appRes("UIUserWatchManager.title.no-matches"); %></td>
+																		<td class="Tdbox" colspan="2"><%= _ctx.appRes("UIUserWatchManager.title.no-matches"); %></td>
 									  						</tr>
 														<% } %>
 						 							</tbody>
@@ -119,9 +116,9 @@
 						 				
 						 			</div>
 					 			</div>
-					 			<div style="margin:5px;">
-					 				<div style="font-weight:bold;"><%=_ctx.appRes("UIUserWatchManager.label.watchByEmail")%>:</div> 
-					 				<div class="EmailAddressIcon" style="color:gray; font-weight:bold;">$uicomponent.emailAddress</div>
+					 			<div class="ClearFix EmailAddress">
+					 				<div class="EmailAddressText"><%=_ctx.appRes("UIUserWatchManager.label.watchByEmail")%>:</div> 
+					 				<div class="EmailAddressIcon">$uicomponent.emailAddress</div>
 					 			</div>
  							</div>
  							
@@ -138,7 +135,7 @@
 						 							<thead>
 						 								<tr>
 							 								<th><%= _ctx.appRes("UIUserWatchManager.label.pathCategory"); %></th>
-							 								<th style="width:80px"><%= _ctx.appRes("UIUserWatchManager.label.action"); %></th>
+							 								<th class="Unwacth"><%= _ctx.appRes("UIUserWatchManager.label.action"); %></th>
 						 								</tr>
 						 							</thead>
 						 							<tbody>
@@ -156,21 +153,19 @@
 						 											String title = path ;
 						 											questionContent = uicomponent.getSubString(questionContent,120)
 						 									 %>
-						 											<td class="text" style="text-align:left;"><a title="$title" href="$link">$questionContent</a></td>
+						 											<td class="text"><a title="$title" href="$link">$questionContent</a></td>
 						 									<% } else { %>
-						 												<td class="text" style="text-align:left;"><a href="$link">$questionContent</a></td>
+						 												<td class="text"><a href="$link">$questionContent</a></td>
 						 									<% } %>
-						 									<td style="width:40px;" align="center">
-						 										<div onclick="$unWatch" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" style="float:left;">
-						 											<div class="DeleteWatchIcon" ></div>
-						 										</div>
+						 									<td>
+						 											<a onclick="$unWatch" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" class="DeleteWatchIcon" ></a>
 						 									</td>
 						 								</tr>
 					 								<% 
 					 									}
 					 								} else {%>
 						 										 <tr class="EvenRow">
-																		<td class="Tdbox" colspan="2" style="text-algin:center;"><%= _ctx.appRes("UIUserWatchManager.title.no-matches"); %></td>
+																		<td class="Tdbox" colspan="2"><%= _ctx.appRes("UIUserWatchManager.title.no-matches"); %></td>
 									  						</tr>
 											<% } %>
 						 							</tbody>
@@ -190,15 +185,13 @@
  							</div>
  							<% END RECOMMENT MANAGE WATCH QUESTION */%>
  						</div>
-					</div>
 					
 					<div class="UIAction">
-      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel");%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIAnswersPortlet.action.Cancel")%></a>
-    </div>
+			      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel");%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIAnswersPortlet.action.Cancel")%></a>
+			    </div>
 				<%uiform.end()%>
 				
 				</div>
-			</div>
 		</div>
 		
 </div>

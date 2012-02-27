@@ -2,7 +2,7 @@
 	import org.exoplatform.faq.service.Watch ;
 %>
 
-<div class="UIWatchManager $uicomponent.id" style="padding:8px;">
+<div class="UIWatchManager">
 		<% uiform.begin() %>
 		<div class="UIForm">
  			<div class="UIHorizontalLayout">
@@ -34,27 +34,21 @@
  										linkDelete = uicomponent.event("DeleteEmail", "$uicomponent.id", user);
 	 							 %>
 		 								<tr>
-		 									<td valign="top" align="left">$user</td>
-		 									<td valign="top" align="left">
+		 									<td>$user</td>
+		 									<td>
 		 										<% 
 		 										for(String str : email.split(",")){%>
-		 											<div style="margin-bottom:3px;">$str</div>
+		 											<div>$str</div>
 		 									<%}
 		 										%>
 		 									</td>
-		 									<td align="center" valign="top">
+		 									<td>
 		 										<%		 										
 						 							String linkCurrent = uicomponent.event("OpenCategory", categoryId)
 						 						%>
-		 										<div onclick="$linkCurrent" title="<%= _ctx.appRes("UIWatchManager.title.link"); %>" style="float:left; cursor:pointer;">
-		 											<div class="LinkWatchIcon"><span></span></div>
-		 										</div>		 										
-		 										<div onclick="$linkEdit" title="<%= _ctx.appRes("UIWatchManager.title.edit-watch"); %>" style="float:left; cursor:pointer;">
-		 											<div class="EditWatchIcon"><span></span></div>
-		 										</div>
-		 										<div onclick="$linkDelete" title="<%= _ctx.appRes("UIWatchManager.title.delete-watch"); %>" style="float:left; cursor:pointer;">
-		 											<div class="DeleteWatchIcon"><span></span></div>
-		 										</div>
+	 											<a onclick="$linkCurrent" title="<%= _ctx.appRes("UIWatchManager.title.link"); %>" class="LinkWatchIcon ActionIcon"><span></span></a>
+	 											<a onclick="$linkEdit" title="<%= _ctx.appRes("UIWatchManager.title.edit-watch"); %>" class="EditWatchIcon ActionIcon"><span></span></a>
+	 											<a onclick="$linkDelete" title="<%= _ctx.appRes("UIWatchManager.title.delete-watch"); %>" class="DeleteWatchIcon ActionIcon"><span></span></a>
 		 									</td>
 		 								</tr>
 	 								<% 

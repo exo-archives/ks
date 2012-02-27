@@ -3,7 +3,7 @@
 	import org.exoplatform.faq.service.Question;
 	import org.exoplatform.faq.webui.FAQUtils;
 %>
-<div class="ResultQuickSearch $uicomponent.id" style="padding:8px">
+<div class="ResultQuickSearch">
 		<% uiform.begin() %>
 		<div class="UIForm">
 					<div class="TitleMoveThreads"><%= _ctx.appRes("ResultQuickSearch.title.result"); %></div>
@@ -13,10 +13,10 @@
  									<table class="UIGrid" cellspacing="0" border="0" cellpadding="0">
  										<thead>
  											<tr>
- 												<th style="width:40px">&nbsp;</th>
+ 												<th class="IconContainer">&nbsp;</th>
  												<th><%= _ctx.appRes("ResultQuickSearch.title.name"); %></th>
- 												<th style="width:90px"><%= _ctx.appRes("ResultQuickSearch.title.createdate"); %></th>
- 												<th style="width:60px;"><%= _ctx.appRes("ResultQuickSearch.title.action"); %></th>
+ 												<th class="DateContainer"><%= _ctx.appRes("ResultQuickSearch.title.createdate"); %></th>
+ 												<th class="PreviewContainer"><%= _ctx.appRes("ResultQuickSearch.title.action"); %></th>
  											</tr>
  										</thead>
  										<tbody>
@@ -32,7 +32,7 @@
 						 						String linkQuestion = uicomponent.event("LinkQuestion",Id);
  										 %>
  											<tr class="EvenRow">
- 												<td class="text" style="text-align:center"><div class="$icon"><span></span></div></td>
+ 												<td><div class="$icon"><span></span></div></td>
  												<%
  												String title = name;
 												if(name.length()>90) {
@@ -42,16 +42,16 @@
  												
  												<% if(result.getType().equals("faqCategory")) {
  												 %>
- 												 	<td class="text" style="text-align:left"><a href="$categoryLink" title="$title">$name</a></td>
- 												 	<td class="text" style="text-align:center">$date</td>
- 													<td style="text-align:center">
- 														<div onclick="$categoryLink"><div class="FAQViewIcon" style="margin:0px auto;"></div></div>
+ 												 	<td class="text"><a href="$categoryLink" title="$title">$name</a></td>
+ 												 	<td>$date</td>
+ 													<td>
+ 														<div onclick="$categoryLink"><div class="FAQViewIcon"></div></div>
  													</td>	
  													<% } else { %>
- 													<td class="text" style="text-align:left"><a href="$linkQuestion" title="$title">$name</a></td>
- 												 	<td class="text" style="text-align:center">$date</td>
- 													<td style="text-align:center">
- 														<div onclick="$linkQuestion"><div class="FAQViewIcon" style="margin:0px auto;"></div></div>
+ 													<td class="text"><a href="$linkQuestion" title="$title">$name</a></td>
+ 												 	<td>$date</td>
+ 													<td>
+ 														<div onclick="$linkQuestion"><div class="FAQViewIcon"></div></div>
  													</td>
  													<% } %>
  											</tr>
@@ -60,7 +60,7 @@
  											} else {
  										 %>
  										 <tr class="EvenRow">
-												<td class="Tdbox" colspan="4" style="text-align:center">
+												<td class="Tdbox" colspan="4">
 													<div><%= _ctx.appRes("ResultSearch.title.no-matches"); %></div>
 												</td>
 			  							</tr>

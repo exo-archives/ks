@@ -1,0 +1,206 @@
+
+@import url('UIAddressEmailsForm/Stylesheet.css');
+@import url('UIFAQSettingForm/Stylesheet.css');
+
+/******************************	 ResultQuickSearch	***************************************/
+
+.UIAnswersPortlet .ResultQuickSearch {
+	padding: 8px;
+}
+
+.UIAnswersPortlet .ResultQuickSearch .IconContainer {
+	width: 40px;
+}
+
+.UIAnswersPortlet .ResultQuickSearch .DateContainer {
+	width: 90px;
+}
+
+.UIAnswersPortlet .ResultQuickSearch .PreviewContainer {
+	width: 60px;
+}
+
+.UIAnswersPortlet .ResultQuickSearch .UIGrid td {
+	text-align: center;
+}
+
+.UIAnswersPortlet .ResultQuickSearch .UIGrid .text {
+	text-align: left;
+}
+
+.UIAnswersPortlet .ResultQuickSearch .TitleMoveThreads {
+	line-height: 30px;
+	padding-left: 1px;
+	font-weight:bold;
+}
+
+/******************************	 FAQUIAddRelationQuestion	***************************************/
+.UIAnswersPortlet .FAQUIAddRelationQuestion .FAQViewChild {
+	display: none; 
+	padding-left: 30px; 
+	margin-top: 10px;
+}
+
+.UIAnswersPortlet .FAQUIAddRelationQuestion .FAQCate {
+	margin: 5px 0px;
+}
+
+/******************************	 FAQCommentForm	***************************************/
+.UIAnswersPortlet .UICommentForm .HorizontalLayout {
+	width: 92%;
+}
+
+.UIAnswersPortlet .UICommentForm .HorizontalLayout table {
+	width: 100%;
+}
+
+.UIAnswersPortlet .UICommentForm .HorizontalLayout table td {
+	white-space: nowrap;
+}
+
+.UIAnswersPortlet .UICommentForm .HorizontalLayout table td p {
+	margin: 0px;
+	padding-right: 10px;
+	line-height: 24px;
+}
+
+.UIAnswersPortlet .UICommentForm .HorizontalLayout table .FieldLabel {
+	text-align: right;
+	width: 200px;
+}
+
+/******************************	 FAQUIDeleteQuestionForm	***************************************/
+.UIAnswersPortlet .FAQUIDeleteQuestionForm .FAQUIDeleteQuestionContent {
+	margin: 10px;
+	padding: 10px;
+	background: #F3F3F3; 
+	border: 1px solid #E6F3F3;
+}
+
+.UIAnswersPortlet .FAQUIDeleteQuestionForm .QuestionLabel {
+	margin: 5px 2px 10px 2px; 
+	text-align: center; 
+	font-weight: bold;
+}
+
+.UIAnswersPortlet .FAQUIDeleteQuestionForm table td p {
+	padding: 5px 10px 5px 2px;
+	margin: 0px;
+}
+
+.UIAnswersPortlet .FAQUIDeleteQuestionForm .FieldLabel {
+	text-align: right;
+	width: 18%;
+}
+
+/******************************	 FAQUIDeleteQuestionForm	***************************************/
+.UIAnswersPortlet .FAQExportForm .UIFormGrid .FieldLabel {
+	white-space: nowrap;
+}
+
+/******************************	 FAQSendMailForm	***************************************/
+.UIAnswersPortlet .FAQSendMailForm .UIFormGrid .FieldContainer {
+	margin: 5px 0px 5px 5px;
+}
+
+.UIAnswersPortlet .FAQSendMailForm .UIFormGrid .FieldLabel {
+	width: 90px;
+	float: left;
+	text-align: right;
+	padding-right: 5px;
+}
+
+.UIAnswersPortlet .FAQSendMailForm .UIFormGrid .FieldComponent {
+	float: left;
+}
+
+.UIAnswersPortlet .FAQSendMailForm .UIFormGrid .link {
+	text-decoration: underline;
+}
+
+.UIAnswersPortlet .FAQSendMailForm .UIFormGrid .Star {
+	float: left;
+	width: 10px;
+}
+
+/******************************	 UIViewUserProfile	***************************************/
+.UIAnswersPortlet .UIViewUserProfile .ImgAvatarBorder {
+	width: 120px;
+	height: 120px;
+}
+
+/******************************	 UIWatchManager	***************************************/
+.UIAnswersPortlet .UIWatchManager {
+	padding: 8px;
+}
+
+.UIAnswersPortlet .UIWatchManager .ActionIcon {
+	float: left; 
+	cursor: pointer;
+	display: block;
+}
+
+.UIAnswersPortlet .UIWatchManager .EvenRow .Tdbox {
+	text-align: center;
+}
+
+/******************************	 UISettingForm	***************************************/
+.UIAnswersPortlet .UISettingForm .HorizontalLayout {
+	margin: 0px;
+}
+
+.UIAnswersPortlet .UISettingForm .SmallAvatarSetting {
+	float: left;
+	white-space: nowrap; 
+	padding: 2px 5px; 
+	text-align: center;
+}
+
+.UIAnswersPortlet .UISettingForm .SmallAvatarSetting a {
+	color: blue;
+	cursor: pointer;
+}
+
+/******************************	 UIWatchManager	***************************************/
+.UIAnswersPortlet .UIUserWatchManager {
+	padding: 8px;
+}
+
+.UIAnswersPortlet .UIUserWatchManager .UITabContentContainer {
+	border: 1px solid #c7c7c7;
+	background: #F3F3F3;
+}
+
+.UIAnswersPortlet .UIUserWatchManager .EmailAddress {
+	padding: 5px;
+}
+
+.UIAnswersPortlet .UIUserWatchManager .EmailAddressText {
+	float: left;
+	line-height: 20px;
+	font-weight: bold;
+}
+
+.UIAnswersPortlet .UIUserWatchManager .EmailAddressIcon {
+	padding: 0px 0px 0px 20px;
+	font-weight: bold;
+	color: gray;
+}
+
+.UIAnswersPortlet .UIUserWatchManager .UIGrid .Unwatch {
+	width: 80px;
+}
+
+.UIAnswersPortlet .UIUserWatchManager .UIGrid .DeleteWatchIcon {
+	float: left;
+	display: block;
+	cursor: pointer;
+}
+
+
+
+
+
+
+
+

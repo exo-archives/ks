@@ -13,13 +13,13 @@
 	<div class="TitleMoveThreads"><%= _ctx.appRes("UIMoveFAQForm.title.chooseCategory"); %>
 	  <% String linkRoot = uicomponent.event("Save", Utils.CATEGORY_HOME); %>	
 	</div>
-  <div class="ViewCategoryToSelect" style="margin:5px 0px 5px 0px ; padding-top:10px;">
-		<div style="padding-left:20px;">
+  <div class="ViewCategoryToSelect">
+		<div>
 			<a href="javaScript: void(0)" ondblclick="$linkRoot">
 				<img alt="<%= _ctx.appRes("UICategoryForm.label.category-home"); %>" src="/faq/skin/DefaultSkin/webui/background/HomeIcon.gif"/>
 			</a>
 		</div>
-		<div style="margin-left:30px;">
+		<div class="TreeContainer">
 			<%
 			List listCate = uicomponent.getListCate() ;
 			if(listCate.size() > 0) {
@@ -40,7 +40,7 @@
 						title = FAQUtils.getTitle(title) ; 
 						categoryName = FAQUtils.getSubString(categoryName, 50);
 		    	}
-		    	println "<div style=\"margin:5px 0px 5px 0px ;\">";
+		    	println "<div class=\"ClearFix\">";
 		    	println 	"<div class=\"Icon FAQCategoryViewMove\"><span></span></div>";
 		    	println		"<div id=\"FAQCate" + i + "\" style=\"float:left\">";
 		    	println 		"<a href=\"javaScript: void(0)\" onclick=\"eXo.faq.UIAnswersPortlet.treeView('FAQViewChild"+i+"')\" title=\"" + title + "\" ondblclick=\"" + link + "\">";
@@ -48,8 +48,7 @@
 		    	println			"</a>";
 		    	println 	"</div>";
 		    	println "</div>";
-		    	println "<div style=\"clear:left;\"><span></span></div>";
-		    	println "<div style=\"padding-left:30px ; margin-top:10px; display:none;\" id=\"FAQViewChild" + i + "\">";
+		    	println "<div class=\"FAQViewChild\" id=\"FAQViewChild" + i + "\">";
 		    }
 		    for(int i = 1; i <= listCate.get(listCate.size() - 1).getDeft(); i ++){
 		    	println "</div>";

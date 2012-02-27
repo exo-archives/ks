@@ -5,7 +5,7 @@ import org.exoplatform.faq.service.Cate;
 
 if(!uicomponent.isEditPortlet_){
 %>
-<div class="UISettingForm $uicomponent.id">
+<div class="UISettingForm">
 	<% uiform.begin() %>
 	 					<div class="HorizontalLayout">
 			 					<table class="UIFormGrid">								
@@ -49,10 +49,10 @@ if(!uicomponent.isEditPortlet_){
 										<tr>
 											<td class="FieldLabel"><%=_ctx.appRes("UISettingForm.label.Avatar")%>:</td>
 											<td>
-													<div style="float:left; color:blue; white-space:nowrap; padding:2px 5px; text-align:center;">
+													<div class="SmallAvatarSetting">
 														<img src="${uicomponent.getAvatarUrl()}" class="SmallImgAvatar ImgAvatarBorder" alt="<%=_ctx.appRes("UISettingForm.label.Avatar")%>"/>
 														<br/>
-														<a href="javaScript:void(0);" onclick="<%=uicomponent.event("ChangeAvatar")%>" style="color:blue; cursor:pointer;">
+														<a href="javaScript:void(0);" onclick="<%=uicomponent.event("ChangeAvatar")%>">
 															<%=_ctx.appRes("UISettingForm.action.ChangeAvatar")%>
 														</a>
 														<%

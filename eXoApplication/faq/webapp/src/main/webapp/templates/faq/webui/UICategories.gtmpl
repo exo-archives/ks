@@ -14,13 +14,13 @@
   String [] categoryAction;
   
 %>
-<div style="padding:0px 5px 2px 5px; line-height:28px;">
+<div class="UICategoriesContainer">
 <%uiform.begin()%>
   <div>
     <div class="AnswerToolbar">
       <div class="LeftBar">
         <div class="RightBar">
-          <div class="CenterBar" style="padding-left:10px;font-size:12px; text-align:center;">
+          <div class="CenterBar">
             <%
             String categoryName = uicomponent.getCurrentName();
             if(categoryName.length() <=20 || categoryName.indexOf("<img") >= 0){%>
@@ -64,7 +64,7 @@
     <div class="AnswerToolbar">
       <div class="LeftBar">
         <div class="RightBar">
-          <div class="CenterBar" style="padding-left:10px; font-size:12px; text-align:center;">
+          <div class="CenterBar">
               <span class="TextTitle"><%= _ctx.appRes("UICategories.title.Categories"); %></span>
           </div>
         </div>
@@ -78,7 +78,7 @@
 	       		<a href="<%=uicomponent.event("OpenCategory", uicomponent.parentCateID_)%>"></a>
 	      	</div>
         <%}%>
-        	<div style="padding:4px 0px 0px 0px;">
+        	<div>
         <%
           String classCss = "";
           long i = 0;

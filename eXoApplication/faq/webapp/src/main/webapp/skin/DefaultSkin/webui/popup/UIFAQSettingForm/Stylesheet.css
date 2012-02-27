@@ -1,0 +1,89 @@
+/********************* UIFAQSettingForm ***************************/
+.UIAnswersPortlet .UIFAQSettingForm .HorizontalLayout {
+	margin: 0px;
+}
+
+.UIAnswersPortlet .UIFAQSettingForm {
+	padding: 6px;
+}
+
+.UIAnswersPortlet .UIFAQSettingForm .TabPaneContent {
+	padding: 0px;
+}
+
+.UIAnswersPortlet .UIFAQSettingForm .CategoryIcon {
+	background: url('../../background/CategoryIcon.png') no-repeat right center;
+	float: left;
+	height: 20px;
+	margin: 0px;
+	width: 40px;
+	padding-top: 2px;
+}
+
+.UIAnswersPortlet .UIFAQSettingForm .CategoryIcon .checkbox {
+	height: 16px;
+}
+
+.UIAnswersPortlet .UIFAQSettingForm .LabelNameCategory {
+	float: left;
+	padding-left: 4px;
+	line-height: 22px;
+	cursor: pointer;
+}
+
+.UIAnswersPortlet .UIFAQSettingForm .TextAreContent {
+	width: 100%;
+	margin: auto;
+}
+
+.UIAnswersPortlet .UIFAQSettingForm .ViewQuestionsAtMove {
+	 margin:5px 0px ;
+	 padding:10px 0px;
+	 border: 3px double #b7b7b7;
+}
+
+.UIAnswersPortlet .UIFAQSettingForm .TabContentContainer {
+	 border: 1px solid white;
+	 border-top: none;
+}
+
+.UIAnswersPortlet .UIFAQSettingForm .UIAction {
+	 background: #F7F7F7;
+	 padding: 6px 0px 10px 0px;
+}
+
+.UIAnswersPortlet .UIFAQSettingForm .UITabPane .UITabContentContainer .UITabContent {
+	 border: none;
+	 height: auto;
+}
+
+.UIAnswersPortlet .UIFAQSettingForm .UITabPane .UITabContentContainer .UITabContent .HorizontalLayout {
+	 padding-left: 10px; 
+	 min-height: 280px;
+}
+
+.UIAnswersPortlet .UIFAQSettingForm .FAQDomNode .FAQCate {
+	 margin: 6px 0px;
+	 line-height: 22px;
+}
+
+.UIAnswersPortlet .UIFAQSettingForm .EditTempLateContent .LabelContent {
+	 margin-bottom: 5px;
+}
+
+.UIAnswersPortlet .UIFAQSettingForm .EditTempLateContent .TextContent {
+	 width: 200px; 
+	 margin: 30px auto;
+	 line-height: 20px;
+}
+
+.UIAnswersPortlet .UIFAQSettingForm #FAQRootChildren {
+	 padding-left:30px; 
+	 margin:10px 0px;
+}
+
+.UIAnswersPortlet .UIFAQSettingForm #ContentTemplate {
+	width: 99.5%;
+	height: 650px;
+	margin: auto;
+}

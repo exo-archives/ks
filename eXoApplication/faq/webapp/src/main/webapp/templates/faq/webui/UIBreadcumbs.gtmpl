@@ -8,11 +8,11 @@
 %>
 <div class="UIBreadcumbs" id="$uicomponent.id">
   <div class="BreadcumbsInfoBar">
-    <table style="table-layout: fixed">
+    <table>
       <tbody>
         <tr>
           <td class="ControlButtonContainer">
-            <div style="padding-left:5px;" class="ClearFix">
+
               <%  
                 if(uicomponent.getBreadcumbs().size() > 1){
               %>
@@ -54,16 +54,16 @@
                   }
                 t = t + 1 ;
               } %>
-             <div class="ScrollButtons" style="width:35px;_width:50px;padding: 4px 1px 0px 1px;">
+             <div class="ScrollButtons">
               <div title="<%=_ctx.appRes("UIBreadcumbs.label.Previous")%>">
                 <div title="<%=_ctx.appRes("UIBreadcumbs.label.Next")%>"><span></span></div>
               </div>
             </div>
 
               <% } %>
-             </div>
+
           </td>
-          <td style="width:310px;">
+          <td class="RightBreadcumbsInfoBar">
             <div class="SearchForm">
               <%uicomponent.renderChild(uicomponent.QUICK_SEARCH) ;%>
             </div>

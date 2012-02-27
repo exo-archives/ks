@@ -64,7 +64,7 @@
       </div>
     <%}%> 
   
-  <div style="padding: 15px 0 0; background:#F8F8F8; margin-bottom: 15px;">
+  <div class="FAQAnswerInfo">
     <%for(questionCate in questionCates) { 
         String question_ =  questionCate.getQuestion();
         question_ = question_.replaceAll("<br/>", " ");
@@ -137,7 +137,7 @@
     <% if (questionDetail_ != null && !questionDetail_.trim().isEmpty()) { %>
             <div class="TextDetailStyle"><span class="TextStyle">$questionDetail_</span></div>
       <% } %>
-    <div class="Answer" style="margin:3px 0px;">
+    <div class="Answer">
       <ul>
       <%for(answer in answers_){ 
           answer = uicomponent.render(answer);
@@ -146,7 +146,7 @@
       <%} %>
       </ul>
     </div>
-    <div style="height:18px;" class="ClearFix">
+    <div class="ClearFix BackTopIconContainer">
       <a class="BackTopIcon" href="#name${id_}"> </a>
     </div>
   <% } %>
@@ -185,7 +185,7 @@
       </div>
     </div>
     <%} %>
-    <div style="height:18px;" class="ClearFix">
+    <div class="ClearFix BackTopIconContainer">
       <a class="BackTopIcon" href="#${id}"> </a>
     </div>
   </div>
@@ -198,7 +198,6 @@
     </a>
 <% } %>
 </div>
-
 
 <style type="text/css">
 .UIFAQPortlet {
@@ -234,6 +233,12 @@
 }
 .UIFAQPortlet h6 {
   font-size:15px;
+}
+
+.UIFAQPortlet .FAQAnswerInfo {
+  padding: 15px 0 0; 
+  background:#F8F8F8; 
+  margin-bottom: 15px;
 }
 
 .UIFAQPortlet .FAQViewerBar {
@@ -372,6 +377,10 @@
   color: #ff6603;
 }
 
+.UIFAQPortlet .BackTopIconContainer {
+  height: 18px;
+}
+
 .UIFAQPortlet .BackTopIcon {
   background: url('/faq/skin/DefaultSkin/webui/background/BackTopIcon18x21.gif') no-repeat right;
   width: 21px; height: 18px;
@@ -380,6 +389,7 @@
 }
 
 .UIFAQPortlet .FAQViewerQuestionContent {
+	padding: 4px 0 0;
 }
 
 .UIFAQPortlet .FAQViewerContainer .FAQContainerQuest{

@@ -9,7 +9,7 @@
   <% uiform.begin() %>  
   <div class="UISearchForm ClearFix">
     <div class="FL"><label for="<%=uiform.FIELD_SEARCHVALUE%>"><%= _ctx.appRes("UIQuickSeach.label.search"); %></label></div>
-    <div class="Input FL" style="!width:165px;">
+    <div class="Input FL">
       <%  
         uiform.renderChild(uiform.FIELD_SEARCHVALUE) ;
       %>

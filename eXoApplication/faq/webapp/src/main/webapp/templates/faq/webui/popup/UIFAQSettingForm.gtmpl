@@ -2,12 +2,12 @@
 	import org.exoplatform.faq.service.Category;
 	uiform.initSettingForm();
 %>
-<div class="UIViewerSettingForm">
+<div class="UIFAQSettingForm">
 	<% uiform.begin() %>
 		
 	<div class="UIFormTabPane">
 		<div class="UITabPane">
-			<div class="TabPaneContent" style="padding:0px;">
+			<div class="TabPaneContent">
 				
 				<div class="WorkingArea">
 					 <div class="UIHorizontalTabs">
@@ -61,7 +61,7 @@
 
 											<div class="TitleMoveThreads"><%=uiform.getLabel("SelectCategory")%>: </div>
 											<!-- View interface -->
-											<div class="HorizontalLayout" style="padding-left:10px; min-height:280px;">
+											<div class="HorizontalLayout">
 												<%
 												List listCate = uicomponent.listCate;
 												Stack<String> stackCateid = new Stack<String>() ;
@@ -80,7 +80,7 @@
 											    	i ++ ;
 											      if(i == 1) {%>
 												      <div class="FAQDomNode">
-																<div style="margin:6px 0px;line-height:22px;" id="FAQCate$i" class="ClearFix">
+																<div id="FAQCate$i" class="FAQCate ClearFix">
 																	<div class="Icon CategoryIcon" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this);">
 																		<%tabconten.renderChild(cateId);%>
 																 	</div>
@@ -94,7 +94,7 @@
 											        		</div>
 											        	</div>
 												      <div class="FAQDomNode">
-											        	<div style="margin:6px 0px;line-height:22px;" class="ClearFix">
+											        	<div class="FAQCate ClearFix">
 											        			<div class="Icon CategoryIcon" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this);">
 																			<%tabconten.renderChild(cateId);%>
 																		</div>
@@ -105,7 +105,7 @@
 											    <%
 											        } else if(sub > 0) {%>
 													      <div class="FAQDomNode">
-																	<div style="margin:6px 0px;line-height:22px;" class="ClearFix">
+																	<div class="FAQCate ClearFix">
 															    	<div id="FAQCate$i">
 															    		<div class="Icon CategoryIcon" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this);">
 																				<%tabconten.renderChild(cateId);%>
@@ -121,7 +121,7 @@
 												    			</div>
 											     		<%}%>
 												      <div class="FAQDomNode">
-															 <div style="margin:6px 0px;line-height:22px;" class="ClearFix">
+															 <div class="FAQCate ClearFix">
 															 	 <div class="Icon CategoryIcon" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this);">
 																		<%tabconten.renderChild(cateId);%>
 																 </div>
@@ -153,7 +153,7 @@
 											</div>
 									<% } else {%>
 											<div class="EditTempLateContent">
-												<div style="width:200px; margin:30px auto;line-height:20px;" class="ClearFix">
+												<div class="TextContent ClearFix">
 													<div class="FloatLeft"><label for="<%=uiform.FIELD_USEAJAX_CHECKBOX;%>"><%=uiform.getLabel(uiform.FIELD_USEAJAX_CHECKBOX);%>:&nbsp; &nbsp;</label></div>
 													<div class="FloatLeft" style="padding-top:3px">
                             <%tabconten.renderChild(uiform.FIELD_USEAJAX_CHECKBOX);%>

@@ -21,35 +21,33 @@
 										display = "block" ;
 									}
 								%>
-									<div id="div$name" style="display:$display; width:100%; float:left; margin:5px 0px 5px 5px;">
-										<div class="FieldLabel" style="width:90px; float:left;">
+									<div id="div$name" class="FieldContainer ClearFix" style="display:$display;">
+										<div class="FieldLabel">
 											<%
 											if(!fieldName.equals(uicomponent.getId())) {
 												name = input.getName();
 												if(name.equals("To")){
 													String linkActionTo = uicomponent.event("To") ;
 												%>
-												<div style="float:right; margin-right:5px;">
-													<label for="<%=name%>"><a href="$linkActionTo" style="text-decoration:underline;">$fieldName</a>:</label>
-												</div>
+													<label for="<%=name%>"><a href="$linkActionTo" class="link">$fieldName</a>:</label>
+									
 											<%
 											} else if(name.equals("AddCc")){
 													String linkActionCc = uicomponent.event("Cc") ;
 												%>
-												<div style="float:right; margin-right:5px;">
-													<label for="<%=name%>"><a href="$linkActionCc" style="text-decoration:underline;">$fieldName</a>:</label>
-												</div>
+													<label for="<%=name%>"><a href="$linkActionCc" class="link">$fieldName</a>:</label>
+											
 											<%
 											} else if(name.equals("AddBcc")){
 													String linkActionBcc= uicomponent.event("Bcc") ;
 												%>
-												<div style="float:right; margin-right:5px;">
-													<label for="<%=name%>"><a href="$linkActionBcc" style="text-decoration:underline;">$fieldName</a>:</label>
-												</div>
+											
+													<label for="<%=name%>"><a href="$linkActionBcc" class="link">$fieldName</a>:</label>
+											
 											<%
 											} else {
 											%>
-											<div style="float:right; margin-right:5px;"><label for="<%=name%>">$fieldName:</label></div>
+											<label for="<%=name%>">$fieldName:</label>
 											<%
 											} 
 										}
@@ -60,8 +58,7 @@
 										if(input.getName().equals(uicomponent.FILED_MESSAGE)) width = "480px"
 										else width = "auto";
 										%>
-										<div class="FieldComponent" style="width:$width; float:left;">
-											<div style="float:left; width:100%;">
+										<div class="FieldComponent" style="width:$width;">
 												<%uiform.renderField(input) %>
 												<%if(!input.getName().equals(uicomponent.FILED_MESSAGE) &&
 															!input.getName().equals(uicomponent.FILED_ADD_CC) &&
@@ -73,10 +70,9 @@
 													| <a href="#" onclick="eXo.faq.UIAnswersPortlet.viewDivById('divAddCc')"><%= _ctx.appRes("UISendMailForm.label.AddCc"); %></a>
 													| <a href="#" onclick="eXo.faq.UIAnswersPortlet.viewDivById('divAddBcc')"><%= _ctx.appRes("UISendMailForm.label.AddBcc"); %></a> |
 												<%}%>
-											</div>
 										</div>
 										<%if(input.getName().equals(uicomponent.FILED_MESSAGE)){%>
-												<div style="float:left;width:10px;">*</div>
+												<div class="Star">*</div>
 										<%}%>
 									</div>
 

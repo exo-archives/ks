@@ -1,4 +1,4 @@
-<div class="UIAddressEmailsForm $uicomponent.id">
+<div class="UIAddressEmailsForm">
 <%
 import org.exoplatform.services.organization.User;
  uiform.begin() 
@@ -6,18 +6,18 @@ import org.exoplatform.services.organization.User;
  rcontext.getJavascriptManager().addJavascript('eXo.ks.CheckBox.init("'+uiform.id+'") ;') ;
  %>
 <div class="UIInsertAddress">
-  <div class="InsertAddressContainer" style="padding:10px">
+  <div class="InsertAddressContainer">
   	<!-- ======================================= search user ======================================================= -->
 	<div class="SearchContent">
-		<div style="margin:7px;" class="ClearFix">
+		<div class="ClearFix">
 			<div class="AddressLabel"><label for="<%=uicomponent.USER_SEARCH%>"><%=_ctx.appRes("UIAddressEmailsForm.label.user-search") %> :</label></div>
-			<div style="float:left;margin-left:5px"><% uiform.renderField(uiform.USER_SEARCH) %></div>
+			<div class="InputLabel"><% uiform.renderField(uiform.USER_SEARCH) %></div>
 			<div class="SearchIcon" onclick="<%=uicomponent.event("Search")%>" title="<%=_ctx.appRes(uicomponent.id+ '.label.quick-search') %>"><span></span></div>
 		</div>
 		
-		<div style="margin:7px;" class="ClearFix">
+		<div class="ClearFix">
 		  <div class="AddressLabel"><label for="<%=uicomponent.USER_GROUP%>"><%=_ctx.appRes("UIAddressEmailsForm.label.addresses-from-group") %> :</label></div>
-		  <div style="float:left; margin-left:5px;"><% uiform.renderField(uiform.USER_GROUP) %></div>
+		  <div class="InputLabel"><% uiform.renderField(uiform.USER_GROUP) %></div>
 		</div>
 	</div>
 
@@ -28,13 +28,13 @@ import org.exoplatform.services.organization.User;
         <table cellspacing="0" border="0" cellpadding="0" id="UIListUsers" class="UIGrid">
             <thead>
               <tr>
-                <th style="width:20px;" class="BorderAddress"><input type="checkbox" title="<%=_ctx.appRes("UIAddressEmailsForm.label.checkAll") %>" class="checkbox" value="4" /></th>
-                <th class="BorderAddress">
+                <th class="CheckBoxLabel"><input type="checkbox" title="<%=_ctx.appRes("UIAddressEmailsForm.label.checkAll") %>" class="checkbox" value="4" /></th>
+                <th>
                   <div class="BlueDownArrowIcon">
                     <div class="Label"><%=_ctx.appRes("UIAddressEmailsForm.label.name") %></div>
                   </div>
                 </th>
-                <th style="width:48%;" >
+                <th class="EmailLabel">
                   <div class="BlueDownArrowIcon">
                     <div class="Label"><%=_ctx.appRes("UIAddressEmailsForm.label.email") %></div>
                   </div>
@@ -52,15 +52,15 @@ import org.exoplatform.services.organization.User;
 	                    if (checkboxField != null) { uicomponent.renderField(checkboxField); }
 	                    %>
 	                  </td>
-	                  <td class="text BorderAddress"><%=user.getFullName()%></td>
+	                  <td class="text"><%=user.getFullName()%></td>
 	                  <td class="text"><%=(user.getEmail() != null ? user.getEmail() : "")%></td>
 	                </tr>
               <%}%>
           </tbody>
         </table>
-		<div style="padding:5px 10px;while-space:nowrap;">
+		
 			<%_ctx.include("app:/templates/faq/webui/UIPageIterator.gtmpl");%>     
-		</div>
+	
       </div>
       
     </div>

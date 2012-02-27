@@ -1,0 +1,160 @@
+/******************************	 UIAddressEmailsForm	***************************************/
+.UIAnswersPortlet .UIAddressEmailsForm .InsertAddressContainer {
+	padding: 10px;
+}
+
+.UIAnswersPortlet .UIInsertAddress .SearchContent {
+  border:1px solid #b7b7b7;
+  padding:10px;
+  margin:10px 0px;
+}
+
+.UIAnswersPortlet .UIInsertAddress .AddressLabel {
+  float: left;
+  font-weight: bold;
+  line-height: 24px;
+  padding-left: 10px;
+  text-align: right;
+  width: 20%;
+}
+
+.UIAnswersPortlet .UIInsertAddress .InputLabel {
+	float: left;
+	margin-left: 5px;
+}
+
+.UIAnswersPortlet .UIInsertAddress .SearchIcon {
+  float: left;
+  padding: 3px;
+	cursor: pointer;
+  background-position: center;
+}
+
+.UIAnswersPortlet .UIInsertAddress .UIPageIterator {		
+	margin: 0px ;
+	padding: 10px;
+}
+
+.UIAnswersPortlet .UIInsertAddress .PageIteratorContainer {		
+	float: right ;
+	overflow: hidden; 
+}
+
+.UIAnswersPortlet .UIInsertAddress .PageIteratorContainer .LeftPageIteratorBlock{		
+	line-height: 18px ; 
+	float: right ;
+	margin-right: 15px;
+}
+
+.UIAnswersPortlet .UIInsertAddress .PageIteratorContainer .RightPageIteratorBlock{		
+	float: right ;
+}
+
+.UIAnswersPortlet .UIInsertAddress .UIPageIterator .Icon {
+	float: left ;
+	margin: 0px 2px 0px 0px ;
+	width: 18px ; height: 17px ;
+}
+
+.UIAnswersPortlet .UIInsertAddress .UIPageIterator .TotalPages {
+	float: left ;
+	line-height: 16px ; 
+}
+
+.UIAnswersPortlet .UIInsertAddress .UIPageIterator .PagesTotalNumber {
+	float: left ;
+	line-height: 17px ; 
+	color: #0183f1;
+	margin-left: 5px;
+}
+
+.UIAnswersPortlet .UIInsertAddress .UIPageIterator .LastTopPageIcon {
+	vertical-align: middle ;
+	background: url('../../background/ScrollDoubleBackArrows.gif') no-repeat ;
+	cursor: pointer ;
+}
+
+.UIAnswersPortlet .UIInsertAddress .UIPageIterator .NextTopPageIcon {
+	background: url('../../background/ScrollDoubleNextArrows.gif') no-repeat ;
+	cursor: pointer ;
+}
+
+.UIAnswersPortlet .UIInsertAddress .UIPageIterator .LastPageIcon {
+	background: url('../../background/ScrollSingleBackArrow.gif') no-repeat ;
+	cursor: pointer ; 
+}
+
+.UIAnswersPortlet .UIInsertAddress .UIPageIterator .NextPageIcon {
+	background: url('../../background/ScrollSingleNextArrow.gif') no-repeat ;
+	cursor: pointer ;
+}
+
+.UIAnswersPortlet .UIInsertAddress .UIPageIterator .DisableLastTopPageIcon {
+	vertical-align: middle ;
+	background: url('../../background/DoubleBackArrows.gif') no-repeat ;
+}
+
+.UIAnswersPortlet .UIInsertAddress .UIPageIterator .DisableNextTopPageIcon {
+	background: url('../../background/DoubleNextArrows.gif') no-repeat ;
+}
+
+.UIAnswersPortlet .UIInsertAddress .UIPageIterator .DisableLastPageIcon {
+	background: url('../../background/SingleBackArrow.gif') no-repeat ;
+}
+
+.UIAnswersPortlet .UIInsertAddress .UIPageIterator .DisableNextPageIcon {
+	background: url('../../background/SingleNextArrow.gif') no-repeat ;
+}
+
+.UIAnswersPortlet .UIInsertAddress .UIPageIterator .Number {
+	float: left ;
+	text-align: center;
+	margin: 0px 2px 0px 0px;
+	line-height: 17px;
+	border: none;
+	background: none;
+}
+
+.UIAnswersPortlet .UIInsertAddress .UIPageIterator .PageSelected {
+	color: #f16701;
+	font-weight: bold;
+	padding: 0px 6px;
+	cursor: default;
+}
+
+.UIAnswersPortlet .UIInsertAddress .UIPageIterator .PageNormal {
+	margin: 0px 0px 0px 0px ;
+	padding: 1px 7px;
+	border: 1px solid #dfdfdf;
+	color: #333333 ;
+	background: white;
+}
+
+.UIAnswersPortlet .UIInsertAddress .UIPageIterator .Number a{
+	float: left;
+	border:1px solid #DFDFDF;
+	height:17px;
+	line-height:17px;
+	padding:0 6px;
+	margin-left: 1px;
+}
+
+
+.UIAnswersPortlet .UIInsertAddress .UIPageIterator .Number a:hover {
+	color: #058ee6 ;
+	border: 1px solid #777777;
+}
+
+.UIAnswersPortlet .UIInsertAddress input {
+	height: 14px;
+}
+
+
+.UIAnswersPortlet .UIInsertAddress .CheckBoxLabel {
+	width: 20px;
+}
+
+.UIAnswersPortlet .UIInsertAddress .EmailLabel {
+	width: 48%;
+}
+

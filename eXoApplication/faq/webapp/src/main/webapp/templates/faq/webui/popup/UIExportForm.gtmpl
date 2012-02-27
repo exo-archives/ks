@@ -10,7 +10,7 @@
 							fieldName = uicomponent.getLabel(field.getName());
 					%>
 							<tr>
-								<td class="FieldLabel" style="white-space:nowrap;">
+								<td class="FieldLabel">
 									<label for="<%=field.getId()%>">$fieldName</label>
 								</td>
 								<td class="FieldComponent"><% uiform.renderField(field) %></td>
