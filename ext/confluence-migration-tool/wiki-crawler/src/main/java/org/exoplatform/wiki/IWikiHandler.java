@@ -71,6 +71,14 @@ public interface IWikiHandler {
   boolean checkPageExists(String path);
 
   /**
+   * @param targetSpace target space
+   * @param pageName
+   * @param attachmentName
+   * @return true if the page already exists
+   */
+  boolean checkAttachmentExists(String targetSpace, String pageName, String attachmentName);
+
+  /**
    * Upload an attachment file
    * 
    * @param targetSpace target space

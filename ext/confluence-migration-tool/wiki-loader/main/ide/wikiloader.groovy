@@ -76,6 +76,20 @@ public class WikiLoader {
   }
 
   @GET
+  @Path("/checkPath/{wikiType}/{wikiOwner:.+}/{pageId}/")
+  public Response checkPath(@PathParam("wikiType") String wikiType,
+                         @PathParam("wikiOwner") String wikiOwner,
+                         @PathParam("pageId") String pageId) {
+    Page page = getPageByPath(wikiType + "/" + wikiOwner + "/" + pageId);
+    if ( page != null) {
+      page.getAttachments()
+      return Response.status(200).entity("OK : Page exists").build();
+    } else {
+      return Response.status(404).entity("KO : Page not found").build();
+    }
+  }
+
+  @GET
   @Path("pageurl")
   @Produces("text/plain")
   public String getPageURL(@QueryParam("path") String path) {
@@ -254,6 +268,28 @@ public class WikiLoader {
     return content;
   }
    
+  @GET
+  @Path("/attachments/{wikiType}/{wikiOwner:.+}/{pageId}/")
+  public String attachmentList(@PathParam("wikiType") String wikiType,
+                       @PathParam("wikiOwner") String wikiOwner,
+                       @PathParam("pageId") String pageId) {
+                         
+    Page page = getPageByPath(wikiType + "/" + wikiOwner + "/" + pageId);
+    String attachmentList = "";
+
+    if (page != null) {
+      Iterator<AttachmentImpl> attIter= ((PageImpl) page).getAttachments().iterator();
+      while (attIter.hasNext()) {
+        AttachmentImpl att = attIter.next();
+        attachmentList += att.getName() + "|";
+      }
+    } else {
+      attachmentList = "%%Page " + wikiType + "/" + wikiOwner + "/" + pageId + " not found";
+    }
+
+    return attachmentList;
+  }
+  
   @POST
   @Path("/upload/{wikiType}/{wikiOwner:.+}/{pageId}/")
   public String upload(@PathParam("wikiType") String wikiType,
@@ -263,6 +299,11 @@ public class WikiLoader {
     EnvironmentContext env = EnvironmentContext.getCurrent();
     HttpServletRequest req = (HttpServletRequest) env.get(HttpServletRequest.class);
     boolean isMultipart = FileUploadBase.isMultipartContent(req);
+
+    Page page = getPageByPath(wikiType + "/" + wikiOwner + "/" + pageId);
+    if (page == null) {
+      return "%%Page not found : " + wikiType + "/" + wikiOwner + "/" + pageId; 
+    }
 
     if (isMultipart) {      
       DiskFileUpload upload = new DiskFileUpload();
@@ -290,9 +331,6 @@ public class WikiLoader {
           WikiResource attachfile = new WikiResource(mimeType, "UTF-8", fileBytes);
           attachfile.setName(fileName);
           if (attachfile != null) {
-            WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
-            Page page = wikiService.getPageById(wikiType, wikiOwner, pageId);
-            if (page != null) {
               AttachmentImpl att = ((PageImpl) page).createAttachment(attachfile.getName(), attachfile);
               
               ConversationState conversationState = ConversationState.getCurrent();
@@ -303,12 +341,15 @@ public class WikiLoader {
               att.setCreator(creator);
               //Utils.reparePermissions(att);
               return "File uploaded : " + fileName + " in WikiType:" + wikiType+ " WikiOwner:" + wikiOwner+ " pageId:" + pageId;
-            }
-          }
+            } else {
+              return "Not found page to attach the file to " + pageId;
+            } 
         }
       } catch (Exception e) {
         return "Error:" + e.getMessage();
       }
+    } else {
+       return "Not multipart";
     }
     return "Nothing done";
   }

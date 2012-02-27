@@ -86,8 +86,10 @@ public class ConfluenceCrawler implements CrawlerConstants {
   private int                        transferredAttachments     = 0;
   private List<String>               erroredElement             = new ArrayList<String>();
 
-  private boolean                    actionCheckPageEnabled     = true;
+  private boolean                    actionCheckPageEnabled     = false;
   private boolean                    actionTransfertPageEnabled = false;
+  private boolean                    actionSyncAttachments      = false;
+
   private IWikiHandler               wikiHandler;
 
   private final Map<String, Integer> supportedMacrosMap         = new HashMap<String, Integer>();
@@ -186,6 +188,9 @@ public class ConfluenceCrawler implements CrawlerConstants {
     }
     if (Arrays.binarySearch(actions, ACTION_PERFORM) >= 0) {
       actionTransfertPageEnabled = true;
+    }
+    if (Arrays.binarySearch(actions, ACTION_SYNC_ATTACHMENTS) >= 0) {
+      actionSyncAttachments = true;
     }
 
     // Init Target Wiki Connector
@@ -379,6 +384,7 @@ public class ConfluenceCrawler implements CrawlerConstants {
         String newPath = subPath + "/" + createdPageName;
 
         for (PageSummary childSummary : children) {
+
           Page childPage = confluence.getPage(childSummary);
           pageProcessed &= crawlPage(childPage, newPath);
 
@@ -399,16 +405,17 @@ public class ConfluenceCrawler implements CrawlerConstants {
 
     String createdPageName = null;
 
+    // Check not exist && Create
+    String path = targetSpace;
+    if (subPath.length() > 0) {
+      path = targetSpace + "/" + subPath;
+    }
+
     if (actionCheckPageEnabled) {
       performCheckPageContent(page);
     }
 
     if (actionTransfertPageEnabled) {
-      // Check not exist && Create
-      String path = targetSpace;
-      if (subPath.length() > 0) {
-        path = targetSpace + "/" + subPath;
-      }
 
       String newPageName = wikiHandler.createPage(path, pageName, confluence.getChildren(page.getId()).size() > 0, targetSyntax);
 
@@ -494,6 +501,17 @@ public class ConfluenceCrawler implements CrawlerConstants {
         }
       }
     }
+
+    if (actionSyncAttachments) {
+      String expectedPageName = wikiHandler.normalizePageName(pageName, true);
+      // Check if page exists or not
+      if (wikiHandler.checkPageExists(path + "/" + expectedPageName)) {
+        // Page exists, only by pass the content creation
+        createdPageName = expectedPageName;
+        uploadAttachments(confluence, page, targetSpace, subPath, createdPageName);
+      }
+    }
+
     // Return page name if page exists or created
     return createdPageName;
   }
@@ -537,37 +555,57 @@ public class ConfluenceCrawler implements CrawlerConstants {
     @SuppressWarnings("unchecked")
     List<Attachment> attachments = confluence.getAttachments(page.getId());
     for (Attachment attachment : attachments) {
-      String url = attachment.getUrl();
       String fileName = attachment.getFileName();
       Long fileSize = Long.parseLong(attachment.getFileSize()) / 1024;
 
       if (fileSize > optionMaxAttachmentSize) {
         LOGGER.error(String.format("[Upload] REJECTED Too big (%s ko) : %s/%s/%s", fileSize, targetSpace, pageName, fileName));
+        erroredElement.add(parentPagePath + "/" + pageName);
       } else {
-        String version = url.replaceAll(".*version=", "");
-        version = version.replaceAll("&.*", "");
-        LOGGER.info(String.format("[Upload] Processing %s ko - %s/%s/%s", fileSize, targetSpace, pageName, fileName));
 
-        try {
-          boolean uploaded = false;
-          byte[] data = confluence.getAttachmentData(page.getId(), attachment.getFileName(), version);
-          InputStream stream = new ByteArrayInputStream(data);
+        boolean attachmentExists = false;
+        if (OPTION_UPLOAD_TYPE_DOCUMENT.equals(optionUploadAs)) {
+          attachmentExists = wikiHandler.checkAttachmentExists(targetSpace, parentPagePath + "/" + pageName, fileName);
+        } else {
+          attachmentExists = wikiHandler.checkAttachmentExists(targetSpace, parentPagePath + "/" + pageName, fileName);
+        }
 
-          if (OPTION_UPLOAD_TYPE_DOCUMENT.equals(optionUploadAs)) {
-            uploaded = wikiHandler.uploadDocument(targetSpace, parentPagePath + "/" + pageName, fileName, attachment.getContentType(), stream);
-          } else {
-            uploaded = wikiHandler.uploadAttachment(targetSpace, pageName, fileName, attachment.getContentType(), stream);
-          }
-
-          if (uploaded) {
-            transferredAttachments++;
-          } else {
-            erroredElement.add(parentPagePath + "/" + pageName);
-          }
-        } catch (Exception e) {
-          LOGGER.error(String.format("[Upload] Attachment failed to upload : %s in %s", fileName, pageName));
+        if (attachmentExists) {
+          LOGGER.info(String.format("[Upload] Attachement %s already exists in %s/%s", fileName, targetSpace, pageName));
+        } else {
+          performAttachmentUpload(page, targetSpace, parentPagePath, pageName, attachment);
         }
       }
+    }
+  }
+
+  private void performAttachmentUpload(Page page, String targetSpace, String parentPagePath, String pageName, Attachment attachment) {
+    String url = attachment.getUrl();
+    String fileName = attachment.getFileName();
+    Long fileSize = Long.parseLong(attachment.getFileSize()) / 1024;
+
+    String version = url.replaceAll(".*version=", "");
+    version = version.replaceAll("&.*", "");
+    LOGGER.info(String.format("[Upload] Processing %s ko - %s/%s/%s", fileSize, targetSpace, pageName, fileName));
+    try {
+      boolean uploaded = false;
+      byte[] data = confluence.getAttachmentData(page.getId(), attachment.getFileName(), version);
+      InputStream stream = new ByteArrayInputStream(data);
+
+      if (OPTION_UPLOAD_TYPE_DOCUMENT.equals(optionUploadAs)) {
+        uploaded = wikiHandler.uploadDocument(targetSpace, parentPagePath + "/" + pageName, fileName, attachment.getContentType(), stream);
+      } else {
+        uploaded = wikiHandler.uploadAttachment(targetSpace, pageName, fileName, attachment.getContentType(), stream);
+      }
+
+      if (uploaded) {
+        transferredAttachments++;
+      } else {
+        erroredElement.add(parentPagePath + "/" + pageName);
+      }
+
+    } catch (Exception e) {
+      LOGGER.error(String.format("[Upload] Attachment failed to upload : %s in %s", fileName, pageName));
     }
   }
 

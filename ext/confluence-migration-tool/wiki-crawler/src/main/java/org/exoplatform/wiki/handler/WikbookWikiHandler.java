@@ -146,6 +146,11 @@ public class WikbookWikiHandler implements IWikiHandler {
     return file.exists() || fileNoDir.exists();
   }
 
+  public boolean checkAttachmentExists(String targetSpace, String pageName, String attachmentName) {
+    File attachment = new File(attachmentsDir, attachmentName);
+    return attachment.exists();
+  }
+
   public boolean uploadAttachment(String targetSpace, String pageName, String attachmentName, String contentType, InputStream stream) {
     // Create attachment in "/attachments" directory
     File attachment = new File(attachmentsDir, attachmentName);

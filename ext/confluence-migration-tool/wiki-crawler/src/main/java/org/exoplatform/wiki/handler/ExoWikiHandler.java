@@ -111,12 +111,13 @@ public class ExoWikiHandler implements IWikiHandler {
         if (statusCodeRC1 == 200) {
           createdPageName = IOUtils.toString(responseCreate.getEntity().getContent());
           if (createdPageName.startsWith("%%")) {
+            LOGGER.error(String.format("[Create] Failed to create [Err = %s] - Cause: %s", "" + statusCodeRC1, createdPageName));
             return null;
           }
         } else {
           String message = "";
           if (responseCreate != null && responseCreate.getEntity() != null) {
-             message = IOUtils.toString(responseCreate.getEntity().getContent());
+            message = IOUtils.toString(responseCreate.getEntity().getContent());
           }
           LOGGER.error(String.format("[Create] Failed to create [Err = %i] - Cause: %s", statusCodeRC1, message));
           return null;
@@ -138,6 +139,7 @@ public class ExoWikiHandler implements IWikiHandler {
       }
     } catch (Exception exception) {
       LOGGER.error(String.format("[Create] Error creating page. Err = ", exception.getMessage()));
+      exception.printStackTrace();
     }
     return null;
   }
@@ -182,16 +184,46 @@ public class ExoWikiHandler implements IWikiHandler {
   public boolean uploadAttachment(String targetSpace, String pageName, String attachmentName, String contentType, InputStream stream) {
     try {
       httpClient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
-      HttpPost post = new HttpPost(targetHost + "/rest/wikiloader/upload/" + targetSpace + "/" + pageName + "/");
+      HttpPost post = new HttpPost(targetHost + "/rest/wikiloader/upload/" + targetSpace + "/" + normalizePageName(pageName, true) + "/");
       MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-      multipartEntity.addPart("File", new InputStreamBody(stream, contentType, attachmentName));
+      multipartEntity.addPart("File", new InputStreamBody(stream, contentType, normalizePageName(attachmentName, true)));
       post.setEntity(multipartEntity);
 
       HttpResponse response = httpClient.execute(post);
-      response.getEntity().consumeContent();
-      return true;
+      String responsePhrase = IOUtils.toString(response.getEntity().getContent());
+
+      int statusCode = response.getStatusLine().getStatusCode();
+      LOGGER.info("[Upload] attachment : " + statusCode + " - " + responsePhrase);
+      if (statusCode == 200) {
+        // TODO Check attachment exists
+        return !responsePhrase.startsWith("%%");
+      } else {
+        LOGGER.error("[Upload] attachment fail : " + statusCode + " - " + responsePhrase);
+      }
     } catch (IOException exception) {
       LOGGER.error("[Upload] attachment fail");
+    }
+    return false;
+  }
+
+  public boolean checkAttachmentExists(String targetSpace, String pageName, String attachmentName) {
+
+    try {
+      String normalizedPageName = normalizePageName(pageName, true);
+      String normalizedAttachmentName = normalizePageName(attachmentName, true);
+      String path = targetSpace + "/" + normalizedPageName + "/";
+      HttpGet httpGet = new HttpGet(targetHost + "/rest/wikiloader/attachments/" + path);
+      HttpResponse responseGet = httpClient.execute(httpGet);
+      String response = IOUtils.toString(responseGet.getEntity().getContent());
+      String[] attachments = response.split("\\|");
+
+      for (String att : attachments) {
+        if (att.equals(normalizedAttachmentName)) {
+          return true;
+        }
+      }
+    } catch (IOException exception) {
+      LOGGER.error("[URL] Error getting Url for : " + targetSpace);
     }
     return false;
   }

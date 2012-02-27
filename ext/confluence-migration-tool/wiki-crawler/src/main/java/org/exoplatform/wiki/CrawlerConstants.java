@@ -55,6 +55,7 @@ public interface CrawlerConstants {
 
   static String ACTION_CHECK                          = "check";
   static String ACTION_PERFORM                        = "perform";
+  static String ACTION_SYNC_ATTACHMENTS               = "sync";
 
   static String PARAMETER_TARGET_TYPE                 = "targetType";
 }
