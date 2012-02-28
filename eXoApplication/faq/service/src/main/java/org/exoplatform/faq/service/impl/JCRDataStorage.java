@@ -2971,7 +2971,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       }
       return new PropertyReader(node).bool(property);
     } catch (Exception e) {
-      e.printStackTrace();
       return false;
     }
   }
