@@ -59,7 +59,7 @@ public class WebUIUtils {
     return getLabel(null, key);
   }
 
-  public static String getLabel(String componentId, String label) throws Exception {
+  public static String getLabel(String componentId, String label) {
     if (!StringUtils.isEmpty(componentId)) {
       label = componentId.concat(".label.").concat(label);
     }
