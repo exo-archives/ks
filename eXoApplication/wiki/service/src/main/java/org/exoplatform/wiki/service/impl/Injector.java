@@ -31,6 +31,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.WatchedMixin;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiContainer;
+import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.utils.Utils;
 
@@ -46,11 +47,14 @@ public class Injector implements LifeCycleListener, StateChangeListener {
 
   private final WikiService wService;
   
+  private final RenderingService renderingService;
+  
   private static final Log log = ExoLogger.getLogger("org.exoplatform.wiki.service.impl.Injector");
 
-  public Injector(MOWService mowService,WikiService wService ) {
+  public Injector(MOWService mowService,WikiService wService, RenderingService renderingService) {
     this.mowService = mowService;
     this.wService = wService;
+    this.renderingService = renderingService;
   }
 
   @Override
@@ -58,6 +62,7 @@ public class Injector implements LifeCycleListener, StateChangeListener {
     if (o instanceof PageImpl) {
       ((PageImpl) o).setMOWService(mowService);
       ((PageImpl) o).setWikiService(wService);
+      ((PageImpl) o).setComponentManager(renderingService.getComponentManager());
     }
     if(o instanceof WikiContainer<?>) {
       ((WikiContainer<?>) o).setwService(wService);
@@ -72,6 +77,7 @@ public class Injector implements LifeCycleListener, StateChangeListener {
     if (o instanceof PageImpl) {
       ((PageImpl) o).setMOWService(mowService);
       ((PageImpl) o).setWikiService(wService);
+      ((PageImpl) o).setComponentManager(renderingService.getComponentManager());
     }
     if(o instanceof WikiContainer<?>) {
       ((WikiContainer<?>) o).setwService(wService);
@@ -86,6 +92,7 @@ public class Injector implements LifeCycleListener, StateChangeListener {
     if (o instanceof PageImpl) {
       ((PageImpl) o).setMOWService(mowService);
       ((PageImpl) o).setWikiService(wService);
+      ((PageImpl) o).setComponentManager(renderingService.getComponentManager());
     }
     if(o instanceof WikiContainer<?>) {
       ((WikiContainer<?>) o).setwService(wService);
@@ -100,6 +107,7 @@ public class Injector implements LifeCycleListener, StateChangeListener {
     if (o instanceof PageImpl) {
       ((PageImpl) o).setMOWService(mowService);
       ((PageImpl) o).setWikiService(wService);
+      ((PageImpl) o).setComponentManager(renderingService.getComponentManager());
     }
     if (o instanceof NTFrozenNode) {
       ((NTFrozenNode) o).setMOWService(mowService);
@@ -140,5 +148,4 @@ public class Injector implements LifeCycleListener, StateChangeListener {
       }
     }
   }
- 
 }

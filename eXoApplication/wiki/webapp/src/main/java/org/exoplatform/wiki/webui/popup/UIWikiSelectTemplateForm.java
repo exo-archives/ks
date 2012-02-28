@@ -24,7 +24,6 @@ import org.exoplatform.webui.core.UIPopupContainer;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.commons.Utils;
@@ -81,7 +80,6 @@ public class UIWikiSelectTemplateForm extends UIWikiTemplateForm implements UIPo
                                                  .getUIStringInput();
       UIFormStringInput descriptionInput = pageEditForm.findComponentById(UIWikiTemplateDescriptionContainer.FIELD_DESCRIPTION);
       UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
-      UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
       UIFormStringInput commentInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_COMMENT);
       String templateId = event.getRequestContext().getRequestParameter(OBJECTID);
 
@@ -95,7 +93,6 @@ public class UIWikiSelectTemplateForm extends UIWikiTemplateForm implements UIPo
       descriptionInput.setValue(template.getDescription());
       pageEditForm.setTitle(template.getTitle());
       markupInput.setValue(template.getContent().getText());
-      syntaxTypeSelectBox.setValue(template.getSyntax());     
       UIPopupContainer popupContainer = wikiPortlet.getPopupContainer(PopupLevel.L1);
       popupContainer.deActivate();
       wikiPortlet.changeMode(WikiMode.ADDPAGE);

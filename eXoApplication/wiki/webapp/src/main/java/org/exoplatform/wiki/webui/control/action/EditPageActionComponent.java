@@ -25,7 +25,6 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
-import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.commons.Utils;
@@ -93,19 +92,15 @@ public class EditPageActionComponent extends AbstractEventActionComponent {
       UIFormStringInput titleInput = pageEditForm.getChild(UIWikiPageTitleControlArea.class).getUIStringInput();
       UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
       UIFormStringInput commentInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_COMMENT);
-      UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
       
       Page page = Utils.getCurrentWikiPage();
       String title = page.getTitle();
       String content = page.getContent().getText();
       titleInput.setEditable(true);
-      syntaxTypeSelectBox.setValue(page.getSyntax());
-      syntaxTypeSelectBox.setEnable(Utils.getCurrentPreferences().getPreferencesSyntax().getAllowMutipleSyntaxes());
       if (wikiPortlet.getEditMode() == EditMode.SECTION) {
         RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
         content = renderingService.getContentOfSection(content, page.getSyntax(), sectionIndex);
         titleInput.setEditable(false);
-        syntaxTypeSelectBox.setEnable(false);
       }
       titleInput.setValue(title);
       pageEditForm.setTitle(title) ;
@@ -120,5 +115,4 @@ public class EditPageActionComponent extends AbstractEventActionComponent {
       super.processEvent(event);
     }
   }
-  
 }

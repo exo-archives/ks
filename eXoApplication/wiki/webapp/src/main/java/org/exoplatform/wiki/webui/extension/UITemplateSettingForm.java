@@ -26,7 +26,6 @@ import org.exoplatform.webui.core.UIPopupContainer;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.commons.Utils;
@@ -98,7 +97,6 @@ public class UITemplateSettingForm extends UIWikiTemplateForm {
                                                  .getUIStringInput();
       UIFormStringInput descriptionInput = pageEditForm.findComponentById(UIWikiTemplateDescriptionContainer.FIELD_DESCRIPTION);
       UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
-      UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
       UIFormStringInput commentInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_COMMENT);
       String templateId = event.getRequestContext().getRequestParameter(OBJECTID);
       pageEditForm.setTemplateId(templateId);
@@ -110,7 +108,6 @@ public class UITemplateSettingForm extends UIWikiTemplateForm {
       descriptionInput.setValue(template.getDescription());
       pageEditForm.setTitle(template.getTitle());
       markupInput.setValue(template.getContent().getText());
-      syntaxTypeSelectBox.setValue(template.getSyntax());
       
       markupInput.setRendered(true);
       pageEditForm.getChild(UIWikiRichTextArea.class).setRendered(false);
@@ -144,7 +141,6 @@ public class UITemplateSettingForm extends UIWikiTemplateForm {
                                                  .getUIStringInput();
       UIFormStringInput descriptionInput = pageEditForm.findComponentById(UIWikiTemplateDescriptionContainer.FIELD_DESCRIPTION);
       UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
-      UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
       UIFormStringInput commentInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_COMMENT);
       String currentDefaultSyntaxt = Utils.getCurrentPreferences()
                                           .getPreferencesSyntax()
@@ -159,11 +155,6 @@ public class UITemplateSettingForm extends UIWikiTemplateForm {
       markupInput.setValue("");
       String sessionId = Util.getPortalRequestContext().getRequest().getSession(false).getId();
       wservice.createDraftNewPage(sessionId);
-      syntaxTypeSelectBox.setValue(currentDefaultSyntaxt);
-      syntaxTypeSelectBox.setEnable(Utils.getCurrentPreferences()
-                                         .getPreferencesSyntax()
-                                         .getAllowMutipleSyntaxes());
-
       markupInput.setRendered(true);
       pageEditForm.getChild(UIWikiRichTextArea.class).setRendered(false);
       pageEditForm.getChild(UIWikiSidePanelArea.class).setRendered(true);

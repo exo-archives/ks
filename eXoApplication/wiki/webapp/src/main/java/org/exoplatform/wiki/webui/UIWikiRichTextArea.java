@@ -23,7 +23,6 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
-import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.service.WikiPageParams;
@@ -72,12 +71,6 @@ public class UIWikiRichTextArea extends UIContainer {
       log.warn(e.getMessage(), e);
       return "target:blank";
     }
-  }
-  
-  protected String getSelectedSyntax() {
-    UIWikiPageEditForm editForm = this.getAncestorOfType(UIWikiPageEditForm.class);
-    UIFormSelectBox selectSyntaxBox = editForm.getChildById(UIWikiPageEditForm.FIELD_SYNTAX);
-    return selectSyntaxBox.getValue();
   }
   
   protected WikiPageParams getCurrentWikiPageParams() {

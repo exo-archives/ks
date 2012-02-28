@@ -32,6 +32,7 @@ import org.picocontainer.Startable;
 import org.w3c.dom.Document;
 import org.xwiki.component.embed.EmbeddableComponentManager;
 import org.xwiki.component.manager.ComponentLookupException;
+import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.component.manager.ComponentRepositoryException;
 import org.xwiki.context.Execution;
 import org.xwiki.rendering.block.Block;
@@ -66,12 +67,17 @@ public class RenderingServiceImpl implements RenderingService, Startable {
   private String cssURL; 
 
   private Log LOG = ExoLogger.getExoLogger(RenderingServiceImpl.class);
-  EmbeddableComponentManager componentManager = null;
+  
+  private EmbeddableComponentManager componentManager = null;
 
   public Execution getExecution() throws ComponentLookupException, ComponentRepositoryException{
     return componentManager.lookup(Execution.class);
   }
   
+  public ComponentManager getComponentManager() {
+    return componentManager;
+  }
+
   public <T> T getComponent(Class<T> clazz) {
     return getComponent(clazz, "default");
   }

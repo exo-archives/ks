@@ -33,7 +33,6 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
-import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.commons.Utils;
@@ -110,7 +109,7 @@ public class SavePageActionComponent extends UIComponent {
                                                  .getUIStringInput();      
       UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
       UIFormStringInput commentInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_COMMENT);
-      UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
+      String syntaxId = Utils.getDefaultSyntax();
       RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
       Page page = Utils.getCurrentWikiPage();
       Utils.setUpWikiContext(wikiPortlet);
@@ -140,13 +139,13 @@ public class SavePageActionComponent extends UIComponent {
         String htmlContent = wikiRichTextArea.getUIFormTextAreaInput().getValue();
         String markupContent = renderingService.render(htmlContent,
                                                        Syntax.XHTML_1_0.toIdString(),
-                                                       syntaxTypeSelectBox.getValue(),
+                                                       syntaxId,
                                                        false);
         markupInput.setValue(markupContent);
       }
       String markup = (markupInput.getValue() == null) ? "" : markupInput.getValue();
       markup = markup.trim();
-      String syntaxId = syntaxTypeSelectBox.getValue();
+      
       
       String newPageId = TitleResolver.getId(title, false);
       if (WikiNodeType.Definition.WIKI_HOME_NAME.equals(page.getName()) && wikiPortlet.getWikiMode() == WikiMode.EDITPAGE) {

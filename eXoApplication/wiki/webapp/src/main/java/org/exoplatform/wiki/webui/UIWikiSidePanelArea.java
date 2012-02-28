@@ -21,7 +21,6 @@ import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
-import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.service.WikiService;
@@ -69,9 +68,8 @@ public class UIWikiSidePanelArea extends UIContainer {
   public void processRender(WebuiRequestContext context) throws Exception {
     RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
     WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
-    UIWikiPageEditForm editForm = this.getAncestorOfType(UIWikiPageEditForm.class);
-    UIFormSelectBox syntaxTypeSelectBox = editForm.getChild(UIFormSelectBox.class);
-    String syntaxId = syntaxTypeSelectBox.getValue();
+    String syntaxId = org.exoplatform.wiki.commons.Utils.getDefaultSyntax(); 
+    
     PageImpl syntaxHelpPage = wikiService.getHelpSyntaxPage(syntaxId);
     this.syntaxName = syntaxId.replace("/", " ").toUpperCase();
     if (syntaxHelpPage != null) {

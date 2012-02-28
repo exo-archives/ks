@@ -1407,7 +1407,7 @@ table.UIFormGrid div.Id {
 	width: 99%;
 }
 
-.UIWikiPageEditForm .UIWikiPageContentInputContainer,.UIWikiPageEditForm .SyntaxType,
+.UIWikiPageEditForm .UIWikiPageContentInputContainer,
   .UIWikiPageEditForm .CommentInput {
   margin-bottom: 15px;
 }
@@ -1446,7 +1446,7 @@ table.UIFormGrid div.Id {
 	font-size: 14px;
 }
 
-.UIWikiPageEditForm .SyntaxType .SyntaxTypeTitle,.UIWikiPageEditForm .CommentInput .CommentTitle {
+.UIWikiPageEditForm .CommentInput .CommentTitle {
 	display: block;
 	float: left;
 	line-height: 15px;

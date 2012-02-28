@@ -31,7 +31,6 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
-import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.commons.Utils;
@@ -99,7 +98,6 @@ public class SaveTemplateActionComponent extends UIComponent {
                                                  .getUIStringInput();
       UIFormStringInput descriptionInput = pageEditForm.findComponentById(UIWikiTemplateDescriptionContainer.FIELD_DESCRIPTION);
       UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
-      UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
       try {
         WikiNameValidator.validate(titleInput.getValue());
       } catch (IllegalNameException ex) {
@@ -124,7 +122,7 @@ public class SaveTemplateActionComponent extends UIComponent {
       String markup = (markupInput.getValue() == null) ? "" : markupInput.getValue();
       markup = markup.trim();
       String description = descriptionInput.getValue();
-      String syntaxId = syntaxTypeSelectBox.getValue();
+      String syntaxId = Utils.getDefaultSyntax();
       String[] msgArg = { title };
       boolean isExist = false; 
       try {

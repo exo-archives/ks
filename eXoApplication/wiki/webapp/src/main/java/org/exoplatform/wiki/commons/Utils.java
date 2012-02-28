@@ -49,7 +49,6 @@ import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.form.UIForm;
-import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.mow.api.Page;
@@ -185,7 +184,7 @@ public class Utils {
     RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
     HttpSession session = Util.getPortalRequestContext().getRequest().getSession(false);
     UIFormTextAreaInput markupInput = pageEditForm.getUIFormTextAreaInput(UIWikiPageEditForm.FIELD_CONTENT);
-    String markupSyntax = pageEditForm.getUIFormSelectBox(UIWikiPageEditForm.FIELD_SYNTAX).getValue();
+    String markupSyntax = getDefaultSyntax();
     WikiContext wikiContext= Utils.setUpWikiContext(wikiPortlet);
     if (markup == null) {
       markup = (markupInput.getValue() == null) ? "" : markupInput.getValue();
@@ -201,7 +200,16 @@ public class Utils {
   public static String getCurrentWikiPagePath() throws Exception {
     return TreeUtils.getPathFromPageParams(getCurrentWikiPageParams());
   }
-
+  
+  public static String getDefaultSyntax() throws Exception {
+    String currentDefaultSyntaxt = Utils.getCurrentPreferences().getPreferencesSyntax().getDefaultSyntax();
+    if (currentDefaultSyntaxt == null) {
+      WikiService wservice = (WikiService) PortalContainer.getComponent(WikiService.class);
+      currentDefaultSyntaxt = wservice.getDefaultWikiSyntaxId();
+    }
+    return currentDefaultSyntaxt;
+  }
+  
   public static Preferences getCurrentPreferences() throws Exception {
     WikiImpl currentWiki = (WikiImpl) getCurrentWiki();
     return currentWiki.getPreferences();
@@ -209,7 +217,6 @@ public class Utils {
  
   public static WikiContext createWikiContext(UIWikiPortlet wikiPortlet) throws Exception {
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
-    UIFormSelectBox syntaxBox = wikiPortlet.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
     WikiMode currentMode = wikiPortlet.getWikiMode();
     List<WikiMode> editModes = Arrays.asList(new WikiMode[] { WikiMode.EDITPAGE, WikiMode.ADDPAGE, WikiMode.EDITTEMPLATE,
         WikiMode.ADDTEMPLATE });
@@ -232,7 +239,7 @@ public class Utils {
     wikiContext.setType(params.getType());
     wikiContext.setOwner(params.getOwner());
     if (editModes.contains(currentMode)) {
-      wikiContext.setSyntax(syntaxBox.getValue());
+      wikiContext.setSyntax(getDefaultSyntax());
     } else {
       WikiService service = (WikiService) PortalContainer.getComponent(WikiService.class);
       Page currentPage = service.getPageById(params.getType(), params.getOwner(), params.getPageId());

@@ -30,10 +30,9 @@ import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.core.api.wiki.Preferences;
 import org.exoplatform.wiki.mow.core.api.wiki.PreferencesSyntax;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiImpl;
-import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
-import org.exoplatform.wiki.webui.UIWikiSyntaxPreferences;
 import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
+import org.exoplatform.wiki.webui.UIWikiSyntaxPreferences;
 
 /**
  * Created by The eXo Platform SAS
@@ -66,7 +65,6 @@ public class UIWikiEditPreferencesForm extends UIForm implements UIPopupComponen
       PreferencesSyntax preferencesSyntax = preferences.getPreferencesSyntax();
       preferencesSyntax.setAllowMutipleSyntaxes(allowCheckBox.isChecked());
       preferencesSyntax.setDefaultSyntax(defaultSyntaxSelect.getValue());
-      wikiPortlet.findFirstComponentOfType(UIWikiPageEditForm.class).reloadSyntax();
       UIPopupContainer popupContainer = wikiPortlet.getPopupContainer(PopupLevel.L1);     
       popupContainer.deActivate();
     }

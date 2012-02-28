@@ -91,7 +91,7 @@ public class PreviewPageActionComponent extends AbstractFormActionComponent {
       UIWikiPagePreview wikiPagePreview = uiMaskWS.createUIComponent(UIWikiPagePreview.class, null, null);
       UIWikiRichTextArea wikiRichTextArea = wikiPageEditForm.getChild(UIWikiRichTextArea.class);
       UIWikiPageTitleControlArea wikiPageTitleArea = wikiPageEditForm.getChild(UIWikiPageTitleControlArea.class);
-      String markupSyntax = wikiPageEditForm.getUIFormSelectBox(UIWikiPageEditForm.FIELD_SYNTAX).getValue();
+      String markupSyntax = Utils.getDefaultSyntax();
       boolean isRichTextRendered = wikiRichTextArea.isRendered();
       RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
       String markup;

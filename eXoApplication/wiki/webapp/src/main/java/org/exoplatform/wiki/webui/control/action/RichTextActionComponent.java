@@ -103,7 +103,7 @@ public class RichTextActionComponent extends UIComponent {
       if (isSourceTextRendered) {
         String htmlContent = wikiRichTextArea.getUIFormTextAreaInput().getValue();
         htmlContent = htmlContent == null ? StringUtils.EMPTY : htmlContent;
-        String markupSyntax = wikiPageEditForm.getUIFormSelectBox(UIWikiPageEditForm.FIELD_SYNTAX).getValue();
+        String markupSyntax = Utils.getDefaultSyntax();
         String markupContent = renderingService.render(htmlContent, Syntax.XHTML_1_0.toIdString(), markupSyntax, false);
         wikiPageEditForm.getUIFormTextAreaInput(UIWikiPageEditForm.FIELD_CONTENT).setValue(markupContent);        
         wikiSidePanelArea.setRendered(true);

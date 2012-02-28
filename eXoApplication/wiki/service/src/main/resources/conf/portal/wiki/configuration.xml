@@ -50,7 +50,7 @@
       </values-param>
       <properties-param>
         <name>preferences</name>
-        <property name="defaultSyntax" value="confluence/1.0"/>              
+        <property name="defaultSyntax" value="xwiki/2.0"/>              
       </properties-param> 
     </init-params>
   </component>

@@ -28,7 +28,6 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
-import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.commons.Utils;
@@ -92,7 +91,6 @@ public class AddPageActionComponent extends AbstractEventActionComponent {
       UIFormStringInput titleInput = pageEditForm.getChild(UIWikiPageTitleControlArea.class).getUIStringInput();
       UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
       UIFormStringInput commentInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_COMMENT);
-      UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
       titleInput.setValue(res.getString("UIWikiPageTitleControlArea.label.Untitled"));
 
       titleInput.setEditable(true);
@@ -107,8 +105,6 @@ public class AddPageActionComponent extends AbstractEventActionComponent {
         currentDefaultSyntaxt = wservice.getDefaultWikiSyntaxId();
       }
 
-      syntaxTypeSelectBox.setValue(currentDefaultSyntaxt);
-      syntaxTypeSelectBox.setEnable(Utils.getCurrentPreferences().getPreferencesSyntax().getAllowMutipleSyntaxes());
       if (pageTitle != null && pageTitle.length() > 0) {
         titleInput.setValue(pageTitle);
         titleInput.setEditable(false);

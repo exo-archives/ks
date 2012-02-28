@@ -58,9 +58,12 @@ import org.exoplatform.wiki.mow.api.Permission;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.MOWService;
+import org.exoplatform.wiki.rendering.converter.ConfluenceToXWiki2Transformer;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.PermissionType;
 import org.exoplatform.wiki.service.WikiService;
+import org.xwiki.component.manager.ComponentManager;
+import org.xwiki.rendering.syntax.Syntax;
 
 /**
  * Created by The eXo Platform SAS
@@ -76,6 +79,8 @@ public abstract class PageImpl extends NTFolder implements Page {
   private WikiService wService;
   
   private Permission permission = new PermissionImpl();
+  
+  private ComponentManager componentManager;
   
   /**
    * caching related pages for performance
@@ -109,6 +114,10 @@ public abstract class PageImpl extends NTFolder implements Page {
     return wService;
   }
   
+  public void setComponentManager(ComponentManager componentManager) {
+    this.componentManager = componentManager;
+  }
+
   private Node getJCRPageNode() throws Exception {
     return (Node) getChromatticSession().getJCRSession().getItem(getPath());
   }
@@ -138,6 +147,13 @@ public abstract class PageImpl extends NTFolder implements Page {
     if (content == null) {
       content = createContent();
       setContentByChromattic(content);
+    } else {
+      String syntax = getSyntax();
+      if (Syntax.CONFLUENCE_1_0.toIdString().equals(syntax)) {
+        content.setText(ConfluenceToXWiki2Transformer.transformContent(content.getText(), componentManager));
+        setSyntax(Syntax.XWIKI_2_0.toIdString());
+        setContentByChromattic(content);
+      }
     }
     return content;
   }

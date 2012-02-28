@@ -30,7 +30,6 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.core.api.wiki.Preferences;
 import org.exoplatform.wiki.mow.core.api.wiki.PreferencesSyntax;
-import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiSyntaxPreferences;
 
@@ -77,7 +76,6 @@ public class UISyntaxSettingForm extends UIForm {
       PreferencesSyntax preferencesSyntax = preferences.getPreferencesSyntax();
       preferencesSyntax.setAllowMutipleSyntaxes(allowCheckBox.isChecked());
       preferencesSyntax.setDefaultSyntax(defaultSyntaxSelect.getValue());
-      wikiPortlet.findFirstComponentOfType(UIWikiPageEditForm.class).reloadSyntax();     
       event.getRequestContext()
            .getUIApplication()
            .addMessage(new ApplicationMessage("UISyntaxSettingForm.msg.Save-syntax-setting-success",

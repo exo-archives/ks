@@ -134,13 +134,18 @@ public abstract class AttachmentImpl extends NTFile implements Attachment, Compa
   @Destroy
   public abstract void remove();
   
-  public String getText() throws Exception {
+  public String getText() {
     Resource textContent = getContentResource();
     if (textContent == null) {
       setText("");
       textContent = getContentResource();
     }
-    return new String(textContent.getData(), "UTF-8");
+    
+    try {
+      return new String(textContent.getData(), "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      return new String(textContent.getData());
+    }
   }
 
   public void setText(String text) {

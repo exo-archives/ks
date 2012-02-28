@@ -226,15 +226,6 @@
            </object>
         </object-param>
         <object-param>
-           <name>SyntaxSetting</name>
-           <object type="org.exoplatform.webui.ext.UIExtension">
-             <field name="type"><string>org.exoplatform.wiki.webui.popup.UIWikiSettingContainer</string></field>
-             <field name="rank"><int>300</int></field>
-             <field name="name"><string>SyntaxSetting</string></field>
-             <field name="component"><string>org.exoplatform.wiki.webui.extension.UISyntaxSettingForm</string></field>             
-           </object>
-        </object-param>
-        <object-param>
            <name>RemoveRelatedPage</name>
            <object type="org.exoplatform.webui.ext.UIExtension">
              <field name="type"><string>org.exoplatform.wiki.webui.control.UIRelatedPagesContainer</string></field>

@@ -72,7 +72,7 @@ public interface Attachment {
    * 
    * @return
    */
-  String getText() throws Exception;
+  String getText();
 
   void setText(String text);
   
