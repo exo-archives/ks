@@ -263,8 +263,6 @@ public abstract class PageImpl extends NTFolder implements Page {
     if (fileName == null) {
       throw new NullPointerException();
     }
-    
-    fileName = TitleResolver.getId(fileName, false);
     Iterator<AttachmentImpl> attIter= getAttachments().iterator();
     while (attIter.hasNext()) {
       AttachmentImpl att = attIter.next();
@@ -274,7 +272,7 @@ public abstract class PageImpl extends NTFolder implements Page {
     }
     
     AttachmentImpl file = createAttachment();
-    file.setName(fileName);
+    file.setName(TitleResolver.getId(fileName, false));
     addAttachment(file);
     if (fileName.lastIndexOf(".") > 0) {
       file.setTitle(fileName.substring(0, fileName.lastIndexOf(".")));

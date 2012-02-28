@@ -98,6 +98,14 @@ public class TestRenderingService extends AbstractRenderingTestCase {
   }
   
   public void testRenderAttachmentsAndImages() throws Exception {
+    Model model = mowService.getModel();
+    WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
+    WikiContainer<PortalWiki> portalWikiContainer = wStore.getWikiContainer(WikiType.PORTAL);
+    PortalWiki wiki = portalWikiContainer.addWiki("classic");
+    WikiHome wikiHomePage = wiki.getWikiHome();
+    PageImpl wikipage = wikiHomePage.getWikiPage("CreateWikiPage-001");
+    wikipage.createAttachment("space in name.png", Resource.createPlainText("logo")) ;
+        
     Execution ec = renderingService.getExecution();
     ec.setContext(new ExecutionContext());
     WikiContext wikiContext = new WikiContext();
@@ -134,6 +142,9 @@ public class TestRenderingService extends AbstractRenderingTestCase {
     
     String expectedFreeStandingImageHtml = "<p><img src=\"http://loclahost:8080/portal/rest/jcr/repository/knowledge/exo:applications/eXoWiki/wikis/classic/WikiHome/CreateWikiPage-001/eXoWikiHome.png\" class=\"wikimodel-freestanding\" alt=\"eXoWikiHome.png\"/></p>";
     assertEquals(expectedFreeStandingImageHtml, renderingService.render("image:eXoWikiHome.png", Syntax.XWIKI_2_0.toIdString(), Syntax.XHTML_1_0.toIdString(), false));
+    
+    String expectedImageSpaceInName = "<p><img src=\"http://loclahost:8080/portal/rest/jcr/repository/knowledge/exo:applications/eXoWiki/wikis/classic/WikiHome/CreateWikiPage-001/space_in_name.png\" alt=\"space in name.png\"/></p>";
+    assertEquals(expectedImageSpaceInName, renderingService.render("[[image:space in name.png]]", Syntax.XWIKI_2_0.toIdString(), Syntax.XHTML_1_0.toIdString(), false));
   }
   
   public void testGetContentOfSection() throws Exception {

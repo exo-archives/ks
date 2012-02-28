@@ -49,6 +49,7 @@ import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.commons.utils.MimeTypeResolver;
 import org.exoplatform.container.ExoContainer;
@@ -202,13 +203,10 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
             imageBytes = null;
           }
           String fileName = fileItem.getName();
-          String fileType = fileItem.getContentType();
-          if (fileName != null) {
+          if (fileName != null)
             // It's necessary because IE posts full path of uploaded files
-            fileName = FilenameUtils.getName(fileName);
-            fileType = FilenameUtils.getExtension(fileName);
-          }
-          String mimeType = new MimeTypeResolver().getMimeType(fileName);
+            fileName = FilenameUtils.getName(fileName);          
+          String mimeType = new MimeTypeResolver().getMimeType(StringUtils.lowerCase(fileName));
           WikiResource attachfile = new WikiResource(mimeType, "UTF-8", imageBytes);
           attachfile.setName(fileName);
           if (attachfile != null) {
