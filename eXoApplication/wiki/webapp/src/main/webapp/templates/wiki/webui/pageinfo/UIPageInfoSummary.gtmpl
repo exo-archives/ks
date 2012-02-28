@@ -1,15 +1,14 @@
 <%
   import java.util.Locale;
   import java.text.DateFormat;
+  import org.exoplatform.wiki.commons.Utils;
   
   def context = _ctx.getRequestContext();
   Locale currentLocale = context.getLocale();
   DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, currentLocale);
   def title = currentWikiPage.getTitle();
-  def author = currentWikiPage.getOwner();
-  author = (author != null) ? author : _ctx.appRes("UIWikiPortlet.label.Anonymous");
-  def editor = currentWikiPage.getAuthor();
-  editor = (editor != null) ? editor : _ctx.appRes("UIWikiPortlet.label.Anonymous");
+  def author = Utils.getFullName(currentWikiPage.getOwner());
+  def editor = Utils.getFullName(currentWikiPage.getAuthor());
   def updateDate = df.format(currentWikiPage.getUpdatedDate());
   def createdDate = df.format(currentWikiPage.getCreatedDate());
   def wordlink = "";

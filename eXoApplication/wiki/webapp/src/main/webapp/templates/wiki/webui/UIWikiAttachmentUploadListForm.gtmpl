@@ -3,6 +3,7 @@
   import java.text.DateFormat;
   import org.exoplatform.portal.webui.util.Util;
   import java.net.URLEncoder;
+  import org.exoplatform.wiki.commons.Utils;
   
   Locale currentLocale = Util.getPortalRequestContext().getLocale();
 %>
@@ -33,13 +34,8 @@
           rowClass = "EvenRow";
         } else {
           rowClass = "OddRow";
-        }
-        if(attachment.getCreator() == null){
-          creator = _ctx.appRes("UIWikiPortlet.label.Anonymous");
-        }else{
-          creator = attachment.getCreator();
-          creator = uicomponent.getFullName(creator);
-        }
+        }         
+        creator = Utils.getFullName(attachment.getCreator());
         downloadLink = attachment.getDownloadURL();
     %>
         <tr class="$rowClass">

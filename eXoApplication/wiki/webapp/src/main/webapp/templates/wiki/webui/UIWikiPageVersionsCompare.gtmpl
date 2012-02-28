@@ -5,6 +5,7 @@
   import org.exoplatform.wiki.mow.api.WikiNodeType;
   import org.exoplatform.web.application.Parameter;
   import org.exoplatform.wiki.webui.UIWikiPortlet;
+  import org.exoplatform.wiki.commons.Utils;
 
   Locale currentLocale = Util.getPortalRequestContext().getLocale();
   DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, currentLocale);
@@ -17,8 +18,7 @@
   String showHistoryLink = uicomponent.event(uicomponent.SHOW_HISTORY);
   String fromVersionName = uicomponent.getFromVersion().getName();
   String fromVersionViewLink = uicomponent.event(uicomponent.VIEW_REVISION, fromVersionName);
-  String fromVersionAuthor = uicomponent.getFromVersion().getNTFrozenNode().getAuthor();
-  fromVersionAuthor = (fromVersionAuthor != null) ? fromVersionAuthor : _ctx.appRes("UIWikiPortlet.label.Anonymous");
+  String fromVersionAuthor = Utils.getFullName(uicomponent.getFromVersion().getNTFrozenNode().getAuthor());
   String fromUpdatedDate = df.format(uicomponent.getFromVersion().getNTFrozenNode().getUpdatedDate());
   String previousCompare = "";
   String previousCompareLink = "";
@@ -33,8 +33,7 @@
   
   String toVersionName = uicomponent.getToVersion().getName();
   String toVersionViewLink = uicomponent.event(uicomponent.VIEW_REVISION, toVersionName);
-  String toVersionAuthor = uicomponent.getToVersion().getNTFrozenNode().getAuthor();
-  toVersionAuthor = (toVersionAuthor != null) ? toVersionAuthor : _ctx.appRes("UIWikiPortlet.label.Anonymous");
+  String toVersionAuthor = Utils.getFullName(uicomponent.getToVersion().getNTFrozenNode().getAuthor());
   String toUpdatedDate = df.format(uicomponent.getToVersion().getNTFrozenNode().getUpdatedDate());
   String nextCompare = "";
   String nextCompareLink = "";

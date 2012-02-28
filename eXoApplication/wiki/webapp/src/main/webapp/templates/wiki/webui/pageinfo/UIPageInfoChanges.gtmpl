@@ -1,7 +1,8 @@
 <%
   import java.util.Locale;
   import java.text.DateFormat;
-  import org.exoplatform.wiki.webui.UIWikiPortlet;
+  import org.exoplatform.wiki.webui.UIWikiPortlet;  
+  import org.exoplatform.wiki.commons.Utils;
   
   def currentVersions = uicomponent.getVersionList(currentWikiPage);
   def rcontext = _ctx.getRequestContext() ;
@@ -39,8 +40,7 @@
         def viewLinkId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + "ViewRevision_"+versionNumber;
         def viewLink = uicomponent.event("ViewRevision", version.getName());
         def updatedDate = df.format(frozenNode.getUpdatedDate());
-        def author = frozenNode.getAuthor();
-        author = (author != null) ? author : _ctx.appRes("UIWikiPortlet.label.Anonymous");
+        def author = Utils.getFullName(frozenNode.getAuthor());
         if (isOddRow) {
           rowClass = "OddClass";
         } else {

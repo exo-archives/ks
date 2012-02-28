@@ -24,11 +24,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.ResourceBundle;
 
 import javax.portlet.PortletPreferences;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.MimeTypeResolver;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
@@ -41,6 +43,8 @@ import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.access.AccessControlEntry;
 import org.exoplatform.services.jcr.access.AccessControlList;
 import org.exoplatform.services.jcr.util.IdGenerator;
+import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.organization.User;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.IdentityConstants;
@@ -96,7 +100,7 @@ public class Utils {
     String pageNodeSelected = uiPortal.getSelectedUserNode().getURI();
     if (!requestURL.contains(pageNodeSelected)) {
       // Happens at the first time processRender() called when add wiki portlet manually
-      requestURL = portalRequestContext.getPortalURI() + pageNodeSelected;
+      requestURL = portalRequestContext + pageNodeSelected;
     }      
     return requestURL;
   }
@@ -467,4 +471,15 @@ public class Utils {
     return limitMB;
   }
   
+  public static String getFullName(String userId) {
+    try {
+      OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+      User user = organizationService.getUserHandler().findUserByName(userId);
+      return user.getFullName();
+    } catch (Exception e) {
+      WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
+      ResourceBundle res = context.getApplicationResourceBundle();
+      return res.getString("UIWikiPortlet.label.Anonymous");
+    }
+  }
 }

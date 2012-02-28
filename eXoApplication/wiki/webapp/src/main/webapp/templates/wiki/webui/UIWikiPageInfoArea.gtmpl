@@ -3,15 +3,14 @@
   import java.text.DateFormat;
   import org.exoplatform.portal.webui.util.Util;
   import org.exoplatform.wiki.webui.UIWikiPortlet;
+  import org.exoplatform.wiki.commons.Utils;
   
   Locale currentLocale = Util.getPortalRequestContext().getLocale();
   DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, currentLocale);
   
   currentWikiPage = uicomponent.getCurrentWikiPage();
-  String creator = currentWikiPage.getOwner();
-  creator = (creator != null) ? creator : _ctx.appRes("UIWikiPortlet.label.Anonymous");
-  String author = currentWikiPage.getAuthor();
-  author = (author != null) ? author : _ctx.appRes("UIWikiPortlet.label.Anonymous");
+  String creator = Utils.getFullName(currentWikiPage.getOwner());
+  String author = Utils.getFullName(currentWikiPage.getAuthor());
   def createdDate = df.format(currentWikiPage.getCreatedDate());
   def updatedDate = df.format(currentWikiPage.getUpdatedDate());
   int attachmentsTotal =  currentWikiPage.getAttachmentsExcludeContent().size();

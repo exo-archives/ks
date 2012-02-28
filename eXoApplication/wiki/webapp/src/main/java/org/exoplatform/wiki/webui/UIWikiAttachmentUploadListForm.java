@@ -21,11 +21,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.organization.OrganizationService;
-import org.exoplatform.services.organization.User;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.ext.UIExtensionManager;
@@ -69,18 +66,6 @@ public class UIWikiAttachmentUploadListForm extends UIForm {
       log.warn("An error happened when get attachments list", e);
     }
     return attachments;
-  }
-  
-  protected String getFullName(String userId) {
-    String fullName = "";
-    try {
-      OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-      User user = organizationService.getUserHandler().findUserByName(userId);
-      fullName = user.getFullName();
-    } catch (Exception e) {
-      log.warn("An error happened when get fullname for: " + userId, e);
-    }
-    return fullName;
   }
   
   public Page getCurrentWikiPage() throws Exception {
