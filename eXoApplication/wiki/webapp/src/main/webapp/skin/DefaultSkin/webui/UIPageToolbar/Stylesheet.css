@@ -86,6 +86,10 @@
 	width: 465px;
 }
 
+.UIWikiPortlet .UIWikiToolBar .Icon:hover {
+  color: black;
+}
+
 .UIWikiPageEditForm .Icon {
 	border-left: 1px solid #d6d6d6;
 	float: left;
