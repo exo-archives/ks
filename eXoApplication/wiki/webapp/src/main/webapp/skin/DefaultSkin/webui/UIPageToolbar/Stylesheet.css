@@ -8,12 +8,8 @@
 	padding: 6px 8px 6px 25px;
 	margin: 0px;
 	text-transform:capitalize;
-	color: black;
-}
-
-.UIWikiPortlet .UIWikiPageControlArea .Icon:hover {
-	background-color: #ececec;
 	text-decoration: none;
+	color: black;
 }
 
 .UIWikiPageControlArea .UIPageToolBar .DeletePage {
@@ -63,14 +59,10 @@
 	height: 14px;
 	display: block;
 	padding: 6px 8px 8px 25px;
-	border-bottom: 1px solid #d7d7d7;
 	color: #555;
 	font-size: 12px;
 }
 
-.UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar .HoverMenu .Icon:hover {
-	background-color: #fff;
-}
 
 .UIWikiPageControlArea .UIPageToolBar .MoreLink {
   background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat right -281px;
@@ -97,7 +89,7 @@
 .UIWikiPageEditForm .Icon {
 	border-left: 1px solid #d6d6d6;
 	float: left;
-  	padding: 0px 10px 0px 30px;
+  padding: 0px 10px 0px 30px;
 	margin: 0px;
 	text-transform:capitalize;
 	color: black;
@@ -108,12 +100,7 @@
 	border-left: none;
 }
 
-.UIWikiPageEditForm .UIEditorTabs .Icon:hover {
-  text-decoration: none;
-  color: #4283c7;
-}
-
-.UIWikiPageEditForm .UISubmitToolBar .Icon:hover {
+.UIWikiPortlet .Icon:hover {
   text-decoration: none;
   color: #4283c7;
 }

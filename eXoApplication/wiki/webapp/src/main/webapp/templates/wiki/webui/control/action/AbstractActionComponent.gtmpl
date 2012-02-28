@@ -11,8 +11,8 @@
   
  %>
 <% if (isAnchor)  {%>
-  <a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="$actionName Icon" title="$labelName">$labelName</a>
-  <a onclick="$actionLink" id="$actionId" style="display:none;">&nbsp;</a>
+  <a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" href="javaScript:void(0)" class="$actionName Icon" title="$labelName">$labelName</a>
+  <a onclick="$actionLink" href="javaScript:void(0)" id="$actionId" style="display:none;">&nbsp;</a>
 <%} else { %>
-  <a onclick="$actionLink" class="$actionName Icon" title="$labelName">$labelName</a>
+  <a onclick="$actionLink" href="javaScript:void(0)" class="$actionName Icon" title="$labelName">$labelName</a>
 <%} %>

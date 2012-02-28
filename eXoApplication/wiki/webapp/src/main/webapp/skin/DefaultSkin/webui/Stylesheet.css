@@ -1357,24 +1357,31 @@ table.UIFormGrid div.Id {
 	list-style: none;
 	margin: 0;
 	padding: 0;
-	float: left;
+	float: none;
 	line-height: 24px;
-	width: 150px;
+	min-width: 120px;
 }
 
 .UIWikiPortlet .HoverMenu li {
 	margin: 0;
 	display: block;
+	background-color: #ececec;
+	border-bottom: 1px solid #d7d7d7;
 }
 
 .UIWikiPortlet .HoverMenu li:hover {
-	background: #D0DFF0;
+	background: #fff;
+}
+
+.UIWikiPageControlArea .UIPageToolBar .MoreLink:hover {
+  background-color: #ececec;
 }
 
 .UIWikiPortlet .HoverMenu a {
 	color: #535353;
 	text-decoration: none;
-	padding: 6px 8px 6px 25px;
+	padding: 6px 10px 6px 25px;
+  display: block;
 }
 
 .UIWikiPageArea .UIWikiPageEditForm .UIColsLeftsEditForm {
