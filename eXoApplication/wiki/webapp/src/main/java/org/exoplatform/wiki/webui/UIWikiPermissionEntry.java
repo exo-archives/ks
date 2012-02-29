@@ -78,10 +78,19 @@ public class UIWikiPermissionEntry extends UIContainer {
     }
     Permission[] permissions = this.permissionEntry.getPermissions();
     UICheckBoxInput checkBoxInput;
+    int lastEnabledIndex = -1;
+    for (int i = 0; i < permissions.length; i++) {
+      if (permissions[i].isAllowed()) {
+        lastEnabledIndex = i;
+      }
+    }
     for (int i = 0; i < permissions.length; i++) {
       checkBoxInput = new UICheckBoxInput(permissions[i].getPermissionType().name() + this.permissionEntry.getId(),
                                           "", permissions[i].isAllowed());
       checkBoxInput.setHTMLAttribute("title", getPermissionLabels().get(permissions[i].getPermissionType().name()));
+      if (i < lastEnabledIndex || lastEnabledIndex + 1 < i) {
+        checkBoxInput.setDisabled(true);
+      }
       addChild((UIComponent) checkBoxInput);
     }
   }

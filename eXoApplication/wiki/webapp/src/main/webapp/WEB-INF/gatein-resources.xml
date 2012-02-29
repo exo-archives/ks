@@ -192,4 +192,11 @@
       <js-path>/javascript/eXo/wiki/UIWikiRichTextArea.js</js-path>
     </param>
   </javascript>
+  
+  <javascript>
+    <param>
+      <js-module>eXo.wiki.UIWikiPermissionForm</js-module>
+      <js-path>/javascript/eXo/wiki/UIWikiPermissionForm.js</js-path>
+    </param>
+  </javascript>
 </gatein-resources>

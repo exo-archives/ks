@@ -1,4 +1,9 @@
 <%
+  import org.exoplatform.web.application.JavascriptManager;
+  
+  JavascriptManager jsmanager = _ctx.getRequestContext().getJavascriptManager();
+  jsmanager.importJavascript('eXo.wiki.UIWikiPermissionForm', '/wiki/javascript/');
+  jsmanager.addJavascript("eXo.wiki.UIWikiPermissionForm.init('" + uicomponent.id + "') ;");
   uicomponent.renderChild(uicomponent.createIdByScope(uicomponent.USER_PERMISSION_POPUP_SELECTOR)) ;
 %>
 <div class="UIForm $uicomponent.id">
