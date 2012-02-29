@@ -26,11 +26,11 @@ if (!eXo.wiki) {
  *    listens for a click event bubbling up, then calls a function depending on
  *    which element was clicked and its checked DOM property.
  * 2. Traversing the HTMLFormElement.elements collection to easily access the checkboxes.
- * 3. Setting the disabled DOM property to "disabled" on the checkbox if it's not
- *    the target checkbox.
- * 4. Setting the disabled DOM property to "" (an empty string) on the checkbox if it's
- *    the target checkbox.
- * 5. It uses a "blacklist", which is an array that contains ids to checkboxes you don't
+ * 3. Setting the checked DOM property to "checked" on the checkbox if it's
+ *    the target checked checkbox.
+ * 4. Setting the checked DOM property to "" (an empty string) on the checkbox if it's
+ *    the target unchecked checkbox.
+ * 5. It uses a "blacklist", which is an array that contains ids to checkboxes you
  *    want enabled when the corresponding checkbox is clicked.
  * @returns
  */
@@ -57,9 +57,9 @@ UIWikiPermissionForm.prototype.delegateFormClick = function(evt) {
   if (target.nodeType === 1 && target.tagName === "INPUT"
       && target.type === "checkbox") {
     if (target.checked) {
-      eXo.wiki.UIWikiPermissionForm.enableCheckBoxes(target.id);
+      eXo.wiki.UIWikiPermissionForm.tickCheckBoxes(target.id);
     } else if (!target.checked) {
-      eXo.wiki.UIWikiPermissionForm.disableCheckBoxes(target.id);
+      eXo.wiki.UIWikiPermissionForm.untickCheckBoxes(target.id);
     }
   }
 };
@@ -71,9 +71,9 @@ UIWikiPermissionForm.prototype.addChangeHandlers = function(form) {
       if (!element.onchange) {
         element.onchange = function() {
           if (this.checked) {
-            eXo.wiki.UIWikiPermissionForm.enableCheckBoxes(this.id);
+            eXo.wiki.UIWikiPermissionForm.tickCheckBoxes(this.id);
           } else if (!this.checked) {
-            eXo.wiki.UIWikiPermissionForm.disableCheckBoxes(this.id);
+            eXo.wiki.UIWikiPermissionForm.untickCheckBoxes(this.id);
           }
         }
       }
@@ -81,81 +81,51 @@ UIWikiPermissionForm.prototype.addChangeHandlers = function(form) {
   }
 };
 
-UIWikiPermissionForm.prototype.disableCheckBoxes = function(id) {
-  var disabledlist = [];
-  var enabledlist = [];
+UIWikiPermissionForm.prototype.untickCheckBoxes = function(id) {
+  var unticklist = [];
   if (id) {
     if (id.indexOf('VIEWPAGE') == 0) {
       var membership = id.substring(8);
-      disabledlist = [ 'EDITPAGE' + membership, 'ADMINPAGE' + membership, 'ADMINSPACE' + membership ];
+      unticklist = [ 'EDITPAGE' + membership, 'ADMINPAGE' + membership, 'ADMINSPACE' + membership ];
     } else if (id.indexOf('EDITPAGE') == 0) {
       var membership = id.substring(8);
-      disabledlist = [ 'ADMINPAGE' + membership, 'ADMINSPACE' + membership ];
-      enabledlist = [ 'VIEWPAGE' + membership ];
+      unticklist = [ 'ADMINPAGE' + membership, 'ADMINSPACE' + membership ];
     } else if (id.indexOf('ADMINPAGE') == 0) {
       var membership = id.substring(9);
-      disabledlist = [ 'ADMINSPACE' + membership ];
-      enabledlist = [ 'EDITPAGE' + membership ];
-    } else if (id.indexOf('ADMINSPACE') == 0) {
-      var membership = id.substring(10);
-      enabledlist = [ 'ADMINPAGE' + membership ];
+      unticklist = [ 'ADMINSPACE' + membership ];
     }
   }
-  for ( var i = 0; i < disabledlist.length; i++) {
-    var element = eXo.core.DOMUtil.findDescendantById(this.form, disabledlist[i]);
+  for ( var i = 0; i < unticklist.length; i++) {
+    var element = eXo.core.DOMUtil.findDescendantById(this.form, unticklist[i]);
     if (element && element.nodeType === 1) {
       // check for element
-      if (element.tagName === "INPUT" && element.type === "checkbox" && !element.checked) {
-        element.disabled = "disabled";
-      }
-    }
-  }
-  for ( var i = 0; i < enabledlist.length; i++) {
-    var element = eXo.core.DOMUtil.findDescendantById(this.form, enabledlist[i]);
-    if (element && element.nodeType === 1) {
-      // check for element
-      if (element.tagName === "INPUT" && element.type === "checkbox" && element.checked) {
-        element.disabled = "";
+      if (element.tagName === "INPUT" && element.type === "checkbox") {
+        element.checked = "";
       }
     }
   }
 };
 
-UIWikiPermissionForm.prototype.enableCheckBoxes = function(id) {
-  var enabledlist = [];
-  var disabledlist = [];
+UIWikiPermissionForm.prototype.tickCheckBoxes = function(id) {
+  var ticklist = [];
   if (id) {
-    if (id.indexOf('VIEWPAGE') == 0) {
+    if (id.indexOf('EDITPAGE') == 0) {
       var membership = id.substring(8);
-      enabledlist = [ 'EDITPAGE' + membership ];
-    } else if (id.indexOf('EDITPAGE') == 0) {
-      var membership = id.substring(8);
-      enabledlist = [ 'ADMINPAGE' + membership ];
-      disabledlist = [ 'VIEWPAGE' + membership ];
+      ticklist = [ 'VIEWPAGE' + membership ];
     } else if (id.indexOf('ADMINPAGE') == 0) {
       var membership = id.substring(9);
-      enabledlist = [ 'ADMINSPACE' + membership ];
-      disabledlist = [ 'EDITPAGE' + membership ];
+      ticklist = [ 'VIEWPAGE' + membership, 'EDITPAGE' + membership ];
     } else if (id.indexOf('ADMINSPACE') == 0) {
       var membership = id.substring(10);
-      disabledlist = [ 'ADMINPAGE' + membership ];
+      ticklist = [ 'VIEWPAGE' + membership, 'EDITPAGE' + membership, 'ADMINPAGE' + membership ];
     }
   }
-  for ( var i = 0; i < enabledlist.length; i++) {
-    var element = eXo.core.DOMUtil.findDescendantById(this.form, enabledlist[i]);
+  for ( var i = 0; i < ticklist.length; i++) {
+    var element = eXo.core.DOMUtil.findDescendantById(this.form, ticklist[i]);
     if (element && element.nodeType === 1) {
       // check for element
-      if (element.tagName === "INPUT" && element.type === "checkbox" && !element.checked) {
-        element.disabled = "";
-      }
-    }
-  }
-  for ( var i = 0; i < disabledlist.length; i++) {
-    var element = eXo.core.DOMUtil.findDescendantById(this.form, disabledlist[i]);
-    if (element && element.nodeType === 1) {
-      // check for element
-      if (element.tagName === "INPUT" && element.type === "checkbox" && element.checked) {
-        element.disabled = "disabled";
+      if (element.tagName === "INPUT" && element.type === "checkbox") {
+        element.checked = "checked";
       }
     }
   }
