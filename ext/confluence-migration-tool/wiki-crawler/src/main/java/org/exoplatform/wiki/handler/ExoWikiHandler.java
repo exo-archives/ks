@@ -139,7 +139,6 @@ public class ExoWikiHandler implements IWikiHandler {
       }
     } catch (Exception exception) {
       LOGGER.error(String.format("[Create] Error creating page. Err = ", exception.getMessage()));
-      exception.printStackTrace();
     }
     return null;
   }

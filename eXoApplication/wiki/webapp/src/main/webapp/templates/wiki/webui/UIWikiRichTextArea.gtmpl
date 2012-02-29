@@ -7,7 +7,7 @@
   String wikiType = wikiPageParams.getType();
   String wikiOwner = wikiPageParams.getOwner();
   String pageId = wikiPageParams.getPageId();
-  String selectedSyntax = uicomponent.getSelectedSyntax();
+  String selectedSyntax = uicomponent.getSyntax();
   rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiRichTextArea', '/wiki/javascript/') ;
   rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiRichTextArea.init('UIWikiRichTextArea_TextArea', '" + restUrlToViewCurrentPage + "', '" + selectedSyntax + "', '" + wikiType + "', '" + wikiOwner + "', '" + pageId + "');");
   

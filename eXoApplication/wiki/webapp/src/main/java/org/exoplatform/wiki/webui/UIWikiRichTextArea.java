@@ -73,6 +73,11 @@ public class UIWikiRichTextArea extends UIContainer {
     }
   }
   
+  
+  protected String getSyntax() throws Exception {
+    return Utils.getCurrentPreferences().getPreferencesSyntax().getDefaultSyntax();
+  }
+  
   protected WikiPageParams getCurrentWikiPageParams() {
     WikiPageParams wikiPageParams = null;
     try {
