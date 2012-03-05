@@ -1,0 +1,20 @@
+<% if(uicomponent.isRenderChild) {%>
+<div id="$uicomponent.id">
+	<div class="UIForumPortlet UIForumModeratePortlet">
+		<div class="UIForumContainer">
+			<div class="UIForumInfos">
+		<%
+			List children = uicomponent.getChildren() ;
+			for(component in children) {
+				if(component.isRendered()){
+					uicomponent.renderChild(component.getClass()) ; 
+				}
+			}
+		%>
+			</div>
+		</div>
+	</div>
+</div>
+<% } else { %>
+	<div id="$uicomponent.id"><span></span></div>
+<% } %>

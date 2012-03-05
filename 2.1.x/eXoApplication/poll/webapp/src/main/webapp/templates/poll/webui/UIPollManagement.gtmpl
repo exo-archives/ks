@@ -1,0 +1,44 @@
+<div class="$uicomponent.id">
+<%
+	import org.exoplatform.webui.core.UIGrid;
+	uiform.begin() ;
+%>
+	<% uicomponent.renderChild(UIGrid.class) ; %>
+	<div class="Label"><%=_ctx.appRes(uicomponent.getName() + ".label.comment");%></div>
+	<div class="SelectBoxInput">
+		<span><%=_ctx.appRes(uicomponent.getName() + ".label.selectPoll");%>:  </span>
+		<span> <% uiform.renderField(uiform.FIELD_SELECT_POLL_SELECTBOX) ; %></span>
+	</div>
+	<script type="text/javascript">
+		var ths = document.getElementsByTagName('th');
+		if(ths) {
+			ths[1].style.width = '60px';
+			ths[2].style.width = '160px';
+			ths[3].style.width = '160px';
+			ths[4].style.width = '100px';
+		}
+	</script>
+	<div class="UIAction"> 
+		<table class="ActionContainer">
+			<tr>
+				<td align="center">
+				<% for(action in uicomponent.getActions()) { 
+					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+					 String link = uicomponent.event(action) ;
+				%>
+						<div onclick="$link" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle">
+										<a href="javascript:void(0);">$actionLabel</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					<%}%>
+				</td>
+			</tr>
+		</table> 
+	</div>
+<% uiform.end(); %>
+</div>

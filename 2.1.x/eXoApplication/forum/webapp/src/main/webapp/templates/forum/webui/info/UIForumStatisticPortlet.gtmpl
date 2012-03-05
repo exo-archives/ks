@@ -1,0 +1,10 @@
+<div class="UIForumPortlet UIForumStatisticPortlet" id="$uicomponent.id">
+	<%
+		List children = uicomponent.getChildren() ;
+		for(component in children) {
+			if(component.isRendered()){
+				uicomponent.renderChild(component.getClass()) ; 
+			}
+		}
+	%>
+</div>

@@ -1,0 +1,119 @@
+<div class="FAQUISendEMailForm $uicomponent.id">
+	<% uiform.begin() %>
+		<div class="HorizontalLayout">
+			<div class="UIFormInput">
+				<table class="UIFormGrid">
+					<tbody>
+						<tr>
+							<td>
+						<% 
+						String name = "" ;
+						String display = "block" ;
+						for(input in  uiform.getChildren()) {
+							if(input.isRendered()) { %>
+								<%
+								fieldName = uicomponent.getLabel(input.getName());
+								if(!fieldName.equals(uicomponent.getId())) {
+									name = input.getName();
+									if((name.equals("AddCc") && !uicomponent.isViewCC) || (name.equals("AddBcc") && !uicomponent.isViewBCC) ){
+										display = "none" ;
+									} else {
+										display = "block" ;
+									}
+								%>
+									<div id="div$name" style="display:$display; width:100%; float:left; margin:5px 0px 5px 5px;">
+										<div class="FieldLabel" style="width:90px; float:left;">
+											<%
+											if(!fieldName.equals(uicomponent.getId())) {
+												name = input.getName();
+												if(name.equals("To")){
+													String linkActionTo = uicomponent.event("To") ;
+												%>
+												<div style="float:right; margin-right:5px;">
+													<a href="$linkActionTo" style="text-decoration:underline;">$fieldName</a>:
+												</div>
+											<%
+											} else if(name.equals("AddCc")){
+													String linkActionCc = uicomponent.event("Cc") ;
+												%>
+												<div style="float:right; margin-right:5px;">
+													<a href="$linkActionCc" style="text-decoration:underline;">$fieldName</a>:
+												</div>
+											<%
+											} else if(name.equals("AddBcc")){
+													String linkActionBcc= uicomponent.event("Bcc") ;
+												%>
+												<div style="float:right; margin-right:5px;">
+													<a href="$linkActionBcc" style="text-decoration:underline;">$fieldName</a>:
+												</div>
+											<%
+											} else {
+											%>
+											<div style="float:right; margin-right:5px;">$fieldName: </div>
+											<%
+											} 
+										}
+											 %>
+										</div>
+										<%
+										String width = "auto";
+										if(input.getName().equals(uicomponent.FILED_MESSAGE)) width = "480px"
+										else width = "auto";
+										%>
+										<div class="FieldComponent" style="width:$width; float:left;">
+											<div style="float:left; width:100%;">
+												<%uiform.renderField(input) %>
+												<%if(!input.getName().equals(uicomponent.FILED_MESSAGE) &&
+															!input.getName().equals(uicomponent.FILED_ADD_CC) &&
+															!input.getName().equals(uicomponent.FILED_ADD_BCC) &&
+															!input.getName().equals(uicomponent.FILED_QUESTION_LANGUAGE)){%>
+														*
+												<%}
+													if(input.getName().equals("To")){%>
+													| <a href="#" onclick="eXo.faq.UIAnswersPortlet.viewDivById('divAddCc')"><%= _ctx.appRes("UISendMailForm.label.AddCc"); %></a>
+													| <a href="#" onclick="eXo.faq.UIAnswersPortlet.viewDivById('divAddBcc')"><%= _ctx.appRes("UISendMailForm.label.AddBcc"); %></a> |
+												<%}%>
+											</div>
+										</div>
+										<%if(input.getName().equals(uicomponent.FILED_MESSAGE)){%>
+												<div style="float:left;width:10px;">*</div>
+										<%}%>
+									</div>
+									<div style="clear:left"><span></span></div>
+							<%}
+							}
+						}
+						%>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>	
+		
+		<div class="UIAction"> 
+			<table class="ActionContainer" style="text-align:center">
+				<tr>
+					<td>
+	        <%for(action in uicomponent.getActions()) { 
+    		 		if(action.indexOf("Attachment") >= 0 || action.indexOf("AddRelation") >= 0) continue ; 
+	        	 	String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+	           	String link = uicomponent.event(action) ;
+	        %>
+	        		<div onclick="$link" class="ActionButton LightBlueStyle">
+		      	  	<div class="ButtonLeft">
+		        	  	<div class="ButtonRight">
+		          	  	<div class="ButtonMiddle">
+		          	  		<a href="javascript:void(0);">$actionLabel</a>
+		          	  	</div>
+		            	</div>
+		          	</div>
+		        	</div>
+	          <%}%>
+	      	</td>
+				</tr>
+		  </table> 
+		</div>
+			
+	<%uiform.end()%>
+</div>

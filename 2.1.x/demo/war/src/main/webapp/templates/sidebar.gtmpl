@@ -1,0 +1,67 @@
+<%
+	import org.exoplatform.portal.webui.util.Util; 
+	String url = Util.getPortalRequestContext().getPortalURI();
+	String tourUrl = url + "tour";
+	String registerUri = url + "register";
+	registerUri.replaceFirst("private", "public");
+%>
+
+<div class="SideBar">
+	<div class="PortletDecoration">
+		<div class="PortletDecorationTL">
+			<div class="PortletDecorationTR">
+				<div class="PortletDecorationTC"><span></span>
+				</div>
+			</div>
+		</div>
+		<div class="PortletDecorationML">
+			<div class="PortletDecorationMR">
+				<div class="HomePortletAdBackround" style="padding:20px 8px 0px 8px;">
+					<div class="LeftButton">
+						<div class="RightButton">
+							<div class="CenterButton">
+								<div style="height: 6px;"><span></span></div>
+								<a href="$registerUri" style="color: white; font-size: 14px"><%=_ctx.appRes("home.try") %></a>
+								<a href="$registerUri" style="color: white; font-size: 11px" class="TextCreatDemo"><%=_ctx.appRes("home.register") %></a>
+							</div>
+						</div>
+					</div>
+					<div class="DotLine"><span></span></div>
+					<div class="DownloadButton">
+						<div style="height: 40px"><span></span></div>
+						<a href="https://sourceforge.net/projects/exo-knowledge/" style="color: white;" class="TextDownload"><%=_ctx.appRes("home.download") %></a><br/>
+						<a href="https://sourceforge.net/projects/exo-knowledge/" style="color: white;"><%=_ctx.appRes("home.support") %></a>
+					</div>
+					<div class="DotLine"><span></span></div>
+					<div class="VersionIcon"><span></span></div>
+					<div class="ArowIcon"><%=_ctx.appRes("home.community") %><br/>
+					<a href="http://forums.exoplatform.org" class="ProVersion"><%=_ctx.appRes("home.forums") %></a>&nbsp;|&nbsp;<a href="http://wiki.exoplatform.org" class="ProVersion"><%=_ctx.appRes("home.wiki") %></a>
+					</div>
+					
+					<div class="DotLine"><span></span></div>
+					<div class="LeftButton">
+						<div class="RightButton">
+							<div class="CenterButton">
+								<div style="height: 8px;"><span></span></div>
+								<a href="$tourUrl" style="color: white; font-size: 18px;"><%=_ctx.appRes("home.tour") %></a>
+							</div>
+						</div>
+					</div>
+					<div class="LeftButton">
+						<div class="RightButton">
+							<div class="CenterButton">
+								<div style="height: 8px;"><span></span></div>
+								<a href="http://spreadsheets.google.com/viewform?cfg=true&formkey=dEp4OTBBdHhwcTdPWjNPVjZPbnNCX2c6MA#gid=0" style="color: white; font-size: 18px;"><%=_ctx.appRes("home.feedback") %></a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="PortletDecorationBL">
+			<div class="PortletDecorationBR">
+				<div class="PortletDecorationBC"><span></span></div>
+			</div>
+		</div>
+	</div>
+</div>

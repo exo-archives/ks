@@ -1,0 +1,124 @@
+<% 
+	import org.exoplatform.forum.webui.UIForumPageIterator ;
+	import org.exoplatform.forum.service.Post ; 
+	import org.exoplatform.forum.ForumUtils;
+	import org.exoplatform.forum.service.UserProfile ;
+	UserProfile userProfile = uicomponent.getUserProfile() ;
+	List posts = uicomponent.getPostsByUser() ;
+	boolean isAdmin = false;
+	if(userProfile.getUserRole() == 0)isAdmin = true;
+	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+	String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
+	boolean isShowIP = uicomponent.getHasEnableIPLogging() ;
+%>
+
+<div class="UIPageListPostByUser" id="$uicomponent.id">
+	<div class="UITopicContainer">
+	 	<div class="UIForumContainer">
+			<div class="ContentContainer">
+				<div class="UITopicList">
+					<div style="overflow:auto; margin:2px 0px;">
+						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+						<div style="clear:right; height:0px;"><span></span></div>
+					</div>
+					<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+						<thead>
+							<tr>
+								<th style="width:40px"></th>
+								<th style="width:100%;">
+									<div onclick="<%=uicomponent.event("SetOrderBy","name");%>">
+										<div class="DownArrow1Icon"  style="cursor:pointer">
+											<%=_ctx.appRes("UIPageListPostByUser.label.PostName");%>
+									</div>
+									</div>
+								</th>
+								<th style="width:130px">
+									<div onclick="<%=uicomponent.event("SetOrderBy","createdDate");%>">
+										<div class="DownArrow1Icon" style="cursor:pointer">
+											<%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%>
+										</div>
+									</div>
+								</th>
+								<%if(isAdmin){ 
+								    if(isShowIP) {
+								%>
+									<th style="width:130px; margin:0px auto;"><%=_ctx.appRes("UIPageListPostByUser.label.IPLogging");%></th>
+								<%  }%>
+								<%} %>
+									<th style="width:60px;"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
+							</tr>
+						</thead>
+						<tbody>
+							<% 
+							if(!posts.isEmpty()) {
+								String classRow = "whileRow";
+								int i = 0;
+								Date postDate = new Date();
+								for(post in posts){
+									if(i%2 == 0) classRow = "whileRow";
+									else classRow = "OddRow";
+									String postTitle = post.getName() ;
+									String message = uicomponent.getTitleInHTMLCode(post.getMessage()) ;
+									String titlePost = ForumUtils.getSubString(message, 100);
+									String iconPost = post.getIcon() ;
+									postDate.setTime(post.getCreatedDate().getTime() - setTime) ;
+									String createdDate = ForumUtils.getFormatDate(formatDate,postDate) ;
+									String remoteAddr = post.getRemoteAddr();
+									if(ForumUtils.isEmpty(remoteAddr)) remoteAddr = "";
+							%>
+								<tr class="$classRow">
+									<td class="Tdbox">
+										<div class="ThreadStatusIcon $iconPost"><span></span></div>
+									</td>
+									<td >
+										<div>
+											<a href="<%=uicomponent.event("OpenPostLink", post.getId());%>" title="$titlePost" class="title">$postTitle</a>
+										</div>
+									</td>
+									<td class="Tdbox">
+										<div class="RatingInfoContainer">$createdDate</div>
+									</td>
+									<%if(isAdmin){ 
+									    if(isShowIP) {
+									%>
+										<td><div title="<%=post.getRemoteAddr();%>">$remoteAddr</div></td>
+									<%  }
+									String link_ =  uicomponent.event("DeletePostLink", post.getId());
+									%>
+										<td class="Tdbox">
+											<div style="margin:0 auto; width:48px">
+												<div class="ItemIcon SetDeleteIcon" onclick="$link_" title="<%=_ctx.appRes("UIViewPost.action.DeletePost");%>" style="width:20px; height:24px; cursor:pointer; float:left"><span></span></div>
+												<a style="display:block; width:24px;float: left;" title="<%=_ctx.appRes("UIViewPost.action.OpenTopicLink");%>" class="HotThreadNoNewPost" href="<%=uicomponent.event("OpenTopicLink", post.getId());%>">&nbsp; &nbsp; &nbsp;</a>
+												<div style="clear:left;"><span></span></div>
+											</div>
+										</td>
+									<%} else {%>
+										<td class="Tdbox">
+											<div style="margin:0 auto; width:28px">
+												<a style="display:block; width:24px; float:none; display:block;" title="<%=_ctx.appRes("UIViewPost.action.OpenTopicLink");%>" class="HotThreadNoNewPost" href="<%=uicomponent.event("OpenTopicLink", post.getId());%>">&nbsp; &nbsp; &nbsp;</a>
+											</div>
+										</td>
+									<%}  %>
+					 			</tr>
+						 	<% i = i + 1;}
+						 		} else {
+						 		%>
+						 			<tr>
+						 				<td colspan="5" align="center">
+						 					<div style="margin:5px 0px 10px 0px"><b><%=_ctx.appRes("UICategory.label.noPost");%></b></div>
+						 				</td>
+						 			</tr>
+						 		<%
+						 		}
+						 	 %>
+						</tbody>
+					</table>
+					<div style="overflow:auto;">
+						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+						<div style="clear:right; height:0px;"><span></span></div>
+					</div>						
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

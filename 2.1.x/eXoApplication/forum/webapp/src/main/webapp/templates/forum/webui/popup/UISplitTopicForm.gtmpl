@@ -1,0 +1,107 @@
+<%	
+	import org.exoplatform.forum.service.Post ;
+	import org.exoplatform.forum.service.Topic ;
+	import org.exoplatform.forum.service.UserProfile ;
+	import org.exoplatform.forum.ForumUtils;
+%>
+<%	
+	Topic topic = uicomponent.getTopic() ;
+	List posts = uicomponent.getListPost();
+	UserProfile userProfile = uicomponent.getUserProfile() ;
+	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+	String url = uicomponent.url("Cancel","pathId");
+ 	uicomponent.setLink(url);
+%>
+<div class="UISplitTopicForm" style="padding:10px;">
+	<% uiform.begin() %>
+	<table class="ActionContainer">
+		<tr>
+			<td style="width:150px;" align="right">
+				<div class="label"><%=_ctx.appRes(uiform.getName() + ".label.ParentThreadName");%> :</div>
+			</td>
+			<td>
+				<div class="label"><strong><%=topic.getTopicName();%></strong></div>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:150px;" align="right">
+				<div class="label"><%=_ctx.appRes(uiform.getName() + ".label." + uiform.FIELD_SPLITTHREAD_INPUT);%>:</div>
+			</td>
+			<td>
+				<%uiform.renderChild(uiform.FIELD_SPLITTHREAD_INPUT);%>
+			</td>
+		</tr>
+ 	</table> 
+	<div class="ListPost">
+	  <div style="overflow:auto; margin:2px 0px;">
+			<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
+			<div style="clear:right; height:0px;"><span></span></div>
+		</div>
+		<table class="UIGrid" border="0" cellpadding="0" cellspacing="0">
+			<thead>
+				<tr>
+					<th style="width:30px"></th>
+					<th><%=_ctx.appRes("UIPageListPostByUser.label.PostName");%></th>
+					<th style="width:120px"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></th>
+					<th style="width:80px"><%=_ctx.appRes("UIForumPortlet.label.CreatedBy");%></th>
+					<th style="width:40px"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
+				</tr>
+			</thead>
+			<tbody>
+			<%
+			  List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
+				if(checkeds == null) checkeds = new ArrayList<String>();
+				Date postDate = new Date();
+				for(post in posts) {
+				 	String postId = post.getCreatedDate().getTime()+"/"+post.getId();
+					postDate.setTime(post.getCreatedDate().getTime() - setTime);
+					String createdDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);
+					String classIconPost = post.getIcon() ;
+					if(classIconPost.length() <= 0) 
+						classIconPost = "NormalTopicIcon" ;
+			%>
+				<tr class="EvenRow">
+	 			 	<td class="text">
+	 			 		<div class="Icon24x24 $classIconPost"><span></span></div>
+ 			 		</td>
+	 			 	<td class="text"><%=post.getName();%></td>
+	 			 	<td class="text">$createdDate</td>
+	 			 	<td class="text"><%=post.getOwner();%></td>
+	 			 	<td class="text">
+		 			 <% 
+						  String checked = "";
+						  if(checkeds.contains(postId)){
+						    checked = "checked=\"checked\"";
+						  }
+					 %>
+					 <div><input type="checkbox" class="checkbox" value="false" name="$postId" $checked/></div>
+		 			 </td>
+				</tr>
+			<%} %>
+			</tbody>
+		</table>
+	</div>
+	<div class="UIAction"> 
+		<table class="ActionContainer">
+			<tr>
+				<td align="center">
+				<% for(action in uicomponent.getActions()) { 
+					 String actionLabel = _ctx.appRes("UIAddTagForm.action." + action); 
+					 String link = uicomponent.event(action) ;
+				%>
+				<div onclick="$link" class="ActionButton LightBlueStyle">
+						<div class="ButtonLeft">
+							<div class="ButtonRight">
+								<div class="ButtonMiddle">
+									<a href="javascript:void(0);">$actionLabel</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				<%}%>
+				</td>
+			</tr>
+	 	</table> 
+	</div>
+	<%uiform.end()%>
+</div>

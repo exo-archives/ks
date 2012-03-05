@@ -1,0 +1,420 @@
+<%
+	import java.util.GregorianCalendar;
+	import org.exoplatform.forum.service.Category; 
+	import org.exoplatform.forum.service.Forum; 
+	import org.exoplatform.forum.service.Topic; 
+	import org.exoplatform.forum.service.ForumServiceUtils ;
+	import org.exoplatform.forum.service.Utils ;
+	import org.exoplatform.forum.ForumUtils;
+	import org.exoplatform.forum.ForumSessionUtils;
+	import org.exoplatform.forum.service.UserProfile ;
+	import org.exoplatform.forum.webui.UIForumListSearch;
+	import org.exoplatform.web.application.JavascriptManager;
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('UICategories') ;") ;
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UICategories') ;") ;
+	UserProfile userProfile = uicomponent.getUserProfile();
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"','" + uicomponent.useAjax + "');") ;
+	String userLogin = userProfile.getUserId() ;
+	boolean isAdmin = false ;
+	if(userProfile.userRole == 0) isAdmin = true ;
+	int rCNB = 0;
+	String actionBookmark = "";
+	String componentId = uicomponent.id ;
+	String link = "";
+	String url = "";
+%>
+<div class="UICategories" id="$componentId">
+	<div class="UIForumWorkingWorkspace">
+	<%	
+		if(uicomponent.getIsRendered()) {
+			uicomponent.renderChild(UIForumListSearch.class);
+		} else {
+	%>
+		<div class="UIForumCategories">
+		<% // Start ForumCategory%>
+		<%
+			List categories = uicomponent.getCategoryList();
+				for(category in categories) {
+					String categoryId = category.getId();
+					if(!uicomponent.isShowCategory(categoryId)) continue ;
+					if(isAdmin || uicomponent.getIsPrivate(category.getUserPrivate())) {
+						String title = category.getCategoryName();
+						if(uicomponent.userProfile.getUserRole() < 3){
+							if(uicomponent.isWatching(category.getPath())){
+								actionBookmark = uicomponent.event("AddBookMark","category//"+categoryId) + ";" + uicomponent.event("UnWatch", categoryId);
+							} else {
+								actionBookmark = uicomponent.event("AddBookMark","category//"+categoryId) + ";" + uicomponent.event("AddWatching", categoryId);
+							}
+						} else {
+							actionBookmark = uicomponent.event("ShareLink","category//" + categoryId);
+						}
+						actionBookmark += ";" + uicomponent.getRSSLink(categoryId) + "," + uicomponent.event("RSS", categoryId).replace("javascript:","") ;
+						//url = uicomponent.url("OpenCategory", categoryId);
+						//url = ForumSessionUtils.getBreadcumbUrl(url, componentId, "OpenCategory", "");
+						url = ForumUtils.createdForumLink(ForumUtils.CATEGORY, categoryId);
+						String titleCollap = _ctx.appRes("UIForumPortlet.label.Collapse");
+						String classCssCollap = "CollapseButton";
+						String actionCollap = uicomponent.event("CollapCategory", categoryId+",true");
+						String display = "block";
+						String styleForumToolBar = "";
+						if(uicomponent.isCollapCategories(categoryId)){
+							titleCollap = _ctx.appRes("UIForumPortlet.label.Expand");
+							classCssCollap = "ExpandButton";
+							display = "none";
+							styleForumToolBar = "style=\"border-bottom:solid 1px #b7b7b7;\""; 
+							actionCollap = uicomponent.event("CollapCategory", categoryId+",false");
+						}
+		 %>
+			<div class="UIForumCategory">
+				<div class="ForumToolbar" $styleForumToolBar>
+					<div class="LeftBar">
+						<div class="RightBar">
+							<div class="CenterBar">
+								<div class="Title" title="$title" oncontextmenu="return false;">
+									<div>
+										<% ++rCNB; %>
+										<%if(uicomponent.useAjax){%>
+												<a ctxMenuId="UIPopupCategory${rCNB}" actions="<%=uicomponent.event("OpenCategory", categoryId)%>;" href="$url" class="ActionLink UICategoryTitle">$title</a>
+										<%} else {%>
+												<a ctxMenuId="UIPopupCategory${rCNB}" href="$url" class="ActionLink UICategoryTitle">$title</a>
+										<%}%>
+										
+											<div id="UIPopupCategory${rCNB}" style="display:none;">
+												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block; font-weight:normal;">
+													<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
+												</div>
+											</div>
+										</div>
+								</div>
+								<div class="$classCssCollap" title="$titleCollap" onclick="$actionCollap;"><span></span></div>
+								<div style="clear:both;"><span></span></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="ContentContainer" style="display:$display">
+					<div class="ForumList">
+						<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+							<thead>
+								<tr>
+									<th style="width:40px;">&nbsp;</th>
+									<th style="width:30px;">&nbsp;</th>
+									<th><%=_ctx.appRes("UICategory.label.Forums");%></th>
+									<th style="width:30%;"><%=_ctx.appRes("UICategory.label.lastpost");%></th>
+									<th style="width:75px;"><%=_ctx.appRes("UICategory.label.thread");%></th>
+									<th style="width:65px;"><%=_ctx.appRes("UICategory.label.post");%></th>
+								</tr>
+							</thead>
+							<tbody>
+							<% 
+								List forums = uicomponent.getForumList(category.getId());
+								if(forums.size() == 0) {
+							%>
+								<tr>
+									<td></td>
+									<td></td>
+									<td class="Tdbox"><%=_ctx.appRes("UICategory.label.noForum");%></td>
+									<td class="Tdbox"><%=_ctx.appRes("UICategory.label.noPost");%></td>
+									<td class="Tdbox">0</td>
+									<td class="Tdbox">0</td>
+								</tr>
+							<% }else {%>
+								<%
+									GregorianCalendar calendar = new GregorianCalendar() ;
+									long toDay = calendar.getTimeInMillis();
+									String classRow = "whileRow";
+									String topicNewPostIcon = "";
+									String topicNewPostTitle = "";
+									String lastPostBy = "";
+									String dateTime = "";
+									String titleTopic = "" ;
+			 						String topicPath = "";
+									int i = 0;
+									int dayForumNewPost = uicomponent.getDayForumNewPost();
+									long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+									Date date = new Date();
+									String lastReadPostOfForum = "";
+				 					for(forum in forums) {
+										if(i%2 == 0) classRow = "whileRow";
+										else classRow = "OddRow";
+										++i;
+										String forumId = forum.getId();
+										lastReadPostOfForum = uicomponent.getLastReadPostOfForum(forumId);
+										String classIconForum = "ForumNormalIcon";
+										String titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryNoNewPosts");
+										String forumTitle = forum.getForumName();
+										String forumDescription = forum.getDescription();
+										List	forumModerators = ForumServiceUtils.getUserPermission(forum.getModerators());
+										String topicCount = (String)forum.getTopicCount();
+										long postCount = forum.getPostCount();
+										if(postCount < 0) postCount = 0;
+										String openLinkLastPost = "javascript:void(0)";
+										String urlLastPost = "javascript:void(0)";
+				 						Topic topicNewPost = uicomponent.getLastTopic(category, forum);
+										String classIconReadForum = "ThreadNoNewPost";
+										String titleNoNewPostForum = _ctx.appRes("UIForumIconState.label.ForumNoNewPost");
+										String fontWeight = "normal";
+				 						if(topicNewPost != null) {
+				 							topicPath = categoryId+'/'+forumId+'/'+topicNewPost.getId() ;
+											topicNewPostIcon = topicNewPost.getIcon();
+											if(topicNewPostIcon.length() <= 0)
+												topicNewPostIcon = "NormalTopicIcon" ;
+											topicNewPostTitle = topicNewPost.getTopicName();
+											lastPostBy = topicNewPost.getLastPostBy();
+											date.setTime(topicNewPost.getLastPostDate().getTime()- setTime);
+											dateTime = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),date);
+											long createdDate = topicNewPost.getLastPostDate().getTime() - setTime;
+											if((int)((toDay-createdDate)/86400000) <= dayForumNewPost){
+												classIconForum = "ForumNewPostIcon";
+												titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryNewPosts");
+											}
+											if(!lastPostBy.equals(userLogin)){
+												long lastAccess = userProfile.getLastTimeAccessForum(forumId) ;
+												if(createdDate > lastAccess) {
+													classIconReadForum = "ThreadNewPost";
+													titleNoNewPostForum =  _ctx.appRes("UIForumIconState.label.ForumNewPost");
+													fontWeight = "bold";
+												}
+											}
+											
+											titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.GotoFirstNewPost"),topicNewPostTitle);
+											if(topicNewPost.getIsClosed()) {
+												if(isAdmin || ForumUtils.isStringInList(forumModerators, userLogin)) {
+													openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
+													urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNewPost.getId());
+												} else {
+													titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsClose"),topicNewPostTitle) ;
+												}
+											} else {
+												if(forum.getIsModerateTopic()) {
+													if(isAdmin || topicNewPost.getIsApproved() || ForumUtils.isStringInList(forumModerators, userLogin)){
+														openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
+														urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNewPost.getId());
+													} else {
+														titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsUnApproved"),topicNewPostTitle) ;
+													}
+												} else {
+													openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
+													urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNewPost.getId());
+												}
+											}
+											titleTopic = titleTopic.replaceAll("'","&#39;").replaceAll('"',"&#34;").replaceAll(" ","&#32;") ;
+										}
+										if(forum.getIsLock() == true){
+											classIconForum = "ForumLockedIcon";
+											titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryLockedPosts");
+										}
+										if(forum.getIsClosed() == true){
+											classIconForum = "ForumCloseIcon";
+											titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryClosedPosts");
+										}
+										String ids = categoryId + "/" + forumId;
+										if(uicomponent.userProfile.getUserRole() < 3){
+											if(uicomponent.isWatching(forum.getPath())){
+												actionBookmark = uicomponent.event("AddBookMark","forum//" + ids) + ";" + uicomponent.event("UnWatch",ids);
+											} else {
+												actionBookmark = uicomponent.event("AddBookMark","forum//" + ids) + ";" + uicomponent.event("AddWatching",ids);
+											}
+										} else {
+											actionBookmark = uicomponent.event("ShareLink","forum//" + ids);
+										}
+										actionBookmark += ";" + uicomponent.getRSSLink(forumId) + "," + uicomponent.event("RSS", forumId).replace("javascript:","") ;
+										String lineHeight = "line-height:14px;";
+										if(ForumUtils.isEmpty(forumDescription)) {
+											lineHeight = "line-height:28px;";
+										}
+										url = ForumUtils.createdForumLink(ForumUtils.FORUM, forumId);
+								%>
+										<tr class="$classRow" oncontextmenu="return false;">
+											<td class="Tdbox"><div class="ForumStatusIcon $classIconForum" title="$titleIconForum"><span></span></div></td>
+											<td class="Tdbox"><div class="ForumStatusIcon $classIconReadForum" title="$titleNoNewPostForum"><span></span></div></td>
+											<td>
+												<span>
+														<% ++rCNB; %>
+													<%if(uicomponent.useAjax){%>
+															<a ctxMenuId="UIPopupCategory${rCNB}" actions="<%=uicomponent.event("OpenForumLink", ids)%>;" href="$url" class="ForumTitle ActionLink" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a><span class="ForumQuantity"></span>
+													<%} else {%>
+															<a ctxMenuId="UIPopupCategory${rCNB}" href="$url" class="ForumTitle ActionLink" style="$lineHeight;font-weight:$fontWeight" >$forumTitle</a><span class="ForumQuantity"></span>
+													<%}%>
+													<div id="UIPopupCategory${rCNB}" style="display:none;">
+														<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
+															<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
+														</div>
+													</div>
+												</span>
+												
+											<% if(!ForumUtils.isEmpty(lastReadPostOfForum)) {
+												String lastRead = uicomponent.event("OpenLastReadTopic", ids+"/"+lastReadPostOfForum);
+											%>
+												<a href="$lastRead" class="ScrollRightButton" title="<%=_ctx.appRes("UIForumPortlet.label.GoLastRead");%>" style="float:none; margin:0px;">&nbsp; &nbsp; &nbsp;</a>
+											<% } %>
+												<div><span></span></div>
+
+
+												<div class="ForumDescription">$forumDescription</div>
+											</td>
+											<%if(topicNewPost != null) {
+												if(uicomponent.userProfile.getUserRole() < 3){
+													if(uicomponent.isWatching(forum.getPath()+"/"+topicNewPost.getId())){
+														actionBookmark = uicomponent.event("AddBookMark","topic//"+ topicPath)+ ";" + uicomponent.event("UnWatch",topicPath) + ";" + uicomponent.getRSSLink(topicNewPost.getId()) + "," + uicomponent.event("RSS", topicNewPost.getId()).replace("javascript:","");
+													} else {
+														actionBookmark = uicomponent.event("AddBookMark","topic//"+ topicPath)+ ";" + uicomponent.event("AddWatching",topicPath) + ";" + uicomponent.getRSSLink(topicNewPost.getId()) + "," + uicomponent.event("RSS", topicNewPost.getId()).replace("javascript:","");
+													}
+												} else {
+													actionBookmark = uicomponent.event("ShareLink","topic//" + topicPath) + ";" + uicomponent.getRSSLink(topicNewPost.getId()) + "," + uicomponent.event("RSS", topicNewPost.getId()).replace("javascript:","");
+												}
+											%>
+										 	<td>
+										 		<!-- <div class="LastPostIcon $topicNewPostIcon"><span></span></div> -->
+										 		<%if(topicNewPost.getIsPoll()){%>
+														<div class="LastPostIcon $topicNewPostIcon" style="margin-right:20px;">
+															<div class="LastPostIcon Stats" style="margin-left:18px;cursor:pointer;" title="<%=_ctx.appRes("UITopicContainer.label.TopicHasPoll");%>"><span></span></div>
+														</div>
+												<%} else {%>
+														<div class="LastPostIcon $topicNewPostIcon">
+															<span></span>
+														</div>
+												<%}%>
+										 		<div style="float:left;">
+														<% ++rCNB; %>
+										 			<%if(uicomponent.useAjax){%>
+												 			<a ctxMenuId="UIPopupCategory${rCNB}" actions="$openLinkLastPost;" href="$urlLastPost" title="$titleTopic" class="LastPostTitle ActionLink" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+													<%} else {%>
+												 			<a ctxMenuId="UIPopupCategory${rCNB}" href="$urlLastPost" title="$titleTopic" class="LastPostTitle ActionLink" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+													<%}%>
+													<div id="UIPopupCategory${rCNB}" style="display:none">
+														<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
+															<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
+														</div>
+													</div>
+												</div>
+												<div style="clear:left;"><span></span></div>
+												<% String screemNamePost =  uicomponent.getScreenName(lastPostBy);%>
+												<div class="LastPostInfos">
+													<span><%=_ctx.appRes("UITopicContainer.label.by");%>&nbsp;</span>
+													<a style="color:#058EE6;" href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">$screemNamePost</a>
+													<span class="DateTime">&nbsp;($dateTime)</span>
+
+													<div style="position:relative;">
+														<div class="UIPopupCategory" style="display:none; left:2px; top:2px; ">
+															<div class="UIRightClickPopupMenu" style="display:block;">
+																<div class="UIContextMenuContainer">
+																	<div class="TopLeftRightClickPopupMenu">
+																		<div class="TopRightRightClickPopupMenu">
+																			<div class="TopCenterRightClickPopupMenu"><span></span></div>
+																		</div>
+																	</div>
+																	<div class="MiddleLeftRightClickPopupMenu">
+																		<div class="MiddleRightRightClickPopupMenu">
+																			<div class="UIRightPopupMenuContainer">
+																			<%
+																				String linkProf = uicomponent.getActionViewInfoUser("ViewPublicUserInfo", lastPostBy);
+																			%>
+																				<div class="MenuItem" onclick="$linkProf">
+																					<div class="ItemIcon IconsView ViewPublicUserInfo" style="padding-left:30px;">
+																						<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPublicUserInfo")%></a>
+																					</div>
+																				</div>
+																			<%
+																			  if(userProfile.getUserRole() < 3 && lastPostBy.indexOf(Utils.DELETED) < 0){
+																					String sendPrSms = uicomponent.getActionViewInfoUser("PrivateMessage", lastPostBy);
+																			%>
+																				<div class="MenuItem" onclick="$sendPrSms">
+																					<div class="ItemIcon IconsView PrivateMessage" style="padding-left:30px;">
+																						<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.PrivateMessage")%></a>
+																					</div>
+																				</div>
+																			<%
+																				}
+																				String viewPosted = uicomponent.getActionViewInfoUser("ViewPostedByUser", lastPostBy);
+																			%>
+																				<div class="MenuItem" onclick="$viewPosted">
+																					<div class="ItemIcon IconsView ViewPostedByUser" style="padding-left:30px;">
+																						<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPostedByUser")%> $screemNamePost</a>
+																					</div>
+																				</div>
+																			<%
+																				String viewThread = uicomponent.getActionViewInfoUser("ViewThreadByUser", lastPostBy);
+																			%>
+																				<div class="MenuItem" onclick="$viewThread">
+																					<div class="ItemIcon IconsView ViewThreadByUser" style="padding-left:30px;">
+																						<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewThreadByUser")%> $screemNamePost</a>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="BottomLeftRightClickPopupMenu">
+																		<div class="BottomRightRightClickPopupMenu">
+																			<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													
+												</div>	
+											<%} else { %>	
+											<td class="Tdbox" style="height:40px;">
+													<%=_ctx.appRes("UICategory.label.availableTheard"); %>
+											<%} %>
+											</td>
+										 	<td class="Tdbox">$topicCount</td>
+											<td class="Tdbox">$postCount</td>
+							 			</tr>
+						 		<% } 
+						 		 }
+							%>
+							</tbody>
+						</table>							
+						
+					</div>
+				</div>
+			</div>	
+		
+		<%	 } // End if private
+			 }// End for and End ForumCategory
+		 uicomponent.setIsgetForumList(false) ;
+		%>
+		</div>
+	<% } %>
+	</div>
+	<% //Begin RightClick Bookmark	%>
+	<div id="RightClickContainer"	style="display:none">
+		<div class="RightClickCustomItem" style="display:none; height:0px;"><span></span></div>
+	<%if(uicomponent.userProfile.getUserRole() < 3){%>
+		<div class="TopLeftRightClickPopupMenu">
+			<div class="TopRightRightClickPopupMenu">
+				<div class="TopCenterRightClickPopupMenu"><span></span></div>
+				<div class="RightClickCustomItem" style="display:none; height:0px"><span></span></div>
+			</div>
+		</div>
+		<div class="MiddleLeftRightClickPopupMenu">
+			<div class="MiddleRightRightClickPopupMenu">
+				<div class="UIRightPopupMenuContainer">
+					<div class="ItemIcon AddLinkToBookIcon">
+						<a class="MenuItem AddBookmark" href=""><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
+					</div>
+					<div class="ItemIcon AddWatchingIcon">
+						<a href="" class="MenuItem AddWatching"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
+ 					</div>
+ 					<div class="ItemIcon ForumRSSFeed">
+						<a class="MenuItem AddRSS" href="#"><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="BottomLeftRightClickPopupMenu">
+			<div class="BottomRightRightClickPopupMenu">
+				<div class="BottomCenterRightClickPopupMenu">
+					<div class="FixHeight"><span></span></div>
+				</div>
+			</div>
+		</div>
+		<% } %>
+	</div>
+	<% //End RightClick Bookmark%>
+</div>

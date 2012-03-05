@@ -1,0 +1,16 @@
+<%
+	import org.exoplatform.forum.webui.UICategoryInfo ;
+	import org.exoplatform.forum.webui.UIForumIconState ;
+	import org.exoplatform.forum.webui.UIForumLinks ;
+%>
+<div class="UICategoriesSummary">	
+	<%
+		uicomponent.setRenderChild();
+		List children = uicomponent.getChildren() ;
+		for(component in children) {
+			if(component.isRendered()){
+				uicomponent.renderChild(component.getClass()) ; 
+			}
+		}
+	%>
+</div>

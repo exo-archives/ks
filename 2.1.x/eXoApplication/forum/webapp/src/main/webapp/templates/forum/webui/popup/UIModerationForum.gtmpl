@@ -1,0 +1,116 @@
+<%  
+	import org.exoplatform.forum.service.ForumSearch;
+	import org.exoplatform.forum.service.Utils ;
+	import org.exoplatform.forum.ForumUtils;
+%>
+<div class="$uicomponent.id">
+	<% uiform.begin() %>
+	<div class="UITopicContainer">
+	 	<div class="UIForumContainer">
+			<div class="ContentContainer">
+			
+				<div class="UIForm">
+				<% 
+					String display =	"block";
+					List objects = uicomponent.getListObject();
+					if(uicomponent.getIsShowIter()){ 
+				%>
+					<div style="overflow:auto;">
+					  <% uicomponent.renderChild(uicomponent.SEARCH_ITERATOR); %>
+						<div style="clear:right; height:0px;"><span></span></div>
+					</div>
+				<% } %>	
+					<div class="HorizontalLayout" style="margin-top:3px;">
+						<div class="UITabContentContainer">
+							<div id="UITabContent" class="UITabContent">
+								<div class="UITopicList">
+									<table cellspacing="0" cellpadding="0" border="0" id="" class="UIGrid">
+										<thead>
+											<tr>
+												<th style="width:60px;"><%=_ctx.appRes("UIForumListSearch.label.Type");%></th>
+												<th><%=_ctx.appRes("UIForumListSearch.label.NameItem");%></th>
+												<th style="width:140px;"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></th>
+											</tr>
+										</thead>
+										<tbody>
+											<% 
+												String classRow = "whileRow";
+												if(objects != null && objects.size() > 0) {
+													int j = 0;
+													String formatDate = uiform.userProfile.getShortDateFormat() + " " + uiform.userProfile.getTimeFormat() ;
+													long setTime = (long)(uiform.userProfile.getTimeZone()*3600000) ;
+													Date postDate = new Date();
+													for(object in objects){
+														if(j%2 == 0) classRow = "whileRow";
+														else classRow = "OddRow";
+														String objectId = object.getId();
+														String type = object.getType();
+														String objectTitle = object.getName();
+														String titlePost = uiform.getTitleInHTMLCode(object.getContent());
+														postDate.setTime(object.getCreatedDate().getTime() - setTime);
+														String createdDate = ForumUtils.getFormatDate(formatDate, postDate);
+														titlePost = ForumUtils.getSubString(titlePost, 100);
+														String classType = "HotThreadNoNewPost";
+														if(type.equals(Utils.POST)) classType = "PostIcon";
+														String titleType = _ctx.appRes("UIForumPortlet.label."+type) ;
+											%>
+												<tr class="$classRow">
+													<td class="Tdbox" align="center"><div class="$classType Icon24x24" style="margin:auto;" title="$titleType"><span></span></div></td>
+													<td>
+														<div>
+															<a href="<%=uicomponent.event("Open", objectId)%>" title="$titlePost">$objectTitle</a>
+														</div>
+													</td>
+												 	<td class="Tdbox" align="center"><div>$createdDate</div></td>
+									 			</tr>
+										 	<% j = j + 1;} 
+										 		} else {
+									 		%>
+									 			<tr>
+									 				<td colspan="3" align="center">
+									 					<div class="ContentNotPost1"><%=_ctx.appRes("UIForumPortlet.label.NoThread");%></div>
+									 				</td>
+									 			</tr>
+									 		<%}%>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						
+						</div>
+					</div>
+				<% if(uicomponent.getIsShowIter()){ %>
+					<div style="overflow:auto;">
+					  <% uicomponent.renderChild(uicomponent.SEARCH_ITERATOR); %>
+						<div style="clear:right; height:0px;"><span></span></div>
+					</div>
+				<% } %>					
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	<div class="UIAction"> 
+		<table class="ActionContainer">
+			<tr>
+				<td align="center">
+				<% for(action in uicomponent.getActions()) { 
+					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+					 String link = uicomponent.event(action) ;
+				%>
+					<div onclick="$link" class="ActionButton LightBlueStyle">						
+						<div class="ButtonLeft">
+							<div class="ButtonRight">
+								<div class="ButtonMiddle">
+									<a href="javascript:void(0);">$actionLabel</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<%}%>
+				</td>
+			</tr>
+		</table> 
+	</div>
+	<%uiform.end()%>
+</div>

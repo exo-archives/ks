@@ -1,0 +1,5 @@
+<div class="UICategoryForm $uicomponent.id">
+	<% uiform.begin() %>
+		This is Print Preview form	
+	<%uiform.end()%>
+</div>

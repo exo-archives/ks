@@ -1,0 +1,51 @@
+<%
+	import org.exoplatform.web.application.JavascriptManager;
+	
+	
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.addOnLoadJavascript('eXo.faq.UIAnswersPortlet.FAQChangeHeightToAuto');
+%>
+
+<div class="FAQUIQuestionManagerForm $uicomponent.id" style="height:auto;" id="Parent$uicomponent.id">
+	<div>
+		<div id="FAQViewTabContent" style="float:left; width:100%; min-width:625px;">
+			<% uicomponent.renderChild("QuestionInfo") ; %>
+		</div>
+		<div id="FAQViewFormContent" style="float:left; padding-top:10px; width:100%; min-width:625px;">
+			<%
+			if(uicomponent.isViewEditQuestion && uicomponent.isEditQuestion) {
+				 uicomponent.renderChild(uicomponent.UI_QUESTION_FORM) ;
+			}
+			if(uicomponent.isViewResponseQuestion && uicomponent.isResponseQuestion){
+				 uicomponent.renderChild(uicomponent.UI_RESPONSE_FORM) ;
+			}
+			%>
+		</div>
+		<div style="clear:left"><span></span></div>
+	</div>
+	<% uiform.begin() %>
+	<div class="UIAction">
+		<table class="ActionContainer" style="text-align:center">
+			<tr>
+				<td>
+        <% for(action in uicomponent.getActions()) { 
+        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+           String QMLink = uicomponent.event(action) ;
+        %>
+        		<div onclick="$QMLink" class="ActionButton LightBlueStyle">
+	      	  	<div class="ButtonLeft">
+	        	  	<div class="ButtonRight">
+	          	  	<div class="ButtonMiddle">
+	          	  		<a href="javascript:void(0);">$actionLabel</a>
+	          	  	</div>
+	            	</div>
+	          	</div>
+	        	</div>
+          <%}%>
+      	</td>
+			</tr>
+	  </table> 
+	</div>
+	<%uiform.end()%>
+</div>

@@ -1,0 +1,54 @@
+<%	
+	import org.exoplatform.forum.service.ForumLinkData ;
+	import org.exoplatform.forum.service.Utils ;
+%>
+
+<div class="UIMovePostForm UIMoveTopicForm">
+	<% uiform.begin() %>
+	<div class="TitleMoveThreads"><%=_ctx.appRes("UISelectCategoryForm.label.ChooseDestinationCategory");%>:</div>
+	<div class="UITree ScrollArea">
+		<div class="TreeContainer ParentNode">
+		<% 
+			List categories = uicomponent.getForumLinks(); 
+			for(category in categories) {
+			 if(category.getType().equals(Utils.CATEGORY)) {
+				String categoryId = category.getId() ;
+				String categoryName = category.getName() ;
+		%>
+			<div class="Node">
+			 	<div class="Icon CategoryNormalIcon" style="background-position:20px 50%; width:40px;padding-top:2px;"><%uicomponent.renderChild(categoryId)%></div>	
+			 	<div class="NodeLabel">
+			 		<div class="NodeSelected" style="line-height:22px;">$categoryName</div> 
+				</div> 			
+				<div style="clear:left;"><span></span></div>
+			</div>
+		<% } 
+			}%>	
+		 </div>
+	</div>
+	<div class="UIAction"> 
+		<table class="ActionContainer">
+			<tr>
+				<td align="center">
+			<% for(action in uicomponent.getActions()) { 
+				 String actionLabel = _ctx.appRes("UISelectItemForum.action." + action); 
+				 String link = uicomponent.event(action) ;
+			%>
+					<div onclick="$link" class="ActionButton LightBlueStyle">
+						<div class="ButtonLeft">
+							<div class="ButtonRight">
+								<div class="ButtonMiddle">
+									<a href="javascript:void(0);">
+										$action
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				<%}%>
+				</td>
+			</tr>
+ 		</table> 
+	</div>
+	<%uiform.end()%>
+</div>

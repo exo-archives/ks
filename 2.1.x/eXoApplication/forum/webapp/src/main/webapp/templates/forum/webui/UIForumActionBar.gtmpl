@@ -1,0 +1,156 @@
+<%	
+	import org.exoplatform.forum.service.UserProfile ;
+	import org.exoplatform.ks.common.UserHelper;
+	import org.exoplatform.web.application.JavascriptManager;
+	UserProfile userProfile = uicomponent.getUserProfile() ;
+	boolean isAdmin = false ;
+	if(userProfile.getUserRole() == 0) isAdmin = true ;
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.addJavascript("setTimeout('eXo.forum.UIForumPortlet.loadScroll()', 1000);") ;
+	if(userProfile.getUserRole() <= 1) {
+		jsmanager.importJavascript('eXo.core.JSON') ;
+		jsmanager.importJavascript('eXo.forum.ForumTotalJob','/forum/javascript/') ;
+		jsmanager.addJavascript('eXo.forum.ForumTotalJob.init("'+uicomponent.userProfile.getUserId()+'","'+uicomponent.getUserToken()+'","'+uicomponent.getCometdContextName()+'");') ;
+		jsmanager.addJavascript("eXo.forum.UIForumPortlet.visibleAction('"+uicomponent.id+"');") ;
+	}
+%>
+<div class="UIForumActionBar" id="UIForumActionBar">
+	<div class="LeftForumActionBar">
+		<div class="RightForumActionBar">
+			<div class="CenterForumActionBar">
+				<div class="ControlbarCotainer">
+					<table>
+						<tr>
+							<td class="ControlButtonContainer">
+								<%String[] actions = [""];
+									if(isAdmin) { 
+										actions = ["AddCategory","AddForum","ManageModerator","Administrations","EditProfile","OpenBookMark"];
+									} else {
+										actions = ["EditProfile","OpenBookMark"];
+									}
+									boolean isAdm = false;
+									for(action in actions){	
+										if(action.equals("Administrations")){
+											isAdm = true;
+										} else isAdm = false;
+								%>
+
+									<div class="DefaultStyle ControlButton ForumBar" id="$action" onmouseover="eXo.forum.UIForumPortlet.OverButton(this);" onmouseout="eXo.forum.UIForumPortlet.OverButton(this);">
+										<%if(isAdm){%>
+										<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">	
+										<%}%>
+											<div class="LeftOverButton">
+												<div class="RightOverButton">
+													<div class="CenterOverButton">
+														<div class="Icon $action">
+														<%if(isAdm){%>
+															<div class="DownArrow1Icon" style="padding-right:16px;">
+																<a href="javaScript: void(0);"><%=_ctx.appRes("UIForumActionBar.label.Administrations");%></a>
+															</div>
+														<%} else {%>
+															<a href="<%=uicomponent.event(action)%>" style="display:block;">
+																<span><%= _ctx.appRes("UIForumActionBar.label." + action); %></span>
+															</a>
+														<%}%>
+														</div>
+													</div>
+												</div>
+											</div>
+										<%if(isAdm){%>
+											<div style="position:relative;">
+											<% /*Begin Popup Menu*/ %>
+												<div class="UIPopupCategory SearchPopup" style="display:none; left:0px; top:auto;">
+													<div class="UIRightClickPopupMenu" style="display:block;">
+														<div class="UIContextMenuContainer">
+															<div class="TopLeftRightClickPopupMenu">
+																<div class="TopRightRightClickPopupMenu">
+																	<div class="TopCenterRightClickPopupMenu"><span></span></div>
+																</div>
+															</div>
+															<div class="MiddleLeftRightClickPopupMenu">
+																<div class="MiddleRightRightClickPopupMenu">
+																	<div class="UIRightPopupMenuContainer">
+																	<% for(ac in uicomponent.getActionMenu()){ %>
+																		<div class="ItemIcon ${ac}Icon">
+																			<a class="MenuItem" href="<%=uicomponent.event(ac)%>" style="display:block">
+																				<span><%= _ctx.appRes("UIForumActionBar.label." + ac); %></span>
+																			</a>
+																		</div>
+																	<% } %>
+																	</div>
+																</div>
+															</div>
+															<div class="BottomLeftRightClickPopupMenu">
+																<div class="BottomRightRightClickPopupMenu">
+																	<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											<% /*End Popup Menu*/ %>
+											</div>
+											
+										</div>	
+										<%}%>
+									</div>
+									<div class="SeparatorLineForum ControlButton" id="${action}Sp"><span></span></div>
+								<% }%>
+								<div class="ScrollButtons" style="width:35px;">
+				      		<div title="Previous">
+				      			<div title="Next"><span></span></div>
+				      		</div>
+				      	</div>
+								<div style="clear:both;"><span></span></div>
+							</td>
+							<% 
+								long numberOfNewMessage = uicomponent.getNewMessage();
+								String priMessage="", pending="";
+								int total = 0;
+							%>
+							<td style="width:245px;" id="tdWidth">
+								<div style="width:245px;" id="divWidth">
+							<%
+								if(!UserHelper.isAnonim() && numberOfNewMessage >= 0){
+									priMessage=_ctx.appRes("UIBreadcumbs.label.PrivateMessages"); 
+									String newMessage;
+									if(numberOfNewMessage > 0) {
+										newMessage = "<b>"+priMessage+"(" + numberOfNewMessage + ") </b>";
+									} else {
+										newMessage = priMessage + " " ;
+									}
+									if(userProfile.getUserRole() <= 1) {
+										total = uicomponent.getTotalJobWattingForModerator();
+										pending = _ctx.appRes("UIBreadcumbs.label.Pending");
+								%>
+									<div class="SeparatorLineForum" style="float:right;width:auto; padding:0px 5px;">
+										<a id="PendingJob" href="<%=uicomponent.event("Moderation");%>">$pending:(<b>$total</b>)</a>
+									</div>
+								<%}%>
+									<div class="SeparatorLineForum" style="float:right;width:auto; padding:0px 5px;">
+										<a class="PrivateMessage PMStyle" onclick="<%=uicomponent.event("PrivateMessage");%>; return false;">
+											 <span>$newMessage</span>
+										</a>
+									</div>
+									<% 
+										int lengths = (String.valueOf(numberOfNewMessage)+ priMessage+pending+String.valueOf(total)).length(); 
+										lengths = (numberOfNewMessage > 0)?lengths+4:lengths;
+										lengths = (total > 0)?lengths+3:lengths;
+									%>
+									<div id="lengthStr" style="display:none; float:right;">$lengths</div>
+									<script type="text/javascript">
+										function setWitdh(){ var l = (document.getElementById('lengthStr').innerHTML)*1+1; document.getElementById('tdWidth').style.width = ((l*6.8)+65) + "px"; document.getElementById('divWidth').style.width = ((l*6.8)+65) + "px";}
+										setWitdh();
+									</script>
+								<% } %>
+									<div style="clear:right;"><span></span></div>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

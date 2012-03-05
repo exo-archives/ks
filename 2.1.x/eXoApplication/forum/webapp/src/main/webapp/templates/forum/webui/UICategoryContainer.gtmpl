@@ -1,0 +1,19 @@
+<%  
+	import org.exoplatform.forum.webui.UICategories ;
+	import org.exoplatform.forum.webui.UICategory ;
+	import org.exoplatform.forum.webui.UICategoriesSummary ;
+	import org.exoplatform.web.application.JavascriptManager;
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.initContextMenu('"+ uicomponent.id +"') ;") ;
+%>
+<div class="UICategoryContainer" id="$uicomponent.id">
+	<% 
+		List children = uicomponent.getChildren() ;
+    for(child in children) {
+      if(child.isRendered()){
+				uicomponent.renderChild(child.getClass()) ;      
+      }
+    }
+	%>
+</div>

@@ -1,0 +1,21 @@
+
+Property changes on: .
+___________________________________________________________________
+Modified: svn:mergeinfo
+   Merged /ks/trunk:r64718
+
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/ForumServiceImpl.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/ForumServiceImpl.java	(revision 66186)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/ForumServiceImpl.java	(working copy)
+@@ -928,7 +928,9 @@
+     }
+     if (maxOnline > mostOnline) {
+       stats.setMostUsersOnline(maxOnline + ", at " + timestamp.getTimeInMillis());
+-    } else {
++    } else if (mostOnline == 0) {
++      // this case is expected to appear when the first user logins to system and the statistic is not activated before.
++      // the maximum number of online users will jump from N/A to 1 
+       stats.setMostUsersOnline("1, at " + timestamp.getTimeInMillis());
+     }
+     storage.saveForumStatistic(stats);  

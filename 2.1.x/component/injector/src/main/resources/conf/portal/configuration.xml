@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_2.xsd http://www.exoplaform.org/xml/ns/kernel_1_2.xsd"
+  xmlns="http://www.exoplaform.org/xml/ns/kernel_1_2.xsd">
+
+
+
+  <!-- This component initializes forum with random data -->
+
+  <component>
+    <type>org.exoplatform.services.bench.DataInjectorService</type>
+  </component>
+  
+  <external-component-plugins>
+    <target-component>org.exoplatform.services.bench.DataInjectorService</target-component>
+    <component-plugin>
+      <name>ForumDataInjector</name>
+      <set-method>addInjector</set-method>
+      <type>org.exoplatform.ks.bench.ForumDataInjector</type>
+      <description>inject data for Forum</description>
+    </component-plugin>
+    
+    <component-plugin>
+      <name>AnswerDataInjector</name>
+      <set-method>addInjector</set-method>
+      <type>org.exoplatform.ks.bench.AnswerDataInjector</type>
+      <description>inject data for Answer</description>
+    </component-plugin>
+    
+  </external-component-plugins>
+</configuration>
+  

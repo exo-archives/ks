@@ -1,0 +1,24 @@
+<%	
+	import org.exoplatform.forum.webui.UIPostRules ;
+	import org.exoplatform.forum.webui.UIForumModerator;
+	import org.exoplatform.forum.service.ForumServiceUtils;
+%>
+<div class="UIForumInfos">
+	<div class="ThreadsStartsList RightStartsList">
+		<% 
+		UIPostRules postRules = uicomponent.getChild(UIPostRules.class);
+		if(postRules.isRendered()) {
+			uicomponent.renderChild(UIPostRules.class);
+		}
+		%>
+	</div>
+	<div class="ThreadsStartsList LeftStartsList">
+		<% 
+		UIForumModerator forumModerator = uicomponent.getChild(UIForumModerator.class);
+		if(forumModerator.isRendered()) {
+			uicomponent.renderChild(UIForumModerator.class); 
+		}
+		%>
+	</div>
+	<div style="clear:right;"><span></span></div>
+</div>

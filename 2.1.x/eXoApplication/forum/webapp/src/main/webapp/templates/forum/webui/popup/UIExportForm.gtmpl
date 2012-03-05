@@ -1,0 +1,109 @@
+<%
+import org.exoplatform.forum.service.Category;
+import org.exoplatform.forum.service.Forum;
+import org.exoplatform.web.application.JavascriptManager;
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+%>
+<div class="UIFormForum $uicomponent.id" style="padding:10px;">
+	<% uiform.begin() %>
+		<div style="display:none;" id="divChecked" checked="0"><span></span></div>
+		<div class="HorizontalLayout">
+			<div class="UIFormInput">
+			<%
+				if(!uiform.listObjects.isEmpty()){%>
+					<div>
+						<fieldset style="color:rgb(51, 51, 51); margin:10px;">
+						<%if(uicomponent.object_ == null){%>
+							<legend class="StyleLegend" style="cursor:pointer;"><%=_ctx.appRes("UIExportForm.label.Selectcategories");%></legend>
+						<%}else if(uicomponent.object_ instanceof Category){%>	
+							<legend class="StyleLegend" style="cursor:pointer;"><%=_ctx.appRes("UIExportForm.label.SelectForums");%></legend>
+						<%}%>
+							<div style="height:160px; overflow:auto;">
+								<table class="UIGrid" style="margin:2px auto; width:95%;">
+									<thead>
+										<tr>
+											<th style="width:16px;"><span></span></th>
+											<%if(uicomponent.object_ == null){%>
+												<th align="center" style="width:100%"><%=_ctx.appRes("UIExportForm.label.Categories");%></th>
+											<%}else if(uicomponent.object_ instanceof Category){%>
+												<th align="center" style="width:100%"><%=_ctx.appRes("UICategory.label.Forums");%></th>
+											<%}%>
+										</tr>
+									</thead>
+									<tbody>	
+										<%
+										child = uiform.getChildById(uicomponent.LIST_CATEGORIES);
+										int i = 0;
+										for(Object object : uiform.listObjects){%>
+											<tr>
+												<td>
+													<% child.renderChild(i) %>
+												</td>
+												<td style="padding-left:10px; width:100%">
+													<%try{%>
+														<%=object.getCategoryName();%>
+													<%}catch(Exception e){%>
+														<%=object.getForumName();%>
+													<%}%>
+												</td>
+											</tr>
+									<%	i ++;
+										}%>
+									</tbody>
+								</table>
+							</div>
+						</fieldset>
+					</div>
+				<%}
+				%>
+				<table class="UIFormGrid">
+					<tbody>				
+					<% 
+					for(field in uiform.getChildren()) { 
+						if(field.isRendered() && !field.getName().equals(uicomponent.LIST_CATEGORIES)) {
+							fieldName = uicomponent.getLabel(field.getName());
+					%>
+							<tr>
+								<td class="FieldLabel" style="white-space:nowrap;">
+									$fieldName
+								</td>
+								<td class="FieldComponent">
+									<% uiform.renderField(field) %>
+								</td>
+							</tr>
+					<% 
+						}
+					}
+					%>						
+					</tbody>
+				</table>
+			</div>
+		</div>
+		
+		<div class="UIAction"> 
+			<table class="ActionContainer">
+				<tr>
+					<td align="center">
+					<% for(action in uicomponent.getActions()) { 
+						 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+						 String link = uicomponent.event(action) ;
+					%>
+							<div onclick="$link" class="ActionButton LightBlueStyle">
+								<div class="ButtonLeft">
+									<div class="ButtonRight">
+										<div class="ButtonMiddle">
+											<a href="javascript:void(0);"> 
+												$actionLabel
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						<%}%>
+					</td>
+				</tr>
+			</table> 
+		</div>
+	<%uiform.end()%>
+</div>

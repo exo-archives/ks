@@ -1,0 +1,155 @@
+<%
+	import org.exoplatform.faq.webui.FAQUtils;
+	uicomponent.setLanguages();
+%>
+<div class="UIQuestionForm $uicomponent.id">
+	<% uiform.begin() %>
+		<div class="HorizontalLayout" style="padding:10px 0px;">
+			<div class="UIFormInput">
+				<table class="UIFormGrid" style="width:95%">
+					<tbody>
+					<% 
+					String url = uicomponent.url("Attachment", "OBJECTID") ;
+					uicomponent.setLink(url);
+					for(field in uiform.getChildren()) { 
+						if(field.getName().equals(uicomponent.ATTACHMENTS) || 
+								field.getName().equals(uicomponent.IS_APPROVED) || 
+								field.getName().equals(uicomponent.IS_ACTIVATED)){
+							continue;
+						} else if(field.isRendered()) {
+					    if(field.getName().equals( uicomponent.QUESTION_DETAIL)){
+					%>
+							  <tr>
+							    <td class="FieldLabel" style="width:100px; text-align:right">
+							      <%=uicomponent.getLabel(field.getName()) %> :
+							    </td>
+							    <td class="FieldComponent" style="padding-left:4px; white-space:nowrap;">
+										<% uiform.renderField(field) %>
+							    </td>
+							  </tr>
+							
+						<%} else if(field.getName().equals( uicomponent.ALL_LANGUAGES)){
+							if(!uicomponent.isRenderSelectLang) continue;
+								String link = uicomponent.event("DeleteLanguage", "delete question");
+						%>
+								<tr>
+									<td class="FieldLabel" style="width:100px; text-align:right"><%=uicomponent.getLabel(field.getName()) %> :</td>
+									<td class="FieldComponent" style="padding-left:4px; white-space:nowrap;">
+										<div style="float:left;">
+											<div style="float:left;"><% uiform.renderField(field) %></div>
+											<div onclick="javaScript:if(confirm('<%=(_ctx.appRes("UIQuestionForm.msg.DeleteQuestionInLanguage").replace("{0}",uicomponent.lastLanguage_) )%> ?')){$link}" style="float:left; width:24px;">
+												<div class="DustBinIcon"><span></span></div>
+											</div>
+										</div>
+										<div style="clear:left;"><span></span></div>
+									</td>
+								</tr>
+						<%} else {%>
+								<tr>
+									<%fieldName = uicomponent.getLabel(field.getName());
+										if(!fieldName.equals(uicomponent.getId())) {%>												
+											<td class="FieldLabel" style="width:100px">
+												<%=uicomponent.getLabel(field.getName()) %> :
+											</td>
+											<td class="FieldComponent" style="white-space:normal;">
+													<% uiform.renderField(field) %>
+													<%if(field.getName().equals("Author") || field.getName().equals("EmailAddress") || field.getName().equals("QuestionTitle")) {%> * <%}%><br/>
+											</td>
+									<%} else {%>
+											<td class="FieldComponent" colspan="2"><% uiform.renderField(field) %></td>
+									<%}%>
+								</tr>
+					<%  }
+					  }
+					}
+					if(uiform.isAddCheckBox) {
+					%>
+						<!-- ============== Validation apporved and activate ============================ -->
+						<tr>
+							<td class="FieldLabel" style="width:100px">
+								<%=_ctx.appRes("UIQuestionForm.label.Validation")%> :
+							</td>
+							<td class="FieldComponent" style="white-space:normal;">
+								<div style="float:left;">
+									<div style="float:left; padding:0px 4px 0px 4px;">
+										<%uiform.renderChild(uicomponent.IS_APPROVED);%>
+										<%=_ctx.appRes("UIQuestionForm.label.IsApproved")%>
+									</div>
+									<div style="float:left; padding:0px 4px 0px 4px;">
+										<%uiform.renderChild(uicomponent.IS_ACTIVATED);%>
+										<%=_ctx.appRes("UIQuestionForm.label.IsActivated")%>
+									</div>
+								</div>
+							</td>
+						</tr>
+					<%}%>
+					<!-- ======================= Attachment =========================== -->
+					<tr>
+						<td class="FieldLabel" style="white-space:nowrap; width:100px">
+							<%=_ctx.appRes("UIQuestionForm.label.Attachment")%> :
+						</td>
+						<td class="FieldComponent" style="white-space:normal;">
+							<%
+							if(!uicomponent.getListFile().isEmpty()) {
+								String name = "" ;
+								String link = "" ;
+								for(attachment in uicomponent.getListFile()) {
+						      name = attachment.getName() ;
+						      if(attachment.getId() != null) {
+						      	link = uicomponent.event("RemoveAttachment", attachment.getId()) ;
+						      } else {
+						      	link = uicomponent.event("RemoveAttachment", attachment.getPath()) ;
+						      }
+						     	if(name.length() < 80){
+							     %>
+							     	<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon">
+						     			$name
+						     	<%} else {%>
+							     	<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon">
+							     		<a href="javaScript:void(0);" title="$name" style="color:black;" title="">
+						     				<%=FAQUtils.getSubString(name, 80)%>
+						     			</a>
+						     	<%}%>
+											<a href="$link" style="color:#058EE6; font-size:12px;" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>">
+												<img class="DustBin" src="/eXoResources/skin/DefaultSkin/background/Blank.gif" alt="<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>"/>
+											</a>
+										</div>
+						    <%
+						  	}
+							}
+							%>
+							<a style="padding-left:5px; color:blue; font-style:italic; text-decoration:underline" href="<%=uicomponent.event("Attachment")%>">
+								<%=_ctx.appRes("UIQuestionForm.label.AttachAFile")%>
+							</a>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		
+		<div class="UIAction"> 
+			<table class="ActionContainer" style="text-align:center">
+				<tr>
+					<td>
+	        <% for(action in uicomponent.getActions()) { 
+	        		 if(action.indexOf("Remove") >= 0) continue ; 
+	        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+	           String link = uicomponent.event(action) ;
+	        %>
+	        		<div onmousedown="$link" class="ActionButton LightBlueStyle">
+		      	  	<div class="ButtonLeft">
+		        	  	<div class="ButtonRight">
+		          	  	<div class="ButtonMiddle">
+		          	  		<a href="javascript:void(0);">$actionLabel</a>
+		          	  	</div>
+		            	</div>
+		          	</div>
+		        	</div>
+	          <%}%>
+	      	</td>
+				</tr>
+		  </table> 
+		</div>
+	<%uiform.end()%>
+</div>

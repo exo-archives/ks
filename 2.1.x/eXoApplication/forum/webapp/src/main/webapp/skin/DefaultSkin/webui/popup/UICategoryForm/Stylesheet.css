@@ -1,0 +1,25 @@
+.UIForumPortlet .UICategoryForm {
+}
+
+.UIForumPortlet .UICategoryForm .HorizontalLayout {
+	padding: 8px 0px 0px 0px;
+	border: none;
+}
+
+.UIForumPortlet .UICategoryForm .UIForm .HorizontalLayout .UIFormInputSet {
+	width: auto;
+}
+
+.UIForumPortlet .UICategoryForm .HorizontalLayout textarea {
+	height:54px;
+	width:235px;
+}
+
+.UIForumPortlet .UICategoryForm #PermissionTab textarea {
+	height:50px;
+	width:235px;
+}
+
+.UIForumPortlet .UICategoryForm .HorizontalLayout input {
+	width:232px;
+}

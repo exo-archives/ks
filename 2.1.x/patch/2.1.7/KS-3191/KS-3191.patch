@@ -1,0 +1,121 @@
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIQuestions.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIQuestions.java	(revision 75845)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIQuestions.java	(working copy)
+@@ -25,6 +25,8 @@
+ import java.util.List;
+ import java.util.Map;
+ 
++import javax.portlet.PortletPreferences;
++
+ import org.exoplatform.container.PortalContainer;
+ import org.exoplatform.faq.rendering.RenderHelper;
+ import org.exoplatform.faq.rendering.RenderingException;
+@@ -62,6 +64,8 @@
+ import org.exoplatform.ks.rss.RSS;
+ import org.exoplatform.services.organization.User;
+ import org.exoplatform.web.application.ApplicationMessage;
++import org.exoplatform.webui.application.WebuiRequestContext;
++import org.exoplatform.webui.application.portlet.PortletRequestContext;
+ import org.exoplatform.webui.config.annotation.ComponentConfig;
+ import org.exoplatform.webui.config.annotation.EventConfig;
+ import org.exoplatform.webui.core.UIApplication;
+@@ -310,6 +314,11 @@
+ 	public void setFAQService(FAQService service){
+ 		faqService_ = service;
+ 	}
++	private boolean isNotInSpace() {
++		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
++		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
++		return (portletPref.getValue("SPACE_URL", null) != null)? false:true;
++	}
+ 
+ //	private String[] getActionQuestionWithUser(){
+ //		if(!faqSetting_.isEnanbleVotesAndComments() || (currentUser_ == null || currentUser_.trim().length() < 1)) return userActionQues2_ ;
+@@ -606,6 +615,7 @@
+ 		}
+ 	}
+ 	
++
+ 	static  public class QuestionManagamentActionListener extends EventListener<UIQuestions> {
+ 		public void execute(Event<UIQuestions> event) throws Exception {
+ 			UIQuestions questions = event.getSource() ;
+@@ -1412,4 +1422,4 @@
+   public void setLanguage(String language) {
+     this.language_ = language;
+   }
+-}
+\ No newline at end of file
++}
+Index: eXoApplication/faq/webapp/src/main/webapp/javascript/eXo/faq/UIAnswersPortlet.js
+===================================================================
+--- eXoApplication/faq/webapp/src/main/webapp/javascript/eXo/faq/UIAnswersPortlet.js	(revision 75845)
++++ eXoApplication/faq/webapp/src/main/webapp/javascript/eXo/faq/UIAnswersPortlet.js	(working copy)
+@@ -83,8 +83,10 @@
+ 	}
+ } ;
+ 
+-UIAnswersPortlet.prototype.checkCustomView = function(hileTitle, showTitle){
++
++UIAnswersPortlet.prototype.checkCustomView = function(isNotSpace, hileTitle, showTitle){
+ 	var cookie = eXo.core.Browser.getCookie("FAQCustomView");
++	cookie = (cookie == "none" || cookie == "" && isNotSpace == "false")? "none":"";
+ 	document.getElementById('FAQViewCategoriesColumn').style.display = cookie;
+ 	var buttomView = document.getElementById('FAQCustomView');
+ 	var title = document.getElementById('FAQTitlePanels');
+@@ -93,23 +95,28 @@
+ 		title.title = showTitle;
+ 	} else {
+ 		title.title = hileTitle;
++		cookie = "block"
+ 	}
++	eXo.core.Browser.setCookie("FAQCustomView", cookie, 1);
+ };
+ 
+ UIAnswersPortlet.prototype.changeCustomView = function(change, hileTitle, showTitle){
+ 	var columnCategories = document.getElementById('FAQViewCategoriesColumn');
+ 	var buttomView = document.getElementById('FAQCustomView');
+ 	var title = document.getElementById('FAQTitlePanels');
++	var cookie = "";
+ 	if(columnCategories.style.display != "none"){		
+ 		columnCategories.style.display = "none";
+-		 eXo.core.DOMUtil.addClass(buttomView,"FAQCustomViewRight");
+-		 title.title = showTitle;
++		eXo.core.DOMUtil.addClass(buttomView,"FAQCustomViewRight");
++		title.title = showTitle;
++		cookie = "none";
+ 	}else{
+ 		columnCategories.style.display = "";
+-		 eXo.core.DOMUtil.replaceClass(buttomView,"FAQCustomViewRight","");
+-		 title.title = hileTitle;
++		eXo.core.DOMUtil.replaceClass(buttomView,"FAQCustomViewRight","");
++		title.title = hileTitle;
++		cookie = "block";
+ 	}
+-	eXo.core.Browser.setCookie("FAQCustomView",columnCategories.style.display,1);
++	eXo.core.Browser.setCookie("FAQCustomView", cookie, 1);
+ 	var uiNav = eXo.faq.UIAnswersPortlet ;
+ 	if(typeof(uiNav.initActionScroll) == "function") uiNav.initActionScroll();
+ 	if(typeof(uiNav.initBreadCumbScroll) == "function") uiNav.initBreadCumbScroll();
+Index: eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/UIQuestions.gtmpl
+===================================================================
+--- eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/UIQuestions.gtmpl	(revision 75845)
++++ eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/UIQuestions.gtmpl	(working copy)
+@@ -16,7 +16,7 @@
+ 	jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.controlWorkSpace();");
+ 	//jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'");');
+ 	jsmanager.addJavascript('eXo.faq.UIAnswersPortlet.initContextMenu("'+compId+'") ;') ;
+-	jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.checkCustomView('" + _ctx.appRes("UIQuestions.label.HileLeftPanels") + "', '" + _ctx.appRes("UIQuestions.label.ShowLeftPanels") + "');");
++	jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.checkCustomView('" + uicomponent.isNotInSpace() + "', '" + _ctx.appRes("UIQuestions.label.HileLeftPanels") + "', '" + _ctx.appRes("UIQuestions.label.ShowLeftPanels") + "');");
+ 	jsmanager.addCustomizedOnLoadScript('eXo.faq.UIAnswersPortlet.loadActionScroll();');
+ 	jsmanager.addJavascript('eXo.faq.UIAnswersPortlet.updateContainersHeight();') ;
+ 	String url = uicomponent.url("Setting", "OBJECTID");
+@@ -54,7 +54,7 @@
+ 									if(uicomponent.faqSetting_.isEnableAutomaticRSS()){
+ 									 	String linkRss = uicomponent.getRSSLink() ;
+ 									%>
+-										<div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
++										<div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)" class="DefaultStyle FAQBar ControlButton">
+ 											<div class="SeparatorLine">
+ 												<div class="LeftOverButton">
+ 													<div class="RightOverButton">

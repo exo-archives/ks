@@ -1,0 +1,162 @@
+
+Property changes on: .
+___________________________________________________________________
+Modified: svn:mergeinfo
+   Merged /ks/trunk:r64718
+
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/Utils.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/Utils.java	(revision 67320)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/Utils.java	(working copy)
+@@ -332,6 +332,20 @@
+   }
+ 	
+ 	/**
++	 * check string array is whether empty or not
++	 * @param array
++	 * @return false if at least one element of array is not empty, true in the opposite case.
++	 */
++	public static boolean isEmpty(String[] array) {
++	  if (array != null && array.length > 0) {
++	    for (String s : array) {
++	      if (s != null && s.trim().length() > 0) return false;
++	    }
++	  }
++    return true;
++  }
++	
++	/**
+ 	 * get Xpath query when get list post. 
+ 	 * @param String isApproved
+ 	 * @param String isHidden
+Index: ext/social-integration/src/main/java/org/exoplatform/ks/ext/impl/ForumSpaceActivityPublisher.java
+===================================================================
+--- ext/social-integration/src/main/java/org/exoplatform/ks/ext/impl/ForumSpaceActivityPublisher.java	(revision 67320)
++++ ext/social-integration/src/main/java/org/exoplatform/ks/ext/impl/ForumSpaceActivityPublisher.java	(working copy)
+@@ -26,6 +26,7 @@
+ import org.exoplatform.ks.ext.impl.ForumTransformHTML;
+ import org.exoplatform.forum.service.Category;
+ import org.exoplatform.forum.service.Forum;
++import org.exoplatform.forum.service.ForumService;
+ import org.exoplatform.forum.service.Post;
+ import org.exoplatform.forum.service.Topic;
+ import org.exoplatform.forum.service.Utils;
+@@ -66,7 +67,31 @@
+     public static final String TOPIC_NAME_KEY = "TopicName";
+     
+     private static Log      LOG = ExoLogger.getExoLogger(ForumSpaceActivityPublisher.class);
+-
++    
++    private boolean isPublicPost(Post post, Topic topic) {
++      if (!isPublicTopic(topic)) {
++        return false;
++      }
++      if (post == null || 
++          post.getUserPrivate().length == 2 || post.getIsHidden() || !post.getIsActiveByTopic() || !post.getIsApproved()) {
++        // check permission of the post
++        // if the post is private or hidden by censored words or not active by topic or waiting for approving, return false. 
++        return false;
++      }
++      return true;
++    }
++    
++    private boolean isPublicTopic(Topic topic) {
++      if (topic == null || 
++          !topic.getIsActive() || topic.getIsWaiting() || topic.getIsClosed() ||
++          !Utils.isEmpty(topic.getCanView())) {
++        // check permission of topic
++        // if the topic is not active or waiting or closed or restricts users, return false
++        return false;
++      }
++      return true;
++    }
++    
+     @Override
+     public void saveCategory(Category category) {
+       // TODO Auto-generated method stub
+@@ -87,6 +112,12 @@
+         if (forumId == null || forumId.indexOf(Utils.FORUM_SPACE_ID_PREFIX) < 0) {
+           return;
+         }
++        ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
++        Topic topic = forumService.getTopic(categoryId, forumId, topicId, "");
++        if (!isPublicPost(post, topic)) {
++          // ignore post which is not public
++          return;
++        }
+         
+         String msg = "@"+post.getOwner();
+         String body = ForumTransformHTML.getTitleInHTMLCode(post.getMessage(), new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
+@@ -113,7 +144,7 @@
+         templateParams.put(ACTIVITY_TYPE_KEY, POST_ADDED);
+         activity.setTemplateParams(templateParams);
+         
+-        activityM.recordActivity(spaceIdentity, activity);
++        activityM.saveActivity(spaceIdentity, activity);
+ 
+       } catch (ClassNotFoundException e) {
+         if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
+@@ -131,6 +162,11 @@
+           return;
+         }
+         
++        if (!isPublicTopic(topic)) {
++          // ignore topic which is not public
++          return;
++        }
++        
+         String msg = "@"+topic.getOwner();
+         String body = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription(), new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
+         IdentityManager identityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
+@@ -157,7 +193,7 @@
+         params.put(ACTIVITY_TYPE_KEY, TOPIC_ADDED);
+         activity.setTemplateParams(params);
+         
+-        activityM.recordActivity(spaceIdentity, activity);
++        activityM.saveActivity(spaceIdentity, activity);
+       } catch (ClassNotFoundException e) {
+         if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
+       } catch (Exception e) {
+@@ -174,6 +210,12 @@
+         if (forumId == null || forumId.indexOf(Utils.FORUM_SPACE_ID_PREFIX) < 0) {
+           return;
+         }
++        ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
++        Topic topic = forumService.getTopic(categoryId, forumId, topicId, "");
++        if (!isPublicPost(post, topic)) {
++          // ignore post which is not public
++          return;
++        }
+         
+         String msg = "@" + post.getOwner();
+         String body = ForumTransformHTML.getTitleInHTMLCode(post.getMessage(), new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
+@@ -201,7 +243,7 @@
+         templateParams.put(ACTIVITY_TYPE_KEY, POST_UPDATED);
+         activity.setTemplateParams(templateParams);
+         
+-        activityM.recordActivity(spaceIdentity, activity);
++        activityM.saveActivity(spaceIdentity, activity);
+ 
+       } catch (ClassNotFoundException e) {
+         if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
+@@ -218,6 +260,11 @@
+           return;
+         }
+         
++        if (!isPublicTopic(topic)) {
++          // ignore topic which is not public
++          return;
++        }
++        
+         String msg = "@" + topic.getOwner();
+         String body = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription(), new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
+         IdentityManager identityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
+@@ -244,7 +291,7 @@
+         params.put(ACTIVITY_TYPE_KEY, TOPIC_UPDATED);
+         activity.setTemplateParams(params);
+         
+-        activityM.recordActivity(spaceIdentity, activity);
++        activityM.saveActivity(spaceIdentity, activity);
+       } catch (ClassNotFoundException e) {
+         if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
+       } catch (Exception e) {

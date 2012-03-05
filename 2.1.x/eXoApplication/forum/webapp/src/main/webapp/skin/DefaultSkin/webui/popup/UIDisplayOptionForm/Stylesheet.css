@@ -1,0 +1,21 @@
+.UIForumPortlet .UIDisplayOptionForm {
+	width: 500px;
+	padding: 10px;
+}
+
+.UIForumPortlet .UIDisplayOptionForm .UIForm {
+	border: 1px solid #bcbcbc;
+	background: #f7f7f7;
+}
+
+.UIForumPortlet .UIDisplayOptionForm .TitleBar {
+	text-align: center;
+	line-height: 20px;
+	padding-top: 10px;
+	font-weight: bold;
+}
+
+.UIForumPortlet .UIDisplayOptionForm .UIForm .HorizontalLayout {
+	padding: 10px 10px 20px 10px;
+	border: none;
+}

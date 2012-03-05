@@ -1,0 +1,97 @@
+<%	
+	import org.exoplatform.forum.ForumUtils;
+	import org.exoplatform.forum.ForumSessionUtils;
+	import org.exoplatform.portal.webui.util.Util;
+	uicomponent.setIsUseAjax();
+%>
+<div class="UIBreadcumbs" id="$uicomponent.id">
+	<div class="LeftBreadcumbs">
+		<div class="RightBreadcumbs"> 
+			<div class="CenterBreadcumbs">
+				<div class="BreadcumbsInfoBar">
+				<% int t = 0 ;
+					String link = "";
+					String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
+					String portalName = "/" + Util.getUIPortal().getName() ;
+					String checkPath = ""; 
+					String id = "", linkHome="";
+					for(namePath in uicomponent.getBreadcumbs()) {
+					  checkPath = namePath;
+					  oncl = "";
+					  id = uicomponent.getPath(t);
+					  id = id.substring(id.lastIndexOf("/")+1);
+						link = ForumUtils.createdForumLink(uicomponent.getType(id),id) ;
+						if(link.indexOf(portalName) > 0) {
+							if(link.indexOf(portalName + "/" + selectedNode) < 0){
+								link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
+							}									
+						}		
+						String event = uicomponent.event("ChangePath", uicomponent.getPath(t)) ;
+						if(namePath.equals(ForumUtils.FIELD_EXOFORUM_LABEL)) {
+							namePath = _ctx.appRes("UIBreadcumbs.label.eXoForum");
+							if(link.indexOf("?") > 0) {
+								linkHome = link.substring(0, link.indexOf("?"));
+							}
+						}
+						if(namePath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL)) {
+							namePath = _ctx.appRes("UIBreadcumbs.label.SearchForums");
+						}
+						String	name = ForumUtils.getSubString(namePath, 18);
+						namePath = namePath.replaceAll("'","&#39;").replaceAll('"',"&#34;").replaceAll(" ","&#32;") ;
+						if(t+1 < uicomponent.getMaxPath()) {
+				%>
+					<%if(uicomponent.useAjax){%>
+							<a href="$link" onclick="$event; return false;" title="$namePath" class="Selected">$name</a>
+					<%} else {%>
+							<a href="$link" title="$namePath" class="Selected">$name</a>
+					<%} %>
+					
+					<div class="RightArrowIcon"><span></span></div>
+				 <% } else {
+				 		 	if(uicomponent.isLink()) {
+				 %>
+				 	<%if(uicomponent.useAjax){%>
+							<a href="$link" title="$namePath" onmousedown="$event; return false;" class="Selected">$name</a>
+					<%} else {%>
+							<a href="$link" title="$namePath" class="Selected">$name</a>
+					<%}%>
+					<% 	} else{ %>				 
+					<div title="$namePath" class="Selected">$name</div>
+				 <%		
+				 			}
+				 		} 
+					t = t + 1 ;
+					} 
+				 %>
+					<div style="clear:left"><span></span></div>
+				</div>
+				<div class="RSSBar">
+				  <%String toolTip = uicomponent.getToolTip();
+				    if(!checkPath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL) && !toolTip.equals("tag")){
+					    toolTip = _ctx.appRes("UIBreadcumbs.title." + toolTip);
+					    
+					  if(uicomponent.checkLinkPrivate(id)){
+					  	link = link.replaceFirst("public", "private");
+					  } else {
+					  	link = link.replaceFirst("private", "public");
+					  }
+				  %>
+					<div class="ForumSeparatorLine" style="float:right;">
+						<div class="ShareLink">
+							<a class="PermLink" onclick="window.open('$link'); return false;" href="$link" title="$toolTip"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></a>
+						</div>
+					</div>	
+					<%}%>
+				
+					<div class="SearchForms" style="float:left">
+						<%
+							uicomponent.renderChildren() ;
+						%>
+					</div>
+					<div style="clear:both"><span></span></div>
+				</div>
+				<div style="clear:both"><span></span></div>
+			</div>
+		</div>
+	</div>
+</div>

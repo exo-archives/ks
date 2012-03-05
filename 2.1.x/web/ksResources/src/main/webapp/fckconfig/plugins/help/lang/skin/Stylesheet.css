@@ -1,0 +1,90 @@
+@import url('/eXoResources/skin/DefaultSkin/webui/component/UIGrid/Stylesheet.css') ;
+@import url('/forum/skin/DefaultSkin/webui/Stylesheet.css');
+div {
+	padding:	0px ; margin: 0px ;
+}
+
+table {
+	width: 100% ;
+	padding: 0px ; margin: 0px ;
+	border-spacing:	0px ;
+	border-collapse: collapse ;
+	font-size: 11px;
+}
+
+th, td {
+	padding: 0px ; margin: 0px ;
+	vertical-align: top;
+}
+
+img {
+	padding: 0px ; margin: 0px ; border: none ; vertical-align: bottom;
+}
+
+html {
+	margin: 0px ; padding: 0px;
+}
+
+body {
+	margin: 0px ; padding: 0px;
+	font-family: Tahoma,Verdana, Arial, Helvetica, sans-serif ;
+	font-size: 11px;
+	height: 100%;
+}
+#MainBody {
+	overflow: hidden;
+	margin: 0px ; padding: 0px;
+}
+#language {
+	width: 100%;
+	border: none;
+	height: 100%;
+}
+.Content {
+	padding: 10px 25px;
+}
+.UIGrid {
+	border:1px solid #B7B7B7;
+	border-collapse:collapse;
+	margin:auto;
+	padding-left:1px;
+	table-layout:fixed;
+}
+
+.UIGrid .tcat {
+	background:#F9F9FD url(background/ForumToolBarCenter1x26.gif) repeat-x center top;
+	line-height: 24px;
+	border-top: none;
+	padding: 0px 15px;
+	font-weight: bold;
+}
+
+.UIGrid .thead {
+	height: 19px;
+	padding: 0px 15px;
+	border-top: 1px solid #CCCCCC;
+	line-height: 16px;
+	background:#F9F9FD url(background/ForumTitleBar1x19.gif) repeat-x center top;
+}
+.UIGrid td {
+	border-left:1px solid #CCCCCC;
+	border-right:1px solid #CCCCCC;
+	border-top:1px solid white;
+}
+.UIGrid .alt2 {
+	background: #E1E4FF;
+	padding: 6px;
+}
+.UIGrid .alt1 {
+	padding: 6px;
+	background: #F1F1E3;
+}
+.highlight {
+	color: red;
+}
+.ClassCode {
+  background: #ededed;
+	border: 1px inset #7b7b7b;
+	margin: 5px;
+	overflow: auto;
+}

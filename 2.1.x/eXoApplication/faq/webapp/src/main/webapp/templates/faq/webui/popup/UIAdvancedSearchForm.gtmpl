@@ -1,0 +1,62 @@
+<% 
+	import org.exoplatform.web.application.JavascriptManager;
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.submitSearch('"+uiform.id+"');") ;
+%>
+<div class="UIAdvancedSearchForm $uicomponent.id">
+	<% uiform.begin() %>
+		<div class="HorizontalLayout">
+			<div class="UIFormInput">
+				<table class="UIFormGrid">
+					<tbody>						
+				<% 
+					for(field in uiform.getChildren()) {
+						if(field.isRendered()) {
+				%>
+							<tr>
+								<%fieldName = uicomponent.getLabel(field.getName());%>
+								<%if(!fieldName.equals(uicomponent.getId()) && fieldName != null && fieldName.length() > 0) { %>												
+									<td class="FieldLabel">
+											<%=fieldName%>
+									</td>
+									<td class="FieldComponent">
+											<% uiform.renderField(field) %>
+									</td>
+								<%} else {%>
+									<td class="FieldComponent" colspan="2"><% uiform.renderField(field) %></td>
+								<%}%>
+							</tr>
+				<%
+						}
+					}
+				%>						
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="UIAction"> 
+			<table class="ActionContainer" style="text-align:center">
+				<tr>
+					<td>
+				<% for(action in uicomponent.getActions()) { 
+					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+					 String link = uicomponent.event(action) ;
+					 String classN = (action.equals("Search")) ? "ActionSearch" : "";
+				%>
+						<div class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle">
+										<a class="$classN" href="$link">$actionLabel</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					<%}%>
+					</td>
+				</tr>
+	 		</table> 
+		</div>
+	<%uiform.end()%>
+</div>

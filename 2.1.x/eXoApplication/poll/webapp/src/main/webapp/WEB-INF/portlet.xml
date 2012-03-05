@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<portlet-app version="1.0" xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"
+					 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+						 xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"> 
+	<portlet>
+		<description xml:lang="EN">Poll Portlet</description>
+		<portlet-name>PollPortlet</portlet-name>
+		<display-name xml:lang="EN">Poll Portlet</display-name>
+		<portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>		
+		
+		<init-param>
+			<name>webui.configuration</name>
+			<value>/WEB-INF/conf/portlet/poll/PollPortlet/webui/configuration.xml</value>
+		</init-param>
+
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>help</portlet-mode>
+			<portlet-mode>edit</portlet-mode>
+		</supports>
+		<supported-locale>en</supported-locale>
+		<resource-bundle>locale.portlet.poll.PollPortlet</resource-bundle>
+		<portlet-info>
+			<title>Poll Portlet</title>
+			<short-title>Poll Portlet</short-title>
+			<keywords>poll</keywords>
+		</portlet-info>
+	
+		<portlet-preferences>
+			<preference>
+				<name>pollIdShow</name>
+				<value></value> <!-- PollId -->
+				<read-only>false</read-only>
+			</preference>
+		</portlet-preferences>
+		
+	</portlet>
+</portlet-app>

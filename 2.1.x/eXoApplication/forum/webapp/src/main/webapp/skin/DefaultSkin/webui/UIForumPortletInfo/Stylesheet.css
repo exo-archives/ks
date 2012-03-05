@@ -1,0 +1,74 @@
+.UIForumStatisticPortlet {
+	padding: 0px 10px 10px 10px;
+	border: 1px solid #b7b7b7;
+	border-top: none;
+	margin: -3px 1px 0px 4px;
+	min-height: auto;
+}
+
+.UIForumQuickReplyPortlet {
+	padding: 0px 10px 10px 10px;
+	border: 1px solid #b7b7b7;
+	border-top: none;
+	margin: -3px 1px 0px 4px;
+	min-height: auto;
+}
+
+.UIForumPollPortlet .UIForumPortlet {
+	padding: 0px;
+	margin: 0px;
+	min-height: auto;
+	border: none;
+}
+
+.UIForumPollPortlet {
+	border: 1px solid #b7b7b7;
+	border-top: none;
+	margin: -3px 1px 0px 4px;
+}
+
+.UIForumPollPortlet .UIForumContainer {
+	padding: 10px 0px 0px 0px;
+	width: 98%;
+	margin: auto;
+}
+
+.UIWindow .UIForumPollPortlet {
+	border: none;
+	margin: 0px;
+}
+
+.UIForumRulePortlet {
+	padding: 0px 10px 10px 10px;
+	border: 1px solid #b7b7b7;
+	border-top: none;
+	margin: -3px 1px 0px 4px;
+	min-height: auto;
+}
+
+.UIForumLinkPortlet {
+	padding: 0px 0px 10px 10px;
+	border: 1px solid #b7b7b7;
+	border-top: none;
+	margin: -3px 1px 0px 4px;
+	min-height: auto;
+}
+
+.UIForumModeratePortlet {
+	padding: 0px 10px 10px 10px;
+	border: 1px solid #b7b7b7;
+	border-top: none;
+	margin: -3px 1px 0px 4px;
+	min-height: auto;
+}
+
+.UIForumModeratePortlet .UIForumContainer {
+	padding: 0px;
+}
+
+.UIForumIconStatePortlet {
+	border: 1px solid #b7b7b7;
+	border-top: none;
+	margin: -3px 1px 0px 4px;
+	min-height: auto;
+}

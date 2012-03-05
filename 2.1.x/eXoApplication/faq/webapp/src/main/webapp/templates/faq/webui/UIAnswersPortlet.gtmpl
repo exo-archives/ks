@@ -1,0 +1,24 @@
+<%
+	import org.exoplatform.web.application.JavascriptManager;
+	
+	def rcontext = _ctx.getRequestContext();
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.importJavascript('eXo.ks.KSUtils', '/ksResources/javascript/');
+	jsmanager.importJavascript('eXo.ks.MaskLayerControl', '/ksResources/javascript/');
+	jsmanager.addOnResizeJavascript('function(){eXo.ks.KSUtils.setMaskLayer("'+uicomponent.id+'");}');
+%>
+
+<div class="UIAnswersPortlet" id="$uicomponent.id">
+	<div class="ParentMaskLayer">
+		<div id="KSMaskLayer" class="KSMaskLayer" onselectstart="return false;" ondragstart="return false;" unselectable="on"><span></span></div>
+	</div>
+	<%
+		List children = uicomponent.getChildren() ;
+    for(component in children) {
+      if(component.isRendered()){
+				uicomponent.renderChild(component.getClass()) ; 
+      }
+    }
+	%>
+	<%uicomponent.renderPopupMessages();%>
+</div>

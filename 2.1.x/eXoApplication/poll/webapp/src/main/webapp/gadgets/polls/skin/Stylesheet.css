@@ -1,0 +1,14 @@
+@import url('/eXoResources/skin/DefaultSkin/webui/component/Stylesheet.css') ;
+@import url('/poll/skin/DefaultSkin/webui/Stylesheet.css') ;
+
+.UIPollPortlet {
+	padding:0px 5px 5px 5px;
+	font-size:12px;	
+}
+.UIPollPortlet .UIAction .ActionButton, .UIPollPortlet .UIGrid, .UIPollPortlet div{
+	font-size:12px;
+}
+
+.UIPollPortlet .EditPoll{
+	width:auto;
+}

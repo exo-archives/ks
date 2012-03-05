@@ -1,0 +1,23 @@
+<%	
+	import org.exoplatform.web.application.JavascriptManager;
+	import org.exoplatform.portal.webui.util.Util ;
+	
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.importJavascript('eXo.portal.UIPortalNavigation');
+	jsmanager.importJavascript('eXo.portal.UIAdminToolbar');
+	jsmanager.addCustomizedOnLoadScript('eXo.portal.UIAdminToolbar.onLoad("' + uicomponent.id + '");');
+	
+	def portalURI = Util.getPortalRequestContext().getPortalURI();
+%>
+<div class="UIUserToolBarFaqPortlet" id="$uicomponent.id">
+	<div class="UIHorizontalTabs">
+		<div class="TabsContainer" style="position: relative">	
+			<div class="UITab NormalToolbarTab">
+				<div class="">
+				    <a class="FaqIcon TBIcon" href="<%= portalURI + "faq" %>">Faq</a>
+				</div>
+			</div>
+		</div>
+	</div>	
+</div>

@@ -1,0 +1,218 @@
+<% 
+	import org.exoplatform.faq.service.Category;
+	import org.exoplatform.faq.service.Question;
+	String compId = uicomponent.getId() ; 
+  def rcontext = _ctx.getRequestContext() ;	
+ %>
+<div class="UIUserWatchManager $uicomponent.id" style="padding:8px;">
+		
+		<div class="UITabPane">
+			<div style="padding:2px;">
+	    	<div class="WorkingArea">
+					<%/* RECOMMENT TAB FOR WATCH QUESTION%>
+		     	<div class="UIHorizontalTabs" >
+		     	  <div class="LeftHorizontalTabs">
+		     	    <div class="RightHorizontalTabs">
+		     	      <div class="CenterHorizontalTabs">
+					        <div class="TabsContainer">
+				            <%
+				            	String selTabId = uicomponent.getSelectedTabId() ;
+				            	if(selTabId == null || selTabId.trim().length() < 1) selTabId = "watchCategoryTab";
+				            	int count = 0;
+				              for(inputSet in uicomponent.tabs) {
+						        		String className="NormalTab" ;
+						        		if(inputSet.equals(selTabId)) className="SelectedTab" ;
+					              String tabName = _ctx.appRes(uicomponent.getName() + ".tab.label." + inputSet) ;
+	                  %>
+					              <div class="UITab NormalTabStyle">
+					                <div class="$className">
+					                  <div class="LeftTab">
+					                    <div class="RightTab">
+							                  <div class="MiddleTab" onClick="eXo.webui.UIHorizontalTabs.changeTabForUIFormTabpane(this, '$uiform.id', '$inputSet');<%=uicomponent.event("ChangeTab", "" + count);%>">$tabName</div>
+							                </div>
+					                  </div>
+					                </div>
+					              </div>
+				            <%	count ++; 
+				            	}%>
+					        </div>
+					      </div>
+					    </div>
+					  </div>
+		      </div>
+		      <% END RECOMMENT TAB FOR WATCH QUESTION */%>
+		      <% uiform.begin() %>
+	        <input type="hidden" id="<%=uicomponent.RENDER_TAB%>" name="<%=uicomponent.RENDER_TAB%>" value="$uicomponent.selectedTabId">
+					<div style="background-color:#F3F3F3;">
+	        	<!-- div class="UITabContentContainer" -->
+	        	<div class="UITabContentContainer" style="border: 1px solid #C7C7C7;">
+	        		<%
+	            String display1 = "none" ;
+	            String display2 = "none" ;
+	            if(uicomponent.tabSelect == 0){
+	            	display1="block" ;
+	            	display2 = "none" ;
+	            } else {
+	            	display1 = "none" ;
+	            	display2="block" ;
+	            }
+	        		%>
+	        		<!-- manager for watch category -->
+      				<div class="UITabContent" style="display:$display1; padding-bottom:30px;">
+								<div class="UIForm">
+						 			<div class="UIHorizontalLayout">
+						 				<div class="UIPermissionManager">
+						 					<div class="UIPermissionInfo">
+						 						<table class="UIGrid" cellspacing="0" border="0" cellpadding="0">
+						 							<thead>
+						 								<tr>
+							 								<th><%= _ctx.appRes("UIUserWatchManager.label.pathCategory"); %></th>
+							 								<th style="width:80px"><%= _ctx.appRes("UIUserWatchManager.label.action"); %></th>
+						 								</tr>
+						 							</thead>
+						 							<tbody>
+						 							<% 
+						 							List<Category> listCate = uicomponent.getListCategory() ;
+						 							if(listCate.size() > 0){
+						 								for(String cate : listCate ) {
+						 									categoryId = cate.getPath() ;
+						 									path = uicomponent.getCategoriesName(categoryId)
+						 									String unWatch = uicomponent.event("UnWatch", categoryId);
+						 									String link = uicomponent.event("Link",categoryId);
+						 							 %>
+						 								<tr>
+						 									<% if(path.length() > 120) {
+						 											String title = path ;
+						 											path = uicomponent.getSubString(path,120);
+						 									 %>
+						 										<td class="text" style="text-align:left"><a title="$title" href="$link">$path</a></td>
+						 									<% } else { %>
+						 										<td class="text" style="text-align:left"><a href="$link">$path</a></td>
+						 									<% } %>
+						 									<td style="width:40px;">
+						 										<div onclick="javaScript: if(confirm('<%=_ctx.appRes("UIUserWatchManager.msg.confirm-unwatch-category")%>')){$unWatch}" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" style="float:left; cursor:pointer;">
+						 											<div class="DeleteWatchIcon" ></div>
+						 										</div>
+						 									</td>
+						 								</tr>
+						 								<% 
+						 									}
+						 								} else {
+						 									   %>
+						 										 <tr class="EvenRow">
+																		<td class="Tdbox" colspan="2" style="text-align:center"><%= _ctx.appRes("UIUserWatchManager.title.no-matches"); %></td>
+									  						</tr>
+														<% } %>
+						 							</tbody>
+						 						</table>
+						 					</div>
+						 				</div>
+						 				
+						 				<%
+										totalPages = uicomponent.getTotalpages(uicomponent.LIST_CATES_WATCHED) ;
+					          if(totalPages > 1) {
+					          %>
+											<div style="overflow:auto;">
+												<% uicomponent.renderChild(uicomponent.LIST_CATES_WATCHED) ; %>
+											</div>
+									<%}%>
+						 				
+						 			</div>
+					 			</div>
+					 			<div style="margin:5px;">
+					 				<div style="font-weight:bold;"><%=_ctx.appRes("UIUserWatchManager.label.watchByEmail")%>:</div> 
+					 				<div class="EmailAddressIcon" style="color:gray; font-weight:bold;">$uicomponent.emailAddress</div>
+					 			</div>
+ 							</div>
+ 							
+ 							<!-- manager for watch question -->
+ 							<%
+ 							/* RECOMMENT MANAGE WATCH QUESTION
+ 							%>
+ 							<div class="UITabContent"  style="display:$display2;">
+ 								<div class="UIForm">
+						 			<div class="UIHorizontalLayout">
+						 				<div class="UIPermissionManager">
+						 					<div class="UIPermissionInfo">
+						 						<table class="UIGrid" cellspacing="0" border="0" cellpadding="0">
+						 							<thead>
+						 								<tr>
+							 								<th><%= _ctx.appRes("UIUserWatchManager.label.pathCategory"); %></th>
+							 								<th style="width:80px"><%= _ctx.appRes("UIUserWatchManager.label.action"); %></th>
+						 								</tr>
+						 							</thead>
+						 							<tbody>
+						 							<% 
+						 							List<Question> listQuestion = uicomponent.getListQuestionsWatch() ;
+						 							if(listQuestion != null && listQuestion.size() > 0){
+						 								for(Question question : listQuestion ) {
+						 									questionID = question.getPath() ;
+						 									questionContent = question.getQuestion();
+						 									String unWatch = uicomponent.event("UnWatch", questionID);
+						 									String link = uicomponent.event("Link", questionID);
+						 							 %>
+						 									<tr>
+						 									<% if(questionContent.length() > 120) {
+						 											String title = path ;
+						 											questionContent = uicomponent.getSubString(questionContent,120)
+						 									 %>
+						 											<td class="text" style="text-align:left;"><a title="$title" href="$link">$questionContent</a></td>
+						 									<% } else { %>
+						 												<td class="text" style="text-align:left;"><a href="$link">$questionContent</a></td>
+						 									<% } %>
+						 									<td style="width:40px;" align="center">
+						 										<div onclick="$unWatch" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" style="float:left;">
+						 											<div class="DeleteWatchIcon" ></div>
+						 										</div>
+						 									</td>
+						 								</tr>
+					 								<% 
+					 									}
+					 								} else {%>
+						 										 <tr class="EvenRow">
+																		<td class="Tdbox" colspan="2" style="text-algin:center;"><%= _ctx.appRes("UIUserWatchManager.title.no-matches"); %></td>
+									  						</tr>
+											<% } %>
+						 							</tbody>
+						 						</table>
+						 					</div>
+						 				</div>
+						 				<%
+										totalPages = uicomponent.getTotalpages(uicomponent.LIST_QUESTIONS_WATCHED) ;
+					          if(totalPages > 1) {
+					          %>
+											<div style="overflow:auto;">
+												<% uicomponent.renderChild(uicomponent.LIST_QUESTIONS_WATCHED) ; %>
+											</div>
+									<%}%>
+						 			</div>
+					 			</div>
+ 							</div>
+ 							<% END RECOMMENT MANAGE WATCH QUESTION */%>
+ 						</div>
+					</div>
+					
+					<div class="UIAction">
+			    	<table class="ActionContainer" style="text-align:center">
+						  <tr>
+							  <td>
+					    		<div onclick="<%=uicomponent.event("Cancel");%>" class="ActionButton LightBlueStyle">
+						  	  	<div class="ButtonLeft">
+						    	  	<div class="ButtonRight">
+						      	  	<div class="ButtonMiddle">
+						      	  		<a href="javascript:void(0);"><%=_ctx.appRes("UIAnswersPortlet.action.Cancel")%></a>
+					      	  		</div>
+						        	</div>
+						      	</div>
+					    		</div>
+				      	</td>
+							</tr>
+			 	  </table>
+				</div>
+				<%uiform.end()%>
+				
+				</div>
+			</div>
+		</div>
+		
+</div>

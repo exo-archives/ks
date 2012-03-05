@@ -1,0 +1,15 @@
+Index: eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java
+===================================================================
+--- eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(revision 79462)
++++ eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(working copy)
+@@ -394,7 +394,9 @@
+     try {
+       Node faqServiceHome = getFAQServiceHome(sProvider) ;
+       if (faqServiceHome.hasNode(Utils.CATEGORY_HOME)) {
+-        log.error("root category is already created");
++        if (log.isDebugEnabled()) {
++          log.debug("root category is already created");
++        }
+         return false;
+       }			
+       Node categoryHome = faqServiceHome.addNode(Utils.CATEGORY_HOME, "exo:faqCategory") ;

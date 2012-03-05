@@ -1,0 +1,139 @@
+<% 
+	import org.exoplatform.forum.webui.UIForumPageIterator ;
+	import org.exoplatform.forum.service.Post ; 
+	import org.exoplatform.forum.ForumUtils;
+	import org.exoplatform.forum.service.UserProfile ;
+	import org.exoplatform.forum.service.Utils;
+	UserProfile userProfile = uicomponent.getUserProfile() ;
+	List posts = uicomponent.getPostsByUser() ;
+	boolean isAdmin = false;
+	if(userProfile.getUserRole() == 0)isAdmin = true;
+	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+	String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
+	boolean isShowIP = uicomponent.getHasEnableIPLogging() ;
+%>
+
+<div class="UIPageListPostByUser" id="searchIpBan">
+	<% uiform.begin() %>
+		<div class="UITopicContainer">
+		 	<div class="UIForumContainer">
+				<div class="ContentContainer">
+					<div class="UITopicList">
+						<div style="overflow:auto; margin:2px 0px;">
+							<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+							<div style="clear:right; height:0px;"><span></span></div>
+						</div>
+						<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+							<thead>
+								<tr>
+									<th><span></span></th>
+									<th style="width:40px"></th>
+									<th>
+										<div onclick="<%=uicomponent.event("SetOrderBy","name");%>">
+											<div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListPostByUser.label.PostName");%></div>
+										</div>
+									</th>
+									<th style="width:120px">
+										<div onclick="<%=uicomponent.event("SetOrderBy","createdDate");%>">
+										  <div class="DownArrow1Icon">
+										    <div class="THFixHidden" style="width: 114px;">
+										      <%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%>
+										    </div>
+										  </div>
+										</div>
+									</th>
+									<th style="width:40px"><%=_ctx.appRes("UIPageListPostByUser.label.Delete");%></th>
+								</tr>
+							</thead>
+							<tbody>
+								<% 
+								if(!posts.isEmpty()) {
+									String classRow = "whileRow";
+									int i = 0;
+									Date postDate = new Date();
+									for(post in posts){
+										if(i%2 == 0) classRow = "whileRow";
+										else classRow = "OddRow";
+										String postTitle = post.getName() ;
+										String message = uicomponent.getTitleInHTMLCode(post.getMessage()) ;
+										String titlePost = ForumUtils.getSubString(message, 100);
+										String iconPost = post.getIcon() ;
+										postDate.setTime(post.getCreatedDate().getTime() - setTime) ;
+										String createdDate = ForumUtils.getFormatDate(formatDate,postDate) ;
+										String path = post.getPath();
+										String topicId = path.substring(path.indexOf(Utils.TOPIC), path.lastIndexOf("/"));
+								%>
+									<tr class="$classRow">
+										<td class="Tdbox">
+										<%
+											if(topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())){%>
+												<%=_ctx.appRes("UIForumPortlet.label.topic");%>
+										<%} else {%>
+												<%=_ctx.appRes("UIForumPortlet.label.post");%>
+										<%}
+										%>
+										</td>
+										<td class="Tdbox"><div class="ThreadStatusIcon $iconPost"><span></span></div></td>
+										<td >
+											<div >
+												<a href="<%=uicomponent.event("OpenPostLink", post.getId());%>" title="$titlePost" class="title">$postTitle</a>
+											</div>
+										</td>
+										<td class="Tdbox">
+											<div class="RatingInfoContainer">$createdDate</div>
+										</td>
+										<%
+										String link_ = "";
+										if(topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())){
+											link_ = "javaScript:if(confirm('" + _ctx.appRes("UITopicDetail.confirm.DeleteThisTopic") + "'))" + uicomponent.event("DeletePostLink", post.getId());
+										} else {
+											link_ = "javaScript:if(confirm('" + _ctx.appRes("UITopicDetail.confirm.DeleteThisPost") + "'))" + uicomponent.event("DeletePostLink", post.getId());
+										}
+										%>
+										<td class="Tdbox" align="center">
+											<div onclick="$link_">
+												<div class="ItemIcon SetDeleteIcon" style="width:16px; height:16px; cursor:pointer; margin:0px auto"><span></span></div>
+											</div>
+										</td>
+						 			</tr>
+							 	<% i = i + 1;}
+							 		} else {
+							 		%>
+							 			<tr>
+							 				<td colspan="5" align="center">
+							 					<div style="margin:5px 0px 10px 0px"><b><%=_ctx.appRes("UICategory.label.noPost");%></b></div>
+							 				</td>
+							 			</tr>
+							 		<%
+							 		}
+							 	 %>
+							</tbody>
+						</table>
+						<div style="overflow:auto;">
+							<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+							<div style="clear:right; height:0px;"><span></span></div>
+						</div>						
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="UIAction"> 
+			<table class="ActionContainer">
+				<tr>
+					<td align="center">
+						<div onclick="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle">
+										<a href="javascript:void(0);"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table> 
+		</div>
+	<%uiform.end()%>
+</div>

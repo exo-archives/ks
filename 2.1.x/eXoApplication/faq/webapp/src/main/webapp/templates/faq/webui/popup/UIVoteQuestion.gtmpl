@@ -1,0 +1,45 @@
+<%
+	import org.exoplatform.web.application.JavascriptManager;
+	def rcontext = _ctx.getRequestContext() ;
+  JavascriptManager jsmanager = rcontext.getJavascriptManager();
+%>
+<% uiform.begin() %>
+<div class="UIRatingForm">
+	<div class="VoteFormContainer">
+		<div class="RatingInfoContainer">
+			<div class="OptionsContainer">
+				<div onmouseout="eXo.faq.UIAnswersPortlet.changeStarForVoteQuestion('-1', 'FAQStarVote')">
+				<%	
+				String action = "Vote";
+				if(uicomponent.answerId_ != null && uicomponent.answerId_.trim().length() > 0) action = "VoteAnswer";
+				for(int i = 0; i < 5; i ++) {
+					String number = String.valueOf(i+1) ;
+					String onclick = uicomponent.event(action, number);
+				%>
+					<div id="FAQStarVote$i" class="RatedVote" onmouseover="eXo.faq.UIAnswersPortlet.changeStarForVoteQuestion('$i', 'FAQStarVote')" onclick="$onclick" title=""><span></span></div>
+		 <%}%>
+		 		</div>
+				<div style="clear: left;"><span></span></div>
+			</div>
+		</div>
+			
+		<div class="UIAction"> 								
+			<table class="ActionContainer">											 
+				<tr>
+					<td align="center">
+						<div onclick="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle">
+										<a href="javascript:void(0);"><%=_ctx.appRes("UIVoteQuestion.action.Cancel"); %></a>
+									</div>
+								</div>
+							</div>								
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+<%uiform.end()%>
