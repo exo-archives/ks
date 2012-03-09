@@ -403,11 +403,12 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       Calendar toDateCreated = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(TODATECREATED), TODATECREATED);
       Calendar fromDateCreatedLastPost = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(FROMDATECREATEDLASTPOST), FROMDATECREATEDLASTPOST);
       Calendar toDateCreatedLastPost = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(TODATECREATEDLASTPOST), TODATECREATEDLASTPOST);
-      if (fromDateCreated.getTimeInMillis() >= toDateCreated.getTimeInMillis()) {
+      if (fromDateCreated != null && toDateCreated != null && fromDateCreated.after(toDateCreated)) {
         uiForm.warning("UISearchForm.msg.erro-from-less-then-to");
         return;
       }
-      if (type.equals(Utils.TOPIC) && (fromDateCreatedLastPost.getTimeInMillis() > toDateCreatedLastPost.getTimeInMillis())) {
+      if (type.equals(Utils.TOPIC) && 
+          (fromDateCreatedLastPost != null && toDateCreatedLastPost != null && fromDateCreatedLastPost.after(toDateCreatedLastPost))) {
         uiForm.warning("UISearchForm.msg.erro-from-less-then-to");
         return;
       }      
