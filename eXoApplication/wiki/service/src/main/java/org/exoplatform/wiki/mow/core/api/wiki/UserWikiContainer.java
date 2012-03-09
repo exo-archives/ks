@@ -69,11 +69,11 @@ public abstract class UserWikiContainer extends WikiContainer<UserWiki> {
         throw new UndeclaredRepositoryException(e.getMessage());
     }
     UserWiki uwiki = session.findByNode(UserWiki.class, wikiNode);
+    uwiki.setWikiService(getwService());
     uwiki.setOwner(wikiOwner);
     uwiki.setUserWikis(this);
     uwiki.getPreferences();
     session.save();
-    uwiki.setWikiService(getwService());
     return uwiki;
   }
 }

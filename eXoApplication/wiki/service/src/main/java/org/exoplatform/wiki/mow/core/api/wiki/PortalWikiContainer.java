@@ -62,12 +62,11 @@ public abstract class PortalWikiContainer extends WikiContainer<PortalWiki> {
       throw new UndeclaredRepositoryException(e);
     }
     PortalWiki pwiki = session.findByNode(PortalWiki.class, wikiNode);
+    pwiki.setWikiService(getwService());
     pwiki.setOwner(wikiOwner);
     pwiki.setPortalWikis(this);
     pwiki.getPreferences();
     session.save();
-    pwiki.setWikiService(getwService());
     return pwiki;
   }
-
 }

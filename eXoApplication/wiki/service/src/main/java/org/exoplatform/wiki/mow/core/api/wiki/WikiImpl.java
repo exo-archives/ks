@@ -113,6 +113,7 @@ public abstract class WikiImpl implements Wiki {
     if (preferences == null) {
       preferences = createPreferences();
       setPreferencesByChromattic(preferences);
+      preferences.getPreferencesSyntax().setDefaultSyntax(wService.getDefaultWikiSyntaxId());
     }
     return preferences;
   }

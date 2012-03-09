@@ -61,11 +61,11 @@ public abstract class GroupWikiContainer extends WikiContainer<GroupWiki> {
       throw new UndeclaredRepositoryException(e);
     }
     GroupWiki gwiki = session.findByNode(GroupWiki.class, wikiNode);
+    gwiki.setWikiService(getwService());
     gwiki.setOwner(wikiOwner);
     gwiki.setGroupWikis(this);
     gwiki.getPreferences();
     session.save();
-    gwiki.setWikiService(getwService());
     return gwiki;
   }
   
