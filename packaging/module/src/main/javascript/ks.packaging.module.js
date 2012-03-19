@@ -91,7 +91,7 @@ function getModule(params) {
     addDependency(new Project("org.xwiki.rendering", "xwiki-rendering-macro-toc", "jar",  "${org.xwiki.platform.version}")).
     addDependency(new Project("org.xwiki.rendering", "xwiki-rendering-macro-box", "jar",  "${org.xwiki.platform.version}")).
     addDependency(new Project("org.xwiki.rendering", "xwiki-rendering-macro-message", "jar",  "${org.xwiki.platform.version}")).
-    addDependency(new Project("org.xwiki.platform", "xwiki-core-rendering-macro-code", "jar",  "2.3.2")).
+    addDependency(new Project("org.xwiki.platform", "xwiki-platform-rendering-macro-code", "jar",  "${org.xwiki.platform.version}")).
     addDependency(new Project("org.xwiki.platform", "xwiki-platform-model", "jar",  "${org.xwiki.platform.version}")).
     addDependency(new Project("org.xwiki.platform", "xwiki-platform-wysiwyg-client", "jar",  "${org.xwiki.platform.version}")).
     addDependency(new Project("org.wikimodel", "org.wikimodel.wem", "jar",  "${org.wikimodel.version}")).

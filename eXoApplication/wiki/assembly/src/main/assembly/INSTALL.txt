@@ -25,7 +25,7 @@ To deploy eXo Wiki module into Tomcat server run eXo Platform 3.0, execute the f
               * org.xwiki.commons:xwiki-commons-xml
               * org.xwiki.commons:xwiki-commons-script
               * org.xwiki.commons:xwiki-commons-legacy-component
-              * org.xwiki.platform:xwiki-core-rendering-macro-code
+              * org.xwiki.platform:xwiki-platform-rendering-macro-code
               * org.xwiki.rendering:xwiki-rendering-api
               * org.xwiki.rendering:xwiki-rendering-syntax-wikimodel
               * org.xwiki.rendering:xwiki-rendering-macro-toc
