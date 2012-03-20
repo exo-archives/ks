@@ -47,7 +47,7 @@ h2. Initialize workspace name and repository name in _storage-configuration.xml_
 
 In details:
 
-Once the _{noformat}war:/ks-extension/jcr/repository-configuration.xml{noformat}_ file has been initialized, the server will load the _{noformat}storage-configuration.xml{noformat}_ file, and the _setLocation_ function in the _org.exoplatform.ks.common.conf.DataLocationPlugin_ component will run.
+Once the _{{{war:/ks-extension/jcr/repository-configuration.xml}}}_ file has been initialized, the server will load the _storage\-configuration.xml_ file, and the _setLocation_ function in the _org.exoplatform.ks.common.conf.DataLocationPlugin_ component will run.
 
 {code:xml}
 <external-component-plugins>

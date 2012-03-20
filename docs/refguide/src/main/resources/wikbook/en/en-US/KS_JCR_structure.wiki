@@ -202,7 +202,7 @@ The Topic node is defined as a child node of the Forum node and allowed adding c
 | exo:viewCount | Long | false | The number of topic views. |
 | exo:numberAttachments | Long | false | The number of attachments in the topic. |
 | exo:icon | String | false | The name of the topic icon. |
-| exo:link | String | false | The link to the topic. Example: {noformat}http://localhost:8080/ksdemo/public/classic/forum/topic/%Topic-id%.{noformat} |
+| exo:link | String | false | The link to the topic. Example: http\://localhost:8080/ksdemo/public/classic/forum/topic/%Topic-id%. |
 | exo:isModeratePost | Boolean | false | All posts in the topic will have to wait for moderation if the value is set to "true". |
 | exo:isNotifyWhenAddPost | Boolean | false | When there is a new post in a topic, a notification message will be sent to the topic owner if this value is set to "true". |
 | exo:isClosed | Boolean | false | The state of the topic: closed/open. If the value is set to "true", the topic is closed. |
@@ -282,11 +282,11 @@ The BBCode node is used to define what BBCode will be used in the forum. The nod
 The BBCode node is stored in {{/exo:applications/ForumService/ForumData/forumBBCode/%BBCode_tag%}} and its node type has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
-| exo:description | String | false | The description about the tag purpose. Example: {noformat} 'The [url] tag allows creating links to other websites and files'.{noformat} |
-| exo:example |  String |  false | The example about using the tag. Example: {noformat}[URL]http://www.exoplatform.com[/URL]'.{noformat} |
+| exo:description | String | false | The description about the tag purpose. Example: 'The \[url\] tag allows creating links to other websites and files'. |
+| exo:example |  String |  false | The example about using the tag. Example: \[URL]http\://www.exoplatform.com\[/URL]'. |
 | exo:isActive | Boolean  | false | The BBCode tag is active/deactive. The BBCode tag is active if the value is set to "true". |
 | exo:isOption | Boolean | false | If the value is set to "true", user can create a tag with atributes and values. |
-| exo:replacement |  String | false | The HTML code that will be replaced by the tag. {noformat}Example: [url] tag replaces '<a target='_blank' href="{param}">{param}</a>'{noformat}. |
+| exo:replacement |  String | false | The HTML code that will be replaced by the tag. Example: {{{[url] tag replaces '<a target='_blank' href="{param}">{param}</a>'}}}. |
 | exo:tagName | String | false | The BBCode tag name. |
 
 
@@ -473,14 +473,14 @@ The Poll node is stored under eXoPolls node {{/exo:applications/eXoPolls/%Portal
 h1. Wiki JCR structure
 The Wiki portlet is a JCR-based application. The Wiki data are stored in the eXo JCR storage. The Wiki application of eXo Knowledge supports several wikis, each wiki is organized as a tree of pages and hosted in different locations, depending on the type of wiki:
 
-* Portal wikis: _{noformat}/exo:applications/eXoWiki/wikis/$PORTAL/WikiHome{noformat}_
-* Group wikis: _{noformat}/Groups/$GROUP/ApplicationData/eXoWiki/WikiHome{noformat}_
-* User wikis: _{noformat}/Users/$USERNAME/ApplicationData/eXoWiki/WikiHome{noformat}_
+* Portal wikis: _/exo\:applications/eXoWiki/wikis/$PORTAL/WikiHome_
+* Group wikis: _/Groups/$GROUP/ApplicationData/eXoWiki/WikiHome_
+* User wikis: _/Users/$USERNAME/ApplicationData/eXoWiki/WikiHome_
 
 _WikiHome_ a conventional name of the root page of a Wiki. The type of _WikiHome_ is "exo:wikihome". 
 Each page may have a number of sub-pages and attachments.
 
-Other Wiki metadata are organized below _{noformat}/exo:applications/eXoWiki/wikimetadata{noformat}_.
+Other Wiki metadata are organized below _/exo\:applications/eXoWiki/wikimetadata_.
 
 The whole Wiki JCR structure can be visualized in the following diagram:
 

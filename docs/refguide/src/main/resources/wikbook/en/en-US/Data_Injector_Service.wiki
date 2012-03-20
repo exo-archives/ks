@@ -125,7 +125,7 @@ http://[rest path]/bench/inject/WikiDataInjector/?type=data&q=1,2,3&pre=abc,def,
 In which, parameters mean:
 
 || Param || Value || Description ||
-| type | {noformat}[data | perm]{noformat} | Type of injector. It can be data or perm which injects data or permission respectively. |
+| type | \[data \| perm]| Type of injector. It can be data or perm which injects data or permission respectively. |
 | q | Number | The number of pages in each depth, separated by commas. For example, if value is 1,2,3 then the injector will create 1 new child of WikiHome, 2 children per each page created in depth 1 and 3 children for each page created in depth 2. |
 | pre | String | Prefix for page id in each depth, separated by commas. For example, if value is abc,def,ghk then pages in depth 1 have title starting with "abc", title of pages in depth 2 start with "def" and in depth 3 is "ghk". |
 | wo | String | Wiki owner. |
@@ -133,7 +133,7 @@ In which, parameters mean:
 | maxAtt | Number | The size of attachment in created pages. the value is evaluated in KByte. If the value is 0 or not set, no attachment is created. |
 | mP | Number | The maximum pages in each injection. The number of created pages must not exceed this value. |
 
-To grant permision, the request link is in the following format:
+To grant permission, the request link is in the following format:
 
 {code}
 http://localhost:8080/rest-ksdemo/private/bench/inject/WikiDataInjector/?type=perm&q=1,2,3&pre=abc,def,ghk&wo=classic&wt=portal&perm=11&users=root,mary&groups=*:/platform/user&rcs=true
@@ -180,7 +180,7 @@ In which:
 
 || Param || Value || Description ||
 | type | [data | perm] | Type of injector. It can be data or perm means injecting data or permission respectively. |
-| q | number,number,etc | The number of items in each depth. For example, if the value is 2,3,4,5,6 then the injector will create 2 new categories with the depth level is '3', add 4 questions in each category, 5 answer and 6 comment in each question. *Warning*: Do not set the depth level to more than 5, because the number of items are calculated by {noformat}number*depth{noformat}.|
+| q | number,number,etc | The number of items in each depth. For example, if the value is 2,3,4,5,6 then the injector will create 2 new categories with the depth level is '3', add 4 questions in each category, 5 answer and 6 comment in each question. *Warning*: Do not set the depth level to more than 5, because the number of items are calculated by number\*depth.|
 | pre | string, string, etc | The prefix for items id in each depth. For example, if the value is "cate, ques, answ, comm" then category has fist name/id is "cate", question has fist name/id is "ques", answer has fist id is "answ" and comment has fist id is "comm" . | 
 | att | number | The number of attachments in one question. If the value is '0' or not set, no attachment is created. |
 | attCp	| number | The capacity of one attachment. The value is evaluated in KByte and must be larger than KByte. |
@@ -202,7 +202,7 @@ q=2,3,4,5,6: All = 2 * 3! + (2 * 3!) * 4 + ((2 * 3!) * 4) * 5 + ((2 * 3!) * 4) *
 If you change the depth from '3' to '5', the number of items will be 11760.
 {note}
 
-* To grant permision, the request link is in the following format:
+* To grant permission, the request link is in the following format:
 
 {code}
 http://[rest path]/bench/inject/AnswerDataInjector/?type=perm&q=2,3,4,5,6&pre=cate,ques,answ,comm&att=2&attCp=100&&txtCp=100&view=root,demo,*:/platform/user&edit=root,*:/platform/manager

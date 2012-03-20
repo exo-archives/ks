@@ -8,7 +8,7 @@ h1. Configuration {anchor:id=KSref.ForumInitializer.Configuration}
 
 h2. Default forum data {anchor:id=KSref.ForumInitializer.DefaultForumData}
 
-The default forum data is configured in the _{noformat}war:webapp/WEB-INF/conf/ksdemo/ks/services-configuration.xml{noformat}_ file.
+The default forum data is configured in the _{{{war:webapp/WEB-INF/conf/ksdemo/ks/services-configuration.xml}}}_ file.
 
 In particular, when the ForumService starts, the Initialization plug-in component is called. Next, the _services-configuration.xml_ file is executed. The component-plugin named _addInitialDefaultDataPlugin_ will refer to _org.exoplatform.forum.service.conf.InitializeForumPlugin_ to execute some objects to create default data for the Forum application. 
 

@@ -7,7 +7,7 @@ h1. Configuration {anchor:id=KSref.PollConfiguration.Configuration}
 
 h2. Default Poll data {anchor:id=KSref.PollConfiguration.DefaultPollData}
 
-The default Poll data are configured in the _{noformat}war:webapp/WEB-INF/conf/ksdemo/ks/services-configuration.xml{noformat}_ file.
+The default Poll data are configured in the _{{{war:webapp/WEB-INF/conf/ksdemo/ks/services-configuration.xml}}}_ file.
 
 In particular, when the Poll service starts, the Initialization plug-in component is called. Next, the _services-configuration.xml_ file is executed.
 The component-plugin named _addInitialDefaultDataPlugin_ will refer to _org.exoplatform.poll.service.InitialDeafaultDataPlugin_ to execute some objects to create default data for the Poll application.

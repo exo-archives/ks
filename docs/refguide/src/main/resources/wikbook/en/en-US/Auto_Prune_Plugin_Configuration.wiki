@@ -6,7 +6,7 @@ When the Job Scheduler runs, it will get values returned from the Auto-prune plu
 
 h1. Configuration {anchor:id=KSref.AutoPrune.Configuration}
 
-The properties of Auto-prune plug-in are configured in the _{noformat}war:webapp/WEB-INF/ks-extension/ks/forum/prune-configuration.xml{noformat}_ file.
+The properties of Auto-prune plug-in are configured in the _{{{war:webapp/WEB-INF/ks-extension/ks/forum/prune-configuration.xml}}}_ file.
 
 In particular, at runtime of Job Scheduler, the Auto-prune plugin component is called. Then, the _prune-configuration.xml_ file will be executed. The component-plugin named _ForumDeactiveJob_ will refer to _org.exoplatform.forum.service.conf.DeactivePeriodJob_ to inactivate topics in Forum which meets predefined inactivation properties.
 
