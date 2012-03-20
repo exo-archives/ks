@@ -1,9 +1,0 @@
-Index: eXoApplication/forum/webapp/src/main/webapp/skin/DefaultSkin/webui/Stylesheet.css
-===================================================================
---- eXoApplication/forum/webapp/src/main/webapp/skin/DefaultSkin/webui/Stylesheet.css	(revision 67036)
-+++ eXoApplication/forum/webapp/src/main/webapp/skin/DefaultSkin/webui/Stylesheet.css	(working copy)
-@@ -1,4 +1,3 @@
--@import url('/ksResources/syntaxhighlighter/Styles/SyntaxHighlighter.css') ;
- @import url('skinIcons/16x16/Stylesheet.css') ;
- @import url('skinIcons/24x24/Stylesheet.css') ;
- @import url('popup/Stylesheet.css') ;
