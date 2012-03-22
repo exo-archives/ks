@@ -1,0 +1,18 @@
+Index: component/rendering/src/main/resources/META-INF/component-overrides.txt
+===================================================================
+--- component/rendering/src/main/resources/META-INF/component-overrides.txt	(revision 80393)
++++ component/rendering/src/main/resources/META-INF/component-overrides.txt	(working copy)
+@@ -1,3 +0,0 @@
+-org.exoplatform.wiki.rendering.macro.code.CodeMacro
+-org.exoplatform.wiki.rendering.transformation.icon.DefaultIconTransformation
+-org.exoplatform.wiki.rendering.internal.parser.confluence.DefaultWikiModelConfluenceParser
+Index: component/rendering/src/main/resources/META-INF/components.txt
+===================================================================
+--- component/rendering/src/main/resources/META-INF/components.txt	(revision 80393)
++++ component/rendering/src/main/resources/META-INF/components.txt	(working copy)
+@@ -28,3 +28,4 @@
+ 500:org.exoplatform.wiki.rendering.transformation.icon.DefaultIconTransformation
+ 500:org.exoplatform.wiki.rendering.internal.parser.confluence.DefaultWikiModelConfluenceParser
+ org.exoplatform.wiki.rendering.internal.parser.confluence.ConfluenceLinkReferenceParser
++500:org.exoplatform.wiki.rendering.render.xwiki.DefaultXWikiSyntaxRenderer
+\ No newline at end of file
