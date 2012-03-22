@@ -1,0 +1,48 @@
+Index: eXoApplication/wiki/service/src/main/resources/wikisyntax/help/xWiki2.0_Full.txt
+===================================================================
+--- eXoApplication/wiki/service/src/main/resources/wikisyntax/help/xWiki2.0_Full.txt	(revision 80396)
++++ eXoApplication/wiki/service/src/main/resources/wikisyntax/help/xWiki2.0_Full.txt	(working copy)
+@@ -535,12 +535,12 @@
+ {{/code}}
+ }}}
+ )))|((( {{code language="java"}}Class X{ String abc; public X(){};}{{/code}} )))
+-| Info Macro| ~{~{info}} Information ~{~{/info}}|
+-((( {{info}} Information {{/info}} )))
++| Info Macro| ~{~{info}} Information ~{~{/info}}| ((({{info}} Information {{/info}})))
+ \\
+-| Warning Macro| ~{~{warning}}Warning~{~{/warning}} |
+-((( {{warning}}Warning{{/warning}} )))
++| Warning Macro| ~{~{warning}}Warning~{~{/warning}} | ((({{warning}}Warning{{/warning}})))
+ \\
++| Error Macro| ~{~{error}}Error message content~{~{/error}} | ((({{error}}Error message content{{/error}})))
++\\
+ | Tip Macro| ~{~{tip}}Tip~{~{/tip}} | ((({{tip}}Tip{{/tip}})))
+ \\
+ | Note Macro| ~{~{note}}Note~{~{/note}} | ((({{note}}Note{{/note}})))
+@@ -553,6 +553,26 @@
+ \\
+ | Anchor Macro| ~{~{anchor name="anchor_name"}}~{~{/anchor}} | ((({{anchor name="anchor_name"}}{{/anchor}})))
+ \\
++| Chilren Macro| ~{~{children childrenNum="1" depth="2"/}} | ((({{children childrenNum="1" depth="2"/}})))
++\\
++| Color Macro| ~{~{color name="blue"}}content~{~{/color}} | ((({{color name="blue"}}content{{/color}})))
++\\
++| Div Macro| ~{~{div style="text-align: left;color: red;"}}The content~{~{/div}} | ((({{div style="text-align: left;color: red;"}}The content{{/div}})))
++\\
++| Excerpt Macro| ~{~{excerpt}}The content~{~{/excerpt}} | ((({{excerpt}}The content{{/excerpt}})))
++\\
++| Iframe Macro| ~{~{iframe height="100" src="http://www.google.com" width="100"/}} | Link to the other webside
++\\
++| Include page Macro| ~{~{includepage page="Wiki_Home"/}} | Include the content of a page to current page
++\\
++| Page tree Macro| ~{~{pagetree root="Wiki_Homesdasdas"/}} | Display a hierachy descendants tree of a specific page
++\\
++| Related page Macro| ~{~{related/}} | Render related pages of current page
++\\
++| Span Macro| ~{~{span style="font:12pt Arial;color: red;"}}The content~{~{/span}} | ((({{span style="font:12pt Arial;color: red;"}}The content{{/span}})))
++\\
++| Success Macro| ~{~{success}}The content~{~{/success}} | ((({{success}}The content{{/success}})))
++\\
+ | Float Macro| ~{~{float cssClass="css_class" side="left_or_right" width="css_width" background="css_color" border="css_border" margin="css_margin" padding="css_padding"}}Content to float~{~{/float}} | ((({{float side="right"}}Content to float{{/float}})))
+ \\
+ | Section and column macro| ~{~{section justify="true"}}\\\\~{~{column}}column1~{~{/column}}\\\\~{~{column}}column2~{~{/column}}\\\\~{~{/section}}
