@@ -1,0 +1,75 @@
+Index: eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/service/impl/WikiRestServiceImpl.java
+===================================================================
+--- eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/service/impl/WikiRestServiceImpl.java	(revision 80393)
++++ eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/service/impl/WikiRestServiceImpl.java	(working copy)
+@@ -754,6 +754,7 @@
+       .append("link.rel = 'stylesheet';")
+       .append("link.type = 'text/css';")
+       .append("link.href = local;")
++      .append("document.head = document.head || document.getElementsByTagName(\"head\")[0] || document.documentElement;")
+       .append("document.head.appendChild(link);")
+       .append("</script>");
+       
+Index: eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/service/impl/WikiServiceImpl.java
+===================================================================
+--- eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/service/impl/WikiServiceImpl.java	(revision 80395)
++++ eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/service/impl/WikiServiceImpl.java	(working copy)
+@@ -1081,6 +1081,17 @@
+     }
+   }
+   
++  private void removeHelpPages() {
++    try {
++      Model model = getModel();
++      WikiStoreImpl wikiStore = (WikiStoreImpl) model.getWikiStore();
++      PageImpl helpPages = wikiStore.getHelpPagesContainer();
++      helpPages.remove();
++    } catch (Exception e) {
++      log.warn("Can not remove help pages ...");
++    }
++  }
++  
+   @Override
+   public void start() {
+     try {
+@@ -1094,6 +1105,7 @@
+       }
+       addEmotionIcons();
+       removeDraftPages();
++      removeHelpPages();
+       try {
+         getWikiHome(PortalConfig.GROUP_TYPE, "sandbox");
+       } catch (Exception e) {
+Index: eXoApplication/wiki/service/src/main/resources/wikisyntax/help/xWiki2.0_Full.txt
+===================================================================
+--- eXoApplication/wiki/service/src/main/resources/wikisyntax/help/xWiki2.0_Full.txt	(revision 80393)
++++ eXoApplication/wiki/service/src/main/resources/wikisyntax/help/xWiki2.0_Full.txt	(working copy)
+@@ -339,16 +339,26 @@
+ |Link with a label|{{{[[label>>Wiki Home]]}}}|[[label>>Wiki Home]]
+ |Link to a page with the wiki name specified|{{{[[Wiki Home>>classic.Wiki Home]]}}}|[[Wiki Home>>classic.Wiki Home]]
+ |Link to a page in a wiki with wiki type specified|{{{[[Wiki Home>>portal:classic.Wiki Home]]}}}|[[Wiki Home>>portal:classic.Wiki Home]]
++||{{{[[Wiki Home>>group:/spaces/my_space.Wiki Home]]}}} | 
++||{{{[[Wiki Home>>user:root.Wiki Home]]}}}|
++||{{{[[label>>wikiType:wikiId.pageName]]}}}|
+ |Link that opens in a new page|{{{[[label>>Wiki Home||rel="__blank"]]}}}|[[label>>Wiki Home||rel="__blank"]]
+ |Link to a URL directly in the text|{{{This is a URL: http://xwiki.org}}}|This is a URL: http://xwiki.org
+ |Link to a URL|{{{[[http://xwiki.org]]}}}|[[http://xwiki.org]]
+ |Link to a URL with a label|{{{[[XWiki>>http://xwiki.org]]}}}|[[XWiki>>http://xwiki.org]]
+ |Link to an email|{{{[[email>>mailto:john@smith.net]]}}}|[[email>>mailto:john@smith.net]]
+ |Image Link|(((
+-{{{[[image:classic.Wiki Home@img.png>>
+-classic.Wiki Home]]}}}
++{{{[[image:classic.Wiki Home@img.png]]}}}
+ )))|[[image:img.png>>classic.Wiki Home]]
++||{{{[[image:portal:classic.Wiki Home@img.png]]}}} | 
++||{{{[[image:group:/spaces/my_space.Wiki Home@img.png]]}}}|
++||{{{[[image:user:root.Wiki Home@img.png]]}}}|
++||{{{[[image:wikiType:wikiId.pageName@imageName]]}}}|
+ |Link to attachment|{{{[[text>>attach:img.png]]}}}|[[text>>attach:img.png]]
++||{{{[[text>>attach:portal:classic.Wiki Home@file.txt]]}}} | 
++||{{{[[text>>attach:group:/spaces/my_space.Wiki Home@file.txt]]}}}|
++||{{{[[text>>attach:user:root.Wiki Home@file.txt]]}}}|
++||{{{[[text>>attach:wikiType:wikiId.pageName@attachName]]}}}|
+ 
+ == XWiki Syntax 2.0 Link Specification ==
+ 

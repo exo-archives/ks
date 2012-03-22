@@ -754,6 +754,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
       .append("link.rel = 'stylesheet';")
       .append("link.type = 'text/css';")
       .append("link.href = local;")
+      .append("document.head = document.head || document.getElementsByTagName(\"head\")[0] || document.documentElement;")
       .append("document.head.appendChild(link);")
       .append("</script>");
       

@@ -1081,6 +1081,17 @@ public class WikiServiceImpl implements WikiService, Startable {
     }
   }
   
+  private void removeHelpPages() {
+    try {
+      Model model = getModel();
+      WikiStoreImpl wikiStore = (WikiStoreImpl) model.getWikiStore();
+      PageImpl helpPages = wikiStore.getHelpPagesContainer();
+      helpPages.remove();
+    } catch (Exception e) {
+      log.warn("Can not remove help pages ...");
+    }
+  }
+  
   @Override
   public void start() {
     try {
@@ -1094,6 +1105,7 @@ public class WikiServiceImpl implements WikiService, Startable {
       }
       addEmotionIcons();
       removeDraftPages();
+      removeHelpPages();
       try {
         getWikiHome(PortalConfig.GROUP_TYPE, "sandbox");
       } catch (Exception e) {
