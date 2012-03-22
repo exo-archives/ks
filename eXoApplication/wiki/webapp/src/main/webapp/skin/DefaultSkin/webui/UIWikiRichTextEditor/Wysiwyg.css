@@ -518,6 +518,7 @@
 .xMacroSelector {
   margin-top: 0;
   height: 346px;
+  overflow: hidden;
 }
 
 .xMacroSelector .xListBox {

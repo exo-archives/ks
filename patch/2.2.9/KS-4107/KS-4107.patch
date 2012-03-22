@@ -1,0 +1,19 @@
+Index: eXoApplication/wiki/webapp/src/main/webapp/skin/DefaultSkin/webui/UIWikiRichTextEditor/Wysiwyg.css
+===================================================================
+--- eXoApplication/wiki/webapp/src/main/webapp/skin/DefaultSkin/webui/UIWikiRichTextEditor/Wysiwyg.css	(revision 80393)
++++ eXoApplication/wiki/webapp/src/main/webapp/skin/DefaultSkin/webui/UIWikiRichTextEditor/Wysiwyg.css	(working copy)
+@@ -518,6 +518,7 @@
+ .xMacroSelector {
+   margin-top: 0;
+   height: 346px;
++  overflow: hidden;
+ }
+ 
+ .xMacroSelector .xListBox {
+@@ -900,4 +901,4 @@
+   background-repeat: no-repeat;
+   border: 1px solid #666;
+   padding: 2px 2px 2px 19px;
+-}
+\ No newline at end of file
++}
