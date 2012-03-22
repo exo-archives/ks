@@ -1,0 +1,134 @@
+Index: eXoApplication/faq/service/src/test/java/org/exoplatform/faq/service/test/TestFAQService.java
+===================================================================
+--- eXoApplication/faq/service/src/test/java/org/exoplatform/faq/service/test/TestFAQService.java	(revision 80393)
++++ eXoApplication/faq/service/src/test/java/org/exoplatform/faq/service/test/TestFAQService.java	(working copy)
+@@ -48,6 +48,8 @@
+ import org.exoplatform.ks.common.NotifyInfo;
+ import org.exoplatform.services.jcr.ext.app.SessionProviderService;
+ import org.exoplatform.services.jcr.ext.common.SessionProvider;
++import org.exoplatform.services.security.ConversationState;
++import org.exoplatform.services.security.Identity;
+ 
+ /**
+  * Created by The eXo Platform SARL
+@@ -94,6 +96,11 @@
+ 
+   public void setUp() throws Exception {
+     super.setUp();
++    ConversationState conversionState = ConversationState.getCurrent();
++    if(conversionState == null) {
++      conversionState = new ConversationState(new Identity("root"));
++      ConversationState.setCurrent(conversionState);
++    }
+     faqService_ = (FAQService) container.getComponentInstanceOfType(FAQService.class);
+     datastorage = (DataStorage) container.getComponentInstanceOfType(JCRDataStorage.class);
+     SessionProviderService sessionProviderService = (SessionProviderService) container.getComponentInstanceOfType(SessionProviderService.class);
+Index: eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/FAQSetting.java
+===================================================================
+--- eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/FAQSetting.java	(revision 80393)
++++ eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/FAQSetting.java	(working copy)
+@@ -234,10 +234,7 @@
+    * @return true, if is admin
+    */
+   public boolean isAdmin() {
+-    if (this.isAdmin.equals("TRUE"))
+-      return true;
+-    else
+-      return false;
++    return ("TRUE".equalsIgnoreCase(isAdmin));
+   }
+ 
+   public boolean isSortQuestionByVote() {
+Index: eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java
+===================================================================
+--- eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(revision 80393)
++++ eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(working copy)
+@@ -1904,6 +1904,9 @@
+   public List<Category> getSubCategories(String categoryId, FAQSetting faqSetting, boolean isGetAll, List<String> limitedUsers) throws Exception {
+     SessionProvider sProvider = CommonUtils.createSystemProvider();
+     List<Category> catList = new ArrayList<Category>();
++    if (limitedUsers == null) {
++      limitedUsers = UserHelper.getAllGroupAndMembershipOfUser(null);
++    }
+     try {
+       Node parentCategory;
+       if (categoryId == null || categoryId.equals(Utils.CATEGORY_HOME)) {
+@@ -1922,11 +1925,9 @@
+         queryString.append("/element(*,exo:faqCategory) [@exo:isView='true'] order by @exo:index ascending");
+       else {
+         queryString.append("/element(*,exo:faqCategory)[@exo:isView='true' and ( not(@exo:userPrivate) or @exo:userPrivate=''");
+-        if (limitedUsers != null) {
+-          for (String id : limitedUsers) {
+-            queryString.append(" or @exo:userPrivate = '").append(id).append("' ");
+-            queryString.append(" or @exo:moderators = '").append(id).append("' ");
+-          }
++        for (String id : limitedUsers) {
++          queryString.append(" or @exo:userPrivate = '").append(id).append("' ");
++          queryString.append(" or @exo:moderators = '").append(id).append("' ");
+         }
+         queryString.append(" )] order by @exo:index");
+       }
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIAnswersContainer.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIAnswersContainer.java	(revision 80393)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIAnswersContainer.java	(working copy)
+@@ -76,7 +76,7 @@
+     String cateIdView = Utils.CATEGORY_HOME;
+     if (!faqSetting_.isAdmin() && !faqSetting_.isPostQuestionInRootCategory()) {
+       propetyOfUser = UserHelper.getAllGroupAndMembershipOfUser(null);
+-      List<Category> cates = faqService_.getSubCategories(cateIdView, faqSetting_, false, propetyOfUser);
++      List<Category> cates = faqService_.getSubCategories(cateIdView, faqSetting_, true, propetyOfUser);
+       if (cates != null && cates.size() > 0)
+         cateIdView = cateIdView + "/" + cates.get(0).getId();
+     }
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UICategories.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UICategories.java	(revision 80393)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UICategories.java	(working copy)
+@@ -206,11 +206,11 @@
+ 
+   private void checkAndSetListCategory(String categoryId) throws Exception {
+     listCate = new ArrayList<Category>();
+-    if (faqSetting_.isAdmin()) {
+-      listCate.addAll(getFAQService().getSubCategories(categoryId, faqSetting_, true, null));
+-    } else {
+-      listCate.addAll(getFAQService().getSubCategories(categoryId, faqSetting_, false, UserHelper.getAllGroupAndMembershipOfUser(null)));
+-    }
++    FAQSetting faqSetting = new FAQSetting();
++    boolean isAdmin = faqSetting_.isAdmin();
++    if(!isAdmin) isAdmin = isModerator;
++    faqSetting.setIsAdmin(String.valueOf(isAdmin));
++    listCate.addAll(getFAQService().getSubCategories(categoryId, faqSetting, true, null));
+     for (Category cat : listCate) {
+       categoryIds.put(cat.getId(), cat.getPath());
+     }
+@@ -218,6 +218,7 @@
+ 
+   protected void setListCate() throws Exception {
+     if (!isSwap) {
++      setIsModerators();
+       try {
+         checkAndSetListCategory(categoryId_);
+       } catch (PathNotFoundException e) {
+@@ -232,9 +233,9 @@
+       } else {
+         currentCategoryName = getFAQService().getCategoryById(categoryId_).getName();
+       }
+-      if (currentCategoryName == null || currentCategoryName.trim().length() < 1)
++      if (currentCategoryName == null || currentCategoryName.trim().length() < 1){
+         currentCategoryName = FAQUtils.getResourceBundle("UIBreadcumbs.label." + Utils.CATEGORY_HOME);
+-      setIsModerators();
++      }
+     }
+     isSwap = false;
+   }
+@@ -251,8 +252,8 @@
+ 
+   public void resetListCate() throws Exception {
+     isSwap = true;
++    setIsModerators();
+     checkAndSetListCategory(parentCateID_);
+-    setIsModerators();
+   }
+ 
+   protected String[] getActionCategory(String cateId) {

@@ -48,6 +48,8 @@ import org.exoplatform.faq.test.FAQServiceTestCase;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 
 /**
  * Created by The eXo Platform SARL
@@ -94,6 +96,11 @@ public class TestFAQService extends FAQServiceTestCase {
 
   public void setUp() throws Exception {
     super.setUp();
+    ConversationState conversionState = ConversationState.getCurrent();
+    if(conversionState == null) {
+      conversionState = new ConversationState(new Identity("root"));
+      ConversationState.setCurrent(conversionState);
+    }
     faqService_ = (FAQService) container.getComponentInstanceOfType(FAQService.class);
     datastorage = (DataStorage) container.getComponentInstanceOfType(JCRDataStorage.class);
     SessionProviderService sessionProviderService = (SessionProviderService) container.getComponentInstanceOfType(SessionProviderService.class);

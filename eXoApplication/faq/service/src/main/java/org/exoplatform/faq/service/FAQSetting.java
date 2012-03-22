@@ -234,10 +234,7 @@ public class FAQSetting {
    * @return true, if is admin
    */
   public boolean isAdmin() {
-    if (this.isAdmin.equals("TRUE"))
-      return true;
-    else
-      return false;
+    return ("TRUE".equalsIgnoreCase(isAdmin));
   }
 
   public boolean isSortQuestionByVote() {

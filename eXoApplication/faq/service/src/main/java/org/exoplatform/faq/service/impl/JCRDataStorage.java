@@ -1904,6 +1904,9 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   public List<Category> getSubCategories(String categoryId, FAQSetting faqSetting, boolean isGetAll, List<String> limitedUsers) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     List<Category> catList = new ArrayList<Category>();
+    if (limitedUsers == null) {
+      limitedUsers = UserHelper.getAllGroupAndMembershipOfUser(null);
+    }
     try {
       Node parentCategory;
       if (categoryId == null || categoryId.equals(Utils.CATEGORY_HOME)) {
@@ -1922,11 +1925,9 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         queryString.append("/element(*,exo:faqCategory) [@exo:isView='true'] order by @exo:index ascending");
       else {
         queryString.append("/element(*,exo:faqCategory)[@exo:isView='true' and ( not(@exo:userPrivate) or @exo:userPrivate=''");
-        if (limitedUsers != null) {
-          for (String id : limitedUsers) {
-            queryString.append(" or @exo:userPrivate = '").append(id).append("' ");
-            queryString.append(" or @exo:moderators = '").append(id).append("' ");
-          }
+        for (String id : limitedUsers) {
+          queryString.append(" or @exo:userPrivate = '").append(id).append("' ");
+          queryString.append(" or @exo:moderators = '").append(id).append("' ");
         }
         queryString.append(" )] order by @exo:index");
       }

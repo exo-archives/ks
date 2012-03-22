@@ -206,11 +206,11 @@ public class UICategories extends BaseUIFAQForm {
 
   private void checkAndSetListCategory(String categoryId) throws Exception {
     listCate = new ArrayList<Category>();
-    if (faqSetting_.isAdmin()) {
-      listCate.addAll(getFAQService().getSubCategories(categoryId, faqSetting_, true, null));
-    } else {
-      listCate.addAll(getFAQService().getSubCategories(categoryId, faqSetting_, false, UserHelper.getAllGroupAndMembershipOfUser(null)));
-    }
+    FAQSetting faqSetting = new FAQSetting();
+    boolean isAdmin = faqSetting_.isAdmin();
+    if(!isAdmin) isAdmin = isModerator;
+    faqSetting.setIsAdmin(String.valueOf(isAdmin));
+    listCate.addAll(getFAQService().getSubCategories(categoryId, faqSetting, true, null));
     for (Category cat : listCate) {
       categoryIds.put(cat.getId(), cat.getPath());
     }
@@ -218,6 +218,7 @@ public class UICategories extends BaseUIFAQForm {
 
   protected void setListCate() throws Exception {
     if (!isSwap) {
+      setIsModerators();
       try {
         checkAndSetListCategory(categoryId_);
       } catch (PathNotFoundException e) {
@@ -232,9 +233,9 @@ public class UICategories extends BaseUIFAQForm {
       } else {
         currentCategoryName = getFAQService().getCategoryById(categoryId_).getName();
       }
-      if (currentCategoryName == null || currentCategoryName.trim().length() < 1)
+      if (currentCategoryName == null || currentCategoryName.trim().length() < 1){
         currentCategoryName = FAQUtils.getResourceBundle("UIBreadcumbs.label." + Utils.CATEGORY_HOME);
-      setIsModerators();
+      }
     }
     isSwap = false;
   }
@@ -251,8 +252,8 @@ public class UICategories extends BaseUIFAQForm {
 
   public void resetListCate() throws Exception {
     isSwap = true;
-    checkAndSetListCategory(parentCateID_);
     setIsModerators();
+    checkAndSetListCategory(parentCateID_);
   }
 
   protected String[] getActionCategory(String cateId) {
