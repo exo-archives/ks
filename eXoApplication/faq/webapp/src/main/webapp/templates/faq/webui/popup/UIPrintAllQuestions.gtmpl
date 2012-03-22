@@ -120,8 +120,8 @@
 																		
 																		<!-- ==================================== question content =========================== -->
 																		<div class="ViewQuestionNotApproved">
-																			<a style="cursor:pointer">
-																				<span class="QuestionName" style="line-height:20px;">$questionContent</span>
+																			<a>
+																				<span class="QuestionName">$questionContent</span>
 																			</a>
 																		</div>
 																		
@@ -129,7 +129,7 @@
 																		<div class="UIDetailContainer">
 																			<%=uicomponent.render(question);%>
 																		</div>
-																		<span class="QuestionDateTime">&nbsp;<%=FAQUtils.getLongDateFormat(question.getCreatedDate());%>&nbsp;</span>
+																		<p class="QuestionDateTime">&nbsp;<%=FAQUtils.getLongDateFormat(question.getCreatedDate());%>&nbsp;</p>
 																		
 																	</div>
 																</div>

@@ -6,12 +6,8 @@
   JavascriptManager jsmanager = _ctx.getRequestContext().getJavascriptManager();
   jsmanager.addOnLoadJavascript('eXo.faq.UIAnswersPortlet.loadBreadcumbScroll');
 %>
-<div class="UIBreadcumbs" id="$uicomponent.id">
-  <div class="BreadcumbsInfoBar">
-    <table>
-      <tbody>
-        <tr>
-          <td class="ControlButtonContainer">
+<div class="UIBreadcumbs ClearFix" id="$uicomponent.id">
+          <div class="ControlButtonContainer ClearFix">
 
               <%  
                 if(uicomponent.getBreadcumbs().size() > 1){
@@ -54,23 +50,13 @@
                   }
                 t = t + 1 ;
               } %>
-             <div class="ScrollButtons">
-              <div title="<%=_ctx.appRes("UIBreadcumbs.label.Previous")%>">
-                <div title="<%=_ctx.appRes("UIBreadcumbs.label.Next")%>"><span></span></div>
-              </div>
-            </div>
+
 
               <% } %>
 
-          </td>
-          <td class="RightBreadcumbsInfoBar">
-            <div class="SearchForm">
-              <%uicomponent.renderChild(uicomponent.QUICK_SEARCH) ;%>
-            </div>
+          </div>
+        <div class="SearchForm">
+          <%uicomponent.renderChild(uicomponent.QUICK_SEARCH) ;%>
+        </div>
 
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
 </div>

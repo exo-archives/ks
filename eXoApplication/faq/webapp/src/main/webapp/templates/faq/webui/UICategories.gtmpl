@@ -16,18 +16,14 @@
 %>
 <div class="UICategoriesContainer">
 <%uiform.begin()%>
-  <div>
     <div class="AnswerToolbar">
-      <div class="LeftBar">
-        <div class="RightBar">
-          <div class="CenterBar">
             <%
             String categoryName = uicomponent.getCurrentName();
             if(categoryName.length() <=20 || categoryName.indexOf("<img") >= 0){%>
             	<% if(categoryName.indexOf("<img") >= 0) { %>
             		<%=categoryName%>
             	<% } else { %>
-              	<div class="TextTitle"><%=categoryName%></div>
+              	<%=categoryName%>
               <% } %>
             <%
             } else {%>
@@ -35,9 +31,6 @@
                 <%=FAQUtils.getSubString(categoryName, 20)%>
               </div>
           <%}%>
-          </div>
-        </div>
-      </div>
     </div>
     
     <div class="AnswersContainer">
@@ -49,8 +42,8 @@
         long questionNotAnswer = cateInfo[2] ;
         long questionNotApproved = cateInfo[3] ;
       %>
-      <a id="uicategoriesCateInfors0" style="margin-top:4px;cursor:pointer;font-weight:<%=uicomponent.font_weight[0]%>;" onclick="javaScript:eXo.faq.UIAnswersPortlet.selectCateInfor(0);<%=uicomponent.event("FilterQuestions", "allQuestions")%>">$numberOfQuestion <%= _ctx.appRes("UICategories.title.Questions"); %></a><br/>
-      <a id="uicategoriesCateInfors1" style="margin-top:4px;cursor:pointer;font-weight:<%=uicomponent.font_weight[1]%>;" onclick="javaScript:eXo.faq.UIAnswersPortlet.selectCateInfor(1);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_OPEN_QUESTIONS)%>">$questionNotAnswer <%= _ctx.appRes("UICategories.label.QuestionsNotAnswer"); %></a><br/>
+      <a id="uicategoriesCateInfors0" style="font-weight:<%=uicomponent.font_weight[0]%>;" onclick="javaScript:eXo.faq.UIAnswersPortlet.selectCateInfor(0);<%=uicomponent.event("FilterQuestions", "allQuestions")%>">$numberOfQuestion <%= _ctx.appRes("UICategories.title.Questions"); %></a><br/>
+      <a id="uicategoriesCateInfors1" style="font-weight:<%=uicomponent.font_weight[1]%>;" onclick="javaScript:eXo.faq.UIAnswersPortlet.selectCateInfor(1);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_OPEN_QUESTIONS)%>">$questionNotAnswer <%= _ctx.appRes("UICategories.label.QuestionsNotAnswer"); %></a><br/>
       <%
         if(uicomponent.isModerator){%>
         <a id="uicategoriesCateInfors2" style="margin-top:4px;cursor:pointer;font-weight:<%=uicomponent.font_weight[2]%>;" onclick="javaScript:eXo.faq.UIAnswersPortlet.selectCateInfor(2);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_PENDING_QUESTIONS)%>">$questionNotApproved <%= _ctx.appRes("UICategories.label.QuestionsNotApproved"); %></a><br/>
@@ -58,17 +51,9 @@
       }
       %>
     </div>
-  </div>
 
-  <div>
     <div class="AnswerToolbar">
-      <div class="LeftBar">
-        <div class="RightBar">
-          <div class="CenterBar">
-              <span class="TextTitle"><%= _ctx.appRes("UICategories.title.Categories"); %></span>
-          </div>
-        </div>
-      </div>
+          <span class="TextTitle"><%= _ctx.appRes("UICategories.title.Categories"); %></span>
     </div>
     <div class="AnswersContainer CategoriesContainer">
       <div class="UICategories">
@@ -89,7 +74,7 @@
             canEdit = uicomponent.isCategoryModerator(category.getPath()) ; 
             i = new Date().getTime();
         %>
-          <div class="FAQTmpCategory"><span></span></div>
+        
           <div class="$classCss FAQCategory oncontextmenu" id="UIContextPopupMenu$i">
           	<input type="hidden" class="InfoCategory" id="<%=category.getId()%>" value="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>" title="input hidden" name="<%=category.getId()%>"/>
             <div>
@@ -149,10 +134,9 @@
               </div>
             </div>
         <% } %>
-        <div class="FAQTmpCategory"><span></span></div>
+        
       </div>
       </div>
     </div>
-  </div>
 <%uiform.end()%>
 </div>

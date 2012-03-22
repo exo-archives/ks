@@ -5,17 +5,16 @@
   jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.submitSearch('"+uiform.id+"');") ;
 %>
 
-<div class="UIQuickSeach">
+<div class="UIQuickSeach ClearFix">
   <% uiform.begin() %>  
-  <div class="UISearchForm ClearFix">
-    <div class="FL"><label for="<%=uiform.FIELD_SEARCHVALUE%>"><%= _ctx.appRes("UIQuickSeach.label.search"); %></label></div>
-    <div class="Input FL">
+    <div class="AdvancedSearch" title="<%= _ctx.appRes("UIQuickSeach.title.advance-search"); %>" onclick="<%=uicomponent.event("AdvancedSearch");%>"><span></span></div>
+    <div class="SearchIcon ActionSearch" title="<%= _ctx.appRes("UIQuickSeach.title.search"); %>" onclick="<%=uicomponent.event("Search");%>"><span></span></div>
+    <div class="Input FR">
       <%  
         uiform.renderChild(uiform.FIELD_SEARCHVALUE) ;
       %>
     </div>
-    <div class="AdvancedSearch FL" title="<%= _ctx.appRes("UIQuickSeach.title.advance-search"); %>" onclick="<%=uicomponent.event("AdvancedSearch");%>"><span></span></div>
-    <div class="SearchIcon ActionSearch FL" title="<%= _ctx.appRes("UIQuickSeach.title.search"); %>" onclick="<%=uicomponent.event("Search");%>"><span></span></div>
-  </div>
+    <div class="FR"><label for="<%=uiform.FIELD_SEARCHVALUE%>"><%= _ctx.appRes("UIQuickSeach.label.search"); %></label></div>
+
   <%uiform.end()%>
 </div>
