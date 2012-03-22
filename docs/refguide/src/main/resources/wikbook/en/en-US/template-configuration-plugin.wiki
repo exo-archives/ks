@@ -36,7 +36,7 @@ The properties of template configuration plug-in are defined in the _init-params
 </init-params>
 {code}
 
-| Name || Description || Value ||
+|| Name || Description || Value ||
 |*viewerTemplate* | Path of file template. | war:/ks-extension/ks/faq/templates/ FAQViewerPortlet.gtmpl |
 
 

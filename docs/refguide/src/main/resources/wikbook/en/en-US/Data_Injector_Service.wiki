@@ -151,7 +151,7 @@ You can use these parameters to set up permissions for pages:
 | users | String, | The list of granted permissions users separated by commas. |
 | groups  | String | The list of granted permissions groups separated by commas. |
 | memship | String | The list of granted permissions memberships separated by commas. |
-| perm | [number][number] | The declared permissions. The value must be a string with 2 numbers. The first number is to define Read permission of identity while the other one is for Edit permission. If the number is "zero", the privilege is denied and vise versa. For example, 11 means that both Read and Edit pages permmission are granted. |
+| perm | \[number\]\[number\] | The declared permissions. The value must be a string with 2 numbers. The first number is to define Read permission of identity while the other one is for Edit permission. If the number is "zero", the privilege is denied and vise versa. For example, 11 means that both Read and Edit pages permmission are granted. |
 | rcs | Boolean | Recursive or not. If the value is true, all pages that meet the constraint will be set permission, or deepest pages (smallest descendants) will be affected. |
 
 h2. AnswerDataInjector {anchor:id=KSref.Configuration.Data_Injectior_Service.Answer_data_injectior}
@@ -179,7 +179,7 @@ http://[rest path]/bench/inject/AnswerDataInjector/?type=data&q=2,3,4,5,6&pre=ca
 In which:
 
 || Param || Value || Description ||
-| type | [data | perm] | Type of injector. It can be data or perm means injecting data or permission respectively. |
+| type | \[data \| perm] | Type of injector. It can be data or perm means injecting data or permission respectively. |
 | q | number,number,etc | The number of items in each depth. For example, if the value is 2,3,4,5,6 then the injector will create 2 new categories with the depth level is '3', add 4 questions in each category, 5 answer and 6 comment in each question. *Warning*: Do not set the depth level to more than 5, because the number of items are calculated by number\*depth.|
 | pre | string, string, etc | The prefix for items id in each depth. For example, if the value is "cate, ques, answ, comm" then category has fist name/id is "cate", question has fist name/id is "ques", answer has fist id is "answ" and comment has fist id is "comm" . | 
 | att | number | The number of attachments in one question. If the value is '0' or not set, no attachment is created. |

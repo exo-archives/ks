@@ -22,7 +22,7 @@ Navigating in the project's folder, you will see the following structure:
 
 Here is the content of the _pom.xml_ file:
 
-{code:lang=xml}
+{code:xml}
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -78,7 +78,7 @@ h2. Create new actions and their corresponding listeners    {anchor:id=KSref.Ext
 
 Edit the _ViewSourceActionComponent_ class as below:
 
-{code:lang=java}
+{code:java}
 package com.acme;
 
 import java.util.Arrays;
@@ -145,7 +145,7 @@ h2. Register new actions with UIExtensionManager      {anchor:id=KSref.Extend_ac
 
 Edit the _configuration.xml_ file as below:
 
-{code:lang=xml}
+{code:xml}
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd http://www.exoplatform.org/xml/ns/kernel_1_2.xsd"
