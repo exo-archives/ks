@@ -139,15 +139,15 @@ public abstract class AbstractMOWTestcase extends TestCase {
     switch (wikiType) {
       case PORTAL:
         WikiContainer<PortalWiki> portalWikiContainer = wStore.getWikiContainer(WikiType.PORTAL);
-        wiki = portalWikiContainer.getWiki(wikiName);
+        wiki = portalWikiContainer.getWiki(wikiName, true);
         break;
       case GROUP:
         WikiContainer<GroupWiki> groupWikiContainer = wStore.getWikiContainer(WikiType.GROUP);
-        wiki = groupWikiContainer.getWiki(wikiName);
+        wiki = groupWikiContainer.getWiki(wikiName, true);
         break;
       case USER:
         WikiContainer<UserWiki> userWikiContainer = wStore.getWikiContainer(WikiType.USER);
-        wiki = userWikiContainer.getWiki(wikiName);
+        wiki = userWikiContainer.getWiki(wikiName, true);
         break;
     }
     mod.save();

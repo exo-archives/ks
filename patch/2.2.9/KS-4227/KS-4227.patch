@@ -1,0 +1,240 @@
+Index: eXoApplication/wiki/service/src/test/java/org/exoplatform/wiki/mow/core/api/TestWikiStore.java
+===================================================================
+--- eXoApplication/wiki/service/src/test/java/org/exoplatform/wiki/mow/core/api/TestWikiStore.java	(revision 80393)
++++ eXoApplication/wiki/service/src/test/java/org/exoplatform/wiki/mow/core/api/TestWikiStore.java	(working copy)
+@@ -61,7 +61,7 @@
+     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
+     WikiContainer<PortalWiki> portalWikiContainer = wStore.getWikiContainer(WikiType.PORTAL);
+     PortalWiki wiki = portalWikiContainer.addWiki("classic");
+-    PortalWiki classicWiki = portalWikiContainer.getWiki("classic");
++    PortalWiki classicWiki = portalWikiContainer.getWiki("classic", true);
+     assertSame(wiki, classicWiki);
+   }
+ 
+@@ -70,7 +70,7 @@
+     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
+     WikiContainer<GroupWiki> groupWikiContainer = wStore.getWikiContainer(WikiType.GROUP);
+     GroupWiki wiki = groupWikiContainer.addWiki("/platform/administrators");
+-    GroupWiki organizationWiki = groupWikiContainer.getWiki("/platform/administrators");
++    GroupWiki organizationWiki = groupWikiContainer.getWiki("/platform/administrators", true);
+     assertSame(wiki, organizationWiki);
+   }
+   
+@@ -79,7 +79,7 @@
+     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
+     WikiContainer<UserWiki> userWikiContainer = wStore.getWikiContainer(WikiType.USER);
+     UserWiki wiki = userWikiContainer.addWiki("demo");
+-    UserWiki rootWiki = userWikiContainer.getWiki("demo");
++    UserWiki rootWiki = userWikiContainer.getWiki("demo", true);
+     assertSame(wiki, rootWiki);
+   }
+   
+Index: eXoApplication/wiki/service/src/test/java/org/exoplatform/wiki/mow/core/api/AbstractMOWTestcase.java
+===================================================================
+--- eXoApplication/wiki/service/src/test/java/org/exoplatform/wiki/mow/core/api/AbstractMOWTestcase.java	(revision 80393)
++++ eXoApplication/wiki/service/src/test/java/org/exoplatform/wiki/mow/core/api/AbstractMOWTestcase.java	(working copy)
+@@ -139,15 +139,15 @@
+     switch (wikiType) {
+       case PORTAL:
+         WikiContainer<PortalWiki> portalWikiContainer = wStore.getWikiContainer(WikiType.PORTAL);
+-        wiki = portalWikiContainer.getWiki(wikiName);
++        wiki = portalWikiContainer.getWiki(wikiName, true);
+         break;
+       case GROUP:
+         WikiContainer<GroupWiki> groupWikiContainer = wStore.getWikiContainer(WikiType.GROUP);
+-        wiki = groupWikiContainer.getWiki(wikiName);
++        wiki = groupWikiContainer.getWiki(wikiName, true);
+         break;
+       case USER:
+         WikiContainer<UserWiki> userWikiContainer = wStore.getWikiContainer(WikiType.USER);
+-        wiki = userWikiContainer.getWiki(wikiName);
++        wiki = userWikiContainer.getWiki(wikiName, true);
+         break;
+     }
+     mod.save();
+Index: eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/service/impl/WikiServiceImpl.java
+===================================================================
+--- eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/service/impl/WikiServiceImpl.java	(revision 80393)
++++ eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/service/impl/WikiServiceImpl.java	(working copy)
+@@ -18,6 +18,7 @@
+ import org.exoplatform.commons.chromattic.ChromatticManager;
+ import org.exoplatform.commons.utils.ObjectPageList;
+ import org.exoplatform.commons.utils.PageList;
++import org.exoplatform.container.ExoContainer;
+ import org.exoplatform.container.ExoContainerContext;
+ import org.exoplatform.container.PortalContainer;
+ import org.exoplatform.container.component.ComponentPlugin;
+@@ -31,10 +32,14 @@
+ import org.exoplatform.portal.config.model.PortalConfig;
+ import org.exoplatform.services.deployment.plugins.XMLDeploymentPlugin;
+ import org.exoplatform.services.jcr.RepositoryService;
++import org.exoplatform.services.jcr.access.AccessControlEntry;
++import org.exoplatform.services.jcr.access.AccessControlList;
+ import org.exoplatform.services.jcr.ext.common.SessionProvider;
+ import org.exoplatform.services.log.ExoLogger;
+ import org.exoplatform.services.log.Log;
+ import org.exoplatform.services.security.ConversationState;
++import org.exoplatform.services.security.Identity;
++import org.exoplatform.services.security.IdentityConstants;
+ import org.exoplatform.wiki.mow.api.Model;
+ import org.exoplatform.wiki.mow.api.Page;
+ import org.exoplatform.wiki.mow.api.Wiki;
+@@ -469,6 +474,7 @@
+ 
+   public Page getPageById(String wikiType, String wikiOwner, String pageId) throws Exception {
+     PageImpl page = null;
++
+     if (WikiNodeType.Definition.WIKI_HOME_NAME.equals(pageId) || pageId == null) {
+       page = getWikiHome(wikiType, wikiOwner);
+     } else {
+@@ -766,13 +772,16 @@
+     try {
+       if (PortalConfig.PORTAL_TYPE.equals(wikiType)) {
+         WikiContainer<PortalWiki> portalWikiContainer = wStore.getWikiContainer(WikiType.PORTAL);
+-        wiki = portalWikiContainer.getWiki(owner);
++        wiki = portalWikiContainer.getWiki(owner, true);
+       } else if (PortalConfig.GROUP_TYPE.equals(wikiType)) {
+         WikiContainer<GroupWiki> groupWikiContainer = wStore.getWikiContainer(WikiType.GROUP);
+-        wiki = groupWikiContainer.getWiki(owner);
++        boolean hasPermission = hasPermission(wikiType, owner);
++        wiki = groupWikiContainer.getWiki(owner, hasPermission);
+       } else if (PortalConfig.USER_TYPE.equals(wikiType)) {
++        boolean hasEditWiki = hasPermission(wikiType, owner);
+         WikiContainer<UserWiki> userWikiContainer = wStore.getWikiContainer(WikiType.USER);
+-        wiki = userWikiContainer.getWiki(owner);
++        wiki = userWikiContainer.getWiki(owner, hasEditWiki);
++
+       }
+       model.save();
+     } catch (Exception e) {
+@@ -782,6 +791,43 @@
+     }
+     return wiki;
+   }
++  
++  private List<AccessControlEntry> getAccessControls(String wikiType, String wikiOwner) throws Exception{
++    List<AccessControlEntry> aces = new ArrayList<AccessControlEntry>();
++    try {
++      List<String> permissions = getWikiDefaultPermissions(wikiType, wikiOwner);
++      for (String perm : permissions) {
++        String[] actions = perm.substring(0, perm.indexOf(":")).split(",");
++        perm = perm.substring(perm.indexOf(":") + 1);
++        String id = perm.substring(perm.indexOf(":") + 1);
++        for (String action : actions) {
++          aces.add(new AccessControlEntry(id, action));
++        }
++      }
++    } catch (Exception e) {
++      log.debug("failed in method getDefaultPermission:", e);
++    }
++    return aces;
++  }
++  
++  private  boolean hasPermission(String wikiType, String owner) throws Exception {
++    ConversationState conversationState = ConversationState.getCurrent();
++    Identity user = null;
++    if (conversationState != null) {
++      user = conversationState.getIdentity();
++      ExoContainer container = ExoContainerContext.getCurrentContainer();
++      UserACL acl = (UserACL)container.getComponentInstanceOfType(UserACL.class);
++      if(acl != null && acl.getSuperUser().equals(user.getUserId())){
++        return true;
++      }
++    } else {
++      user = new Identity(IdentityConstants.ANONIM);
++    }
++    List<AccessControlEntry> aces = getAccessControls(wikiType, owner);
++    AccessControlList acl = new AccessControlList(owner, aces);
++    String []permission = new String[]{PermissionType.ADMINSPACE.toString()};
++    return Utils.hasPermission(acl, permission, user);
++  }
+ 
+   private WikiHome getWikiHome(String wikiType, String owner) throws Exception {
+     Model model = getModel();
+Index: eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/utils/Utils.java
+===================================================================
+--- eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/utils/Utils.java	(revision 80393)
++++ eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/utils/Utils.java	(working copy)
+@@ -288,14 +288,14 @@
+       } else {
+         // Object is a wiki home page
+         Wiki wiki = store.getWikiContainer(WikiType.valueOf(wikiType.toUpperCase()))
+-                         .getWiki(wikiOwner);
++                         .getWiki(wikiOwner, true);
+         WikiHome wikiHome = (WikiHome) wiki.getWikiHome();
+         return wikiHome;
+       }
+     } else if (wikiOwner != null) {
+       // Object is a wiki
+       Wiki wiki = store.getWikiContainer(WikiType.valueOf(wikiType.toUpperCase()))
+-                       .getWiki(wikiOwner);
++                       .getWiki(wikiOwner, true);
+       return wiki;
+     } else if (wikiType != null) {
+       // Object is a space
+Index: eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/resolver/URLResolver.java
+===================================================================
+--- eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/resolver/URLResolver.java	(revision 80393)
++++ eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/resolver/URLResolver.java	(working copy)
+@@ -27,7 +27,13 @@
+         params.setType(PortalConfig.USER_TYPE)  ;
+         if(array.length >= 3) {
+           params.setOwner(array[1]);
+-          params.setPageId(array[2]);
++          String pageId = "";
++          for(int i=2; i< array.length; i++){
++            pageId += array[i];
++          }
++          pageId = pageId.substring(0, pageId.length());
++          params.setPageId(pageId);
++          
+         }else if(array.length == 2) {
+           params.setOwner(array[1]);
+           params.setPageId(WikiPageParams.WIKI_HOME);
+@@ -73,8 +79,8 @@
+     }
+     params.setPageId(TitleResolver.getId(params.getPageId(), true));
+     return params;
+-  }  
+-  
++  }
++
+   private String extractURI(String url, String wikiPageName) throws Exception{
+     String uri = null;
+     String sign1 = "/" + wikiPageName + "/";
+Index: eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/mow/core/api/WikiStoreImpl.java
+===================================================================
+--- eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/mow/core/api/WikiStoreImpl.java	(revision 80393)
++++ eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/mow/core/api/WikiStoreImpl.java	(working copy)
+@@ -61,7 +61,7 @@
+   }
+ 
+   public Wiki getWiki(WikiType wikiType, String name) {
+-    return getWikiContainer(wikiType).getWiki(name);
++    return getWikiContainer(wikiType).getWiki(name, true);
+   }
+ 
+   public Collection<Wiki> getWikis() {
+Index: eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/mow/core/api/wiki/WikiContainer.java
+===================================================================
+--- eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/mow/core/api/wiki/WikiContainer.java	(revision 80393)
++++ eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/mow/core/api/wiki/WikiContainer.java	(working copy)
+@@ -60,13 +60,15 @@
+     this.wService = wService;
+   }
+ 
+-  public T getWiki(String wikiOwner) {
++  public T getWiki(String wikiOwner, boolean hasAdminPermission) {
+     T wiki = contains(wikiOwner);
+     if (wiki != null)
+       return wiki;
+     else {
+-      wiki = addWiki(wikiOwner);
+-      ((WikiImpl)wiki).initTemplate();
++      if(hasAdminPermission){
++        wiki = addWiki(wikiOwner);
++        ((WikiImpl)wiki).initTemplate();
++      }
+       return wiki;
+     }
+   }

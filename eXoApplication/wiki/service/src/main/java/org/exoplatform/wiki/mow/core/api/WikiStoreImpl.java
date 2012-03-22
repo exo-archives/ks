@@ -61,7 +61,7 @@ public abstract class WikiStoreImpl implements WikiStore {
   }
 
   public Wiki getWiki(WikiType wikiType, String name) {
-    return getWikiContainer(wikiType).getWiki(name);
+    return getWikiContainer(wikiType).getWiki(name, true);
   }
 
   public Collection<Wiki> getWikis() {

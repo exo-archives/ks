@@ -288,14 +288,14 @@ public class Utils {
       } else {
         // Object is a wiki home page
         Wiki wiki = store.getWikiContainer(WikiType.valueOf(wikiType.toUpperCase()))
-                         .getWiki(wikiOwner);
+                         .getWiki(wikiOwner, true);
         WikiHome wikiHome = (WikiHome) wiki.getWikiHome();
         return wikiHome;
       }
     } else if (wikiOwner != null) {
       // Object is a wiki
       Wiki wiki = store.getWikiContainer(WikiType.valueOf(wikiType.toUpperCase()))
-                       .getWiki(wikiOwner);
+                       .getWiki(wikiOwner, true);
       return wiki;
     } else if (wikiType != null) {
       // Object is a space

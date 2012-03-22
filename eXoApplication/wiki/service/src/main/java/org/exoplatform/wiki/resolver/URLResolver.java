@@ -27,7 +27,13 @@ public class URLResolver extends Resolver{
         params.setType(PortalConfig.USER_TYPE)  ;
         if(array.length >= 3) {
           params.setOwner(array[1]);
-          params.setPageId(array[2]);
+          String pageId = "";
+          for(int i=2; i< array.length; i++){
+            pageId += array[i];
+          }
+          pageId = pageId.substring(0, pageId.length());
+          params.setPageId(pageId);
+          
         }else if(array.length == 2) {
           params.setOwner(array[1]);
           params.setPageId(WikiPageParams.WIKI_HOME);
@@ -73,8 +79,8 @@ public class URLResolver extends Resolver{
     }
     params.setPageId(TitleResolver.getId(params.getPageId(), true));
     return params;
-  }  
-  
+  }
+
   private String extractURI(String url, String wikiPageName) throws Exception{
     String uri = null;
     String sign1 = "/" + wikiPageName + "/";

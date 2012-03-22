@@ -61,7 +61,7 @@ public class TestWikiStore extends AbstractMOWTestcase {
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
     WikiContainer<PortalWiki> portalWikiContainer = wStore.getWikiContainer(WikiType.PORTAL);
     PortalWiki wiki = portalWikiContainer.addWiki("classic");
-    PortalWiki classicWiki = portalWikiContainer.getWiki("classic");
+    PortalWiki classicWiki = portalWikiContainer.getWiki("classic", true);
     assertSame(wiki, classicWiki);
   }
 
@@ -70,7 +70,7 @@ public class TestWikiStore extends AbstractMOWTestcase {
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
     WikiContainer<GroupWiki> groupWikiContainer = wStore.getWikiContainer(WikiType.GROUP);
     GroupWiki wiki = groupWikiContainer.addWiki("/platform/administrators");
-    GroupWiki organizationWiki = groupWikiContainer.getWiki("/platform/administrators");
+    GroupWiki organizationWiki = groupWikiContainer.getWiki("/platform/administrators", true);
     assertSame(wiki, organizationWiki);
   }
   
@@ -79,7 +79,7 @@ public class TestWikiStore extends AbstractMOWTestcase {
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
     WikiContainer<UserWiki> userWikiContainer = wStore.getWikiContainer(WikiType.USER);
     UserWiki wiki = userWikiContainer.addWiki("demo");
-    UserWiki rootWiki = userWikiContainer.getWiki("demo");
+    UserWiki rootWiki = userWikiContainer.getWiki("demo", true);
     assertSame(wiki, rootWiki);
   }
   

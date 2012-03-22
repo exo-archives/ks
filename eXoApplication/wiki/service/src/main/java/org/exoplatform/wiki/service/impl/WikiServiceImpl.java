@@ -18,6 +18,7 @@ import org.chromattic.api.ChromatticSession;
 import org.exoplatform.commons.chromattic.ChromatticManager;
 import org.exoplatform.commons.utils.ObjectPageList;
 import org.exoplatform.commons.utils.PageList;
+import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentPlugin;
@@ -31,10 +32,14 @@ import org.exoplatform.portal.config.UserPortalConfigService;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.services.deployment.plugins.XMLDeploymentPlugin;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.access.AccessControlEntry;
+import org.exoplatform.services.jcr.access.AccessControlList;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.security.IdentityConstants;
 import org.exoplatform.wiki.mow.api.Model;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.Wiki;
@@ -469,6 +474,7 @@ public class WikiServiceImpl implements WikiService, Startable {
 
   public Page getPageById(String wikiType, String wikiOwner, String pageId) throws Exception {
     PageImpl page = null;
+
     if (WikiNodeType.Definition.WIKI_HOME_NAME.equals(pageId) || pageId == null) {
       page = getWikiHome(wikiType, wikiOwner);
     } else {
@@ -766,13 +772,16 @@ public class WikiServiceImpl implements WikiService, Startable {
     try {
       if (PortalConfig.PORTAL_TYPE.equals(wikiType)) {
         WikiContainer<PortalWiki> portalWikiContainer = wStore.getWikiContainer(WikiType.PORTAL);
-        wiki = portalWikiContainer.getWiki(owner);
+        wiki = portalWikiContainer.getWiki(owner, true);
       } else if (PortalConfig.GROUP_TYPE.equals(wikiType)) {
         WikiContainer<GroupWiki> groupWikiContainer = wStore.getWikiContainer(WikiType.GROUP);
-        wiki = groupWikiContainer.getWiki(owner);
+        boolean hasPermission = hasPermission(wikiType, owner);
+        wiki = groupWikiContainer.getWiki(owner, hasPermission);
       } else if (PortalConfig.USER_TYPE.equals(wikiType)) {
+        boolean hasEditWiki = hasPermission(wikiType, owner);
         WikiContainer<UserWiki> userWikiContainer = wStore.getWikiContainer(WikiType.USER);
-        wiki = userWikiContainer.getWiki(owner);
+        wiki = userWikiContainer.getWiki(owner, hasEditWiki);
+
       }
       model.save();
     } catch (Exception e) {
@@ -781,6 +790,43 @@ public class WikiServiceImpl implements WikiService, Startable {
       }
     }
     return wiki;
+  }
+  
+  private List<AccessControlEntry> getAccessControls(String wikiType, String wikiOwner) throws Exception{
+    List<AccessControlEntry> aces = new ArrayList<AccessControlEntry>();
+    try {
+      List<String> permissions = getWikiDefaultPermissions(wikiType, wikiOwner);
+      for (String perm : permissions) {
+        String[] actions = perm.substring(0, perm.indexOf(":")).split(",");
+        perm = perm.substring(perm.indexOf(":") + 1);
+        String id = perm.substring(perm.indexOf(":") + 1);
+        for (String action : actions) {
+          aces.add(new AccessControlEntry(id, action));
+        }
+      }
+    } catch (Exception e) {
+      log.debug("failed in method getDefaultPermission:", e);
+    }
+    return aces;
+  }
+  
+  private  boolean hasPermission(String wikiType, String owner) throws Exception {
+    ConversationState conversationState = ConversationState.getCurrent();
+    Identity user = null;
+    if (conversationState != null) {
+      user = conversationState.getIdentity();
+      ExoContainer container = ExoContainerContext.getCurrentContainer();
+      UserACL acl = (UserACL)container.getComponentInstanceOfType(UserACL.class);
+      if(acl != null && acl.getSuperUser().equals(user.getUserId())){
+        return true;
+      }
+    } else {
+      user = new Identity(IdentityConstants.ANONIM);
+    }
+    List<AccessControlEntry> aces = getAccessControls(wikiType, owner);
+    AccessControlList acl = new AccessControlList(owner, aces);
+    String []permission = new String[]{PermissionType.ADMINSPACE.toString()};
+    return Utils.hasPermission(acl, permission, user);
   }
 
   private WikiHome getWikiHome(String wikiType, String owner) throws Exception {

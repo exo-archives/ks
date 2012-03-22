@@ -60,13 +60,15 @@ public abstract class WikiContainer<T extends Wiki> {
     this.wService = wService;
   }
 
-  public T getWiki(String wikiOwner) {
+  public T getWiki(String wikiOwner, boolean hasAdminPermission) {
     T wiki = contains(wikiOwner);
     if (wiki != null)
       return wiki;
     else {
-      wiki = addWiki(wikiOwner);
-      ((WikiImpl)wiki).initTemplate();
+      if(hasAdminPermission){
+        wiki = addWiki(wikiOwner);
+        ((WikiImpl)wiki).initTemplate();
+      }
       return wiki;
     }
   }
