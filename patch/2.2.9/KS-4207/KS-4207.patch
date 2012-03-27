@@ -1,0 +1,13 @@
+Index: eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/rendering/builder/XWiki20ReferenceBuilder.java
+===================================================================
+--- eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/rendering/builder/XWiki20ReferenceBuilder.java	(revision 80538)
++++ eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/rendering/builder/XWiki20ReferenceBuilder.java	(working copy)
+@@ -35,7 +35,7 @@
+       .append(wikiSpaceSeparator)
+       .append(params.getOwner())
+       .append(spacePageSeparator)
+-      .append(params.getPageId());
++      .append(params.getPageId().replace(".", "\\."));
+     return (sb.toString());
+   }
+ 
