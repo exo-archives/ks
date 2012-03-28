@@ -1,0 +1,25 @@
+Index: packaging/product/src/main/javascript/portal.packaging.product.js
+===================================================================
+--- packaging/product/src/main/javascript/portal.packaging.product.js	(revision 80473)
++++ packaging/product/src/main/javascript/portal.packaging.product.js	(working copy)
+@@ -60,6 +60,8 @@
+   product.addDependencies(ks.demo.cometd);
+   product.addDependencies(ks.demo.rest);
+   
++  product.addDependencies(new Project("org.exoplatform.commons", "exo.platform.commons.component", "jar", "${org.exoplatform.commons.version}"));
++  
+   product.addServerPatch("tomcat", ks.server.tomcat.patch) ;
+   //product.addServerPatch("jboss",  ks.server.jboss.patch) ;
+   product.addServerPatch("jbossear",  ks.server.jboss.patchear) ;
+Index: packaging/module/src/main/javascript/ks.packaging.module.js
+===================================================================
+--- packaging/module/src/main/javascript/ks.packaging.module.js	(revision 80473)
++++ packaging/module/src/main/javascript/ks.packaging.module.js	(working copy)
+@@ -35,7 +35,6 @@
+   // KS components
+   module.component = {};
+   module.component.common = new Project("org.exoplatform.ks", "exo.ks.component.common", "jar", module.version).
+-                            addDependency(new Project("org.exoplatform.commons", "exo.platform.commons.component", "jar", commonsVersion)).
+                             addDependency(new Project("org.exoplatform.commons", "exo.platform.commons.webui", "jar", commonsVersion));
+   module.component.rendering = new Project("org.exoplatform.ks", "exo.ks.component.rendering", "jar", module.version).
+                             addDependency(new Project("org.exoplatform.ks", "exo.ks.component.macro.iframe", "jar", module.version));

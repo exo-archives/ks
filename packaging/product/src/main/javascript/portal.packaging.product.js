@@ -60,6 +60,8 @@ function getProduct(version) {
   product.addDependencies(ks.demo.cometd);
   product.addDependencies(ks.demo.rest);
   
+  product.addDependencies(new Project("org.exoplatform.commons", "exo.platform.commons.component", "jar", "${org.exoplatform.commons.version}"));
+  
   product.addServerPatch("tomcat", ks.server.tomcat.patch) ;
   //product.addServerPatch("jboss",  ks.server.jboss.patch) ;
   product.addServerPatch("jbossear",  ks.server.jboss.patchear) ;
