@@ -17,12 +17,14 @@
 package org.exoplatform.wiki.service;
 
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.chromattic.api.ChromatticSession;
 import org.chromattic.ext.ntdef.Resource;
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.portal.config.model.PortalConfig;
+import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.wiki.mow.api.Model;
 import org.exoplatform.wiki.mow.api.WikiType;
 import org.exoplatform.wiki.mow.core.api.AbstractMOWTestcase;
@@ -35,11 +37,11 @@ import org.exoplatform.wiki.mow.core.api.wiki.PortalWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.UserWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiContainer;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
-import org.exoplatform.wiki.service.search.WikiSearchData;
 import org.exoplatform.wiki.service.search.SearchResult;
 import org.exoplatform.wiki.service.search.TemplateSearchData;
 import org.exoplatform.wiki.service.search.TemplateSearchResult;
 import org.exoplatform.wiki.service.search.TitleSearchResult;
+import org.exoplatform.wiki.service.search.WikiSearchData;
 import org.xwiki.rendering.syntax.Syntax;
 
 
@@ -200,9 +202,27 @@ public class TestWikiService extends AbstractMOWTestcase {
     newLocationParams.setType(PortalConfig.PORTAL_TYPE);
     newLocationParams.setOwner("classic");   
     assertTrue(wService.movePage(currentLocationParams,newLocationParams)) ;
+    
+    // moving a page to another read-only page
+    wService.createPage(PortalConfig.PORTAL_TYPE, "demo", "toMovedPage", "WikiHome");
+    PageImpl page = (PageImpl) wService.createPage(PortalConfig.USER_TYPE, "demo", "privatePage", "WikiHome");
+    HashMap<String, String[]> permissionMap = new HashMap<String, String[]>();
+    permissionMap.put("any", PermissionType.DEFAULT_AC);
+    page.setPermission(permissionMap);
+    assertNotNull(wService.getPageById(PortalConfig.PORTAL_TYPE, "demo", "toMovedPage"));
+    assertNotNull(wService.getPageById(PortalConfig.USER_TYPE, "demo", "privatePage"));
+
+    currentLocationParams.setPageId("toMovedPage");
+    currentLocationParams.setType(PortalConfig.PORTAL_TYPE);
+    currentLocationParams.setOwner("demo");
+    newLocationParams.setPageId("privatePage");
+    newLocationParams.setType(PortalConfig.USER_TYPE);
+    newLocationParams.setOwner("demo");
+    startSessionAs("mary");
+    assertFalse(wService.movePage(currentLocationParams, newLocationParams));
   }
   
-  public void testAddMixin() throws Exception{    
+  public void testAddMixin() throws Exception{
     wService.createPage(PortalConfig.PORTAL_TYPE, "classic", "mixinPage", "WikiHome") ;
     PageImpl page = (PageImpl)wService.getPageById("portal", "classic", "mixinPage") ;
     Model model = mowService.getModel();

@@ -308,9 +308,11 @@ public class WikiServiceImpl implements WikiService, Startable {
 
   public boolean movePage(WikiPageParams currentLocationParams, WikiPageParams newLocationParams) throws Exception {
     try {
-      if (!isHasCreatePagePermission(Utils.getCurrentUser(), newLocationParams.getOwner())) {
+      PageImpl destPage = (PageImpl) getPageById(newLocationParams.getType(),
+                                                 newLocationParams.getOwner(),
+                                                 newLocationParams.getPageId());
+      if (destPage == null || !destPage.hasPermission(PermissionType.EDITPAGE))
         return false;
-      }
       Model model = getModel();
       WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
       ChromatticSession session = wStore.getSession();
@@ -321,10 +323,7 @@ public class WikiServiceImpl implements WikiService, Startable {
       MovedMixin mix = session.create(MovedMixin.class);
       if (movePage.getMovedMixin() == null) {
         session.setEmbedded(movePage, MovedMixin.class, mix);
-      }
-      PageImpl destPage = (PageImpl) getPageById(newLocationParams.getType(),
-                                                 newLocationParams.getOwner(),
-                                                 newLocationParams.getPageId());
+      }      
       WikiImpl destWiki = (WikiImpl) destPage.getWiki();
       movePage.setParentPage(destPage);
       
@@ -465,11 +464,6 @@ public class WikiServiceImpl implements WikiService, Startable {
     wiki.setWikiPermissions(permissions);
     // TODO: study performance
     updateAllPagesPermissions(wikiType, wikiOwner, permMap);
-  }
-
-  private boolean isHasCreatePagePermission(String userId, String destSpace) {
-
-    return true;
   }
 
   public Page getPageById(String wikiType, String wikiOwner, String pageId) throws Exception {

@@ -170,4 +170,9 @@ public abstract class AbstractMOWTestcase extends TestCase {
     return wikipage;
   }
   
+  protected void startSessionAs(String user) {
+    Identity userIdentity = new Identity(user);
+    ConversationState.setCurrent(new ConversationState(userIdentity));
+  }
+  
 }

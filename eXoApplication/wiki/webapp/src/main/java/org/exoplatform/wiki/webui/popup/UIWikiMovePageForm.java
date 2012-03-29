@@ -36,11 +36,11 @@ import org.exoplatform.wiki.tree.TreeNode.TREETYPE;
 import org.exoplatform.wiki.webui.UIWikiBreadCrumb;
 import org.exoplatform.wiki.webui.UIWikiLocationContainer;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
-import org.exoplatform.wiki.webui.WikiMode;
 import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
+import org.exoplatform.wiki.webui.WikiMode;
 import org.exoplatform.wiki.webui.tree.EventUIComponent;
-import org.exoplatform.wiki.webui.tree.UITreeExplorer;
 import org.exoplatform.wiki.webui.tree.EventUIComponent.EVENTTYPE;
+import org.exoplatform.wiki.webui.tree.UITreeExplorer;
 
 /**
  * Created by The eXo Platform SAS
@@ -124,8 +124,15 @@ public class UIWikiMovePageForm extends UIForm implements UIPopupComponent {
                                                 ApplicationMessage.WARNING));
         org.exoplatform.wiki.commons.Utils.redirect(currentLocationParams, uiWikiPortlet.getWikiMode());
         return;
-      }      
-      wservice.movePage(currentLocationParams, newLocationParams);      
+      }
+      boolean isMoved = wservice.movePage(currentLocationParams, newLocationParams);      
+      if (!isMoved) {
+        event.getRequestContext()
+             .getUIApplication()
+             .addMessage(new ApplicationMessage("UIWikiMovePageForm.msg.no-permission-at-destination", null, ApplicationMessage.WARNING));
+        org.exoplatform.wiki.commons.Utils.redirect(currentLocationParams, uiWikiPortlet.getWikiMode());
+        return;
+      }
       UIPopupContainer popupContainer = uiWikiPortlet.getPopupContainer(PopupLevel.L1);    
       popupContainer.cancelPopupAction();
       newLocationParams.setPageId(currentLocationParams.getPageId());

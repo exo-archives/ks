@@ -1,0 +1,225 @@
+Index: eXoApplication/wiki/service/src/test/java/org/exoplatform/wiki/service/TestWikiService.java
+===================================================================
+--- eXoApplication/wiki/service/src/test/java/org/exoplatform/wiki/service/TestWikiService.java	(revision 80665)
++++ eXoApplication/wiki/service/src/test/java/org/exoplatform/wiki/service/TestWikiService.java	(working copy)
+@@ -17,12 +17,14 @@
+ package org.exoplatform.wiki.service;
+ 
+ 
++import java.util.HashMap;
+ import java.util.List;
+ 
+ import org.chromattic.api.ChromatticSession;
+ import org.chromattic.ext.ntdef.Resource;
+ import org.exoplatform.commons.utils.PageList;
+ import org.exoplatform.portal.config.model.PortalConfig;
++import org.exoplatform.services.jcr.access.PermissionType;
+ import org.exoplatform.wiki.mow.api.Model;
+ import org.exoplatform.wiki.mow.api.WikiType;
+ import org.exoplatform.wiki.mow.core.api.AbstractMOWTestcase;
+@@ -35,11 +37,11 @@
+ import org.exoplatform.wiki.mow.core.api.wiki.UserWiki;
+ import org.exoplatform.wiki.mow.core.api.wiki.WikiContainer;
+ import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
+-import org.exoplatform.wiki.service.search.WikiSearchData;
+ import org.exoplatform.wiki.service.search.SearchResult;
+ import org.exoplatform.wiki.service.search.TemplateSearchData;
+ import org.exoplatform.wiki.service.search.TemplateSearchResult;
+ import org.exoplatform.wiki.service.search.TitleSearchResult;
++import org.exoplatform.wiki.service.search.WikiSearchData;
+ import org.xwiki.rendering.syntax.Syntax;
+ 
+ 
+@@ -200,9 +202,27 @@
+     newLocationParams.setType(PortalConfig.PORTAL_TYPE);
+     newLocationParams.setOwner("classic");   
+     assertTrue(wService.movePage(currentLocationParams,newLocationParams)) ;
++    
++    // moving a page to another read-only page
++    wService.createPage(PortalConfig.PORTAL_TYPE, "demo", "toMovedPage", "WikiHome");
++    PageImpl page = (PageImpl) wService.createPage(PortalConfig.USER_TYPE, "demo", "privatePage", "WikiHome");
++    HashMap<String, String[]> permissionMap = new HashMap<String, String[]>();
++    permissionMap.put("any", PermissionType.DEFAULT_AC);
++    page.setPermission(permissionMap);
++    assertNotNull(wService.getPageById(PortalConfig.PORTAL_TYPE, "demo", "toMovedPage"));
++    assertNotNull(wService.getPageById(PortalConfig.USER_TYPE, "demo", "privatePage"));
++
++    currentLocationParams.setPageId("toMovedPage");
++    currentLocationParams.setType(PortalConfig.PORTAL_TYPE);
++    currentLocationParams.setOwner("demo");
++    newLocationParams.setPageId("privatePage");
++    newLocationParams.setType(PortalConfig.USER_TYPE);
++    newLocationParams.setOwner("demo");
++    startSessionAs("mary");
++    assertFalse(wService.movePage(currentLocationParams, newLocationParams));
+   }
+   
+-  public void testAddMixin() throws Exception{    
++  public void testAddMixin() throws Exception{
+     wService.createPage(PortalConfig.PORTAL_TYPE, "classic", "mixinPage", "WikiHome") ;
+     PageImpl page = (PageImpl)wService.getPageById("portal", "classic", "mixinPage") ;
+     Model model = mowService.getModel();
+Index: eXoApplication/wiki/service/src/test/java/org/exoplatform/wiki/mow/core/api/AbstractMOWTestcase.java
+===================================================================
+--- eXoApplication/wiki/service/src/test/java/org/exoplatform/wiki/mow/core/api/AbstractMOWTestcase.java	(revision 80665)
++++ eXoApplication/wiki/service/src/test/java/org/exoplatform/wiki/mow/core/api/AbstractMOWTestcase.java	(working copy)
+@@ -170,4 +170,9 @@
+     return wikipage;
+   }
+   
++  protected void startSessionAs(String user) {
++    Identity userIdentity = new Identity(user);
++    ConversationState.setCurrent(new ConversationState(userIdentity));
++  }
++  
+ }
+Index: eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/service/impl/WikiServiceImpl.java
+===================================================================
+--- eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/service/impl/WikiServiceImpl.java	(revision 80665)
++++ eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/service/impl/WikiServiceImpl.java	(working copy)
+@@ -308,9 +308,11 @@
+ 
+   public boolean movePage(WikiPageParams currentLocationParams, WikiPageParams newLocationParams) throws Exception {
+     try {
+-      if (!isHasCreatePagePermission(Utils.getCurrentUser(), newLocationParams.getOwner())) {
++      PageImpl destPage = (PageImpl) getPageById(newLocationParams.getType(),
++                                                 newLocationParams.getOwner(),
++                                                 newLocationParams.getPageId());
++      if (destPage == null || !destPage.hasPermission(PermissionType.EDITPAGE))
+         return false;
+-      }
+       Model model = getModel();
+       WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
+       ChromatticSession session = wStore.getSession();
+@@ -321,10 +323,7 @@
+       MovedMixin mix = session.create(MovedMixin.class);
+       if (movePage.getMovedMixin() == null) {
+         session.setEmbedded(movePage, MovedMixin.class, mix);
+-      }
+-      PageImpl destPage = (PageImpl) getPageById(newLocationParams.getType(),
+-                                                 newLocationParams.getOwner(),
+-                                                 newLocationParams.getPageId());
++      }      
+       WikiImpl destWiki = (WikiImpl) destPage.getWiki();
+       movePage.setParentPage(destPage);
+       
+@@ -467,11 +466,6 @@
+     updateAllPagesPermissions(wikiType, wikiOwner, permMap);
+   }
+ 
+-  private boolean isHasCreatePagePermission(String userId, String destSpace) {
+-
+-    return true;
+-  }
+-
+   public Page getPageById(String wikiType, String wikiOwner, String pageId) throws Exception {
+     PageImpl page = null;
+ 
+Index: eXoApplication/wiki/webapp/src/main/java/org/exoplatform/wiki/webui/popup/UIWikiMovePageForm.java
+===================================================================
+--- eXoApplication/wiki/webapp/src/main/java/org/exoplatform/wiki/webui/popup/UIWikiMovePageForm.java	(revision 80665)
++++ eXoApplication/wiki/webapp/src/main/java/org/exoplatform/wiki/webui/popup/UIWikiMovePageForm.java	(working copy)
+@@ -36,11 +36,11 @@
+ import org.exoplatform.wiki.webui.UIWikiBreadCrumb;
+ import org.exoplatform.wiki.webui.UIWikiLocationContainer;
+ import org.exoplatform.wiki.webui.UIWikiPortlet;
++import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
+ import org.exoplatform.wiki.webui.WikiMode;
+-import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
+ import org.exoplatform.wiki.webui.tree.EventUIComponent;
++import org.exoplatform.wiki.webui.tree.EventUIComponent.EVENTTYPE;
+ import org.exoplatform.wiki.webui.tree.UITreeExplorer;
+-import org.exoplatform.wiki.webui.tree.EventUIComponent.EVENTTYPE;
+ 
+ /**
+  * Created by The eXo Platform SAS
+@@ -124,8 +124,15 @@
+                                                 ApplicationMessage.WARNING));
+         org.exoplatform.wiki.commons.Utils.redirect(currentLocationParams, uiWikiPortlet.getWikiMode());
+         return;
+-      }      
+-      wservice.movePage(currentLocationParams, newLocationParams);      
++      }
++      boolean isMoved = wservice.movePage(currentLocationParams, newLocationParams);      
++      if (!isMoved) {
++        event.getRequestContext()
++             .getUIApplication()
++             .addMessage(new ApplicationMessage("UIWikiMovePageForm.msg.no-permission-at-destination", null, ApplicationMessage.WARNING));
++        org.exoplatform.wiki.commons.Utils.redirect(currentLocationParams, uiWikiPortlet.getWikiMode());
++        return;
++      }
+       UIPopupContainer popupContainer = uiWikiPortlet.getPopupContainer(PopupLevel.L1);    
+       popupContainer.cancelPopupAction();
+       newLocationParams.setPageId(currentLocationParams.getPageId());
+Index: eXoApplication/wiki/webapp/src/main/resources/locale/portlet/wiki/WikiPortlet_fr.properties
+===================================================================
+--- eXoApplication/wiki/webapp/src/main/resources/locale/portlet/wiki/WikiPortlet_fr.properties	(revision 80665)
++++ eXoApplication/wiki/webapp/src/main/resources/locale/portlet/wiki/WikiPortlet_fr.properties	(working copy)
+@@ -217,6 +217,7 @@
+ UIWikiMovePageForm.msg.same-name-in-new-location-space=La page ne peut être déplacée dans l'emplacement actuel.
+ UIWikiMovePageForm.msg.new-location-can-not-be-empty=Le nouvel emplacement ne peut être vide.
+ UIWikiMovePageForm.msg.you-are-about-move-page=Vous allez déplacer la page suivante :
++UIWikiMovePageForm.msg.no-permission-at-destination=Vous n'avez pas la permission de modifier la page de destination
+ UIWikiMovePageForm.action.Move=Déplacer
+ UIWikiMovePageForm.action.Cancel=Annuler
+ #############################################################################
+Index: eXoApplication/wiki/webapp/src/main/resources/locale/portlet/wiki/WikiPortlet_de.properties
+===================================================================
+--- eXoApplication/wiki/webapp/src/main/resources/locale/portlet/wiki/WikiPortlet_de.properties	(revision 80665)
++++ eXoApplication/wiki/webapp/src/main/resources/locale/portlet/wiki/WikiPortlet_de.properties	(working copy)
+@@ -202,6 +202,7 @@
+ UIWikiMovePageForm.msg.same-name-in-new-location-space=Cannot move the page to its own location.
+ UIWikiMovePageForm.msg.new-location-can-not-be-empty=The new location can not be empty.
+ UIWikiMovePageForm.msg.you-are-about-move-page=You are about to move the page:
++UIWikiMovePageForm.msg.no-permission-at-destination=You have no edit permission at destination page
+ UIWikiMovePageForm.action.Move=Move
+ UIWikiMovePageForm.action.Cancel=Cancel
+ #############################################################################
+Index: eXoApplication/wiki/webapp/src/main/resources/locale/portlet/wiki/WikiPortlet_nl.properties
+===================================================================
+--- eXoApplication/wiki/webapp/src/main/resources/locale/portlet/wiki/WikiPortlet_nl.properties	(revision 80665)
++++ eXoApplication/wiki/webapp/src/main/resources/locale/portlet/wiki/WikiPortlet_nl.properties	(working copy)
+@@ -202,6 +202,7 @@
+ UIWikiMovePageForm.msg.same-name-in-new-location-space=Cannot move the page to its own location.
+ UIWikiMovePageForm.msg.new-location-can-not-be-empty=The new location can not be empty.
+ UIWikiMovePageForm.msg.you-are-about-move-page=You are about to move the page:
++UIWikiMovePageForm.msg.no-permission-at-destination=You have no edit permission at destination page
+ UIWikiMovePageForm.action.Move=Move
+ UIWikiMovePageForm.action.Cancel=Cancel
+ #############################################################################
+Index: eXoApplication/wiki/webapp/src/main/resources/locale/portlet/wiki/WikiPortlet_it.properties
+===================================================================
+--- eXoApplication/wiki/webapp/src/main/resources/locale/portlet/wiki/WikiPortlet_it.properties	(revision 80665)
++++ eXoApplication/wiki/webapp/src/main/resources/locale/portlet/wiki/WikiPortlet_it.properties	(working copy)
+@@ -192,6 +192,7 @@
+ UIWikiMovePageForm.msg.same-name-in-new-location-space=Impossibile spostare la pagina dove essa gi\u00e0 si trova.
+ UIWikiMovePageForm.msg.new-location-can-not-be-empty=Nuova posizione non pu\u00f2 essere vuota.
+ UIWikiMovePageForm.msg.you-are-about-move-page=Sta per spostare la pagina:
++UIWikiMovePageForm.msg.no-permission-at-destination=You have no edit permission at destination page
+ UIWikiMovePageForm.action.Move=Sposta
+ UIWikiMovePageForm.action.Cancel=Annulla
+ #############################################################################
+Index: eXoApplication/wiki/webapp/src/main/resources/locale/portlet/wiki/WikiPortlet.properties
+===================================================================
+--- eXoApplication/wiki/webapp/src/main/resources/locale/portlet/wiki/WikiPortlet.properties	(revision 80665)
++++ eXoApplication/wiki/webapp/src/main/resources/locale/portlet/wiki/WikiPortlet.properties	(working copy)
+@@ -217,6 +217,7 @@
+ UIWikiMovePageForm.msg.same-name-in-new-location-space=Cannot move the page to its own location.
+ UIWikiMovePageForm.msg.new-location-can-not-be-empty=The new location can not be empty.
+ UIWikiMovePageForm.msg.you-are-about-move-page=You are about to move the page:
++UIWikiMovePageForm.msg.no-permission-at-destination=You have no edit permission at destination page
+ UIWikiMovePageForm.action.Move=Move
+ UIWikiMovePageForm.action.Cancel=Cancel
+ #############################################################################
+Index: eXoApplication/wiki/webapp/src/main/resources/locale/portlet/wiki/WikiPortlet_en.properties
+===================================================================
+--- eXoApplication/wiki/webapp/src/main/resources/locale/portlet/wiki/WikiPortlet_en.properties	(revision 80665)
++++ eXoApplication/wiki/webapp/src/main/resources/locale/portlet/wiki/WikiPortlet_en.properties	(working copy)
+@@ -217,6 +217,7 @@
+ UIWikiMovePageForm.msg.same-name-in-new-location-space=Cannot move the page to its own location.
+ UIWikiMovePageForm.msg.new-location-can-not-be-empty=The new location can not be empty.
+ UIWikiMovePageForm.msg.you-are-about-move-page=You are about to move the page:
++UIWikiMovePageForm.msg.no-permission-at-destination=You have no edit permission at destination page
+ UIWikiMovePageForm.action.Move=Move
+ UIWikiMovePageForm.action.Cancel=Cancel
+ #############################################################################
