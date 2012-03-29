@@ -1,0 +1,370 @@
+Index: eXoApplication/poll/service/src/main/java/org/exoplatform/poll/service/impl/JCRDataStorage.java
+===================================================================
+--- eXoApplication/poll/service/src/main/java/org/exoplatform/poll/service/impl/JCRDataStorage.java	(revision 80665)
++++ eXoApplication/poll/service/src/main/java/org/exoplatform/poll/service/impl/JCRDataStorage.java	(working copy)
+@@ -17,6 +17,7 @@
+ package org.exoplatform.poll.service.impl;
+ 
+ import java.util.ArrayList;
++import java.util.Collection;
+ import java.util.Date;
+ import java.util.HashSet;
+ import java.util.List;
+@@ -272,20 +273,25 @@
+   
+   private boolean hasPermissionInForum(SessionProvider sProvider, Node pollNode, List<String> allInfoOfUser) throws Exception {
+     try {
+-      long userRole = getUserRoleOfForum(sProvider, (allInfoOfUser.size() > 0)?allInfoOfUser.get(0):"");
++      long userRole = getUserRoleOfForum(sProvider, (allInfoOfUser.size() > 0) ? allInfoOfUser.get(0) : "");
+       // check for administrators. If is admin --> return true;
+       if(userRole == 0) return true;
+       Node topicNode = pollNode.getParent();
+       Node forumNode = topicNode.getParent();
+       Node categoryNode = forumNode.getParent();
+       PropertyReader reader = new PropertyReader(topicNode);
+-
++      List<String> privates = new ArrayList<String>(reader.set("exo:userPrivate", new HashSet<String>()));
++      // check user private.
++      if (!Utils.isListEmpty(privates)) {
++        if (collectionsDisjoint(allInfoOfUser, privates) || Utils.isListEmpty(allInfoOfUser)) {
++          return false;
++        }
++      }
+       // permission in topic
+       Set<String> viewers = reader.set("exo:canView", new HashSet<String>());
+       // user's permission of the topic content this poll.
+       boolean hasNotPremissionByTopic = (reader.bool("exo:isClosed") || !reader.bool("exo:isApproved") ||
+                                          reader.bool("exo:isWaiting") || !reader.bool("exo:isActive"));
+-
+       // permission in forum
+       reader = new PropertyReader(forumNode);
+       viewers.addAll(reader.set("exo:viewer", new HashSet<String>()));
+@@ -303,22 +309,18 @@
+       }
+       //checking when user has not moderator of the forum content the poll.
+       if(hasNotPremissionByTopic) return false;
+-
+       // permission in category
+       reader = new PropertyReader(categoryNode);
+       // check viewer
+       viewers.addAll(reader.set("exo:viewer", new HashSet<String>()));
+-      // check user private.
+-      viewers.addAll(reader.set("exo:userPrivate", new HashSet<String>()));
+       // if viewer is empty then poll public.
+       if (Utils.isListEmpty(new ArrayList<String>(viewers))) {
+         return true;
+       }
+-      // if user login and viewer list not empty.
+       if (!Utils.isListEmpty(allInfoOfUser)) {
+-        for (String string : viewers) {
+-          if (allInfoOfUser.contains(string.trim()))
+-            return true;
++        // if user login and viewer list not empty.
++        if (!collectionsDisjoint(viewers, allInfoOfUser)) {
++           return true;
+         }
+       }
+     } catch (Exception e) {
+@@ -326,6 +328,15 @@
+     }
+     return false;
+   }
++  
++  private boolean collectionsDisjoint(Collection<String> c1, Collection<String> c2) {
++    for (String e : c1) {
++      if (c2.contains(e.trim())) {
++        return false;
++      }
++    }
++    return true;
++  }
+ 
+   public PollSummary getPollSummary(List<String> allInfoOfUser) throws Exception {
+     SessionProvider sProvider = SessionProvider.createSystemProvider();
+Index: eXoApplication/poll/service/src/main/java/org/exoplatform/poll/service/ws/PollWebservice.java
+===================================================================
+--- eXoApplication/poll/service/src/main/java/org/exoplatform/poll/service/ws/PollWebservice.java	(revision 80665)
++++ eXoApplication/poll/service/src/main/java/org/exoplatform/poll/service/ws/PollWebservice.java	(working copy)
+@@ -3,6 +3,7 @@
+  */
+ package org.exoplatform.poll.service.ws;
+ 
++import java.net.URI;
+ import java.util.ArrayList;
+ import java.util.Date;
+ import java.util.HashSet;
+@@ -14,9 +15,13 @@
+ import javax.ws.rs.PathParam;
+ import javax.ws.rs.Produces;
+ import javax.ws.rs.core.CacheControl;
++import javax.ws.rs.core.Context;
+ import javax.ws.rs.core.MediaType;
+ import javax.ws.rs.core.Response;
+ import javax.ws.rs.core.Response.Status;
++import javax.ws.rs.core.SecurityContext;
++import javax.ws.rs.core.UriInfo;
++import javax.ws.rs.ext.RuntimeDelegate;
+ 
+ import org.apache.commons.lang.StringUtils;
+ import org.exoplatform.container.ExoContainerContext;
+@@ -28,11 +33,12 @@
+ import org.exoplatform.portal.config.UserACL;
+ import org.exoplatform.services.log.ExoLogger;
+ import org.exoplatform.services.log.Log;
++import org.exoplatform.services.organization.Group;
++import org.exoplatform.services.organization.Membership;
++import org.exoplatform.services.organization.OrganizationService;
++import org.exoplatform.services.rest.impl.RuntimeDelegateImpl;
+ import org.exoplatform.services.rest.resource.ResourceContainer;
+-import org.exoplatform.services.security.ConversationState;
+-import org.exoplatform.services.security.Identity;
+ import org.exoplatform.services.security.IdentityConstants;
+-import org.exoplatform.services.security.MembershipEntry;
+ 
+ /**
+  * @author Vu Duy Tu
+@@ -43,18 +49,57 @@
+   private static final Log   log      = ExoLogger.getLogger(PollWebservice.class);
+ 
+   final public static String APP_TYPE = "poll".intern();
+-
++  private OrganizationService organizationService = null;
++  
+   public PollWebservice() {
+   }
++  
++  private static final CacheControl         cc;
++  static {
++    RuntimeDelegate.setInstance(new RuntimeDelegateImpl());
++    cc = new CacheControl();
++    cc.setNoCache(true);
++    cc.setNoStore(true);
++  }
++  
++  private OrganizationService getOrganizationService() {
++    if (organizationService == null) {
++      organizationService = (OrganizationService) ExoContainerContext.getCurrentContainer()
++                                .getComponentInstance(OrganizationService.class);
++    }
++    return organizationService;
++  }
++  
++  private String getUserId(SecurityContext sc, UriInfo uriInfo) {
++    if (sc != null && sc.getUserPrincipal() != null) {
++      return sc.getUserPrincipal().getName();
++    } else if (uriInfo != null) {
++      return getViewerId(uriInfo);
++    }
++    return StringUtils.EMPTY;
++  }
++  
++  private String getViewerId(UriInfo uriInfo) {
++    URI uri = uriInfo.getRequestUri();
++    String requestString = uri.getQuery();
++    if (requestString == null) return null;
++    String[] queryParts = requestString.split("&");
++    for (String queryPart : queryParts) {
++      if (queryPart.startsWith("opensocial_viewer_id")) {
++        return queryPart.substring(queryPart.indexOf("=") + 1, queryPart.length());
++      }
++    }
++    return null;
++  }
+ 
+   @GET
+   @Path("/viewpoll/{resourceid}")
+   @Produces(MediaType.APPLICATION_JSON)
+-  public Response viewPoll(@PathParam("resourceid") String pollId) throws Exception {
+-    CacheControl cacheControl = new CacheControl();
+-    cacheControl.setNoCache(true);
+-    cacheControl.setNoStore(true);
++  public Response viewPoll(@PathParam("resourceid") String pollId,
++                           @Context SecurityContext sc,
++                           @Context UriInfo uriInfo) throws Exception {
+     PollService pollService = (PollService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class);
++    String username = getUserId(sc, uriInfo);
+     if (!Utils.isEmpty(pollId)) {
+       try {
+         Poll poll = pollService.getPoll(pollId);
+@@ -65,71 +110,63 @@
+           boolean hasPerminsion = false;
+           if (group.indexOf(PollNodeTypes.APPLICATION_DATA) > 0 && poll.getIsAdmin().equals("false")) {
+             group = group.substring(group.indexOf(PollNodeTypes.GROUPS + "/") + PollNodeTypes.GROUPS.length(), group.indexOf("/" + PollNodeTypes.APPLICATION_DATA));
+-            for (String group_ : getGroupsOfUser()) {
++            for (String group_ : getGroupsOfUser(username)) {
+               if (group_.indexOf(group) >= 0) {
+                 hasPerminsion = true;
+                 break;
+               }
+             }
+           } else if (group.indexOf(PollNodeTypes.POLLS) < 0) {
+-            hasPerminsion = pollService.hasPermissionInForum(group + "/" + poll.getId(), getAllGroupAndMembershipOfUser());
++            hasPerminsion = pollService.hasPermissionInForum(group + "/" + poll.getId(), getAllGroupAndMembershipOfUser(username));
+           } else {
+             hasPerminsion = true;
+           }
+           if (!hasPerminsion) {
+             poll = new Poll();
+             poll.setId("DoNotPermission");
+-            return Response.ok(poll, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
++            return Response.ok(poll, MediaType.APPLICATION_JSON).cacheControl(cc).build();
+           }
+           poll.setVotes();
+           poll.setInfoVote();
+-          poll.setShowVote(isGuestPermission(poll));
+-          return Response.ok(poll, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
++          poll.setShowVote(isGuestPermission(poll, username));
++          return Response.ok(poll, MediaType.APPLICATION_JSON).cacheControl(cc).build();
+         }
+       } catch (Exception e) {
+         log.error("Can not get poll by id: " + pollId, e);
+       }
+     }
+     PollSummary pollSummary = new PollSummary();
+-    /*
+-    if (hasGroupAdminOfGatein()) {
+-      pollSummary = pollService.getPollSummary();
+-      pollSummary.setIsAdmin("true");
+-    } else {
+-      pollSummary.setId("DoNotPermission");
+-    }
+-    */
+-    pollSummary = pollService.getPollSummary(getAllGroupAndMembershipOfUser());
++    pollSummary = pollService.getPollSummary(getAllGroupAndMembershipOfUser(username));
+     pollSummary.setIsAdmin("true");
+-    return Response.ok(pollSummary, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
++    return Response.ok(pollSummary, MediaType.APPLICATION_JSON).cacheControl(cc).build();
+   }
+ 
+   @GET
+   @Path("/votepoll/{pollId}/{indexVote}")
+   @Produces(MediaType.APPLICATION_JSON)
+-  public Response votePoll(@PathParam("pollId") String pollId, @PathParam("indexVote") String indexVote) throws Exception {
+-    CacheControl cacheControl = new CacheControl();
+-    cacheControl.setNoCache(true);
+-    cacheControl.setNoStore(true);
++  public Response votePoll(@PathParam("pollId") String pollId,
++                           @PathParam("indexVote") String indexVote,
++                           @Context SecurityContext sc,
++                           @Context UriInfo uriInfo) throws Exception {
+     if (!Utils.isEmpty(pollId) && !Utils.isEmpty(indexVote)) {
+       try {
+         PollService pollService = (PollService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class);
+         Poll poll = pollService.getPoll(pollId.trim());
+-        String username = getUserId();
++        String username = getUserId(sc, uriInfo);
+         if (poll != null && !IdentityConstants.ANONIM.equals(username) && 
+             validateIndexVote(indexVote, poll.getOption().length)) {
+           poll = Utils.calculateVote(poll, username, indexVote);
+           pollService.savePoll(poll, false, true);
+           poll.setVotes();
+           poll.setInfoVote();
+-          poll.setShowVote(isGuestPermission(poll));
+-          poll.setIsAdmin(String.valueOf(hasGroupAdminOfGatein()));
+-          return Response.ok(poll, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
++          poll.setShowVote(isGuestPermission(poll, username));
++          poll.setIsAdmin(String.valueOf(hasGroupAdminOfGatein(username)));
++          return Response.ok(poll, MediaType.APPLICATION_JSON).cacheControl(cc).build();
+         }
+       } catch (Exception e) {
+         log.debug("Failed to vote poll.", e);
+       }
+-      return Response.ok("You do not have permission to vote this poll; or some options have been removed from the poll.", MediaType.TEXT_PLAIN).cacheControl(cacheControl).build();
++      return Response.ok("You do not have permission to vote this poll; or some options have been removed from the poll.", MediaType.TEXT_PLAIN).cacheControl(cc).build();
+     }
+     return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+   }
+@@ -149,7 +186,7 @@
+     return true;
+   }
+ 
+-  private boolean isGuestPermission(Poll poll_) throws Exception {
++  private boolean isGuestPermission(Poll poll_, String username) throws Exception {
+     if (poll_.getIsClosed())
+       return true;
+     if (poll_.getTimeOut() > 0) {
+@@ -157,7 +194,6 @@
+       if ((today.getTime() - poll_.getCreatedDate().getTime()) >= poll_.getTimeOut() * 86400000)
+         return true;
+     }
+-    String username = getUserId();
+     if (Utils.isEmpty(username) || IdentityConstants.ANONIM.equals(username))
+       return true;
+     String[] userVotes = poll_.getUserVote();
+@@ -169,58 +205,50 @@
+     return false;
+   }
+ 
+-  private boolean hasGroupAdminOfGatein() {
++  private boolean hasGroupAdminOfGatein(String username) {
+     try {
+       UserACL userACL = (UserACL) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(UserACL.class);
+       List<String> list = new ArrayList<String>();
+-      Identity identity = ConversationState.getCurrent().getIdentity();
+-      list.add(identity.getUserId());
+-      list.addAll(identity.getGroups());
+-      // for (MembershipEntry membership : identity.getMemberships()) {}
+-      // userACL.getAdminMSType();
++      list.add(username);
++      list.addAll(getGroupsOfUser(username));
+       for (String str : list) {
+         if (str.equals(userACL.getSuperUser()) || str.equals(userACL.getAdminGroups()))
+           return true;
+       }
+     } catch (Exception e) {
+-      log.debug("Failed to check has group admin of gatein.", e);
++      log.debug("Failed to check has group admin of gatein." + e.getCause());
+     }
+     return false;
+   }
+ 
+-  private String getUserId() {
+-    try {
+-      return ConversationState.getCurrent().getIdentity().getUserId();
+-    } catch (Exception e) {
+-      return StringUtils.EMPTY;
+-    }
+-  }
+-
+-  private List<String> getAllGroupAndMembershipOfUser() {
++  private List<String> getAllGroupAndMembershipOfUser(String username) {
+     List<String> listOfUser = new ArrayList<String>();
+     try {
+-      Identity identity = ConversationState.getCurrent().getIdentity();
+-      listOfUser.add(identity.getUserId());
++      listOfUser.add(username);
+       Set<String> list = new HashSet<String>();
+-      list.addAll(identity.getGroups());
+-      for (MembershipEntry membership : identity.getMemberships()) {
+-        String value = membership.getGroup();
++      list.addAll(getGroupsOfUser(username));
++      for (Object membership : getOrganizationService().getMembershipHandler().findMembershipsByUser(username)) {
++        String value = ((Membership) membership).getGroupId();
+         list.add(value); // its groups
+-        value = membership.getMembershipType() + ":" + value;
++        value = ((Membership) membership).getMembershipType() + ":" + value;
+         list.add(value);
+       }
+       listOfUser.addAll(list);
+     } catch (Exception e) {
+-      log.warn("Failed to add all info of user.");
++      log.warn("Failed to get all info of user.");
+     }
+     return listOfUser;
+   }
+ 
+-  private List<String> getGroupsOfUser() {
++  private List<String> getGroupsOfUser(String username) {
+     try {
+-      return new ArrayList<String>(ConversationState.getCurrent().getIdentity().getGroups());
++      List<String> grIds = new ArrayList<String>();
++      for (Object gr : getOrganizationService().getGroupHandler().findGroupsOfUser(username)) {
++        grIds.add(((Group) gr).getId());
++      }
++      return grIds;
+     } catch (Exception e) {
+-      log.warn("Failed to add group of user.");
++      log.warn("Failed to get groupId of user.");
+       return new ArrayList<String>();
+     }
+   }

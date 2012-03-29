@@ -17,6 +17,7 @@
 package org.exoplatform.poll.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -272,20 +273,25 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
   
   private boolean hasPermissionInForum(SessionProvider sProvider, Node pollNode, List<String> allInfoOfUser) throws Exception {
     try {
-      long userRole = getUserRoleOfForum(sProvider, (allInfoOfUser.size() > 0)?allInfoOfUser.get(0):"");
+      long userRole = getUserRoleOfForum(sProvider, (allInfoOfUser.size() > 0) ? allInfoOfUser.get(0) : "");
       // check for administrators. If is admin --> return true;
       if(userRole == 0) return true;
       Node topicNode = pollNode.getParent();
       Node forumNode = topicNode.getParent();
       Node categoryNode = forumNode.getParent();
       PropertyReader reader = new PropertyReader(topicNode);
-
+      List<String> privates = new ArrayList<String>(reader.set("exo:userPrivate", new HashSet<String>()));
+      // check user private.
+      if (!Utils.isListEmpty(privates)) {
+        if (collectionsDisjoint(allInfoOfUser, privates) || Utils.isListEmpty(allInfoOfUser)) {
+          return false;
+        }
+      }
       // permission in topic
       Set<String> viewers = reader.set("exo:canView", new HashSet<String>());
       // user's permission of the topic content this poll.
       boolean hasNotPremissionByTopic = (reader.bool("exo:isClosed") || !reader.bool("exo:isApproved") ||
                                          reader.bool("exo:isWaiting") || !reader.bool("exo:isActive"));
-
       // permission in forum
       reader = new PropertyReader(forumNode);
       viewers.addAll(reader.set("exo:viewer", new HashSet<String>()));
@@ -303,28 +309,33 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
       }
       //checking when user has not moderator of the forum content the poll.
       if(hasNotPremissionByTopic) return false;
-
       // permission in category
       reader = new PropertyReader(categoryNode);
       // check viewer
       viewers.addAll(reader.set("exo:viewer", new HashSet<String>()));
-      // check user private.
-      viewers.addAll(reader.set("exo:userPrivate", new HashSet<String>()));
       // if viewer is empty then poll public.
       if (Utils.isListEmpty(new ArrayList<String>(viewers))) {
         return true;
       }
-      // if user login and viewer list not empty.
       if (!Utils.isListEmpty(allInfoOfUser)) {
-        for (String string : viewers) {
-          if (allInfoOfUser.contains(string.trim()))
-            return true;
+        // if user login and viewer list not empty.
+        if (!collectionsDisjoint(viewers, allInfoOfUser)) {
+           return true;
         }
       }
     } catch (Exception e) {
       log.debug("Failed to checking has premission viewing poll add in forum.");
     }
     return false;
+  }
+  
+  private boolean collectionsDisjoint(Collection<String> c1, Collection<String> c2) {
+    for (String e : c1) {
+      if (c2.contains(e.trim())) {
+        return false;
+      }
+    }
+    return true;
   }
 
   public PollSummary getPollSummary(List<String> allInfoOfUser) throws Exception {
