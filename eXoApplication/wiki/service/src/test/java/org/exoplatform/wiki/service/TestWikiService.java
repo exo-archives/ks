@@ -597,4 +597,19 @@ public class TestWikiService extends AbstractMOWTestcase {
     assertNull(wService.getRelatedPage(PortalConfig.PORTAL_TYPE, "classic", "OriginalPage"));
   }
   
+  public void testCircularRename() throws Exception {
+    wService.createPage(PortalConfig.PORTAL_TYPE, "classic", "CircularRename1", "WikiHome");
+    PageImpl relatedPage = (PageImpl) wService.getRelatedPage(PortalConfig.PORTAL_TYPE, "classic", "CircularRename1");
+    assertEquals("CircularRename1", relatedPage.getName());
+    wService.renamePage(PortalConfig.PORTAL_TYPE, "classic", "CircularRename1", "CircularRename2", "CircularRename2");
+    relatedPage = (PageImpl) wService.getRelatedPage(PortalConfig.PORTAL_TYPE, "classic", "CircularRename1");
+    assertEquals("CircularRename2", relatedPage.getName());
+    // Do a circular rename
+    wService.renamePage(PortalConfig.PORTAL_TYPE, "classic", "CircularRename2", "CircularRename1", "CircularRename1");
+    relatedPage = (PageImpl) wService.getRelatedPage(PortalConfig.PORTAL_TYPE, "classic", "CircularRename1");
+    assertEquals("CircularRename1", relatedPage.getName());
+    relatedPage = (PageImpl) wService.getRelatedPage(PortalConfig.PORTAL_TYPE, "classic", "CircularRename2");
+    assertNull(relatedPage);
+  }
+  
 }

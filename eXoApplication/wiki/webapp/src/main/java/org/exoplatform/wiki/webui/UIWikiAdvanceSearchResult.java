@@ -17,14 +17,11 @@
 package org.exoplatform.wiki.webui;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.exoplatform.commons.utils.PageList;
-import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.portal.webui.portal.UIPortal;
@@ -35,10 +32,8 @@ import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
-import org.exoplatform.wiki.mow.core.api.wiki.LinkEntry;
-import org.exoplatform.wiki.mow.core.api.wiki.LinkRegistry;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
-import org.exoplatform.wiki.mow.core.api.wiki.WikiImpl;
+import org.exoplatform.wiki.mow.core.api.wiki.RenamedMixin;
 import org.exoplatform.wiki.service.search.SearchResult;
 import org.exoplatform.wiki.utils.Utils;
 import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
@@ -53,8 +48,6 @@ import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
 public class UIWikiAdvanceSearchResult extends UIContainer {
 
   private String keyword;
-  
-  LinkRegistry registry = null;
 
   public UIWikiAdvanceSearchResult() throws Exception {
     addChild(UIAdvancePageIterator.class, null, "SearchResultPageIterator");
@@ -87,52 +80,34 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
     return df.format(cal.getTime());
   }
   
-  protected Wiki getWiki(SearchResult result){
-    Wiki searchWiki = null;
+  protected PageImpl getPage(SearchResult result) {
+    PageImpl page = null;
     try {
       if (WikiNodeType.WIKI_PAGE_CONTENT.equals(result.getType()) || WikiNodeType.WIKI_ATTACHMENT.equals(result.getType())) {
         AttachmentImpl searchContent = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(result.getPath(), WikiNodeType.WIKI_ATTACHMENT);
-        searchWiki = searchContent.getParentPage().getWiki();
+        page = searchContent.getParentPage();
       } else if (WikiNodeType.WIKI_PAGE.equals(result.getType()) || WikiNodeType.WIKI_HOME.equals(result.getType())) {
-        PageImpl page = (PageImpl) org.exoplatform.wiki.utils.Utils.getObject(result.getPath(), WikiNodeType.WIKI_PAGE);
-        searchWiki = page.getWiki();
+        page = (PageImpl) org.exoplatform.wiki.utils.Utils.getObject(result.getPath(), WikiNodeType.WIKI_PAGE);
       }
-      return searchWiki;
+      return page;
     } catch (Exception e) {
       return null;
-    }    
+    }
   }
 
-  protected String getPageSearchName(Wiki wiki, String pageTitle) throws Exception {
-    if (pageTitle.indexOf(keyword) >= 0) return "";
-    if(registry == null) {
-      registry = ((WikiImpl) wiki).getLinkRegistry();
+  protected Wiki getWiki(PageImpl page) {
+    return (page != null ? page.getWiki() : null);
+  }
+
+  protected String getOldPageTitleInSearchResult(PageImpl page, String pageTitle) throws Exception {
+    if (pageTitle.indexOf(keyword) >= 0) {
+      return "";
     }
-    Map<String, LinkEntry> linkEntries = registry.getLinkEntries();
-    String titleBefore, titleAfter;
-    List<LinkEntry> linkEntrys = new ArrayList<LinkEntry>();
-    List<String> alias = new ArrayList<String>();
-    for (LinkEntry linkEntry : linkEntries.values()) {
-      if (alias.contains(linkEntry.getAlias())) continue;
-      while (true) {
-        alias.add(linkEntry.getAlias());
-        titleAfter = linkEntry.getTitle();
-        linkEntrys.add(linkEntry);
-        linkEntry = linkEntry.getNewLink();
-        if(linkEntry == null) break;
-        titleBefore = linkEntry.getTitle();
-        if(!CommonUtils.isEmpty(titleBefore) && 
-            titleBefore.equals(pageTitle) && titleAfter.equals(titleBefore)) {
-          for (LinkEntry entry : linkEntrys) {
-            if (entry.getTitle().indexOf(keyword) >= 0) {
-              return entry.getTitle();
-            }
-          }
-          break;
-        }
-        if (CommonUtils.isEmpty(titleBefore) || titleAfter.equals(titleBefore)) {
-          linkEntrys.clear();
-          break;
+    if (page.getRenamedMixin() != null) {
+      RenamedMixin mix = page.getRenamedMixin();
+      for (String id : mix.getOldPageIds()) {
+        if (id.indexOf(keyword) >= 0) {
+          return replaceUnderscorebySpace(id);
         }
       }
     }
@@ -154,5 +129,17 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
     }
     return sb.toString();
   }
+  
+  protected static String replaceUnderscorebySpace(String s) {
+    StringTokenizer st = new StringTokenizer(s, "_", false);
+    StringBuilder sb = new StringBuilder();
+    if (st.hasMoreElements()) {
+      sb.append(st.nextElement());
+    }
+    while (st.hasMoreElements())
+      sb.append(" ").append(st.nextElement());
+    return sb.toString();
+  }
+  
 }
 

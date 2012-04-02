@@ -17,6 +17,7 @@
 package org.exoplatform.wiki.mow.core.api.wiki;
 
 import org.chromattic.api.RelationshipType;
+import org.chromattic.api.annotations.Destroy;
 import org.chromattic.api.annotations.ManyToOne;
 import org.chromattic.api.annotations.MappedBy;
 import org.chromattic.api.annotations.PrimaryType;
@@ -44,5 +45,8 @@ public abstract class LinkEntry {
   @MappedBy(WikiNodeType.Definition.NEW_LINK)
   public abstract LinkEntry getNewLink();
   public abstract void setNewLink(LinkEntry linkEntry);
+  
+  @Destroy
+  public abstract void remove();
 
 }

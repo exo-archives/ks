@@ -187,7 +187,10 @@ public class DefaultWikiModel implements WikiModel {
   private String getDocumentViewURL(WikiContext context) {
     try {
       WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(WikiService.class);
-      PageImpl page = (PageImpl) wikiService.getRelatedPage(context.getType(), context.getOwner(), context.getPageId());
+      PageImpl page = (PageImpl) wikiService.getPageById(context.getType(), context.getOwner(), context.getPageId());
+      if (page == null) {
+        page = (PageImpl) wikiService.getRelatedPage(context.getType(), context.getOwner(), context.getPageId());
+      }
       if (page != null) {
         Wiki wiki = page.getWiki();
         context.setType(wiki.getType());

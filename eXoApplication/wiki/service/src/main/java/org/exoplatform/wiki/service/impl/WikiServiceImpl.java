@@ -90,6 +90,8 @@ public class WikiServiceImpl implements WikiService, Startable {
 
   final static private String          DEFAULT_SYNTAX       = "defaultSyntax";
 
+  final static private int             CIRCULAR_RENAME_FLAG   = 1000;
+
   private ConfigurationManager  configManager;
 
   private JCRDataStorage        jcrDataStorage;
@@ -155,6 +157,7 @@ public class WikiServiceImpl implements WikiService, Startable {
       newEntry.setAlias(newEntryAlias);
       newEntry.setTitle(title);
     }
+    //This line must be outside if statement to break chaining list when add new page with name that was used in list.
     newEntry.setNewLink(newEntry);
     
     model.save();
@@ -293,15 +296,17 @@ public class WikiServiceImpl implements WikiService, Startable {
     String newEntryName = getLinkEntryName(wikiType, wikiOwner, newName);
     String newEntryAlias = getLinkEntryAlias(wikiType, wikiOwner, newName);
     LinkEntry newEntry = linkRegistry.getLinkEntries().get(newEntryName);
+    LinkEntry entry = linkRegistry.getLinkEntries().get(getLinkEntryName(wikiType, wikiOwner, pageName));
     if (newEntry == null) {
       newEntry = linkRegistry.createLinkEntry();
       linkRegistry.getLinkEntries().put(newEntryName, newEntry);
       newEntry.setAlias(newEntryAlias);
       newEntry.setNewLink(newEntry);
       newEntry.setTitle(newTitle);
+      entry.setNewLink(newEntry);
+    } else {
+      processCircularRename(entry, newEntry);
     }
-    linkRegistry.getLinkEntries().get(getLinkEntryName(wikiType, wikiOwner, pageName)).setNewLink(newEntry);
-    
     parentPage.getChromatticSession().save() ;
     return true ;    
   }
@@ -334,14 +339,17 @@ public class WikiServiceImpl implements WikiService, Startable {
         String newEntryName = getLinkEntryName(newLocationParams.getType(), newLocationParams.getOwner(), currentLocationParams.getPageId());
         String newEntryAlias = getLinkEntryAlias(newLocationParams.getType(), newLocationParams.getOwner(), currentLocationParams.getPageId());
         LinkEntry newEntry = destLinkRegistry.getLinkEntries().get(newEntryName);
+        LinkEntry entry = sourceLinkRegistry.getLinkEntries().get(getLinkEntryName(currentLocationParams.getType(), currentLocationParams.getOwner(), currentLocationParams.getPageId()));
         if (newEntry == null) {
           newEntry = destLinkRegistry.createLinkEntry();
           destLinkRegistry.getLinkEntries().put(newEntryName, newEntry);
           newEntry.setAlias(newEntryAlias);
           newEntry.setNewLink(newEntry);
           newEntry.setTitle(destPage.getTitle());
+          entry.setNewLink(newEntry);
+        } else {
+          processCircularRename(entry, newEntry);
         }
-        sourceLinkRegistry.getLinkEntries().get(getLinkEntryName(currentLocationParams.getType(), currentLocationParams.getOwner(), currentLocationParams.getPageId())).setNewLink(newEntry);
       }
     } catch (Exception e) {
       log.error("Can't move page '" + currentLocationParams.getPageId() + "' ", e);
@@ -501,19 +509,31 @@ public class WikiServiceImpl implements WikiService, Startable {
     if (oldLinkEntry != null) {
       newLinkEntry = oldLinkEntry.getNewLink();
     }
-    while (newLinkEntry != null && !newLinkEntry.equals(oldLinkEntry)) {
+    int circularFlag = CIRCULAR_RENAME_FLAG;// To deal with old circular data if it is existed
+    while (newLinkEntry != null && !newLinkEntry.equals(oldLinkEntry) && circularFlag > 0) {
       oldLinkEntry = newLinkEntry;
       newLinkEntry = oldLinkEntry.getNewLink();
+      circularFlag--;
     }
     if (newLinkEntry == null) {
       return null;
     }
-    String linkEntryAlias = newLinkEntry.getAlias();
-    String[] splits = linkEntryAlias.split("@");
-    String newWikiType = splits[0];
-    String newWikiOwner = splits[1];
-    String newPageId = linkEntryAlias.substring((newWikiType + "@" + newWikiOwner + "@").length());
-    return getPageById(newWikiType, newWikiOwner, newPageId);
+    if (circularFlag == 0) {
+      // Find link entry mapped with an existed page in old circular data
+      circularFlag = CIRCULAR_RENAME_FLAG;
+      while (circularFlag > 0) {
+        if (getPageWithLinkEntry(newLinkEntry) != null) {
+          break;
+        }
+        newLinkEntry = newLinkEntry.getNewLink();
+        circularFlag--;
+      }
+      // Break old circular data
+      if (circularFlag > 0) {
+        newLinkEntry.setNewLink(newLinkEntry);
+      }
+    }
+    return getPageWithLinkEntry(newLinkEntry);
   }
   
   public Page getExsitedOrNewDraftPageById(String wikiType, String wikiOwner, String pageId) throws Exception {
@@ -966,6 +986,46 @@ public class WikiServiceImpl implements WikiService, Startable {
   
   private String getLinkEntryAlias(String wikiType, String wikiOwner, String pageId) {
     return wikiType + "@" + wikiOwner + "@" + pageId;
+  }
+  
+  private void processCircularRename(LinkEntry entry, LinkEntry newEntry) {
+    // Check circular rename
+    boolean isCircular = true;
+    int circularFlag = CIRCULAR_RENAME_FLAG;// To deal with old circular data if it is existed
+    LinkEntry checkEntry = newEntry;
+    while (!checkEntry.equals(entry) && circularFlag > 0) {
+      checkEntry = checkEntry.getNewLink();
+      if (checkEntry.getNewLink().equals(checkEntry) && !checkEntry.equals(entry)) {
+        isCircular = false;
+        break;
+      }
+      circularFlag--;
+    }
+    if (!isCircular || circularFlag == 0) {
+      entry.setNewLink(newEntry);
+    } else {
+      LinkEntry nextEntry = newEntry.getNewLink();
+      while (!nextEntry.equals(newEntry)) {
+        LinkEntry deletedEntry = nextEntry;
+        nextEntry = nextEntry.getNewLink();
+        if (!nextEntry.equals(deletedEntry)) {
+          deletedEntry.remove();
+        } else {
+          deletedEntry.remove();
+          break;
+        }
+      }
+    }
+    newEntry.setNewLink(newEntry);
+  }
+  
+  private Page getPageWithLinkEntry(LinkEntry entry) throws Exception {
+    String linkEntryAlias = entry.getAlias();
+    String[] splits = linkEntryAlias.split("@");
+    String wikiType = splits[0];
+    String wikiOwner = splits[1];
+    String pageId = linkEntryAlias.substring((wikiType + "@" + wikiOwner + "@").length());
+    return getPageById(wikiType, wikiOwner, pageId);
   }
   
   private void updateAllPagesPermissions(String wikiType, String wikiOwner, HashMap<String, String[]> permMap) throws Exception {

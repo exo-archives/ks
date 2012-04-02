@@ -19,7 +19,8 @@ import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
 			<div class="ResultInfo"><%=resultInfo%></div>
 			<%
 				for(SearchResult result in results.getPage(results.getCurrentPage())) {
-					def wiki= uicomponent.getWiki(result);
+				  def page= uicomponent.getPage(result);
+					def wiki= uicomponent.getWiki(page);
 					String wikiURI = uicomponent.getWikiNodeUri(wiki) ;
 					String space = wiki.getOwner();
 					String wikiType= wiki.getType();
@@ -28,17 +29,17 @@ import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
 					timeMsg = timeMsg.replace("{0}", uicomponent.getDateFormat(result.getCreatedDate())).replace("{1}", uicomponent.getDateFormat(result.getUpdatedDate()));
 					wikiLabel = wikiLabel.replace("{0}", wikiType);
 					String pageURI = wikiURI + result.getPageName() ;
-					String pageName = result.getTitle();
-					String pageOldName = uicomponent.getPageSearchName(wiki, pageName)			
+					String pageTitle = result.getTitle();
+					String pageOldTitle = uicomponent.getOldPageTitleInSearchResult(page, pageTitle);
 					if(WikiNodeType.WIKI_PAGE_CONTENT.equals(result.getType())) {										
 			%>						
 						<div class="BlockResultFeed">
 							<a class="page TxtTitle" href="$pageURI">
-							<% if(pageOldName.length() > 0) { %>
-								<span class="TxtTitFeed"><%=pageOldName%></span>
+							<% if(pageOldTitle.length() > 0) { %>
+								<span class="TxtTitFeed"><%=pageOldTitle%></span>
 								<span class="TxtMark"> is renamed to </span>
 							<% } %>
-								<span class="TxtTitFeed"><%=pageName%></span>
+								<span class="TxtTitFeed"><%=pageTitle%></span>
 							</a>
 							<% if (result.getExcerpt()!=null){ %>				
 								<div class="TxtDetail"><%=result.getExcerpt()%></div>
@@ -71,11 +72,11 @@ import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
 						%>
 						<div class="BlockResultFeed">
 							<a class="page TxtTitle" href="$pageURI">
-								<% if(pageOldName.length() > 0) { %>
-					<span class="TxtTitFeed"><%=pageOldName%></span>
+								<% if(pageOldTitle.length() > 0) { %>
+					<span class="TxtTitFeed"><%=pageOldTitle%></span>
 					<span class="TxtMark"> is renamed to </span>
 				<% } %>
-					<span class="TxtTitFeed"><%=pageName%></span>
+					<span class="TxtTitFeed"><%=pageTitle%></span>
 				</a>
 						<div>
 							<strong>$wikiLabel: </strong><a class="TxtMark" href="$wikiURI">$space</a>

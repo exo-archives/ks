@@ -1,0 +1,390 @@
+Index: eXoApplication/wiki/service/src/test/java/org/exoplatform/wiki/service/TestWikiService.java
+===================================================================
+--- eXoApplication/wiki/service/src/test/java/org/exoplatform/wiki/service/TestWikiService.java	(revision 80688)
++++ eXoApplication/wiki/service/src/test/java/org/exoplatform/wiki/service/TestWikiService.java	(working copy)
+@@ -597,4 +597,19 @@
+     assertNull(wService.getRelatedPage(PortalConfig.PORTAL_TYPE, "classic", "OriginalPage"));
+   }
+   
++  public void testCircularRename() throws Exception {
++    wService.createPage(PortalConfig.PORTAL_TYPE, "classic", "CircularRename1", "WikiHome");
++    PageImpl relatedPage = (PageImpl) wService.getRelatedPage(PortalConfig.PORTAL_TYPE, "classic", "CircularRename1");
++    assertEquals("CircularRename1", relatedPage.getName());
++    wService.renamePage(PortalConfig.PORTAL_TYPE, "classic", "CircularRename1", "CircularRename2", "CircularRename2");
++    relatedPage = (PageImpl) wService.getRelatedPage(PortalConfig.PORTAL_TYPE, "classic", "CircularRename1");
++    assertEquals("CircularRename2", relatedPage.getName());
++    // Do a circular rename
++    wService.renamePage(PortalConfig.PORTAL_TYPE, "classic", "CircularRename2", "CircularRename1", "CircularRename1");
++    relatedPage = (PageImpl) wService.getRelatedPage(PortalConfig.PORTAL_TYPE, "classic", "CircularRename1");
++    assertEquals("CircularRename1", relatedPage.getName());
++    relatedPage = (PageImpl) wService.getRelatedPage(PortalConfig.PORTAL_TYPE, "classic", "CircularRename2");
++    assertNull(relatedPage);
++  }
++  
+ }
+Index: eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/service/impl/WikiServiceImpl.java
+===================================================================
+--- eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/service/impl/WikiServiceImpl.java	(revision 80688)
++++ eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/service/impl/WikiServiceImpl.java	(working copy)
+@@ -90,6 +90,8 @@
+ 
+   final static private String          DEFAULT_SYNTAX       = "defaultSyntax";
+ 
++  final static private int             CIRCULAR_RENAME_FLAG   = 1000;
++
+   private ConfigurationManager  configManager;
+ 
+   private JCRDataStorage        jcrDataStorage;
+@@ -155,6 +157,7 @@
+       newEntry.setAlias(newEntryAlias);
+       newEntry.setTitle(title);
+     }
++    //This line must be outside if statement to break chaining list when add new page with name that was used in list.
+     newEntry.setNewLink(newEntry);
+     
+     model.save();
+@@ -293,15 +296,17 @@
+     String newEntryName = getLinkEntryName(wikiType, wikiOwner, newName);
+     String newEntryAlias = getLinkEntryAlias(wikiType, wikiOwner, newName);
+     LinkEntry newEntry = linkRegistry.getLinkEntries().get(newEntryName);
++    LinkEntry entry = linkRegistry.getLinkEntries().get(getLinkEntryName(wikiType, wikiOwner, pageName));
+     if (newEntry == null) {
+       newEntry = linkRegistry.createLinkEntry();
+       linkRegistry.getLinkEntries().put(newEntryName, newEntry);
+       newEntry.setAlias(newEntryAlias);
+       newEntry.setNewLink(newEntry);
+       newEntry.setTitle(newTitle);
++      entry.setNewLink(newEntry);
++    } else {
++      processCircularRename(entry, newEntry);
+     }
+-    linkRegistry.getLinkEntries().get(getLinkEntryName(wikiType, wikiOwner, pageName)).setNewLink(newEntry);
+-    
+     parentPage.getChromatticSession().save() ;
+     return true ;    
+   }
+@@ -334,14 +339,17 @@
+         String newEntryName = getLinkEntryName(newLocationParams.getType(), newLocationParams.getOwner(), currentLocationParams.getPageId());
+         String newEntryAlias = getLinkEntryAlias(newLocationParams.getType(), newLocationParams.getOwner(), currentLocationParams.getPageId());
+         LinkEntry newEntry = destLinkRegistry.getLinkEntries().get(newEntryName);
++        LinkEntry entry = sourceLinkRegistry.getLinkEntries().get(getLinkEntryName(currentLocationParams.getType(), currentLocationParams.getOwner(), currentLocationParams.getPageId()));
+         if (newEntry == null) {
+           newEntry = destLinkRegistry.createLinkEntry();
+           destLinkRegistry.getLinkEntries().put(newEntryName, newEntry);
+           newEntry.setAlias(newEntryAlias);
+           newEntry.setNewLink(newEntry);
+           newEntry.setTitle(destPage.getTitle());
++          entry.setNewLink(newEntry);
++        } else {
++          processCircularRename(entry, newEntry);
+         }
+-        sourceLinkRegistry.getLinkEntries().get(getLinkEntryName(currentLocationParams.getType(), currentLocationParams.getOwner(), currentLocationParams.getPageId())).setNewLink(newEntry);
+       }
+     } catch (Exception e) {
+       log.error("Can't move page '" + currentLocationParams.getPageId() + "' ", e);
+@@ -501,19 +509,31 @@
+     if (oldLinkEntry != null) {
+       newLinkEntry = oldLinkEntry.getNewLink();
+     }
+-    while (newLinkEntry != null && !newLinkEntry.equals(oldLinkEntry)) {
++    int circularFlag = CIRCULAR_RENAME_FLAG;// To deal with old circular data if it is existed
++    while (newLinkEntry != null && !newLinkEntry.equals(oldLinkEntry) && circularFlag > 0) {
+       oldLinkEntry = newLinkEntry;
+       newLinkEntry = oldLinkEntry.getNewLink();
++      circularFlag--;
+     }
+     if (newLinkEntry == null) {
+       return null;
+     }
+-    String linkEntryAlias = newLinkEntry.getAlias();
+-    String[] splits = linkEntryAlias.split("@");
+-    String newWikiType = splits[0];
+-    String newWikiOwner = splits[1];
+-    String newPageId = linkEntryAlias.substring((newWikiType + "@" + newWikiOwner + "@").length());
+-    return getPageById(newWikiType, newWikiOwner, newPageId);
++    if (circularFlag == 0) {
++      // Find link entry mapped with an existed page in old circular data
++      circularFlag = CIRCULAR_RENAME_FLAG;
++      while (circularFlag > 0) {
++        if (getPageWithLinkEntry(newLinkEntry) != null) {
++          break;
++        }
++        newLinkEntry = newLinkEntry.getNewLink();
++        circularFlag--;
++      }
++      // Break old circular data
++      if (circularFlag > 0) {
++        newLinkEntry.setNewLink(newLinkEntry);
++      }
++    }
++    return getPageWithLinkEntry(newLinkEntry);
+   }
+   
+   public Page getExsitedOrNewDraftPageById(String wikiType, String wikiOwner, String pageId) throws Exception {
+@@ -968,6 +988,46 @@
+     return wikiType + "@" + wikiOwner + "@" + pageId;
+   }
+   
++  private void processCircularRename(LinkEntry entry, LinkEntry newEntry) {
++    // Check circular rename
++    boolean isCircular = true;
++    int circularFlag = CIRCULAR_RENAME_FLAG;// To deal with old circular data if it is existed
++    LinkEntry checkEntry = newEntry;
++    while (!checkEntry.equals(entry) && circularFlag > 0) {
++      checkEntry = checkEntry.getNewLink();
++      if (checkEntry.getNewLink().equals(checkEntry) && !checkEntry.equals(entry)) {
++        isCircular = false;
++        break;
++      }
++      circularFlag--;
++    }
++    if (!isCircular || circularFlag == 0) {
++      entry.setNewLink(newEntry);
++    } else {
++      LinkEntry nextEntry = newEntry.getNewLink();
++      while (!nextEntry.equals(newEntry)) {
++        LinkEntry deletedEntry = nextEntry;
++        nextEntry = nextEntry.getNewLink();
++        if (!nextEntry.equals(deletedEntry)) {
++          deletedEntry.remove();
++        } else {
++          deletedEntry.remove();
++          break;
++        }
++      }
++    }
++    newEntry.setNewLink(newEntry);
++  }
++  
++  private Page getPageWithLinkEntry(LinkEntry entry) throws Exception {
++    String linkEntryAlias = entry.getAlias();
++    String[] splits = linkEntryAlias.split("@");
++    String wikiType = splits[0];
++    String wikiOwner = splits[1];
++    String pageId = linkEntryAlias.substring((wikiType + "@" + wikiOwner + "@").length());
++    return getPageById(wikiType, wikiOwner, pageId);
++  }
++  
+   private void updateAllPagesPermissions(String wikiType, String wikiOwner, HashMap<String, String[]> permMap) throws Exception {
+     // Include ACL for administrators
+     permMap.putAll(Utils.getACLForAdmins());
+Index: eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/mow/core/api/wiki/LinkEntry.java
+===================================================================
+--- eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/mow/core/api/wiki/LinkEntry.java	(revision 80688)
++++ eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/mow/core/api/wiki/LinkEntry.java	(working copy)
+@@ -17,6 +17,7 @@
+ package org.exoplatform.wiki.mow.core.api.wiki;
+ 
+ import org.chromattic.api.RelationshipType;
++import org.chromattic.api.annotations.Destroy;
+ import org.chromattic.api.annotations.ManyToOne;
+ import org.chromattic.api.annotations.MappedBy;
+ import org.chromattic.api.annotations.PrimaryType;
+@@ -44,5 +45,8 @@
+   @MappedBy(WikiNodeType.Definition.NEW_LINK)
+   public abstract LinkEntry getNewLink();
+   public abstract void setNewLink(LinkEntry linkEntry);
++  
++  @Destroy
++  public abstract void remove();
+ 
+ }
+Index: eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/rendering/impl/DefaultWikiModel.java
+===================================================================
+--- eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/rendering/impl/DefaultWikiModel.java	(revision 80688)
++++ eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/rendering/impl/DefaultWikiModel.java	(working copy)
+@@ -187,7 +187,10 @@
+   private String getDocumentViewURL(WikiContext context) {
+     try {
+       WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(WikiService.class);
+-      PageImpl page = (PageImpl) wikiService.getRelatedPage(context.getType(), context.getOwner(), context.getPageId());
++      PageImpl page = (PageImpl) wikiService.getPageById(context.getType(), context.getOwner(), context.getPageId());
++      if (page == null) {
++        page = (PageImpl) wikiService.getRelatedPage(context.getType(), context.getOwner(), context.getPageId());
++      }
+       if (page != null) {
+         Wiki wiki = page.getWiki();
+         context.setType(wiki.getType());
+Index: eXoApplication/wiki/webapp/src/main/java/org/exoplatform/wiki/webui/UIWikiAdvanceSearchResult.java
+===================================================================
+--- eXoApplication/wiki/webapp/src/main/java/org/exoplatform/wiki/webui/UIWikiAdvanceSearchResult.java	(revision 80688)
++++ eXoApplication/wiki/webapp/src/main/java/org/exoplatform/wiki/webui/UIWikiAdvanceSearchResult.java	(working copy)
+@@ -17,14 +17,11 @@
+ package org.exoplatform.wiki.webui;
+ 
+ import java.text.DateFormat;
+-import java.util.ArrayList;
+ import java.util.Calendar;
+-import java.util.List;
+ import java.util.Locale;
+-import java.util.Map;
++import java.util.StringTokenizer;
+ 
+ import org.exoplatform.commons.utils.PageList;
+-import org.exoplatform.ks.common.CommonUtils;
+ import org.exoplatform.portal.application.PortalRequestContext;
+ import org.exoplatform.portal.config.model.PortalConfig;
+ import org.exoplatform.portal.webui.portal.UIPortal;
+@@ -35,10 +32,8 @@
+ import org.exoplatform.wiki.mow.api.Wiki;
+ import org.exoplatform.wiki.mow.api.WikiNodeType;
+ import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
+-import org.exoplatform.wiki.mow.core.api.wiki.LinkEntry;
+-import org.exoplatform.wiki.mow.core.api.wiki.LinkRegistry;
+ import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
+-import org.exoplatform.wiki.mow.core.api.wiki.WikiImpl;
++import org.exoplatform.wiki.mow.core.api.wiki.RenamedMixin;
+ import org.exoplatform.wiki.service.search.SearchResult;
+ import org.exoplatform.wiki.utils.Utils;
+ import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
+@@ -53,8 +48,6 @@
+ public class UIWikiAdvanceSearchResult extends UIContainer {
+ 
+   private String keyword;
+-  
+-  LinkRegistry registry = null;
+ 
+   public UIWikiAdvanceSearchResult() throws Exception {
+     addChild(UIAdvancePageIterator.class, null, "SearchResultPageIterator");
+@@ -87,53 +80,35 @@
+     return df.format(cal.getTime());
+   }
+   
+-  protected Wiki getWiki(SearchResult result){
+-    Wiki searchWiki = null;
++  protected PageImpl getPage(SearchResult result) {
++    PageImpl page = null;
+     try {
+       if (WikiNodeType.WIKI_PAGE_CONTENT.equals(result.getType()) || WikiNodeType.WIKI_ATTACHMENT.equals(result.getType())) {
+         AttachmentImpl searchContent = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(result.getPath(), WikiNodeType.WIKI_ATTACHMENT);
+-        searchWiki = searchContent.getParentPage().getWiki();
++        page = searchContent.getParentPage();
+       } else if (WikiNodeType.WIKI_PAGE.equals(result.getType()) || WikiNodeType.WIKI_HOME.equals(result.getType())) {
+-        PageImpl page = (PageImpl) org.exoplatform.wiki.utils.Utils.getObject(result.getPath(), WikiNodeType.WIKI_PAGE);
+-        searchWiki = page.getWiki();
++        page = (PageImpl) org.exoplatform.wiki.utils.Utils.getObject(result.getPath(), WikiNodeType.WIKI_PAGE);
+       }
+-      return searchWiki;
++      return page;
+     } catch (Exception e) {
+       return null;
+-    }    
++    }
+   }
+ 
+-  protected String getPageSearchName(Wiki wiki, String pageTitle) throws Exception {
+-    if (pageTitle.indexOf(keyword) >= 0) return "";
+-    if(registry == null) {
+-      registry = ((WikiImpl) wiki).getLinkRegistry();
++  protected Wiki getWiki(PageImpl page) {
++    return (page != null ? page.getWiki() : null);
++  }
++
++  protected String getOldPageTitleInSearchResult(PageImpl page, String pageTitle) throws Exception {
++    if (pageTitle.indexOf(keyword) >= 0) {
++      return "";
+     }
+-    Map<String, LinkEntry> linkEntries = registry.getLinkEntries();
+-    String titleBefore, titleAfter;
+-    List<LinkEntry> linkEntrys = new ArrayList<LinkEntry>();
+-    List<String> alias = new ArrayList<String>();
+-    for (LinkEntry linkEntry : linkEntries.values()) {
+-      if (alias.contains(linkEntry.getAlias())) continue;
+-      while (true) {
+-        alias.add(linkEntry.getAlias());
+-        titleAfter = linkEntry.getTitle();
+-        linkEntrys.add(linkEntry);
+-        linkEntry = linkEntry.getNewLink();
+-        if(linkEntry == null) break;
+-        titleBefore = linkEntry.getTitle();
+-        if(!CommonUtils.isEmpty(titleBefore) && 
+-            titleBefore.equals(pageTitle) && titleAfter.equals(titleBefore)) {
+-          for (LinkEntry entry : linkEntrys) {
+-            if (entry.getTitle().indexOf(keyword) >= 0) {
+-              return entry.getTitle();
+-            }
+-          }
+-          break;
++    if (page.getRenamedMixin() != null) {
++      RenamedMixin mix = page.getRenamedMixin();
++      for (String id : mix.getOldPageIds()) {
++        if (id.indexOf(keyword) >= 0) {
++          return replaceUnderscorebySpace(id);
+         }
+-        if (CommonUtils.isEmpty(titleBefore) || titleAfter.equals(titleBefore)) {
+-          linkEntrys.clear();
+-          break;
+-        }
+       }
+     }
+     return "";
+@@ -154,5 +129,17 @@
+     }
+     return sb.toString();
+   }
++  
++  protected static String replaceUnderscorebySpace(String s) {
++    StringTokenizer st = new StringTokenizer(s, "_", false);
++    StringBuilder sb = new StringBuilder();
++    if (st.hasMoreElements()) {
++      sb.append(st.nextElement());
++    }
++    while (st.hasMoreElements())
++      sb.append(" ").append(st.nextElement());
++    return sb.toString();
++  }
++  
+ }
+ 
+Index: eXoApplication/wiki/webapp/src/main/webapp/templates/wiki/webui/UIWikiAdvanceSearchResult.gtmpl
+===================================================================
+--- eXoApplication/wiki/webapp/src/main/webapp/templates/wiki/webui/UIWikiAdvanceSearchResult.gtmpl	(revision 80688)
++++ eXoApplication/wiki/webapp/src/main/webapp/templates/wiki/webui/UIWikiAdvanceSearchResult.gtmpl	(working copy)
+@@ -19,7 +19,8 @@
+ 			<div class="ResultInfo"><%=resultInfo%></div>
+ 			<%
+ 				for(SearchResult result in results.getPage(results.getCurrentPage())) {
+-					def wiki= uicomponent.getWiki(result);
++				  def page= uicomponent.getPage(result);
++					def wiki= uicomponent.getWiki(page);
+ 					String wikiURI = uicomponent.getWikiNodeUri(wiki) ;
+ 					String space = wiki.getOwner();
+ 					String wikiType= wiki.getType();
+@@ -28,17 +29,17 @@
+ 					timeMsg = timeMsg.replace("{0}", uicomponent.getDateFormat(result.getCreatedDate())).replace("{1}", uicomponent.getDateFormat(result.getUpdatedDate()));
+ 					wikiLabel = wikiLabel.replace("{0}", wikiType);
+ 					String pageURI = wikiURI + result.getPageName() ;
+-					String pageName = result.getTitle();
+-					String pageOldName = uicomponent.getPageSearchName(wiki, pageName)			
++					String pageTitle = result.getTitle();
++					String pageOldTitle = uicomponent.getOldPageTitleInSearchResult(page, pageTitle);
+ 					if(WikiNodeType.WIKI_PAGE_CONTENT.equals(result.getType())) {										
+ 			%>						
+ 						<div class="BlockResultFeed">
+ 							<a class="page TxtTitle" href="$pageURI">
+-							<% if(pageOldName.length() > 0) { %>
+-								<span class="TxtTitFeed"><%=pageOldName%></span>
++							<% if(pageOldTitle.length() > 0) { %>
++								<span class="TxtTitFeed"><%=pageOldTitle%></span>
+ 								<span class="TxtMark"> is renamed to </span>
+ 							<% } %>
+-								<span class="TxtTitFeed"><%=pageName%></span>
++								<span class="TxtTitFeed"><%=pageTitle%></span>
+ 							</a>
+ 							<% if (result.getExcerpt()!=null){ %>				
+ 								<div class="TxtDetail"><%=result.getExcerpt()%></div>
+@@ -71,11 +72,11 @@
+ 						%>
+ 						<div class="BlockResultFeed">
+ 							<a class="page TxtTitle" href="$pageURI">
+-								<% if(pageOldName.length() > 0) { %>
+-					<span class="TxtTitFeed"><%=pageOldName%></span>
++								<% if(pageOldTitle.length() > 0) { %>
++					<span class="TxtTitFeed"><%=pageOldTitle%></span>
+ 					<span class="TxtMark"> is renamed to </span>
+ 				<% } %>
+-					<span class="TxtTitFeed"><%=pageName%></span>
++					<span class="TxtTitFeed"><%=pageTitle%></span>
+ 				</a>
+ 						<div>
+ 							<strong>$wikiLabel: </strong><a class="TxtMark" href="$wikiURI">$space</a>
