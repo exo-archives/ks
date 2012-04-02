@@ -39,6 +39,8 @@ import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.common.webui.UISelectComponent;
 import org.exoplatform.ks.common.webui.UISelector;
 import org.exoplatform.ks.common.webui.UIUserSelect;
+import org.exoplatform.web.application.RequestContext;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -47,12 +49,12 @@ import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.UITree;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormInputWithActions;
+import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
-import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
@@ -236,7 +238,6 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
       UIFormInputWithActions inputset = uiCategory.getChildById(CATEGORY_DETAIL_TAB);
       long index = uiCategory.oldIndex_;
       String strIndex = inputset.getUIStringInput(FIELD_INDEX_INPUT).getValue();
-      UIAnswersPortlet answerPortlet = uiCategory.getAncestorOfType(UIAnswersPortlet.class);
       if (!CommonUtils.isEmpty(strIndex)) {
         index = Long.parseLong(strIndex);
         if(index > uiCategory.getFAQService().getMaxindexCategory(uiCategory.parentId_) + 1) {
@@ -280,6 +281,7 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
       cat.setModerators(users);
       uiCategory.getFAQService().saveCategory(uiCategory.parentId_, cat, uiCategory.isAddNew_);
 
+      UIAnswersPortlet answerPortlet = uiCategory.getAncestorOfType(UIAnswersPortlet.class);
       if (!uiCategory.isAddNew_) {
         UICategories categories = answerPortlet.findFirstComponentOfType(UICategories.class);
         if (uiCategory.categoryId_.equals(categories.getCategoryPath())) {
@@ -291,10 +293,18 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
       }
 
       answerPortlet.cancelAction();
-      event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet);
+      event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet.getChild(UIAnswersContainer.class));
     }
   }
 
+  protected static void closePopupWindow(UIPopupWindow popupWindow) {
+    popupWindow.setUIComponent(null);
+    popupWindow.setShow(false);
+    popupWindow.setRendered(false);
+    WebuiRequestContext context = RequestContext.getCurrentInstance();
+    context.addUIComponentToUpdateByAjax(popupWindow.getParent());
+  }
+  
   static public class SelectPermissionActionListener extends BaseEventListener<UICategoryForm> {
     public void onEvent(Event<UICategoryForm> event, UICategoryForm categoryForm, String permType) throws Exception {
       String types[] = permType.split(CommonUtils.COMMA);
@@ -302,10 +312,7 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
       UIUserSelect uiUserSelect = popupContainer.findFirstComponentOfType(UIUserSelect.class);
       if (uiUserSelect != null) {
         UIPopupWindow popupWindow = uiUserSelect.getParent();
-        popupWindow.setShow(false);
-        popupWindow.setUIComponent(null);
-        popupWindow.setRendered(false);
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent());
+        closePopupWindow(popupWindow);
       }
       UIGroupSelector uiGroupSelector = null;
       if (types[1].equals(UISelectComponent.TYPE_GROUP)) {
@@ -318,36 +325,27 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
       uiGroupSelector.setComponent(categoryForm, new String[] { types[0] });
       uiGroupSelector.getChild(UITree.class).setId(UIGroupSelector.TREE_GROUP_ID);
       uiGroupSelector.getChild(org.exoplatform.webui.core.UIBreadcumbs.class).setId(UIGroupSelector.BREADCUMB_GROUP_ID);
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
     }
   }
 
   static public class CancelActionListener extends EventListener<UICategoryForm> {
     public void execute(Event<UICategoryForm> event) throws Exception {
-      UICategoryForm uiCategory = event.getSource();
-      UIPopupAction uiPopupAction = uiCategory.getAncestorOfType(UIPopupAction.class);
-      uiPopupAction.deActivate();
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction);
+      event.getSource().getAncestorOfType(UIAnswersPortlet.class).cancelAction();
     }
   }
 
   static public class CloseActionListener extends EventListener<UIUserSelector> {
     public void execute(Event<UIUserSelector> event) throws Exception {
-      UIUserSelector uiUserSelector = event.getSource();
-      UIPopupWindow popupWindow = uiUserSelector.getParent();
-      popupWindow.setUIComponent(null);
-      popupWindow.setShow(false);
-      popupWindow.setRendered(false);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent());
+      UIPopupWindow popupWindow = event.getSource().getParent();
+      closePopupWindow(popupWindow);
     }
   }
 
   static public class ClosePopupActionListener extends EventListener<UIPopupWindow> {
     public void execute(Event<UIPopupWindow> event) throws Exception {
       UIPopupWindow popupWindow = event.getSource();
-      popupWindow.setUIComponent(null);
-      popupWindow.setShow(false);
-      popupWindow.setRendered(false);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent());
+      closePopupWindow(popupWindow);
     }
   }
 
@@ -370,7 +368,6 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
       String values = uiUserSelector.getSelectedUsers();
       UIAnswersPortlet answerPortlet = uiUserSelector.getAncestorOfType(UIAnswersPortlet.class);
       UICategoryForm categoryForm = answerPortlet.findFirstComponentOfType(UICategoryForm.class);
-      UIPopupWindow popupWindow = uiUserSelector.getParent();
       String id = uiUserSelector.getPermisionType();
       UIFormInputWithActions inputset = categoryForm.getChildById(CATEGORY_DETAIL_TAB);
       if (id.equals(FIELD_USERPRIVATE_INPUT)) {
@@ -380,10 +377,8 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
         UIFormTextAreaInput stringInput = inputset.getUIFormTextAreaInput(FIELD_MODERATOR_INPUT);
         stringInput.setValue(categoryForm.getUserSelect(stringInput.getValue(), values));
       }
-      popupWindow.setUIComponent(null);
-      popupWindow.setShow(false);
-      popupWindow.setRendered(false);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent());
+      UIPopupWindow popupWindow = uiUserSelector.getParent();
+      closePopupWindow(popupWindow);
       event.getRequestContext().addUIComponentToUpdateByAjax(categoryForm);
     }
   }
@@ -396,10 +391,7 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
       UIGroupSelector uiGroupSelector = uiPopupContainer.findFirstComponentOfType(UIGroupSelector.class);
       if (uiGroupSelector != null) {
         UIPopupWindow popupWindow = uiGroupSelector.getAncestorOfType(UIPopupWindow.class);
-        popupWindow.setUIComponent(null);
-        popupWindow.setShow(false);
-        popupWindow.setRendered(false);
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent());
+        closePopupWindow(popupWindow);
       }
       UIPopupWindow uiPopupWindow = uiPopupContainer.getChildById(USER_SELECTOR_POPUPWINDOW);
       if (uiPopupWindow == null)
