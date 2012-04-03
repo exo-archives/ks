@@ -42,6 +42,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiContainer;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
 import org.exoplatform.wiki.rendering.RenderingService;
+import org.exoplatform.wiki.service.IDType;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
@@ -402,13 +403,13 @@ public class Utils {
     return (container.contains(wikiOwner) != null);
   }
   
-  public static HashMap<String, String[]> getACLForAdmins() {
-    HashMap<String, String[]> permissionMap = new HashMap<String, String[]>();
+  public static HashMap<String, IDType> getACLForAdmins() {
+    HashMap<String, IDType> permissionMap = new HashMap<String, IDType>();
     UserACL userACL = (UserACL) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(UserACL.class);
-    permissionMap.put(userACL.getSuperUser(), org.exoplatform.services.jcr.access.PermissionType.ALL);
-    permissionMap.put(userACL.getAdminGroups(), org.exoplatform.services.jcr.access.PermissionType.ALL);
+    permissionMap.put(userACL.getSuperUser(), IDType.USER);
+    permissionMap.put(userACL.getAdminGroups(), IDType.GROUP);
     for (String group : userACL.getPortalCreatorGroups()) {
-      permissionMap.put(group, org.exoplatform.services.jcr.access.PermissionType.ALL);
+      permissionMap.put(group, IDType.MEMBERSHIP);
     }
     return permissionMap;
   }

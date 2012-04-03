@@ -4,10 +4,11 @@
   
   PermissionEntry permissionEntry = uicomponent.getPermissionEntry();
   String id = permissionEntry.getId();
+  boolean isImmutable = uicomponent.isImmutable();
   String fullName = uicomponent.getEntryFullName();
   Permission[] permissions = permissionEntry.getPermissions();
   def uiPermissionForm = uicomponent.getParent().getParent();
-  def deleteLink = uiPermissionForm.event(uiPermissionForm.DELETE_ENTRY, id);
+  def deleteLink = uiPermissionForm.event(uiPermissionForm.DELETE_ENTRY, uicomponent.id);
 %>
 <td>
   <div title="$fullName">$fullName</div>
@@ -15,13 +16,18 @@
 </td>
 <%
   for(permission in permissions){
-    checkboxField = uicomponent.getChildById(permission.getPermissionType().toString() + id) ;
+    def checkboxField = uicomponent.getChildById(permission.getPermissionType().toString() + id) ;
+    if (isImmutable) {
+     checkboxField.setDisabled(true);
+    }
     %>
     <td class="center"><% uicomponent.renderChild(checkboxField); %></td>
 <%  }
 %>
 <td>
   <div class="ActionContainer">
+   <% if (!isImmutable) { %>
     <img class="DeleteUserIcon" src="/eXoResources/skin/sharedImages/Blank.gif" title="<%= _ctx.appRes("UIPermissionEntry.title.DeletePermission"); %>" alt="<%= _ctx.appRes("UIPermissionEntry.title.DeletePermission"); %>" onclick="$deleteLink"/>
+   <% } %>
   </div>
 </td>

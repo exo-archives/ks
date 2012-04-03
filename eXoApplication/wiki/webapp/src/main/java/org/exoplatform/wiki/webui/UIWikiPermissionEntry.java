@@ -17,7 +17,9 @@
 package org.exoplatform.wiki.webui;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.exoplatform.ks.common.webui.WebUIUtils;
 import org.exoplatform.services.log.ExoLogger;
@@ -31,6 +33,7 @@ import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
+import org.exoplatform.wiki.service.IDType;
 import org.exoplatform.wiki.service.Permission;
 import org.exoplatform.wiki.service.PermissionEntry;
 import org.exoplatform.wiki.service.PermissionType;
@@ -134,5 +137,16 @@ public class UIWikiPermissionEntry extends UIContainer {
       }
     }
     return permissionEntry.getFullName();
+  }
+  
+  public boolean isImmutable() {
+    Iterator<Entry<String, IDType>> iter = org.exoplatform.wiki.utils.Utils.getACLForAdmins().entrySet().iterator();
+    while (iter.hasNext()) {
+      Entry<String, IDType> entry = iter.next();
+      if (permissionEntry.getId().equals(entry.getKey()) && permissionEntry.getIdType() == entry.getValue()) {
+        return true;
+      }
+    }
+    return false;
   }
 }

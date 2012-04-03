@@ -33,11 +33,11 @@ import org.exoplatform.webui.core.UIPopupContainer;
 import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormInputWithActions;
-import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
+import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
 import org.exoplatform.webui.organization.UIGroupMembershipSelector;
 import org.exoplatform.webui.organization.account.UIGroupSelector;
@@ -235,16 +235,22 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
 
   private void processPostAction() throws Exception {
     UIPermissionGrid permissionGrid = getChild(UIPermissionGrid.class);
-    List<UIComponent> permissionEntries = permissionGrid.getChildren();
+    List<UIWikiPermissionEntry> uiPermissionEntries = new ArrayList<UIWikiPermissionEntry>();
+    permissionGrid.findComponentOfType(uiPermissionEntries, UIWikiPermissionEntry.class);
     List<PermissionEntry> permEntries = new ArrayList<PermissionEntry>();
-    for (UIComponent uiPermissionEntry : permissionEntries) {
-      PermissionEntry permissionEntry = ((UIWikiPermissionEntry) uiPermissionEntry).getPermissionEntry();
-      Permission[] permissions = permissionEntry.getPermissions();
-      for (int i = 0; i < permissions.length; i++) {
-        UICheckBoxInput checkboxInput = ((UIWikiPermissionEntry) uiPermissionEntry).getChildById(permissions[i].getPermissionType().name()
-            + permissionEntry.getId());
-        checkboxInput.setHTMLAttribute("title", UIWikiPermissionEntry.getPermissionLabels().get(permissions[i].getPermissionType().name()));
-        permissions[i].setAllowed(checkboxInput.isChecked());
+    for (UIWikiPermissionEntry uiPermissionEntry : uiPermissionEntries) {
+      PermissionEntry permissionEntry = uiPermissionEntry.getPermissionEntry();
+      if (!uiPermissionEntry.isImmutable()) {
+        Permission[] permissions = permissionEntry.getPermissions();
+        for (int i = 0; i < permissions.length; i++) {
+          UICheckBoxInput checkboxInput = ((UIWikiPermissionEntry) uiPermissionEntry).getChildById(permissions[i].getPermissionType()
+                                                                                                                 .name()
+              + permissionEntry.getId());
+          checkboxInput.setHTMLAttribute("title",
+                                         UIWikiPermissionEntry.getPermissionLabels().get(permissions[i].getPermissionType()
+                                                                                                       .name()));
+          permissions[i].setAllowed(checkboxInput.isChecked());
+        }
       }
       permEntries.add(permissionEntry);
     }
@@ -381,12 +387,10 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
     @Override
     public void execute(Event<UIWikiPermissionForm> event) throws Exception {
       UIWikiPermissionForm uiWikiPermissionForm = event.getSource();
-      String ownerId = event.getRequestContext().getRequestParameter(OBJECTID);
-      for (PermissionEntry permissionEntry : uiWikiPermissionForm.permissionEntries) {
-        if (permissionEntry.getId().equals(ownerId)) {
-          uiWikiPermissionForm.permissionEntries.remove(permissionEntry);
-          break;
-        }
+      String objectId = event.getRequestContext().getRequestParameter(OBJECTID);
+      UIWikiPermissionEntry uiPermissionEntry = uiWikiPermissionForm.findComponentById(objectId);
+      if (!uiPermissionEntry.isImmutable()) {
+        uiWikiPermissionForm.permissionEntries.remove(uiPermissionEntry.getPermissionEntry());
       }
       uiWikiPermissionForm.setPermission(uiWikiPermissionForm.permissionEntries);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPermissionForm);
@@ -508,8 +512,6 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
       } else if (Scope.PAGE.equals(scope)) {
         PageImpl page = (PageImpl) Utils.getCurrentWikiPage();
         HashMap<String, String[]> permissionMap = uiWikiPermissionForm.convertToPermissionMap(uiWikiPermissionForm.permissionEntries);
-        // Include ACL for administrators
-        permissionMap.putAll(org.exoplatform.wiki.utils.Utils.getACLForAdmins());
         page.setPermission(permissionMap);
         page.setOverridePermission(true);
         

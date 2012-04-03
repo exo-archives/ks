@@ -1,0 +1,297 @@
+Index: eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/service/impl/WikiServiceImpl.java
+===================================================================
+--- eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/service/impl/WikiServiceImpl.java	(revision 80722)
++++ eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/service/impl/WikiServiceImpl.java	(working copy)
+@@ -12,6 +12,7 @@
+ import java.util.LinkedList;
+ import java.util.List;
+ import java.util.Map;
++import java.util.Map.Entry;
+ import java.util.Queue;
+ 
+ import org.chromattic.api.ChromatticSession;
+@@ -1028,9 +1029,7 @@
+     return getPageById(wikiType, wikiOwner, pageId);
+   }
+   
+-  private void updateAllPagesPermissions(String wikiType, String wikiOwner, HashMap<String, String[]> permMap) throws Exception {
+-    // Include ACL for administrators
+-    permMap.putAll(Utils.getACLForAdmins());
++  private void updateAllPagesPermissions(String wikiType, String wikiOwner, HashMap<String, String[]> permMap) throws Exception {    
+     PageImpl page = getWikiHome(wikiType, wikiOwner);
+     Queue<PageImpl> queue = new LinkedList<PageImpl>();
+     queue.add(page);
+@@ -1047,24 +1046,62 @@
+   }
+   
+   private List<String> getWikiDefaultPermissions(String wikiType, String wikiOwner) throws Exception {
+-    StringBuilder view = new StringBuilder().append(PermissionType.VIEWPAGE);
+-    StringBuilder viewEdit = new StringBuilder().append(PermissionType.VIEWPAGE).append(",").append(PermissionType.EDITPAGE);
+-    StringBuilder all = new StringBuilder().append(PermissionType.VIEWPAGE).append(",").append(PermissionType.EDITPAGE).append(",")
+-                                           .append(PermissionType.ADMINPAGE).append(",").append(PermissionType.ADMINSPACE);
++    String view = new StringBuilder().append(PermissionType.VIEWPAGE).toString();
++    String viewEdit = new StringBuilder().append(PermissionType.VIEWPAGE).append(",").append(PermissionType.EDITPAGE).toString();
++    String all = new StringBuilder().append(PermissionType.VIEWPAGE)
++                                    .append(",")
++                                    .append(PermissionType.EDITPAGE)
++                                    .append(",")
++                                    .append(PermissionType.ADMINPAGE)
++                                    .append(",")
++                                    .append(PermissionType.ADMINSPACE)
++                                    .toString();
+     List<String> permissions = new ArrayList<String>();
++    Iterator<Entry<String, IDType>> iter = Utils.getACLForAdmins().entrySet().iterator();
++    while (iter.hasNext()) {
++      Entry<String, IDType> entry = iter.next();
++      permissions.add(new StringBuilder(all).append(":").append(entry.getValue()).append(":").append(entry.getKey()).toString());
++    }
+     if (PortalConfig.PORTAL_TYPE.equals(wikiType)) {
+-      UserPortalConfigService service = (UserPortalConfigService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(UserPortalConfigService.class);
++      UserPortalConfigService service = (UserPortalConfigService) ExoContainerContext.getCurrentContainer()
++                                                                                     .getComponentInstanceOfType(UserPortalConfigService.class);
+       PortalConfig portalConfig = service.getUserPortalConfig(wikiOwner, null).getPortalConfig();
+-      permissions.add(all.append(":").append(IDType.MEMBERSHIP).append(":").append(portalConfig.getEditPermission()).toString());
+-      permissions.add(viewEdit.append(":").append(IDType.USER).append(":any").toString());
++      String portalEditClause = new StringBuilder(all).append(":")
++                                                      .append(IDType.MEMBERSHIP)
++                                                      .append(":")
++                                                      .append(portalConfig.getEditPermission())
++                                                      .toString();
++      if (!permissions.contains(portalEditClause)) {
++        permissions.add(portalEditClause);
++      }
++      permissions.add(new StringBuilder(viewEdit).append(":").append(IDType.USER).append(":any").toString());
+     } else if (PortalConfig.GROUP_TYPE.equals(wikiType)) {
+       UserACL userACL = (UserACL) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(UserACL.class);
+-      permissions.add(all.append(":").append(IDType.MEMBERSHIP).append(":").append(userACL.getMakableMT()).append(":").append(wikiOwner).toString());
+-      permissions.add(viewEdit.append(":").append(IDType.MEMBERSHIP).append(":*:").append(wikiOwner).toString());
+-      permissions.add(view.append(":").append(IDType.USER).append(":any").toString());
++      String makableMTClause = new StringBuilder(all).append(":")
++                                                     .append(IDType.MEMBERSHIP)
++                                                     .append(":")
++                                                     .append(userACL.getMakableMT())
++                                                     .append(":")
++                                                     .append(wikiOwner)
++                                                     .toString();
++      if (!permissions.contains(makableMTClause)) {
++        permissions.add(makableMTClause);
++      }
++      String ownerClause = new StringBuilder(viewEdit).append(":")
++                                                      .append(IDType.MEMBERSHIP)
++                                                      .append(":*:")
++                                                      .append(wikiOwner)
++                                                      .toString();
++      if (!permissions.contains(ownerClause)) {
++        permissions.add(ownerClause);
++      }
++      permissions.add(new StringBuilder(view).append(":").append(IDType.USER).append(":any").toString());
+     } else if (PortalConfig.USER_TYPE.equals(wikiType)) {
+-      permissions.add(all.append(":").append(IDType.USER).append(":").append(wikiOwner).toString());
+-      permissions.add(view.append(":").append(IDType.USER).append(":any").toString());
++      String ownerClause = new StringBuilder(all).append(":").append(IDType.USER).append(":").append(wikiOwner).toString();
++      if (!permissions.contains(ownerClause)) {
++        permissions.add(ownerClause);
++      }
++      permissions.add(new StringBuilder(view).append(":").append(IDType.USER).append(":any").toString());
+     }
+     return permissions;
+   }
+Index: eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/utils/Utils.java
+===================================================================
+--- eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/utils/Utils.java	(revision 80722)
++++ eXoApplication/wiki/service/src/main/java/org/exoplatform/wiki/utils/Utils.java	(working copy)
+@@ -42,6 +42,7 @@
+ import org.exoplatform.wiki.mow.core.api.wiki.WikiContainer;
+ import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
+ import org.exoplatform.wiki.rendering.RenderingService;
++import org.exoplatform.wiki.service.IDType;
+ import org.exoplatform.wiki.service.WikiContext;
+ import org.exoplatform.wiki.service.WikiPageParams;
+ import org.exoplatform.wiki.service.WikiService;
+@@ -402,13 +403,13 @@
+     return (container.contains(wikiOwner) != null);
+   }
+   
+-  public static HashMap<String, String[]> getACLForAdmins() {
+-    HashMap<String, String[]> permissionMap = new HashMap<String, String[]>();
++  public static HashMap<String, IDType> getACLForAdmins() {
++    HashMap<String, IDType> permissionMap = new HashMap<String, IDType>();
+     UserACL userACL = (UserACL) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(UserACL.class);
+-    permissionMap.put(userACL.getSuperUser(), org.exoplatform.services.jcr.access.PermissionType.ALL);
+-    permissionMap.put(userACL.getAdminGroups(), org.exoplatform.services.jcr.access.PermissionType.ALL);
++    permissionMap.put(userACL.getSuperUser(), IDType.USER);
++    permissionMap.put(userACL.getAdminGroups(), IDType.GROUP);
+     for (String group : userACL.getPortalCreatorGroups()) {
+-      permissionMap.put(group, org.exoplatform.services.jcr.access.PermissionType.ALL);
++      permissionMap.put(group, IDType.MEMBERSHIP);
+     }
+     return permissionMap;
+   }
+Index: eXoApplication/wiki/webapp/src/main/java/org/exoplatform/wiki/webui/control/action/PagePermissionActionComponent.java
+===================================================================
+--- eXoApplication/wiki/webapp/src/main/java/org/exoplatform/wiki/webui/control/action/PagePermissionActionComponent.java	(revision 80722)
++++ eXoApplication/wiki/webapp/src/main/java/org/exoplatform/wiki/webui/control/action/PagePermissionActionComponent.java	(working copy)
+@@ -88,11 +88,6 @@
+       uiWikiPermissionForm.setScope(Scope.PAGE);
+       PageImpl page = (PageImpl) Utils.getCurrentWikiPage();
+       HashMap<String, String[]> permissionMap = page.getPermission();
+-      HashMap<String, String[]> adminsACLMap = org.exoplatform.wiki.utils.Utils.getACLForAdmins();
+-      // Filter out ACL for administrators
+-      for(String id: adminsACLMap.keySet()){
+-        permissionMap.remove(id);
+-      }
+       List<PermissionEntry> permissionEntries = convertToPermissionEntryList(permissionMap);
+       uiWikiPermissionForm.setPermission(permissionEntries);
+       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer);
+Index: eXoApplication/wiki/webapp/src/main/java/org/exoplatform/wiki/webui/UIWikiPermissionForm.java
+===================================================================
+--- eXoApplication/wiki/webapp/src/main/java/org/exoplatform/wiki/webui/UIWikiPermissionForm.java	(revision 80722)
++++ eXoApplication/wiki/webapp/src/main/java/org/exoplatform/wiki/webui/UIWikiPermissionForm.java	(working copy)
+@@ -33,11 +33,11 @@
+ import org.exoplatform.webui.core.UIPopupWindow;
+ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+ import org.exoplatform.webui.event.Event;
++import org.exoplatform.webui.event.Event.Phase;
+ import org.exoplatform.webui.event.EventListener;
+-import org.exoplatform.webui.event.Event.Phase;
+ import org.exoplatform.webui.form.UIFormInputWithActions;
++import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
+ import org.exoplatform.webui.form.UIFormStringInput;
+-import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
+ import org.exoplatform.webui.form.input.UICheckBoxInput;
+ import org.exoplatform.webui.organization.UIGroupMembershipSelector;
+ import org.exoplatform.webui.organization.account.UIGroupSelector;
+@@ -235,16 +235,22 @@
+ 
+   private void processPostAction() throws Exception {
+     UIPermissionGrid permissionGrid = getChild(UIPermissionGrid.class);
+-    List<UIComponent> permissionEntries = permissionGrid.getChildren();
++    List<UIWikiPermissionEntry> uiPermissionEntries = new ArrayList<UIWikiPermissionEntry>();
++    permissionGrid.findComponentOfType(uiPermissionEntries, UIWikiPermissionEntry.class);
+     List<PermissionEntry> permEntries = new ArrayList<PermissionEntry>();
+-    for (UIComponent uiPermissionEntry : permissionEntries) {
+-      PermissionEntry permissionEntry = ((UIWikiPermissionEntry) uiPermissionEntry).getPermissionEntry();
+-      Permission[] permissions = permissionEntry.getPermissions();
+-      for (int i = 0; i < permissions.length; i++) {
+-        UICheckBoxInput checkboxInput = ((UIWikiPermissionEntry) uiPermissionEntry).getChildById(permissions[i].getPermissionType().name()
+-            + permissionEntry.getId());
+-        checkboxInput.setHTMLAttribute("title", UIWikiPermissionEntry.getPermissionLabels().get(permissions[i].getPermissionType().name()));
+-        permissions[i].setAllowed(checkboxInput.isChecked());
++    for (UIWikiPermissionEntry uiPermissionEntry : uiPermissionEntries) {
++      PermissionEntry permissionEntry = uiPermissionEntry.getPermissionEntry();
++      if (!uiPermissionEntry.isImmutable()) {
++        Permission[] permissions = permissionEntry.getPermissions();
++        for (int i = 0; i < permissions.length; i++) {
++          UICheckBoxInput checkboxInput = ((UIWikiPermissionEntry) uiPermissionEntry).getChildById(permissions[i].getPermissionType()
++                                                                                                                 .name()
++              + permissionEntry.getId());
++          checkboxInput.setHTMLAttribute("title",
++                                         UIWikiPermissionEntry.getPermissionLabels().get(permissions[i].getPermissionType()
++                                                                                                       .name()));
++          permissions[i].setAllowed(checkboxInput.isChecked());
++        }
+       }
+       permEntries.add(permissionEntry);
+     }
+@@ -381,12 +387,10 @@
+     @Override
+     public void execute(Event<UIWikiPermissionForm> event) throws Exception {
+       UIWikiPermissionForm uiWikiPermissionForm = event.getSource();
+-      String ownerId = event.getRequestContext().getRequestParameter(OBJECTID);
+-      for (PermissionEntry permissionEntry : uiWikiPermissionForm.permissionEntries) {
+-        if (permissionEntry.getId().equals(ownerId)) {
+-          uiWikiPermissionForm.permissionEntries.remove(permissionEntry);
+-          break;
+-        }
++      String objectId = event.getRequestContext().getRequestParameter(OBJECTID);
++      UIWikiPermissionEntry uiPermissionEntry = uiWikiPermissionForm.findComponentById(objectId);
++      if (!uiPermissionEntry.isImmutable()) {
++        uiWikiPermissionForm.permissionEntries.remove(uiPermissionEntry.getPermissionEntry());
+       }
+       uiWikiPermissionForm.setPermission(uiWikiPermissionForm.permissionEntries);
+       event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPermissionForm);
+@@ -508,8 +512,6 @@
+       } else if (Scope.PAGE.equals(scope)) {
+         PageImpl page = (PageImpl) Utils.getCurrentWikiPage();
+         HashMap<String, String[]> permissionMap = uiWikiPermissionForm.convertToPermissionMap(uiWikiPermissionForm.permissionEntries);
+-        // Include ACL for administrators
+-        permissionMap.putAll(org.exoplatform.wiki.utils.Utils.getACLForAdmins());
+         page.setPermission(permissionMap);
+         page.setOverridePermission(true);
+         
+Index: eXoApplication/wiki/webapp/src/main/java/org/exoplatform/wiki/webui/UIWikiPermissionEntry.java
+===================================================================
+--- eXoApplication/wiki/webapp/src/main/java/org/exoplatform/wiki/webui/UIWikiPermissionEntry.java	(revision 80722)
++++ eXoApplication/wiki/webapp/src/main/java/org/exoplatform/wiki/webui/UIWikiPermissionEntry.java	(working copy)
+@@ -17,7 +17,9 @@
+ package org.exoplatform.wiki.webui;
+ 
+ import java.util.HashMap;
++import java.util.Iterator;
+ import java.util.Map;
++import java.util.Map.Entry;
+ 
+ import org.exoplatform.ks.common.webui.WebUIUtils;
+ import org.exoplatform.services.log.ExoLogger;
+@@ -31,6 +33,7 @@
+ import org.exoplatform.webui.core.UIContainer;
+ import org.exoplatform.webui.core.lifecycle.Lifecycle;
+ import org.exoplatform.webui.form.input.UICheckBoxInput;
++import org.exoplatform.wiki.service.IDType;
+ import org.exoplatform.wiki.service.Permission;
+ import org.exoplatform.wiki.service.PermissionEntry;
+ import org.exoplatform.wiki.service.PermissionType;
+@@ -135,4 +138,15 @@
+     }
+     return permissionEntry.getFullName();
+   }
++  
++  public boolean isImmutable() {
++    Iterator<Entry<String, IDType>> iter = org.exoplatform.wiki.utils.Utils.getACLForAdmins().entrySet().iterator();
++    while (iter.hasNext()) {
++      Entry<String, IDType> entry = iter.next();
++      if (permissionEntry.getId().equals(entry.getKey()) && permissionEntry.getIdType() == entry.getValue()) {
++        return true;
++      }
++    }
++    return false;
++  }
+ }
+Index: eXoApplication/wiki/webapp/src/main/webapp/templates/wiki/webui/UIWikiPermissionEntry.gtmpl
+===================================================================
+--- eXoApplication/wiki/webapp/src/main/webapp/templates/wiki/webui/UIWikiPermissionEntry.gtmpl	(revision 80722)
++++ eXoApplication/wiki/webapp/src/main/webapp/templates/wiki/webui/UIWikiPermissionEntry.gtmpl	(working copy)
+@@ -4,10 +4,11 @@
+   
+   PermissionEntry permissionEntry = uicomponent.getPermissionEntry();
+   String id = permissionEntry.getId();
++  boolean isImmutable = uicomponent.isImmutable();
+   String fullName = uicomponent.getEntryFullName();
+   Permission[] permissions = permissionEntry.getPermissions();
+   def uiPermissionForm = uicomponent.getParent().getParent();
+-  def deleteLink = uiPermissionForm.event(uiPermissionForm.DELETE_ENTRY, id);
++  def deleteLink = uiPermissionForm.event(uiPermissionForm.DELETE_ENTRY, uicomponent.id);
+ %>
+ <td>
+   <div title="$fullName">$fullName</div>
+@@ -15,13 +16,18 @@
+ </td>
+ <%
+   for(permission in permissions){
+-    checkboxField = uicomponent.getChildById(permission.getPermissionType().toString() + id) ;
++    def checkboxField = uicomponent.getChildById(permission.getPermissionType().toString() + id) ;
++    if (isImmutable) {
++     checkboxField.setDisabled(true);
++    }
+     %>
+     <td class="center"><% uicomponent.renderChild(checkboxField); %></td>
+ <%  }
+ %>
+ <td>
+   <div class="ActionContainer">
++   <% if (!isImmutable) { %>
+     <img class="DeleteUserIcon" src="/eXoResources/skin/sharedImages/Blank.gif" title="<%= _ctx.appRes("UIPermissionEntry.title.DeletePermission"); %>" alt="<%= _ctx.appRes("UIPermissionEntry.title.DeletePermission"); %>" onclick="$deleteLink"/>
++   <% } %>
+   </div>
+ </td>
+\ No newline at end of file

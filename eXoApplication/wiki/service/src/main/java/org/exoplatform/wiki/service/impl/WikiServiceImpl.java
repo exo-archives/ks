@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Queue;
 
 import org.chromattic.api.ChromatticSession;
@@ -1028,9 +1029,7 @@ public class WikiServiceImpl implements WikiService, Startable {
     return getPageById(wikiType, wikiOwner, pageId);
   }
   
-  private void updateAllPagesPermissions(String wikiType, String wikiOwner, HashMap<String, String[]> permMap) throws Exception {
-    // Include ACL for administrators
-    permMap.putAll(Utils.getACLForAdmins());
+  private void updateAllPagesPermissions(String wikiType, String wikiOwner, HashMap<String, String[]> permMap) throws Exception {    
     PageImpl page = getWikiHome(wikiType, wikiOwner);
     Queue<PageImpl> queue = new LinkedList<PageImpl>();
     queue.add(page);
@@ -1047,24 +1046,62 @@ public class WikiServiceImpl implements WikiService, Startable {
   }
   
   private List<String> getWikiDefaultPermissions(String wikiType, String wikiOwner) throws Exception {
-    StringBuilder view = new StringBuilder().append(PermissionType.VIEWPAGE);
-    StringBuilder viewEdit = new StringBuilder().append(PermissionType.VIEWPAGE).append(",").append(PermissionType.EDITPAGE);
-    StringBuilder all = new StringBuilder().append(PermissionType.VIEWPAGE).append(",").append(PermissionType.EDITPAGE).append(",")
-                                           .append(PermissionType.ADMINPAGE).append(",").append(PermissionType.ADMINSPACE);
+    String view = new StringBuilder().append(PermissionType.VIEWPAGE).toString();
+    String viewEdit = new StringBuilder().append(PermissionType.VIEWPAGE).append(",").append(PermissionType.EDITPAGE).toString();
+    String all = new StringBuilder().append(PermissionType.VIEWPAGE)
+                                    .append(",")
+                                    .append(PermissionType.EDITPAGE)
+                                    .append(",")
+                                    .append(PermissionType.ADMINPAGE)
+                                    .append(",")
+                                    .append(PermissionType.ADMINSPACE)
+                                    .toString();
     List<String> permissions = new ArrayList<String>();
+    Iterator<Entry<String, IDType>> iter = Utils.getACLForAdmins().entrySet().iterator();
+    while (iter.hasNext()) {
+      Entry<String, IDType> entry = iter.next();
+      permissions.add(new StringBuilder(all).append(":").append(entry.getValue()).append(":").append(entry.getKey()).toString());
+    }
     if (PortalConfig.PORTAL_TYPE.equals(wikiType)) {
-      UserPortalConfigService service = (UserPortalConfigService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(UserPortalConfigService.class);
+      UserPortalConfigService service = (UserPortalConfigService) ExoContainerContext.getCurrentContainer()
+                                                                                     .getComponentInstanceOfType(UserPortalConfigService.class);
       PortalConfig portalConfig = service.getUserPortalConfig(wikiOwner, null).getPortalConfig();
-      permissions.add(all.append(":").append(IDType.MEMBERSHIP).append(":").append(portalConfig.getEditPermission()).toString());
-      permissions.add(viewEdit.append(":").append(IDType.USER).append(":any").toString());
+      String portalEditClause = new StringBuilder(all).append(":")
+                                                      .append(IDType.MEMBERSHIP)
+                                                      .append(":")
+                                                      .append(portalConfig.getEditPermission())
+                                                      .toString();
+      if (!permissions.contains(portalEditClause)) {
+        permissions.add(portalEditClause);
+      }
+      permissions.add(new StringBuilder(viewEdit).append(":").append(IDType.USER).append(":any").toString());
     } else if (PortalConfig.GROUP_TYPE.equals(wikiType)) {
       UserACL userACL = (UserACL) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(UserACL.class);
-      permissions.add(all.append(":").append(IDType.MEMBERSHIP).append(":").append(userACL.getMakableMT()).append(":").append(wikiOwner).toString());
-      permissions.add(viewEdit.append(":").append(IDType.MEMBERSHIP).append(":*:").append(wikiOwner).toString());
-      permissions.add(view.append(":").append(IDType.USER).append(":any").toString());
+      String makableMTClause = new StringBuilder(all).append(":")
+                                                     .append(IDType.MEMBERSHIP)
+                                                     .append(":")
+                                                     .append(userACL.getMakableMT())
+                                                     .append(":")
+                                                     .append(wikiOwner)
+                                                     .toString();
+      if (!permissions.contains(makableMTClause)) {
+        permissions.add(makableMTClause);
+      }
+      String ownerClause = new StringBuilder(viewEdit).append(":")
+                                                      .append(IDType.MEMBERSHIP)
+                                                      .append(":*:")
+                                                      .append(wikiOwner)
+                                                      .toString();
+      if (!permissions.contains(ownerClause)) {
+        permissions.add(ownerClause);
+      }
+      permissions.add(new StringBuilder(view).append(":").append(IDType.USER).append(":any").toString());
     } else if (PortalConfig.USER_TYPE.equals(wikiType)) {
-      permissions.add(all.append(":").append(IDType.USER).append(":").append(wikiOwner).toString());
-      permissions.add(view.append(":").append(IDType.USER).append(":any").toString());
+      String ownerClause = new StringBuilder(all).append(":").append(IDType.USER).append(":").append(wikiOwner).toString();
+      if (!permissions.contains(ownerClause)) {
+        permissions.add(ownerClause);
+      }
+      permissions.add(new StringBuilder(view).append(":").append(IDType.USER).append(":any").toString());
     }
     return permissions;
   }
