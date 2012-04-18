@@ -10,6 +10,7 @@
 		<Locale lang="ar" messages="/ksResources/gadgets/lastpost/locale/ar.xml" language_direction="rtl"/>
 		<Locale lang="fr" messages="/ksResources/gadgets/lastpost/locale/fr.xml" />
 		<Locale lang="vi" messages="/ksResources/gadgets/lastpost/locale/vi.xml" />
+		<Locale lang="it" messages="/ksResources/gadgets/lastpost/locale/it.xml" />
 		<Require feature="setprefs"/>
 		<Require feature="dynamic-height"/>
 	</ModulePrefs>
