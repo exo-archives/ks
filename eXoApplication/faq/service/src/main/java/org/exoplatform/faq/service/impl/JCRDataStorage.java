@@ -2899,39 +2899,41 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
           i = i + 1;
         }
       }
-      Node categoryNode = categoryRootNode.getNode(Utils.CATEGORY_HOME);
-      NodeIterator iterator = categoryNode.getNodes();
-      String rootPath = categoryRootNode.getPath();
-      Session session = categoryRootNode.getSession();
-      Workspace workspace = session.getWorkspace();
-      while (iterator.hasNext()) {
-        Node node = iterator.nextNode();
-        try {
-          if (node.isNodeType(EXO_FAQ_CATEGORY)) {
-            node.setProperty(EXO_INDEX, i);
-            i = i + 1;
-            workspace.move(node.getPath(), rootPath + "/" + node.getName());
-          } else if (node.isNodeType(EXO_FAQ_QUESTION_HOME)) {
-            if (categoryRootNode.hasNode(Utils.QUESTION_HOME)) {
-              NodeIterator iter = node.getNodes();
-              while (iter.hasNext()) {
-                Node node_ = iter.nextNode();
-                workspace.move(node_.getPath(), rootPath + "/" + Utils.QUESTION_HOME + "/" + node_.getName());
-              }
-            } else {
+      if (categoryRootNode.hasNode(Utils.CATEGORY_HOME)) {
+        Node categoryNode = categoryRootNode.getNode(Utils.CATEGORY_HOME);
+        NodeIterator iterator = categoryNode.getNodes();
+        String rootPath = categoryRootNode.getPath();
+        Session session = categoryRootNode.getSession();
+        Workspace workspace = session.getWorkspace();
+        while (iterator.hasNext()) {
+          Node node = iterator.nextNode();
+          try {
+            if (node.isNodeType(EXO_FAQ_CATEGORY)) {
+              node.setProperty(EXO_INDEX, i);
+              i = i + 1;
               workspace.move(node.getPath(), rootPath + "/" + node.getName());
+            } else if (node.isNodeType(EXO_FAQ_QUESTION_HOME)) {
+              if (categoryRootNode.hasNode(Utils.QUESTION_HOME)) {
+                NodeIterator iter = node.getNodes();
+                while (iter.hasNext()) {
+                  Node node_ = iter.nextNode();
+                  workspace.move(node_.getPath(), rootPath + "/" + Utils.QUESTION_HOME + "/" + node_.getName());
+                }
+              } else {
+                workspace.move(node.getPath(), rootPath + "/" + node.getName());
+              }
+            }
+          } catch (Exception e) {
+            if (log.isDebugEnabled()) {
+              log.debug("Failed to move node " + node.getName(), e);
             }
           }
-        } catch (Exception e) {
-          if (log.isDebugEnabled()) {
-            log.debug("Failed to move node " + node.getName(), e);
-          }
         }
+        categoryNode.remove();
+        session.save();
       }
-      categoryNode.remove();
-      session.save();
     } catch (Exception e) {
-        log.warn("Failed to calculate imported root category", e);
+        log.warn("Failed to calculate imported root category");
     }
   }
 
