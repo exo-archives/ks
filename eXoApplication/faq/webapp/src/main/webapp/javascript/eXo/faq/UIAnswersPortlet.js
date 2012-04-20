@@ -407,7 +407,7 @@ DOMUtil.prototype.getElemementsByClass = function (root, clazz) {
   return list;
 }
 
-ScrollManager.prototype.loadItems = function (elementClass, clean) {
+ScrollManager.prototype.answerLoadItems = function (elementClass, clean) {
   if (clean) this.cleanElements();
   this.elements.clear();
   this.elements.pushAll(eXo.core.DOMUtil.getElemementsByClass(this.mainContainer, elementClass).reverse());
@@ -436,18 +436,21 @@ UIAnswersPortlet.prototype.initBreadcumbScroll = function () {
   var uiNav = eXo.faq.UIAnswersPortlet;
   uiNav.scrollMgr["UIBreadcumbs"].init();
   uiNav.scrollMgr["UIBreadcumbs"].checkAvailableSpace();
-  if (uiNav.scrollMgr["UIBreadcumbs"].arrowsContainer) uiNav.scrollMgr["UIBreadcumbs"].renderElements();
+  if (uiNav.scrollMgr["UIBreadcumbs"].arrowsContainer) {
+    uiNav.scrollMgr["UIBreadcumbs"].renderElements();
+  }
 };
 
 UIAnswersPortlet.prototype.loadScroll = function (scrollname, container, callback) {
   var uiNav = eXo.faq.UIAnswersPortlet;
-  if (container) {
+  var controlButtonContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "td", "ControlButtonContainer");
+  if (container && controlButtonContainer) {
     uiNav.scrollMgr[scrollname] = eXo.portal.UIPortalControl.newScrollManager(scrollname);
     uiNav.scrollMgr[scrollname].initFunction = callback;
-    uiNav.scrollMgr[scrollname].mainContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "td", "ControlButtonContainer");
-    uiNav.scrollMgr[scrollname].loadItems("ControlButton");
+    uiNav.scrollMgr[scrollname].mainContainer = controlButtonContainer;
+    uiNav.scrollMgr[scrollname].answerLoadItems("ControlButton");
     if (uiNav.scrollMgr[scrollname].elements.length <= 0) return;
-    uiNav.scrollMgr[scrollname].arrowsContainer = eXo.core.DOMUtil.findFirstDescendantByClass(uiNav.scrollMgr[scrollname].mainContainer, "div", "ScrollButtons");
+    uiNav.scrollMgr[scrollname].arrowsContainer = eXo.core.DOMUtil.findFirstDescendantByClass(controlButtonContainer, "div", "ScrollButtons");
     var button = eXo.core.DOMUtil.findDescendantsByTagName(uiNav.scrollMgr[scrollname].arrowsContainer, "div");
 
     if (button.length >= 2) {

@@ -88,6 +88,7 @@
 
 /******************************************** UIBreadcumbs ****************************************/
 
+
 .UIAnswersPortlet .UIBreadcumbs {
 	border: 1px solid #e2e2e2;
 	background: #f6f6f6;
@@ -103,11 +104,8 @@
 }
 
 .UIAnswersPortlet .UIBreadcumbs a.Selected {
-	float: left;
 	color: #1e1f21;
 	font-weight: bold;
-	padding: 0px 5px;
-	line-height: 30px;
 }
 
 .UIAnswersPortlet .UIBreadcumbs .Selected {
@@ -118,13 +116,108 @@
 	font-size: 14px;
 }
 
+.UIAnswersPortlet .UIBreadcumbs .AnswerHomeIcon {
+  float: left;
+	height: 24px;
+  padding: 6px 5px 0px 0px;
+  vertical-align: top;
+}
+
+.UIAnswersPortlet .UIBreadcumbs .AnswerHomeIcon img {
+  vertical-align: top;
+}
+
 .UIAnswersPortlet .UIBreadcumbs .RightArrowIcon {
 	float: left;
-	/*background: url('background/IconBreadcumbs15x12.gif') no-repeat ;*/
-	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/BlueNextArrow.gif') no-repeat ;
-	width: 16px; 
-	height: 16px;	
-	margin: 9px 0px 0px 0px;
+	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/BlueNextArrow.gif') no-repeat right center ;
+	padding-right: 16px;
+}
+
+.UIAnswersPortlet .UIBreadcumbs .TableLayout {
+	table-layout:fixed;
+}
+
+.UIAnswersPortlet .UIBreadcumbs .RightBreadcumbsInfoBar {
+	width: 320px;
+}
+
+.UIAnswersPortlet .UIBreadcumbs .LastItem {
+  padding-right: 25px;
+}
+
+.UIAnswersPortlet .ScrollButtons {	
+  padding:5px 1px 5px 1px;
+}
+
+.UIAnswersPortlet .UIBreadcumbs .ScrollButtons {
+  position: absolute;
+  top: 1px;
+  right: -10px;
+  width: 35px;
+}
+
+.UIAnswersPortlet .UIBreadcumbs .ScrollButtonContainer {
+ 	float:right;
+  position: relative;
+  width: 1px;
+}
+
+.UIAnswersPortlet .DisableScrollLeftButton {
+	background: url('background/DisableScrollLeftButton.gif') no-repeat left;
+	cursor:pointer;
+	float:left;
+	height:15px;
+	margin:0px 5px;
+	padding-left:12px;
+	width:13px;
+}
+
+.UIAnswersPortlet .DisableScrollRightButton {
+	background: url('background/DisableScrollRightButton.gif') no-repeat left;
+	cursor:pointer;
+	float:left;
+	height:15px;
+	margin:0px 2px;
+	width:13px;
+}
+
+.UIAnswersPortlet .ScrollRightButton {
+	background: url('background/ScrollRightButton.gif') no-repeat left;
+	cursor:pointer;
+	float:left;
+	height:15px;
+	margin:0px 2px;
+	width:13px;
+}
+
+.UIAnswersPortlet .ScrollLeftButton {
+	background: url('background/ScrollLeftButton.gif') no-repeat left;
+	cursor:pointer;
+	float:left;
+	height:15px;
+	padding-left:12px;
+	margin:0px 5px;
+	width:13px;
+}
+
+.UIAnswersPortlet .HighlightScrollRightButton {
+	background: url('background/HighlightScrollRightButton.gif') no-repeat left;
+	cursor:pointer;
+	float:left;
+	height:15px;
+	margin:0px 2px;
+
+	width:13px;
+}
+
+.UIAnswersPortlet .HighlightScrollLeftButton {
+	background: url('background/HighlightScrollLeftButton.gif') no-repeat left;
+	cursor:pointer;
+	float:left;
+	height:15px;
+	margin:0px 5px;
+	padding-left:12px;
+	width:13px;
 }
 
 .UIAnswersPortlet .UICategoriesSummary {
@@ -196,18 +289,18 @@
 	padding-right: 20px;
 }
 
-.UIAnswersPortlet .UIBreadcumbs .SearchForm {
+/*********************FAQ UIQuickSeach***************************/
+.UIAnswersPortlet .UIQuickSeach {
 	float: right;
 	padding: 2px 6px 0px 0px;
-	width: 280px;
 }
 
-.UIAnswersPortlet .UIBreadcumbs .SearchForm label {
+.UIAnswersPortlet .UIQuickSeach label {
 	color: #4c4c4c;
 	margin-right: 5px;
 }
 
-.UIAnswersPortlet .UIBreadcumbs .SearchForm .SearchIcon {
+.UIAnswersPortlet .UIQuickSeach .SearchIcon {
 	background: url('background/FAQPortlet.gif') no-repeat left -210px;
 	float: right;
 	height:16px;
@@ -216,13 +309,18 @@
 	cursor: pointer;
 }
 
-.UIAnswersPortlet .UIBreadcumbs .SearchForm .AdvancedSearch {
+.UIAnswersPortlet .UIQuickSeach .AdvancedSearch {
 	background: url('background/FAQPortlet.gif') no-repeat left -226px;
 	float:right;
 	height:16px;
 	margin:5px 3px 0px 3px;
 	width:16px;
 	cursor: pointer;
+}
+
+.UIAnswersPortlet .UIQuickSeach input {
+	!width: 165px;
+  height: 16px;
 }
 
 .UIAnswersPortlet .UISearchForm input {
@@ -1959,64 +2057,6 @@
 	min-width: 600px;
 }
 
-.UIAnswersPortlet .DisableScrollLeftButton {
-	background: url('background/DisableScrollLeftButton.gif') no-repeat left;
-	cursor:pointer;
-	float:left;
-	height:15px;
-	margin:0px 5px;
-	padding-left:12px;
-	width:13px;
-}
-
-.UIAnswersPortlet .DisableScrollRightButton {
-	background: url('background/DisableScrollRightButton.gif') no-repeat left;
-	cursor:pointer;
-	float:left;
-	height:15px;
-	margin:0px 2px;
-	width:13px;
-}
-
-.UIAnswersPortlet .ScrollRightButton {
-	background: url('background/ScrollRightButton.gif') no-repeat left;
-	cursor:pointer;
-	float:left;
-	height:15px;
-	margin:0px 2px;
-	width:13px;
-}
-
-.UIAnswersPortlet .ScrollLeftButton {
-	background: url('background/ScrollLeftButton.gif') no-repeat left;
-	cursor:pointer;
-	float:left;
-	height:15px;
-	padding-left:12px;
-	margin:0px 5px;
-	width:13px;
-}
-
-.UIAnswersPortlet .HighlightScrollRightButton {
-	background: url('background/HighlightScrollRightButton.gif') no-repeat left;
-	cursor:pointer;
-	float:left;
-	height:15px;
-	margin:0px 2px;
-
-	width:13px;
-}
-
-.UIAnswersPortlet .HighlightScrollLeftButton {
-	background: url('background/HighlightScrollLeftButton.gif') no-repeat left;
-	cursor:pointer;
-	float:left;
-	height:15px;
-	margin:0px 5px;
-	padding-left:12px;
-	width:13px;
-}
-
 /************************** UIViewUserProfile *****************************/
 .UIAnswersPortlet .UIViewUserProfile {
 	margin: 10px;
@@ -2470,6 +2510,7 @@
 .UIAnswersPortlet .UICategoriesContainer {
 	padding: 0px 5px 2px 5px;
 	font-family: verdana, arial, tahoma;
+  width: 200px;
 }
 
 .UIAnswersPortlet .UICategoriesContainer .AnswerToolbar .CenterBar {
@@ -2489,22 +2530,6 @@
 	text-align: center;
 	width: 90%;
 }
-
-/*********************FAQ UIBreadcumbs***************************/
-
-.UIAnswersPortlet .UIBreadcumbs .ControlButtonContainer {
-	padding-left: 5px;
-	float: left;
-}
-
-/*********************FAQ UIQuickSeach***************************/
-
-.UIAnswersPortlet .UIQuickSeach .UISearchForm .Input {
-	!width: 165px;
-}
-
-
-
 
 
 

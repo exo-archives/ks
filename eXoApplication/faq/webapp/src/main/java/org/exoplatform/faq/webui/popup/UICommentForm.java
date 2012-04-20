@@ -34,7 +34,6 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.webui.BaseEventListener;
-import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.WebUIUtils;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -136,18 +135,13 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
     public void execute(Event<UICommentForm> event) throws Exception {
       UICommentForm commentForm = event.getSource();
       UIAnswersPortlet portlet = commentForm.getAncestorOfType(UIAnswersPortlet.class);
-      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
-      popupAction.deActivate();
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      portlet.cancelAction();
     }
   }
 
   static public class SaveActionListener extends BaseEventListener<UICommentForm> {
     public void onEvent(Event<UICommentForm> event, UICommentForm commentForm, final String objectId) throws Exception {
       String comment = ((UIFormWYSIWYGInput) commentForm.getChildById(commentForm.COMMENT_CONTENT)).getValue();
-      UIAnswersPortlet portlet = commentForm.getAncestorOfType(UIAnswersPortlet.class);
-      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
-      UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
       if (CommonUtils.isEmpty(comment) || !ValidatorDataInput.fckContentIsNotEmpty(comment)) {
         warning("UICommentForm.msg.comment-is-null");
         return;
@@ -156,6 +150,9 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
         warning("UIQuestions.msg.comment-id-deleted");
         return;
       }
+      UIAnswersPortlet portlet = commentForm.getAncestorOfType(UIAnswersPortlet.class);
+      UIAnswersContainer answersContainer = portlet.getChild(UIAnswersContainer.class);
+      UIQuestions questions = answersContainer.getChild(UIQuestions.class);
       comment = CommonUtils.encodeSpecialCharInContent(comment);
       try {
         // Create link by Vu Duy Tu.
@@ -241,10 +238,8 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
         event.getSource().log.error("Fail to save action: ", e);
         warning("UIQuestions.msg.category-id-deleted", false);
       }
-      // questions.setDefaultLanguage() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(questions);
-      popupAction.deActivate();
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      portlet.cancelAction();
+      event.getRequestContext().addUIComponentToUpdateByAjax(answersContainer);
     }
   }
 }
