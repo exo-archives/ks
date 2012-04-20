@@ -645,11 +645,9 @@ UIAnswersPortlet.prototype.submitSearch = function (id) {
 UIAnswersPortlet.prototype.submitOnKey = function (event) {
   var key = eXo.core.Keyboard.getKeynum(event);
   if (key == 13) {
-    var searchLinkElm = eXo.core.DOMUtil.findFirstDescendantByClass(this, "a", "ActionSearch");
-    if (searchLinkElm) {
-      var link = String(searchLinkElm.href);
-      link = link.replace("javascript:", "");
-      eval(link);
+    var searchButton = eXo.core.DOMUtil.findFirstDescendantByClass(this, "div", "ActionSearch");
+    if (searchButton) {
+      (searchButton.onclick || searchButton.click)();
       eXo.core.EventManager.cancelEvent(event);
       return false;
     }
