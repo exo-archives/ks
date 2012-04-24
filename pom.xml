@@ -15,7 +15,7 @@
   <url>http://wiki.exoplatform.org/xwiki/bin/view/KS/</url>
   <scm>
    <connection>scm:git:git://github.com/exoplatform/ks.git</connection>
-   <developerConnection>scm:git:ssh://git@github.com/exoplatform/ks.git</developerConnection>
+   <developerConnection>scm:git:git@github.com:exoplatform/ks.git</developerConnection>
    <url>http://fisheye.exoplatform.org/browse/ks</url>
   </scm>
   <issueManagement>
