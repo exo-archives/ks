@@ -112,6 +112,8 @@
     <!-- We enforce Java 6 to build to use Chromattic and APT -->
     <jdk.min.version>1.6</jdk.min.version>
     <!-- maven-release-plugin -->
+    <version.exobuild.plugin>1.2.2</version.exobuild.plugin>
+    <version.release.plugin>2.2.1</version.release.plugin>
     <arguments>-Prelease,java-api-compat,pkg-tomcat,arc-tomcat,run-its -Dgatein.working.dir=target</arguments>
   </properties>
   <dependencyManagement>
