@@ -27,18 +27,18 @@
     <url>https://ci.exoplatform.org/job/ks-2.2.x-ci/</url>
   </ciManagement>
   <properties>
-    <org.exoplatform.kernel.version>2.3.7-GA</org.exoplatform.kernel.version>
-    <org.exoplatform.core.version>2.4.7-GA</org.exoplatform.core.version>
-    <org.exoplatform.ws.version>2.2.7-GA</org.exoplatform.ws.version>
-    <org.exoplatform.jcr.version>1.14.7-GA</org.exoplatform.jcr.version>
-    <org.exoplatform.portal.version>3.2.4-PLF</org.exoplatform.portal.version>
+    <org.exoplatform.kernel.version>2.3.8-GA-SNAPSHOT</org.exoplatform.kernel.version>
+    <org.exoplatform.core.version>2.4.8-GA-SNAPSHOT</org.exoplatform.core.version>
+    <org.exoplatform.ws.version>2.2.8-GA-SNAPSHOT</org.exoplatform.ws.version>
+    <org.exoplatform.jcr.version>1.14.8-GA-SNAPSHOT</org.exoplatform.jcr.version>
+    <org.exoplatform.portal.version>3.2.5-PLF-SNAPSHOT</org.exoplatform.portal.version>
     <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
     <org.exoplatform.exopackage.version>1.1.4</org.exoplatform.exopackage.version>
     <org.chromattic.version>1.1.2</org.chromattic.version>
     <!--commons dependencies -->
-    <org.exoplatform.commons.version>1.1.8</org.exoplatform.commons.version>
+    <org.exoplatform.commons.version>1.1.9-SNAPSHOT</org.exoplatform.commons.version>
     <!-- eXo extended service -->
-    <org.exoplatform.social.version>1.2.9</org.exoplatform.social.version>
+    <org.exoplatform.social.version>1.2.10-SNAPSHOT</org.exoplatform.social.version>
     <!-- 3rd parties -->
     <org.codehaus.swizzle.version>1.6.1</org.codehaus.swizzle.version>
     <com.xpn.xwiki.platform.plugins.version>1.0</com.xpn.xwiki.platform.plugins.version>
