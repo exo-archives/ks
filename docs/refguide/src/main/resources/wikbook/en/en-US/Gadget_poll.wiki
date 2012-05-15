@@ -1,15 +1,30 @@
-h1. Overview {anchor:id=KSref.Applications.Gadgets.Overview}
-eXo Platform provides a gadget which enables users to see a poll. The Poll Gadget is developed on the combination of Gagget by GateIn and Polls Service. The Poll Gadget allows users to apply functions of Polls, such as viewing and voting Polls. 
+eXo Platform provides a gadget which enables users to see a poll. The Poll Gadget is developed on the combination of Gadget by GateIn and Polls Service. The Poll Gadget allows users to apply functions of Polls, such as viewing and voting Polls.
 
 || Gadget name || War name || Description ||
 |*pollslist*| poll.war | The list of Polls. |
 
-h1. Preferences {anchor:id=KSref.GadgetPoll.GadgetPollPreferences}
+{docbook}
+<para xml:id="KSref.GadgetPoll.GadgetPollPreferences">
+<citetitle>
+<emphasis role="bold">
+Preferences
+</emphasis>
+</citetitle>
+</para>
+{docbook}
 
 || Preference name || Description ||
 | *pollId* | The Id of Polls which is displayed in the Polls gadget. |
 
-h1. Links to used REST services {anchor:id=KSref.GadgetPoll.LinkToUsedRESTServices}
+{docbook}
+<para xml:id="KSref.GadgetPoll.LinkToUsedRESTServices">
+<citetitle>
+<emphasis role="bold">
+Links to used REST services
+</emphasis>
+</citetitle>
+</para>
+{docbook}
 
 * portal/rest/private/ks/poll/viewpoll/{{{pollId}}}
 

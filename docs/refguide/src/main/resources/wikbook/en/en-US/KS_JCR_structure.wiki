@@ -1,5 +1,10 @@
 eXo Knowledge is a JCR-based product, it uses JCR to store data.
-The root node of eXo Knowledge is exo:application which includes these child nodes: exo:forumHome, exo:faqHome. 
+The root node of eXo Knowledge is exo:application which includes these child nodes: exo:forumHome, exo:faqHome.
+This chapter describes the structure of the main applications in eXo Collaboration via the following topics:
+* [Forum JCR structure|#KSref.JCRStructure.ForumJCRStructure]
+* [FAQ JCR structure|#KSref.JCRStructure.FAQJCRStructure]
+* [Poll JCR structure|#KSref.JCRStructure.PollJCRStructure]
+* [Wiki JCR structure|#KSref.JCRStructure.WikiJCRStructure]
 
 h1. Forum JCR structure {anchor:id=KSref.JCRStructure.ForumJCRStructure}
 Forum is a JCR-based application. The Forum data are saved in eXo-JCR under the Forum Service data directory. The whole JCR structure of Forum can be visualized in the diagram below:
@@ -307,10 +312,6 @@ The whole FAQ JCR structure can be visualized in the following diagram:
 !images/FAQ_JCR_Structure.png|align="center" width="150mm" fo:scalefit="1" html:scalefit="0"!
 
 h2. Category {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category}
-The Category node is created from the exo:faqCategory node type and defined to add data inside as:
-- Sub-category
-- Question Home
-- RSS
 
 h3. Sub-category {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category.SubCategory}
 The system will automatically create the Category Home node under the FAQ application node at the first time the user launches application. All users-created categories are the sub-categories of Category Home.
@@ -429,7 +430,7 @@ Answers and comments node are stored under the Answer home and the Comment home 
 | exo:fileName | String | false | The name of the attachment file. |
 
 
-h3. FAQ setting {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category.FAQSetting}
+h2. FAQ setting {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category.FAQSetting}
 This FAQ Setting node stores the user settings data, such as how answer is ordered (in alphabetical order or by created date), the order type (descending or ascending) or the user's selection to sort questions by popularity. Each user has a dedicated settings data to select the display preferences in FAQ . The default setting will be used if the users has never changed and saved their setting. 
 
 - The User Setting node of an individual user is stored in {{/exo:applications/faqApp/settingHome/userSettingHome/%user-id%}} and has the following properties:
@@ -439,7 +440,7 @@ This FAQ Setting node stores the user settings data, such as how answer is order
 | exo:ordeType | string | false | The value "asc" = ascending and "des" = descending. |
 | exo:sortQuestionByVote | Boolean | false | All questions will be sorted by the popularity (based on the number of votes) if the value is set to "true". |
 
-h3. Template for FAQ {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category.TemplateFAQ}
+h2. Template for FAQ {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category.TemplateFAQ}
 This node stores the template for FAQ portlet. The user can edit this template online in FAQ to change the layout, skins, and more.
 
 - The template is stored in an nt:file node type under the Template Home node.
@@ -470,7 +471,7 @@ The Poll node is stored under eXoPolls node {{/exo:applications/eXoPolls/%Portal
 | exo:isAgainVote | Boolean | false | Enable/disable the option to vote again. User can change their vote if the value is set to "true". |
 | exo:isClosed | Boolean | false | The poll status: open/closed. The poll is closed if the value is set to "true". |
 
-h1. Wiki JCR structure
+h1. Wiki JCR structure  {anchor:id=KSref.JCRStructure.WikiJCRStructure}
 The Wiki portlet is a JCR-based application. The Wiki data are stored in the eXo JCR storage. The Wiki application of eXo Knowledge supports several wikis, each wiki is organized as a tree of pages and hosted in different locations, depending on the type of wiki:
 
 * Portal wikis: _/exo\:applications/eXoWiki/wikis/$PORTAL/WikiHome_
@@ -487,17 +488,17 @@ The whole Wiki JCR structure can be visualized in the following diagram:
 !images/wiki-jcr.png|align="center" width="150mm" fo:scalefit="1" html:scalefit="0"!
 
 
-h2. Wiki data
+h2. Wiki data  {anchor:id=KSref.JCRStructure.WikiJCRStructure.WikiData}
 Depending on the Wiki type (portal, group or user); its pages, attachments and default syntax are stored under a node with either of node types: "wiki:portalwiki", "wiki:groupwiki" or "wiki:userwiki", respectively. Such a node has four child nodes: WikiHome, Preferences, LinkRegistry and Trash.
 These node types have the super type "wiki:wiki" that has the following properties:
 
-|| Properties name || Required type || Multiple ||||Description ||
+|| Properties name || Required type || Multiple || Description ||
 |ref|Reference|false|The reference to one of three following nodes: portalwikis, groupwikis or userwikis.|
 |owner|String|false|The name of the wiki.|
 |wikiPermissions|String|true|The property consists of the permission information of the wiki. The permission string has the format: VIEWPAGE,EDITPAGE,ADMINPAGE,ADMINSPACE:USER:john; VIEWPAGE:GROUP:/platform/users; VIEWPAGE,EDITPAGE,ADMINPAGE,ADMINSPACE:MEMBERSHIP:manager:/platform/administrators.|
 |isDefaultPermissionsInited|Boolean|true|Check whether the default permission is applied to all the wiki tree or not. Its default value is "false".|
 
-h3. WikiHome
+h3. WikiHome {anchor:id=KSref.JCRStructure.WikiJCRStructure.WikiData.WikiHome}
 The WikiHome node stores the root page of a Wiki. It has the node type "exo:wikihome" that has the super type "wiki:page" inherited from "nt:folder". The super type has the following properties:
 
 || Properties name || Required type || Multiple ||Description ||
@@ -539,7 +540,7 @@ The mixin node type "wiki:watched" has the following properties:
 |watcher|String|false|The Id of the person who is watching the page.|
 
 
-h3. Preferences
+h3. Preferences  {anchor:id=KSref.JCRStructure.WikiJCRStructure.WikiData.Preferences}
 The "Preferences" node stores the default syntax and page templates of the Wiki. It has the node type "wiki:preferences" and two child nodes "PreferencesSyntax" and "TemplateContainer".
 
 * The "PreferencesSyntax" node has the node type "wiki:preferencessyntax" that has the following properties:
@@ -554,22 +555,22 @@ The node type "wiki:template" has the following properties:
 |description|String|false|The description of the template.|
 
 
-h3. LinkRegistry
+h3. LinkRegistry {anchor:id=KSref.JCRStructure.WikiJCRStructure.WikiData.LinkRegistry}
 
 The "LinkRegistry" node stores the entries to keep track of renaming or moving pages. Each link entry has the node type "wiki:linkentry" that has the following properties:
 || Properties name || Required type || Multiple ||Description ||
 |alias|String|false|The Id of a page that is moved or renamed. Its format is "wikitype@wikiowner@page_name".|
 |newlink|Path|false|A new path to the wiki page that has been moved or renamed.|
 
-h3. Trash
+h3. Trash  {anchor:id=KSref.JCRStructure.WikiJCRStructure.WikiData.Trash}
 The "Trash" node stores deleted pages.
 
-h3. Template Container
+h3. Template Container {anchor:id=KSref.JCRStructure.WikiJCRStructure.WikiData.TemplateContainer}
 
-The "Template Container" node 
+The "Template Container" node stores the templates to create Wiki pages.
 
 
-h2. Wiki metadata
+h2. Wiki metadata    {anchor:id=KSref.JCRStructure.WikiJCRStructure.WikiMetadata}
 Wiki metadata are stored in the node wikimetadata that has the node type "wiki:store". These metadata consist of information about help contents, draft contents and the way to find the wikis in the system.
 The nodes portalwikis, groupwikis and userwikis allow finding the wikis under the type: portal, group and user, basing on the JCR reference features. These nodes have the node types "wiki:portalwikis", "wiki:groupwikis" and "wiki:userwikis" relatively.
 

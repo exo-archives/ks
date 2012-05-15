@@ -1,4 +1,3 @@
-h1. Overview {anchor:id=KSref.UserStatistic.Overview}
 
 The Auto-count Active Users component is to calculate the number of active users automatically. A user is considered as the active user only when he/she adds a topic/post in the Forum and his/her last post date matches the predefined interval time.
 
@@ -6,7 +5,15 @@ For example, if one user does not have any new posts after 15 days, he/she is no
 
 When the Job Scheduler runs, it will get values returned from the Auto-count Active Users plug-in component to identify the number of active users. This value is updated to Active Members information when the user views Forum statistics.
 
-h1. Configuration {anchor:id=KSref.UserStatistic.Configuration}
+{docbook}
+<para xml:id="KSref.UserStatistic.Configuration">
+<citetitle>
+<emphasis role="bold">
+Configuration
+</emphasis>
+</citetitle>
+</para>
+{docbook}
 
 The properties of Auto-count Active Users plug-in is configured in the _{{{war:webapp/WEB-INF/ks-extension/ks/forum/statistics-configuration.xml}}}_ file.
 

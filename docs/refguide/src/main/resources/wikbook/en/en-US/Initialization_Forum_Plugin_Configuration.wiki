@@ -1,10 +1,12 @@
-h1. Overview {anchor:id=KSref.ForumInitializer.Overview}
-
 The Initialization plug-in component defines the default Forum data in the *.xml* file, including categories, forums, topics and posts.
 
 When the Forum Service runs, it will get values which are returned from the Initialization plug-in component to initialize default data of the Forum.
 
 h1. Configuration {anchor:id=KSref.ForumInitializer.Configuration}
+This section covers the following topics:
+* [Default forum data|#KSref.ForumInitializer.DefaultForumData]
+* [Forum array|#KSref.ForumInitializer.ForumArray]
+* [Forum topics|#KSref.ForumInitializer.ForumTopics]
 
 h2. Default forum data {anchor:id=KSref.ForumInitializer.DefaultForumData}
 

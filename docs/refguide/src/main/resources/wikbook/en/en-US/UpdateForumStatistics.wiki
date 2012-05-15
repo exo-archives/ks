@@ -1,8 +1,16 @@
-h1. Overview {anchor:id=KSref.UpdateStatisticData.Overview}
 
 UpdateDataJob is used when there are abnormal changes in Forum data (such as migration). By default, UpdateDataJob is disabled at the server start up. When UpdateDataJob is running, it will calculate the statistic data in Forum to make sure that the statistic data are correct.
 
-h1. Configuration {anchor:id=KSref.UpdateStatisticData.Configuration}
+{docbook}
+<para xml:id="KSref.UpdateStatisticData.Configuration">
+<citetitle>
+<emphasis role="bold">
+Configuration
+</emphasis>
+</citetitle>
+</para>
+{docbook}
+
 The properties of Forum's UpdateDataJob is configured in _/WEB-INF/ks-extension/ks/forum/statistics-configuration.xml_ which is located in ks-extension webapp.
 
 {code:xml}

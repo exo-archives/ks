@@ -1,7 +1,15 @@
-h1. Overview {anchor:id=KSref.FAQPortlet.Overview}
+The FAQ portlet is the application to show questions and answers.
 
-|| Portlet name || War name || Description ||
-| *FAQPortlet* | faq.war | The FAQ portlet which is the application to show questions and answers. |
+{docbook}
+<para>
+<citetitle>
+<emphasis role="bold">
+Package
+</emphasis>
+</citetitle>
+</para>
+{docbook}
+This portlet is packaged in the _faq.war_ file.
 
 h1. Portlet.xml {anchor:id=KSref.FAQPortlet.FAQPortletxml}
 * See the _portlet.xml_ file in the project following this path: _/webapps/faq/WEB-INF/portlet.xml_.

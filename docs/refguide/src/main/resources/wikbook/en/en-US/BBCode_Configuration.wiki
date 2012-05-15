@@ -1,12 +1,16 @@
-h1. Overview {anchor:id=KSref.BBCodeConfiguration.Overview}
-
-The BBCode plug-in component defines default BBCode data in the _.xml_ file, including BBCode tags, for example, I, B, U, SIZE, COLOR. 
+The BBCode plug-in component defines default BBCode data in the _.xml_ file, including BBCode tags, for example, I, B, U, SIZE, COLOR.
 
 When the BBCode Service runs, it will get values returned from the BBCode plug-in component to initialize default BBCode data.
 
-h1. Configuration {anchor:id=KSref.BBCodeConfiguration.Configuration}
-
-h2. Default BBCode data {anchor:id=KSref.BBCodeConfiguration.DefaultBBCodeData}
+{docbook}
+<para xml:id="KSref.BBCodeConfiguration.DefaultBBCodeData">
+<citetitle>
+<emphasis role="bold">
+Configuration of default BBCode data
+</emphasis>
+</citetitle>
+</para>
+{docbook}
 
 The default BBCode data is configured in the _bbcodes-configuration.xml_ file.
 

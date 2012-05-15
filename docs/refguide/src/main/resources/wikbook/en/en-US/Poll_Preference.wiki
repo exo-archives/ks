@@ -1,7 +1,16 @@
-h1. Overview {anchor:id=KSref.PollPortlet.Overview}
+The Poll portlet is the application for users to vote any ideas, or activities.
 
-|| Portlet name || War name || Description ||
-| PollPortlet | poll.war | The Poll portlet which is the application for users to vote any ideas, or activities. |
+{docbook}
+<para>
+<citetitle>
+<emphasis role="bold">
+Package
+</emphasis>
+</citetitle>
+</para>
+{docbook}
+This portlet is packaged in the _poll.war_ file.
+
 
 h1. Portlet.xml {anchor:id=KSref.PollPortlet.PollPortletxml}
 * See the _portlet.xml_ file in the project following this path: _poll/WEB-INF/portlet.xml_. 

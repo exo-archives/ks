@@ -1,18 +1,14 @@
-h1. Overview {anchor:id=KSref.ForumPortlet.Overview}
-
-|| Portlet name || War name || Description ||
-| *ForumPortlet* | forum.war | The Forum portlet is the application for users to post and read messages on different topics. |
-	
-* Declaration template	
-
-{code:xml}
-<portlet-application>
-  <portlet>
-    <application-ref>forum</application-ref>
-    <portlet-ref>ForumPortlet</portlet-ref>
-  </portlet>
-</portlet-application>
-{code}	
+The Forum portlet is the application for users to post and read messages on different topics.
+{docbook}
+<para>
+<citetitle>
+<emphasis role="bold">
+Package
+</emphasis>
+</citetitle>
+</para>
+{docbook}
+This portlet is packaged in the _forum.war_ file.
 
 h1. Portlet.xml {anchor:id=KSref.FoumPortlet.ForumPortletxml}
 * See the _portlet.xml_ file in the project following this path: _forum/WEB-INF/portlet.xml_.
@@ -39,13 +35,13 @@ h1. Preferences {anchor:id=KSref.ForumPortlet.ForumPortletPreferences}
 h1. Events {anchor:id=KSref.ForumPortlet.Event}
 
 || Name || Description ||
-| *ForumLinkEvent* | Set the render for UIForumLinkPortlet and set values for UIForumLinks. |
-| *ReLoadPortletEvent* | Reload UIForumPortlet. |
-| *OpenLink* | Update values for UIForumLinks. |
-| *ForumPollEvent* | Set the render for UIForumPollPortlet. |
-| *ForumModerateEvent* | Set the render for UIForumModeratorPortlet. |
-| *ForumRuleEvent* | Set the render for UIForumRulePortlet. |
-| *QuickReplyEvent* | Set the render for UIForumQuickReplyPortlet. |
+| *[ForumLinkEvent|#KSref.ForumPortlet.ForumLinkEvent]* | Set the render for UIForumLinkPortlet and set values for UIForumLinks. |
+| *[ReLoadPortletEvent|#KSref.ForumPortlet.ReLoadPortletEvent]* | Reload UIForumPortlet. |
+| *[OpenLink|#KSref.ForumPortlet.OpenLink]* | Update values for UIForumLinks. |
+| *[ForumPollEvent|#KSref.ForumPortlet.ForumPollEvent]* | Set the render for UIForumPollPortlet. |
+| *[ForumModerateEvent|#KSref.ForumPortlet.ForumModerateEvent]* | Set the render for UIForumModeratorPortlet. |
+| *[ForumRuleEvent|#KSref.ForumPortlet.ForumRuleEvent]* | Set the render for UIForumRulePortlet. |
+| *[QuickReplyEvent|#KSref.ForumPortlet.QuickReplyEvent]* | Set the render for UIForumQuickReplyPortlet. |
 
 h2. ForumLinkEvent {anchor:id=KSref.ForumPortlet.ForumLinkEvent}
 This event is fired through UIForumLinkPortlet. 

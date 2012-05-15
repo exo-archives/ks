@@ -43,11 +43,19 @@ The properties of template configuration plug-in are defined in the _init-params
 h1. How to change look and feel {anchor:id=KSref.FAQTemplateConfiguration.HowToChangeLookAndFeel}
 You can change the template FAQ viewer in one of the following two ways:
 
-* By using Plug-in. 
+* [By using Plug-in|#KSref.FAQTemplateConfiguration.Plugin]
 
-* By using the *edit mode* to edit template. 
+* [By using the *edit mode*|#KSref.FAQTemplateConfiguration.UsingEditMode]
 
-h2. Plug-in {anchor:id=KSref.FAQTemplateConfiguration.Plugin}
+{docbook}
+<para xml:id="KSref.FAQTemplateConfiguration.Plugin">
+<citetitle>
+<emphasis role="bold">
+Plug-in
+</emphasis>
+</citetitle>
+</para>
+{docbook}
 
 *1.* Create a file named *_FAQViewerPortlet.gtmpl_*. The content of the file is the template of the FAQ viewer.
 
@@ -55,8 +63,16 @@ h2. Plug-in {anchor:id=KSref.FAQTemplateConfiguration.Plugin}
 
 When the server runs, _FAQViewerPortlet.gtmpl_ will initialize the template of the FAQ viewer.
 
-h2. Edit Mode {anchor:id=KSref.FAQTemplateConfiguration.UsingEditMode}
 
+{docbook}
+<para xml:id="KSref.FAQTemplateConfiguration.UsingEditMode">
+<citetitle>
+<emphasis role="bold">
+Edit Mode
+</emphasis>
+</citetitle>
+</para>
+{docbook}
 *1.* Run the server and open the FAQ Portlet.
 
 *2.* Go to *edit mode* and open the *Edit Template* tab.

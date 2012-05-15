@@ -1,4 +1,3 @@
-h1. Overview {anchor:id=KSref.AnswerEmailTemplateConfiguration.Overview}
 Answers is configured mainly in the file:
 - Portlet preferences: */webapps/faq/WEB-INF/portlet.xml*
 
@@ -6,7 +5,16 @@ Answers is configured mainly in the file:
 For general information of eXo Knowledge configuration, refer to [eXo Knowledge Configuration| KS:KS Manual#Configuration] section.
 {info}
 
-h1. Configuration {anchor:id=KSref.AnswerEmailTemplatesConfiguration.Configuration}
+{docbook}
+<para xml:id="KSref.AnswerEmailTemplatesConfiguration.Configuration">
+<citetitle>
+<emphasis role="bold">
+Configuration
+</emphasis>
+</citetitle>
+</para>
+{docbook}
+
 The Mail templates use a specific syntax, enabling you to create a customized email message in the Edit mode via three templates: New question, Edit/answer, and Move question. 
 
 !images/EmailTemplate.png|align="center" width="120mm" fo:scalefit="1" html:scalefit="0"!

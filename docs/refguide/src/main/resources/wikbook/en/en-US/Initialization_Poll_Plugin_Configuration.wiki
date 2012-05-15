@@ -1,11 +1,16 @@
-h1. Overview {anchor:id=KSref.PollConfiguration.Overview}
-
 The Initialization plugin component defines the default Poll data in the _.xml_ file, including polls.
 When the Poll Service runs, it will get values returned from the Initialization plugin component to initialize default Poll data.
 
-h1. Configuration {anchor:id=KSref.PollConfiguration.Configuration}
+{docbook}
+<para xml:id="KSref.PollConfiguration.DefaultPollData">
+<citetitle>
+<emphasis role="bold">
+Configuration of default Poll data
+</emphasis>
+</citetitle>
+</para>
+{docbook}
 
-h2. Default Poll data {anchor:id=KSref.PollConfiguration.DefaultPollData}
 
 The default Poll data are configured in the _{{{war:webapp/WEB-INF/conf/ksdemo/ks/services-configuration.xml}}}_ file.
 

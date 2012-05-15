@@ -1,10 +1,17 @@
-h1. Overview {anchor:id=KSref.AutoPrune.Overview}
 
 The Auto-prune component is to prune inactive topics which have not been viewed, edited or received for a given period. The "prune" operation does not denote to the physical removal of topics, but sets them to invisible. The function helps you not clutter busy forums from outdated information.
 
 When the Job Scheduler runs, it will get values returned from the Auto-prune plug-in component to identify topics which have to be inactivated in the Forum application. These topics will be invisible to users.
 
-h1. Configuration {anchor:id=KSref.AutoPrune.Configuration}
+{docbook}
+<para xml:id="KSref.AutoPrune.Configuration">
+<citetitle>
+<emphasis role="bold">
+Configuration
+</emphasis>
+</citetitle>
+</para>
+{docbook}
 
 The properties of Auto-prune plug-in are configured in the _{{{war:webapp/WEB-INF/ks-extension/ks/forum/prune-configuration.xml}}}_ file.
 

@@ -1,17 +1,15 @@
-h1. Init data {anchor:id=KSref.InitDataConfiguration.InitData}
+The Init data plug-in is used to define the default data in the _.xml_ file. It includes nodes (node of jcr).
+When the _org.exoplatform.services.jcr.config.RepositoryServiceConfiguration_ component is initialized, the _org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationPlugin_ component will be get and the function _addConfig_ is called. Then, the _/ks-extension/jcr/repository-configuration.xml_ file is loaded and the component _org.exoplatform.ks.common.jcr.KSDataLocation_ will be initialized. Next, the _setLocation_ function is called, setting up the workspace and repository for KS. After that, the _addPlugin_ function will be run, generating the DataLocation (some parent nodes) for eXo Knowledge.
 
+The following is the list of applications in eXo Knowledge and the corresponding components used to initialize the default data.
 || Application || Component || Description ||
 | *Forum* | {{KSDataLocation, ForumServiceImpl}} | Initialize default data of the Forum portlet. |
 | *Answers* | {{KSDataLocation, AnswerServiceImpl}} | Initialize default data of the Answers portlet. |
 | *Polls* | {{KSDataLocation, PollServiceImpl}} | Initialize default data of the Polls portlet. |
 
-The Init data plug-in is used to define the default data in the _.xml_ file. It includes nodes (node of jcr). 
+In this section, you will understand how to initialize data via the sample configurations below.
 
-When the _org.exoplatform.services.jcr.config.RepositoryServiceConfiguration_ component is initialized, the _org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationPlugin_ component will be get and the function _addConfig_ is called. Then, the _/ks-extension/jcr/repository-configuration.xml_ file is loaded and the component _org.exoplatform.ks.common.jcr.KSDataLocation_ will be initialized. Next, the _setLocation_ function is called, setting up the workspace and repository for KS. After that, the _addPlugin_ function will be run, generating the DataLocation (some parent nodes) for eXo Knowledge.
-
-h1. Configuration {anchor:id=KSref.InitDataConfiguration.Configuration} 
-
-h2. Initialize the conf-part for loading _repository-configuration.xml_ {anchor:id=KSref.InitDataConfiguration.InitializeConf-partForLoading_repository-configuration.xml_}
+h1. Initialize the conf-part for loading _repository-configuration.xml_ {anchor:id=KSref.InitDataConfiguration.InitializeConf-partForLoading_repository-configuration.xml_}
 
 When the server starts, the _jcr-configuration.xml_ file is initialized. The component-plugin named addConfig will be referred to org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationPlugin to load the _war:/ks-extension/jcr/repository-configuration.xml_ file.
 
@@ -43,7 +41,7 @@ When the server starts, the _jcr-configuration.xml_ file is initialized. The com
 || Name || Possible value || Default value || Description ||
 | *conf-path* | {{string}} |war:/ks-extension/jcr/ repository- configuration.xml| The path to the _repository-configuration.xml_ file. |
 
-h2. Initialize workspace name and repository name in _storage-configuration.xml_ {anchor:id=KSref.InitDataConfiguration.InitializeWorkspaceName&RepositoryName}
+h1. Initialize workspace name and repository name in _storage-configuration.xml_ {anchor:id=KSref.InitDataConfiguration.InitializeWorkspaceName&RepositoryName}
 
 In details:
 
@@ -77,7 +75,7 @@ In which,
 | *repository* | {{string}} | {{repository}} | The JCR repository for KS data. |
 | *workspace* | {{string}} | {{knowledge}} | The workspace for KS data. |
 
-h2. Initialize data {anchor:id=KSref.InitDataConfiguration.InitializeData}
+h1. Initialize data {anchor:id=KSref.InitDataConfiguration.InitializeData}
 
 Once the workspace name and repository name are registered, the server will load org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator and the _addPaths_ function in org.exoplatform.services.jcr.ext.hierarchy.impl.AddPathPlugin is called. Then, the data location will be built. 
 
