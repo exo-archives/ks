@@ -132,6 +132,10 @@
     <!-- ************** -->
     <!-- We enforce Java 6 to build to use Chromattic and APT -->
     <jdk.min.version>1.6</jdk.min.version>
+<!-- config-scm-maven-plugin -->
+    <org.apache.maven.scm.version>1.6</org.apache.maven.scm.version>
+    <version.release.plugin>4.0.0.GA</version.release.plugin>
+    <version.buildnumber.plugin>1.1</version.buildnumber.plugin>
     <!-- maven-release-plugin -->
     <arguments>-Prelease,java-api-compat,pkg-tomcat,arc-tomcat -Dgatein.working.dir=target</arguments>
   </properties>
