@@ -41,7 +41,7 @@
     <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
     <version.chromattic>1.0.4</version.chromattic>
     <version.release.plugin>2.2.1</version.release.plugin>
-	<version.buildnumber.plugin>1.0</version.buildnumber.plugin>
+	<version.buildnumber.plugin>1.1</version.buildnumber.plugin>
 	<!-- Extend service -->
 	<org.exoplatform.social.version>1.1.10-SNAPSHOT</org.exoplatform.social.version>
 	
