@@ -34,8 +34,13 @@
 }
 
 .UIWikiSettingContainer .Content {
-  margin-left: 180px;
-  padding: 10px 0px; 
+  margin-left: 0px;
+  padding: 10px 0px 0px 10px;
+  overflow: auto;
+}
+
+.UIWikiSettingContainer .Content .ExtensionContainer {
+  padding-bottom: 20px;
 }
 
 .UIWikiPortlet .UIWikiSettingContainer .Spliter {

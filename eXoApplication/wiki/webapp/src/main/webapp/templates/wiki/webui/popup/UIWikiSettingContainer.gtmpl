@@ -4,7 +4,8 @@
   def rcontext = _ctx.getRequestContext();
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
   jsmanager.importJavascript('eXo.wiki.UIWikiSettingContainer', '/wiki/javascript/') ;
-  jsmanager.addJavascript("eXo.wiki.UIWikiSettingContainer.init('" + uicomponent.id + "') ;"); 
+  jsmanager.addJavascript("eXo.wiki.UIWikiSettingContainer.init('" + uicomponent.id + "') ;");
+  jsmanager.addJavascript("eXo.wiki.WikiLayout.reCalculateContentHeight();"); 
 %>
 
 <style>
@@ -32,9 +33,9 @@
   
   <div class="VerticalLine"></div>
   
-  <div class="Content"> 
-    <%
-    uicomponent.renderChild(uicomponent.getActiveItem());
-    %>
+  <div class="Content">
+    <div class="ExtensionContainer">
+      <% uicomponent.renderChild(uicomponent.getActiveItem());%>
+    </div>        
   </div>
 </div>

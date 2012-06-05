@@ -49,9 +49,10 @@ WikiLayout.prototype.init = function(prtId) {
       this.bodyClass = String(this.myBody.className+'');
       this.myHtml = document.getElementsByTagName("html")[0];
     }
-  }catch(e){};
+  } catch(e) {
+  };
   
-  try{
+  try {
     if(prtId.length > 0) this.portletId = prtId;
     var isIE = (eXo.core.Browser.getBrowserType() == "ie") ? true : false;
     var idPortal = (isIE) ? 'UIWorkingWorkspace' : 'UIPortalApplication';
@@ -62,6 +63,10 @@ WikiLayout.prototype.init = function(prtId) {
     this.layoutContainer = DOMUtil.findFirstDescendantByClass(wikiLayout, "div", "WikiLayout");
     this.spliter = DOMUtil.findFirstDescendantByClass(this.layoutContainer, "div", "Spliter");
     this.verticalLine = DOMUtil.findFirstDescendantByClass(this.layoutContainer, "div", "VerticalLine");
+    
+    var pageSettingContainer = DOMUtil.findFirstDescendantByClass(wikiLayout, "div", "UIWikiPageSettingContainer");
+    this.settingContent = DOMUtil.findFirstDescendantByClass(pageSettingContainer, "div", "Content");
+    
     if (this.spliter) {
       this.leftArea = DOMUtil.findPreviousElementByTagName(this.spliter, "div");
       this.rightArea = DOMUtil.findNextElementByTagName(this.spliter, "div");
@@ -71,11 +76,12 @@ WikiLayout.prototype.init = function(prtId) {
       }
       this.spliter.onmousedown = eXo.wiki.WikiLayout.exeRowSplit;
     }
+    
     if(this.layoutContainer) {
       this.processeWithHeight();
       eXo.core.Browser.addOnResizeCallback("WikiLayout", eXo.wiki.WikiLayout.processeWithHeight);
     }
-  }catch(e){
+  } catch(e) {
    return;
   };
 };
@@ -98,6 +104,10 @@ WikiLayout.prototype.processeWithHeight = function() {
     WikiLayout.setClassBody(WikiLayout.wikiBodyClass);
     WikiLayout.setHeightLayOut();
     WikiLayout.setWithLayOut();
+    
+    if (this.settingContent) {
+      this.settingContent.style.height = WikiLayout.layoutContainer.offsetHeight + "px";
+    }
   } else {
     WikiLayout.init('');
   }
@@ -171,6 +181,21 @@ WikiLayout.prototype.setHeightRightContent = function() {
   }
 };
 
+WikiLayout.prototype.reCalculateContentHeight = function() {
+  var WikiLayout = eXo.wiki.WikiLayout;
+  var DOMUtil = eXo.core.DOMUtil;
+  if(!WikiLayout.layoutContainer) {
+    WikiLayout.init('');
+  }
+  
+  var portlet = document.getElementById(this.portletId);
+  var DOMUtil = eXo.core.DOMUtil;
+  var wikiLayout = DOMUtil.findFirstDescendantByClass(portlet, "div", "UIWikiMiddleArea");
+  var pageSettingContainer = DOMUtil.findFirstDescendantByClass(wikiLayout, "div", "UIWikiPageSettingContainer");
+  this.settingContent = DOMUtil.findFirstDescendantByClass(pageSettingContainer, "div", "Content");
+  
+  eXo.wiki.WikiLayout.processeWithHeight();
+};
 
 WikiLayout.prototype.exeRowSplit = function(e) {
   _e = (window.event) ? window.event : e;
