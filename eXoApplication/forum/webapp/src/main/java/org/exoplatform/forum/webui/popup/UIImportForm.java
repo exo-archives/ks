@@ -104,7 +104,6 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent {
         nodePath = importForm.categoryPath;
       }
 
-      UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
       boolean isUdateForm = false;
       boolean isErr = false;
       try {
@@ -118,11 +117,9 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent {
           importForm.warning("UIImportForm.msg.mimetype-invalid");
           return;
         }
-        // service.updateForum(nodePath);
-        importForm.info("UIImportForm.msg.import-successful");
+        importForm.info("UIImportForm.msg.import-successful", false);
         isUdateForm = true;
-        popupAction.deActivate();
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+        forumPortlet.cancelAction();
         if (!ForumUtils.isEmpty(importForm.categoryPath)) {
           UICategory category = forumPortlet.findFirstComponentOfType(UICategory.class);
           category.setIsEditForum(true);
@@ -131,20 +128,20 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent {
           event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
         }
       } catch (PathNotFoundException pnf) {
-        importForm.warning("UIImportForm.msg.CategoryNoLongerExist");
+        importForm.warning("UIImportForm.msg.CategoryNoLongerExist", false);
         isErr = true;
       } catch (AccessDeniedException ace) {
-        importForm.warning("UIImportForm.msg.access-denied");
+        importForm.warning("UIImportForm.msg.access-denied", false);
         isErr = true;
       } catch (ConstraintViolationException con) {
         if (ForumUtils.isEmpty(importForm.categoryPath)) {
-          importForm.warning("UIImportForm.msg.constraint-violation-exception-category");
+          importForm.warning("UIImportForm.msg.constraint-violation-exception-category", false);
         } else {
-          importForm.warning("UIImportForm.msg.constraint-violation-exception-forum");
+          importForm.warning("UIImportForm.msg.constraint-violation-exception-forum", false);
         }
         isErr = true;
       } catch (ItemExistsException ie) {
-        importForm.warning("UIImportForm.msg.ObjectIsExist");
+        importForm.warning("UIImportForm.msg.ObjectIsExist", false);
       } catch (Exception ise) {
         importForm.warning("UIImportForm.msg.filetype-error");
         return;
@@ -153,8 +150,7 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent {
       UploadService uploadService = importForm.getApplicationComponent(UploadService.class);
       uploadService.removeUploadResource(uploadInput.getUploadId());
       if (!isUdateForm) {
-        popupAction.deActivate();
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+        forumPortlet.cancelAction();
       }
       if (isErr) {
         forumPortlet.renderForumHome();

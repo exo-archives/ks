@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +17,6 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.services.compress.CompressData;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -174,7 +172,7 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
       if (exportForm.object_ instanceof Forum) {
         Forum forum = (Forum) exportForm.object_;
         nodePath = forum.getPath();
-        categoryId = forum.getPath().split(ForumUtils.SLASH)[3];
+        categoryId = forum.getCategoryId();
         forumId = forum.getId();
       } else if (exportForm.object_ instanceof Category) {
         Category category = (Category) exportForm.object_;
@@ -182,14 +180,13 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
         categoryId = category.getId();
       }
 
-      if(!ForumUtils.isEmpty(forumId) && exportForm.mapObject.size() == 0) {
+      if (ForumUtils.isEmpty(forumId) && exportForm.mapObject.size() == 0) {
         exportForm.warning("UICategory.msg.emptyCategoryExport", false);
         portlet.cancelAction();
-        return;        
+        return;
       }
 
       ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      InputStream inputStream = null;
       InputStreamDownloadResource dresource = null;
       File file = null;
       try {
@@ -209,7 +206,6 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
                 } else {
                   String sms = (type.equals(Utils.FORUM)) ? "UIExportForm.msg.ForumIsNoLonagerExist" : "UIExportForm.msg.CategoryIsNoLonagerExist";
                   exportForm.warning(sms, new String[] { exportForm.mapObject.get(str) }, false);
-                  exportForm.setObjectId(exportForm.object_);
                   event.getRequestContext().addUIComponentToUpdateByAjax(portlet);
                   return;
                 }
@@ -220,9 +216,9 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
                 return;
               }
             } else {
-              Forum forum = (Forum) exportForm.object_;
-              if (exportForm.getForumService().getObjectNameByPath(forum.getCategoryId().concat(ForumUtils.SLASH).concat(forum.getId())) == null) {
-                exportForm.warning("UIExportForm.msg.ForumIsNoLonagerExist", new String[] { forum.getForumName() }, false);
+              if (exportForm.getForumService().getObjectNameByPath(categoryId.concat(ForumUtils.SLASH).concat(forumId)) == null) {
+                exportForm.warning("UIExportForm.msg.ForumIsNoLonagerExist",
+                                    new String[] { ((Forum) exportForm.object_).getForumName() }, false);
                 portlet.cancelAction();
                 portlet.renderForumHome();
                 event.getRequestContext().addUIComponentToUpdateByAjax(portlet);
@@ -238,44 +234,30 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
         }
         if (file == null) {
           boolean isCreateZipFile = exportForm.getUICheckBoxInput(CREATE_ZIP).isChecked();
-          inputStream = new ByteArrayInputStream(bos.toByteArray());
           if (!isCreateZipFile) {
-            // create file xml to dowload
-            dresource = new InputStreamDownloadResource(inputStream, "text/xml");
+            dresource = new InputStreamDownloadResource(new ByteArrayInputStream(bos.toByteArray()), "text/xml");
             dresource.setDownloadName(fileName + ".xml");
           } else {
-            // create zip file
             CompressData zipService = new CompressData();
-            zipService.addInputStream("System.xml", inputStream);
+            zipService.addInputStream("System.xml", new ByteArrayInputStream(bos.toByteArray()));
             bos = new ByteArrayOutputStream();
             zipService.createZip(bos);
-            ByteArrayInputStream zipInput = new ByteArrayInputStream(bos.toByteArray());
-            dresource = new InputStreamDownloadResource(zipInput, "application/zip");
+            dresource = new InputStreamDownloadResource(new ByteArrayInputStream(bos.toByteArray()), "application/zip");
             dresource.setDownloadName(fileName + ".zip");
           }
         } else {
-          inputStream = new FileInputStream(file);
-          dresource = new InputStreamDownloadResource(inputStream, "text/xml");
+          dresource = new InputStreamDownloadResource(new FileInputStream(file), "application/zip");
           dresource.setDownloadName(fileName + ".zip");
         }
         DownloadService dservice = exportForm.getApplicationComponent(DownloadService.class);
         String downloadLink = dservice.getDownloadLink(dservice.addDownloadResource(dresource));
         event.getRequestContext().getJavascriptManager().addJavascript("ajaxRedirect('" + downloadLink + "');");
+        portlet.cancelAction();
       } finally {
         if (bos != null) {
           bos.close();
         }
-        if (inputStream != null) {
-          inputStream.close();
-        }
-        if (dresource != null && dresource.getInputStream() != null) {
-          dresource.getInputStream().close();
-        }
       }
-
-      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
-      popupAction.deActivate();
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
     }
   }
 
