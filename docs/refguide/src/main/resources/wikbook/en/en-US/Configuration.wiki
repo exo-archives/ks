@@ -1,6 +1,6 @@
 {docbook}
 <abstract>
- <para>This chapter describes about configurations used in eXo Knowledge. It consists of the following main sections:</para>
+ <para>This chapter describes configurations used in Knowledge. It consists of the following main sections:</para>
     <itemizedlist>
       <listitem>
         <para>

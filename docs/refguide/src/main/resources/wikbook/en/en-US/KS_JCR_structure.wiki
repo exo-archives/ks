@@ -1,9 +1,8 @@
 {docbook}
 <abstract>
- <para>eXo Knowledge is a JCR-based product, it uses JCR to store data.</para>
- <para>The root node of eXo Knowledge is <emphasis>exo:application</emphasis> which includes these child nodes: <emphasis>exo:forumHome</emphasis>, <emphasis>exo:faqHome</emphasis>.
+ <para>Knowledge is a JCR-based product which uses JCR to store data. The root node of Knowledge is <emphasis>exo:application</emphasis> which includes these child nodes: <emphasis>exo:forumHome</emphasis>, <emphasis>exo:faqHome</emphasis>.
  </para>
- <para>This chapter helps you further understand about the JCR structure of eXo Knowledge. It consists of the following main sections:</para>
+ <para>In this chapter, you will have opportunity to further understand about the JCR structure of Knowledge that consists of the following main sections:</para>
     <itemizedlist>
       <listitem>
         <para>

@@ -1,6 +1,6 @@
 {docbook}
 <abstract>
- <para>This chapter provides you a comprehensive view about applications in eXo Knowledge, including:</para>
+ <para>This chapter provides you with a comprehensive view about applications in Knowledge, including:</para>
     <itemizedlist>
       <listitem>
         <para>
@@ -19,6 +19,5 @@
   </para>
   <para>Also, you can specify the package of each portlet and gadget and its available preferences that allow you to extend the configuration choices for standard preferences.
   </para>
-	</abstract>
+</abstract>
 {docbook}
-

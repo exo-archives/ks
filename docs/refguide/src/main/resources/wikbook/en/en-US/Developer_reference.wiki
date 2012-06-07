@@ -1,6 +1,6 @@
 {docbook}
 <abstract>
- <para>This chapter supplies you with the basic knowledge about overridden components, internal APIs implemented in eXo Knowledge. Also,
+ <para>This chapter provides you with the basic knowledge of overridden components, internal APIs implemented in Knowledge. Also,
 you will know how to set up a default template for the FAQ portlet, and how to create a sample action extension in Wiki.</para>
 <para>In this chapter, there are the following main topics:</para>
     <itemizedlist>
