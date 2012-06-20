@@ -119,7 +119,12 @@ public abstract class PageImpl extends NTFolder implements Page {
     this.componentManager = componentManager;
   }
 
-  private Node getJCRPageNode() throws Exception {
+  /**
+   * Return the jcr node mapped to the this page object.
+   * @return A <code>Node</code>
+   * @throws Exception
+   */
+  public Node getJCRPageNode() throws Exception {
     return (Node) getChromatticSession().getJCRSession().getItem(getPath());
   }
   

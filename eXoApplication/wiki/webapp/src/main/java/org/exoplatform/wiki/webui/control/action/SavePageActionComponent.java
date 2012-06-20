@@ -187,22 +187,23 @@ public class SavePageActionComponent extends UIComponent {
           if (minorAtt != null) {
             ((PageImpl) page).setMinorEdit(Boolean.parseBoolean(minorAtt.toString()));
           }
+          synchronized (((PageImpl) page).getJCRPageNode().getUUID()) {
+            page.setComment(commentInput.getValue());
+            page.setSyntax(syntaxId);
+            pageTitleControlForm.getUIFormInputInfo().setValue(title);
+            pageParams.setPageId(page.getName());
+            ((PageImpl) page).setURL(Utils.getURLFromParams(pageParams));
+            page.getContent().setText(markup);
 
-          page.setComment(commentInput.getValue());
-          page.setSyntax(syntaxId);
-          pageTitleControlForm.getUIFormInputInfo().setValue(title);
-          pageParams.setPageId(page.getName());
-          ((PageImpl) page).setURL(Utils.getURLFromParams(pageParams));          
-          page.getContent().setText(markup);
-
-          if (!pageEditForm.getTitle().equals(title)) {
-            page.setTitle(title);
-            ((PageImpl) page).checkin();
-            ((PageImpl) page).checkout();
-            pageParams.setPageId(newPageId);
-          } else {
-            ((PageImpl) page).checkin();
-            ((PageImpl) page).checkout();
+            if (!pageEditForm.getTitle().equals(title)) {
+              page.setTitle(title);
+              ((PageImpl) page).checkin();
+              ((PageImpl) page).checkout();
+              pageParams.setPageId(newPageId);
+            } else {
+              ((PageImpl) page).checkin();
+              ((PageImpl) page).checkout();
+            }
           }
         } else if (wikiPortlet.getWikiMode() == WikiMode.ADDPAGE) {
           String sessionId = Util.getPortalRequestContext().getRequest().getSession(false).getId();
