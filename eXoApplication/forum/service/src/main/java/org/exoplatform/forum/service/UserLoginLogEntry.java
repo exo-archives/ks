@@ -20,7 +20,7 @@ import java.util.Calendar;
 
 public class UserLoginLogEntry {
 
-  public String   tenantName = Utils.DEFAULT_TEMANT_NAME;
+  public String   tenantName = Utils.DEFAULT_TENANT_NAME;
 
   public String   userName;
 

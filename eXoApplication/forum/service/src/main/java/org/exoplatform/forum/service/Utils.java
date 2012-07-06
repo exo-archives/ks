@@ -98,7 +98,7 @@ public class Utils implements ForumNodeTypes {
 
   public static final String CACHE_REPO_NAME       = "repositoryName".intern();
   
-  public static final String DEFAULT_TEMANT_NAME   = Long.toHexString(System.currentTimeMillis() 
+  public static final String DEFAULT_TENANT_NAME   = Long.toHexString(System.currentTimeMillis() 
                                                                       + System.identityHashCode("currentTenant"));
 
   // Type Modify
@@ -556,7 +556,7 @@ public class Utils implements ForumNodeTypes {
         LOG.debug("Can not get current repository", e);
       }
     }
-    return DEFAULT_TEMANT_NAME;
+    return DEFAULT_TENANT_NAME;
   }
 
   static public List<String> getOnlineUserByTenantName(Map<String, List<String>> onlineUserMap) {
