@@ -453,7 +453,7 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
       String groupId = event.getRequestContext().getRequestParameter(OBJECTID);
       UIFormInputWithActions inputWithActions = uiWikiPermissionForm.getChild(UIFormInputWithActions.class);
       UIFormStringInput uiFormStringInput = inputWithActions.getChild(UIFormStringInput.class);
-      uiFormStringInput.setValue(groupId);
+      uiFormStringInput.setValue("*:" + groupId);
       closePopupAction(uiWikiPermissionForm.getPermissionPopupSelector());
       event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPermissionForm);
     }
