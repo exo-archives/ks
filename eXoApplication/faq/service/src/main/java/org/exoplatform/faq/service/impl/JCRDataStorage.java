@@ -1668,8 +1668,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 
   private List<Cate> listingSubTree(Node currentCategory, int i) throws Exception {
     Node cat;
-    int j = i;
-    j = j + 1;
+    int j = i + 1;
     List<Cate> cateList = new ArrayList<Cate>();
     Cate cate;
     NodeIterator iter = currentCategory.getNodes();
@@ -1682,7 +1681,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         cateList.add(cate);
         if (cat.hasNodes()) {
           cateList.addAll(listingSubTree(cat, j));
-          ;
         }
       }
     }
