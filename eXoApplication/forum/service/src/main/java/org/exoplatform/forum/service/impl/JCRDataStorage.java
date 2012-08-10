@@ -56,6 +56,7 @@ import javax.jcr.query.QueryResult;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.ExoContainer;
@@ -105,6 +106,7 @@ import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
 import org.exoplatform.forum.service.user.AutoPruneJob;
 import org.exoplatform.ks.common.CommonUtils;
+import org.exoplatform.ks.common.TransformHTML;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
@@ -7243,7 +7245,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     String message = post.string(EXO_MESSAGE);
     listContent.add(message);
     SyndContent description = new SyndContentImpl();
-    description.setType("text/plain");
+    description.setType("text/html");
     description.setValue("ST[CDATA[" + message + "END]]");
     final String title = post.string(EXO_NAME);
     final Date created = post.date(EXO_CREATED_DATE);
@@ -7260,24 +7262,30 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     String desc = reader.string(EXO_DESCRIPTION, " ");
     SyndFeed feed = new SyndFeedImpl();
     feed.setFeedType("rss_2.0");
-    feed.setTitle(reader.string(EXO_NAME));
     feed.setPublishedDate(reader.date(EXO_CREATED_DATE, new Date()));
     feed.setLink(link);
-    feed.setDescription("ST[CDATA[" + desc + "END]]");
+    feed.setDescription(getTitleRSS(desc));
     feed.setEncoding("UTF-8");
+    feed.setTitle(getTitleRSS(reader.string(EXO_NAME)));
     return feed;
   }
 
   private SyndEntry createNewEntry(String uri, String title, String link, List<String> listContent, SyndContent description, Date pubDate, String author) {
     SyndEntry entry = new SyndEntryImpl();
     entry.setUri(uri);
-    entry.setTitle(title);
+    entry.setTitle(getTitleRSS(title));
     entry.setLink(link);
     entry.setContributors(listContent);
     entry.setDescription(description);
     entry.setPublishedDate(pubDate);
     entry.setAuthor(author);
     return entry;
+  }
+  
+  
+  private String getTitleRSS(String title) {
+    return new StringBuilder("ST[CDATA[")
+          .append(StringEscapeUtils.unescapeHtml(TransformHTML.getTitleInHTMLCode(title, null))).append("END]]").toString();
   }
 
   public InputStream createUserRss(String userId, String link) throws Exception {
