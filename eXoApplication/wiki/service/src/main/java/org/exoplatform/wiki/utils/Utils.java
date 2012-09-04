@@ -3,6 +3,7 @@ package org.exoplatform.wiki.utils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Stack;
@@ -254,7 +255,15 @@ public class Utils {
   } 
   
   public static boolean isDescendantPage(PageImpl page, PageImpl parentPage) throws Exception {
-    return page.getPath().startsWith(parentPage.getPath()); 
+    Iterator<PageImpl> iter = parentPage.getChildPages().values().iterator();
+    while (iter.hasNext()) {
+      PageImpl childpage = (PageImpl) iter.next();
+      if (childpage.equals(page))
+        return true;
+      if (isDescendantPage(page, childpage))
+        return true;
+    }
+    return false;
   }
 
   public static Object getObject(String path, String type) throws Exception {
