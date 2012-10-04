@@ -16,7 +16,8 @@
  */
 package org.exoplatform.forum.service.cache.model.selector;
 
-import org.exoplatform.forum.service.cache.model.ScopeCacheKey;
+import org.exoplatform.ks.common.cache.model.ScopeCacheKey;
+import org.exoplatform.ks.common.cache.model.selector.ScopeCacheSelector;
 import org.exoplatform.forum.service.cache.model.key.PostListCountKey;
 import org.exoplatform.services.cache.ObjectCacheInfo;
 

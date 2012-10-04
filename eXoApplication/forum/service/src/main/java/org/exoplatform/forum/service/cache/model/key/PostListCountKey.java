@@ -16,7 +16,7 @@
  */
 package org.exoplatform.forum.service.cache.model.key;
 
-import org.exoplatform.forum.service.cache.model.ScopeCacheKey;
+import org.exoplatform.ks.common.cache.model.ScopeCacheKey;
 
 /**
  * Created by The eXo Platform SAS

@@ -225,18 +225,14 @@ public class TestForumService extends ForumServiceTestCase {
     assertNotNull("Category is null", category);
     // get categories
     List<Category> categories = forumService_.getCategories();
-    assertEquals(categories.size(), 4);
+    assertEquals(categories.size(), 5);
     // update category
     category.setCategoryName("ReName Category");
     forumService_.saveCategory(category, false);
     Category updatedCat = forumService_.getCategory(catIds[0]);
     assertEquals("Category name is not change", "ReName Category", updatedCat.getCategoryName());
 
-    // test removeCategory
-    for (int i = 0; i < 3; ++i) {
-      forumService_.removeCategory(catIds[i]);
-    }
-    forumService_.removeCategory(catId);
+    killData();
     categories = forumService_.getCategories();
     assertEquals("Size categories can not equals 0", categories.size(), 0);
   }

@@ -1,7 +1,8 @@
 package org.exoplatform.forum.service.cache.model;
 
-import org.exoplatform.forum.service.cache.loader.CacheLoader;
-import org.exoplatform.forum.service.cache.loader.ServiceContext;
+import org.exoplatform.ks.common.cache.CacheLoader;
+import org.exoplatform.ks.common.cache.ServiceContext;
+import org.exoplatform.ks.common.cache.model.ScopeCacheKey;
 import org.exoplatform.services.cache.CacheService;
 import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.cache.future.FutureExoCache;
