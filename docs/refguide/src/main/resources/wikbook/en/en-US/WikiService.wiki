@@ -67,7 +67,7 @@
 * [Actions over a wiki page from external jars|#KSref.DeveloperReference.Extend_actions_over_a_wiki_page_from_external_jars]
 * [JCR structure|#KSref.JCRStructure]
 
-h1. DiffService  {anchor:id=KSref.DeveloperReference.WikiService.DiffService}
+h1. DiffService  {anchor:id=KSref.DeveloperReference.WikiService.DiffServiceRoleNotInToc}
 This service is used to show the differences between two strings.
 
 ||Method || Param || Return || Description||
@@ -76,7 +76,7 @@ This service is used to show the differences between two strings.
 |*getWordDifferencesAsHTML*(String text1, String text2) throws DifferentiationFailedException, |{{text1}}: The original content. {example}{example}  {{text2}}: The revised content. |{{DiffResult}} |Return a _DiffResult_ object representing differences between words of text1 and text2. |
 |*getDifferencesAsHTML*(String text1, String text2, boolean allDoc) throws DifferentiationFailedException, | {{text1}}: The original content. {example}{example}  {{text2}}: The revised content.  {example}{example}  {{allDoc}}: Show all documents.|{{DiffResult}} |Return a _DiffResult_ object representing differences between lines of text1 and text2. |
 
-h1. LinkService   {anchor:id=KSref.DeveloperReference.WikiService.LinkService}
+h1. LinkService   {anchor:id=KSref.DeveloperReference.WikiService.LinkServiceRoleNotInToc}
 This service is used for the WYSIWYG editor to get the configuration.
 
 ||Method || Param || Return || Description||
@@ -93,7 +93,7 @@ This service is used to get the rendered content of a wiki page with the support
 |*addPageLink*(WikiPageParams param, WikiPageParams entity)| {{param}}: The identity parameter of a source page. {example}{example} {{entity}}: The identity parameter of a target page.|{{void}}| Record a link between two pages. |
 |*invalidateCache*(WikiPageParams param)|{{param}}: The identity parameter of a page to remove in cache. | {{void}} |Invalidate all cache entries linking to a page in case this page is removed, changed or renamed.|
 
-h1. ResizeImageService {anchor:id=KSref.DeveloperReference.WikiService.ResizeImageService}
+h1. ResizeImageService {anchor:id=KSref.DeveloperReference.WikiService.ResizeImageServiceRoleNotInToc}
 This service is used to resize the image to a desired size.
 
 ||Method || Param || Return || Description||
@@ -101,7 +101,7 @@ This service is used to resize the image to a desired size.
 |*resizeImageByWidth*(String imageName, InputStream is, int requestWidth); |{{imageName}}: The name of the image that is resized.  {example}{example}   {{is}}: The input stream of the image.  {example}{example}  {{requestWidth}}: The new image width. | {{InputStream}}|Resize the given image to the requested width and keep the aspect ratio. |
 |*resizeImageByHeight*(String imageName, InputStream is, int requestHeight); |{{imageName}}: The name of the image that is resized.  {example}{example}   {{is}}: The input stream of the image.  {example}{example}  {{requestHeight}}: The new image height. | {{InputStream }} | Resize the given image to the requested height and keep the aspect ratio. |
 
-h1. RenderingService  {anchor:id=KSref.DeveloperReference.WikiService.RenderingService}
+h1. RenderingService  {anchor:id=KSref.DeveloperReference.WikiService.RenderingServiceRoleNotInToc}
 This service provides functions to render between syntaxes.
 ||Method || Param || Return || Description||
 |*getExecution*() throws ComponentLookupException, ComponentRepositoryException; |N/A |{{Execution}} |Get the execution from the XWIKI component manager. |
@@ -114,7 +114,7 @@ This service provides functions to render between syntaxes.
 |*setCssURL*(String cssURL); |{{cssURL}}: The URL of CSS.|{{void}} |Set the CSS URL. |
 
 
-h1. WikiRestService {anchor:id=KSref.DeveloperReference.WikiService.WikiRestService}
+h1. WikiRestService {anchor:id=KSref.DeveloperReference.WikiService.WikiRestServiceRoleNotInToc}
 This service provides functions to access Wiki data, such as tree data, Help content, images and more.
 ||Method || Param || Return || Description||
 |*getWikiPageContent(String sessionKey, String wikiContextKey, boolean isMarkup, String data); |{{sessionKey}}: The key used to retrieve the editor input value from the session.  {example}{example}  {{wikiContextKey}}: The key used to get the wiki context from the client session. {example}{example}  {{isMarkup}}: If _true_, then _markup content_ is returned, otherwise _html content_ is returned.  {example}{example}  {{data}}: The content of the wiki page.| {{Response}}: _Status.OK_ and the page content as _TEXT\_HTML_. _Status.INTERNAL\_SERVER\_ERROR_ if the exception occurs when getting the content of wiki page.  |Get the content of a wiki page. |
@@ -125,7 +125,7 @@ This service provides functions to access Wiki data, such as tree data, Help con
 |*getImage*(UriInfo uriInfo, String wikiType, String wikiOwner, String pageId, String imageId, Integer width); | {{uriInfo}}: The base URL information.  {example}{example} {{wikiType}}: The wiki type.  {example}{example} {{wikiOwner}}: The wiki owner.  {example}{example}  {{pageId}}: The wiki page Id. {example}{example}  {{imageId}}: The image Id.  {example}{example}  {{width}}: The width of the image.| {{Response}}: _Status.OK_ and the resized image. _Status.INTERNAL\_SERVER\_ERROR_ if the exception occurs when getting the image. |Get an image from a wiki page. |
 |*getHelpSyntaxPage*(String syntaxId); | {{syntaxId}}: The syntax Id. | {{Response}}: _Status.OK_ and Help content as _TEXT\_HTML_. _Status.INTERNAL\_SERVER\_ERROR_ if the exception occurs when getting the Help content.|Get the Help content by the syntax Id. |
 
-h1. WikiService   {anchor:id=KSref.DeveloperReference.WikiService.WikiService}
+h1. WikiService   {anchor:id=KSref.DeveloperReference.WikiService.WikiServiceRoleNotInToc}
 This service provides interface for processing database with wikis and pages, including adding, editing, removing and searching data.
 
 ||Method || Param || Return || Description||
@@ -168,8 +168,3 @@ This service provides interface for processing database with wikis and pages, in
 |*addRelatedPage*(WikiPageParams orginaryPageParams, WikiPageParams relatedPageParams) throws Exception |{{orginaryPageParams}}: The parameter of the target page to which related pages are added.  {example}{example}  {{relatedPageParams}}: The parameter of the related page. |{{boolean}} |Add related pages. |
 |*getRelatedPage*(WikiPageParams pageParams) throws Exception |{{pageParams}}: The parameter which refers to the wiki page. |{{List<Page>}}: The list of related pages. | Get a list of related pages of a wiki page.|
 |*removeRelatedPage*(WikiPageParams orginaryPageParams, WikiPageParams relatedPageParams) throws Exception |{{orginaryPageParams}}: The parameter of the target page from which related pages are removed.  {example}{example}  {{relatedPageParams}}: The parameter of the related page. |{{boolean}} |Remove related pages from the related pages list of a wiki page. |
-
-
-
-
-
