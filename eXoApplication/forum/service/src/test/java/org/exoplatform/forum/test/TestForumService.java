@@ -197,7 +197,7 @@ public class TestForumService extends ForumServiceTestCase {
     Category cat_ = createCategory(catId);
     // check category existing
     assertNull(String.format("The category has ID is %s existed.", catId), forumService_.getCategory(catId));
-    // save new category
+    // save new one category
     forumService_.saveCategory(cat_, true);
     // check again category existing
     assertNotNull(String.format("The category has ID is %s not existing.", catId), forumService_.getCategory(catId));
@@ -217,7 +217,7 @@ public class TestForumService extends ForumServiceTestCase {
     catTest = forumService_.getCategory(catId);
     assertEquals("The moderators of category not contanins user demo.", catTest.getModerators()[0], USER_DEMO);
     
-    // add category
+    // add 3 categories
     forumService_.saveCategory(createCategory(catIds[0]), true);
     forumService_.saveCategory(createCategory(catIds[1]), true);
     forumService_.saveCategory(createCategory(catIds[2]), true);
@@ -225,7 +225,7 @@ public class TestForumService extends ForumServiceTestCase {
     assertNotNull("Category is null", category);
     // get categories
     List<Category> categories = forumService_.getCategories();
-    assertEquals(categories.size(), 5);
+    assertEquals(categories.size(), 4);
     // update category
     category.setCategoryName("ReName Category");
     forumService_.saveCategory(category, false);
