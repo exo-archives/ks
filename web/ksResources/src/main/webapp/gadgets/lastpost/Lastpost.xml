@@ -11,6 +11,7 @@
 		<Locale lang="fr" messages="/ksResources/gadgets/lastpost/locale/fr.xml" />
 		<Locale lang="vi" messages="/ksResources/gadgets/lastpost/locale/vi.xml" />
 		<Locale lang="it" messages="/ksResources/gadgets/lastpost/locale/it.xml" />
+		<Locale lang="es" messages="/ksResources/gadgets/lastpost/locale/es_ES.xml" />
 		<Require feature="setprefs"/>
 		<Require feature="dynamic-height"/>
 	</ModulePrefs>
