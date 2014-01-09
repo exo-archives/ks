@@ -180,10 +180,12 @@ public class UIFieldEditableForm extends UIWikiForm {
                                                            ApplicationMessage.WARNING);
         if (msg != null) {
           Object[] arg = { msg };
-          appMsg = new ApplicationMessage("WikiPageNameValidator.msg.Invalid-char",
-                                          arg,
-                                          ApplicationMessage.WARNING);
-        }        
+          if (ex.getCause() == null ) {
+            appMsg = new ApplicationMessage("WikiPageNameValidator.msg.Invalid-char",arg, ApplicationMessage.WARNING);
+          } else {
+            appMsg = new ApplicationMessage("WikiPageNameValidator.msg.Invalid-Expression",arg, ApplicationMessage.WARNING);
+          }
+        }      
         event.getRequestContext().getUIApplication().addMessage(appMsg);
         Utils.redirect(Utils.getCurrentWikiPageParams(), WikiMode.VIEW);
         return;

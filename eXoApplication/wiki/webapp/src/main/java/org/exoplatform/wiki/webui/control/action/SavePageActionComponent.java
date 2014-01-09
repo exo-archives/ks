@@ -132,10 +132,12 @@ public class SavePageActionComponent extends UIComponent {
                                                            null,
                                                            ApplicationMessage.WARNING);
         if (msg != null) {
-          Object[] arg = { msg };
-          appMsg = new ApplicationMessage("WikiPageNameValidator.msg.Invalid-char",
-                                          arg,
-                                          ApplicationMessage.WARNING);
+          Object[] arg;
+          if (ex.getCause() == null ) {
+            appMsg = new ApplicationMessage("WikiPageNameValidator.msg.Invalid-char",arg, ApplicationMessage.WARNING);
+          } else {
+            appMsg = new ApplicationMessage("WikiPageNameValidator.msg.Invalid-Expression",arg, ApplicationMessage.WARNING);
+          }
         }
         event.getRequestContext().getUIApplication().addMessage(appMsg);
         event.getRequestContext().setProcessRender(true);

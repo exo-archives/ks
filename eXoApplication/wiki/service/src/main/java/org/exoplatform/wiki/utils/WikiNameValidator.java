@@ -17,8 +17,13 @@
 package org.exoplatform.wiki.utils;
 
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
+import java.text.ParseException;
 
+
+import org.exoplatform.commons.utils.PropertyManager;
 import org.exoplatform.services.jcr.datamodel.IllegalNameException;
+
 
 /**
  * Created by The eXo Platform SAS
@@ -30,27 +35,36 @@ public class WikiNameValidator {
   
   public static final String INVALID_CHARACTERS  = "= % : @ / \\ | ^ # ; [ ] { } < > * ' \" + ? &"; // and .
   
+  private static String customizedPattern;
+  
   public static void validate(String s) throws IllegalNameException {
+	customizedPattern = PropertyManager.getProperty("gatein.validators.identifier.wiki.regexp");
     StringTokenizer tokens;
     if (s == null || s.trim().length() == 0) {
       throw new IllegalNameException();
     }
-    for (int i = 0; i < s.length(); i++) {
-      tokens = new StringTokenizer(INVALID_CHARACTERS);
-      char c = s.charAt(i);
-      boolean isInvalid = false;
-      while (tokens.hasMoreTokens()) {
-        String test = tokens.nextToken();
-        isInvalid = test.equals(String.valueOf(c));
-        if (isInvalid == true)
-          break;
+    if (customizedPattern == null) {
+      for (int i = 0; i < s.length(); i++) {
+        tokens = new StringTokenizer(INVALID_CHARACTERS);
+        char c = s.charAt(i);
+        boolean isInvalid = false;
+        while (tokens.hasMoreTokens()) {
+          String test = tokens.nextToken();
+          isInvalid = test.equals(String.valueOf(c));
+          if (isInvalid == true)
+            break;
+        }
+        if (Character.isLetter(c) || Character.isDigit(c) || (!isInvalid)) {
+          continue;
+        } else {
+          throw new IllegalNameException(INVALID_CHARACTERS);
+        }
       }
-      if (Character.isLetter(c) || Character.isDigit(c) || (!isInvalid)) {
-        continue;
-      } else {
-        throw new IllegalNameException(INVALID_CHARACTERS);
+    } else {
+      if (!Pattern.matches(customizedPattern, s)) {
+        throw new IllegalNameException(customizedPattern, new ParseException(null, 0) );
       }
-    }     
+    }
   }  
   
   public static void validateFileName(String s) throws Exception {
